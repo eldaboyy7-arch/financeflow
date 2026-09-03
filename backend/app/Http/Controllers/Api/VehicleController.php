@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
+use App\Models\Transaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class VehicleController extends Controller
 {
@@ -124,13 +126,23 @@ class VehicleController extends Controller
                 $income  = $v->incomeForPeriod($month, $year);
                 $expense = $v->expenseForPeriod($month, $year);
 
-                // Recent transactions for this vehicle in this period
+                // Recent transactions for this vehicle in this period with category
                 $transactions = $v->transactions()
+                    ->with('category:id,name,icon,color')
                     ->whereMonth('date', $month)
                     ->whereYear('date', $year)
                     ->orderByDesc('date')
-                    ->limit(10)
-                    ->get(['id', 'type', 'amount', 'description', 'date']);
+                    ->orderByDesc('id')
+                    ->limit(20)
+                    ->get(['id', 'type', 'amount', 'description', 'date', 'category_id'])
+                    ->map(fn($t) => [
+                        'id'          => $t->id,
+                        'type'        => $t->type?->value ?? $t->type,
+                        'amount'      => (float) $t->amount,
+                        'description' => $t->description,
+                        'date'        => $t->date ? \Carbon\Carbon::parse($t->date)->format('d M Y') : '',
+                        'category'    => $t->category,
+                    ]);
 
                 return [
                     'id'           => $v->id,
@@ -148,14 +160,55 @@ class VehicleController extends Controller
         $totalIncome  = $vehicles->sum('income');
         $totalExpense = $vehicles->sum('expense');
 
+        // Breakdown per category for rental transactions this month
+        $incomeBreakdown = Transaction::with('category')
+            ->where('user_id', Auth::id())
+            ->whereNotNull('vehicle_id')
+            ->where('type', 'income')
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->select('category_id', DB::raw('SUM(amount) as total'), DB::raw('COUNT(id) as count'))
+            ->groupBy('category_id')
+            ->orderByDesc('total')
+            ->get()
+            ->map(fn($t) => [
+                'category_id' => $t->category_id,
+                'category'    => $t->category?->name ?? 'Lainnya',
+                'icon'        => $t->category?->icon ?? '💰',
+                'color'       => $t->category?->color ?? '#10B981',
+                'total'       => (float) $t->total,
+                'count'       => (int) $t->count,
+            ])->values();
+
+        $expenseBreakdown = Transaction::with('category')
+            ->where('user_id', Auth::id())
+            ->whereNotNull('vehicle_id')
+            ->where('type', 'expense')
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->select('category_id', DB::raw('SUM(amount) as total'), DB::raw('COUNT(id) as count'))
+            ->groupBy('category_id')
+            ->orderByDesc('total')
+            ->get()
+            ->map(fn($t) => [
+                'category_id' => $t->category_id,
+                'category'    => $t->category?->name ?? 'Lainnya',
+                'icon'        => $t->category?->icon ?? '⛽',
+                'color'       => $t->category?->color ?? '#EF4444',
+                'total'       => (float) $t->total,
+                'count'       => (int) $t->count,
+            ])->values();
+
         return response()->json([
             'data' => [
-                'month'         => $month,
-                'year'          => $year,
-                'vehicles'      => $vehicles,
-                'total_income'  => $totalIncome,
-                'total_expense' => $totalExpense,
-                'total_profit'  => $totalIncome - $totalExpense,
+                'month'             => $month,
+                'year'              => $year,
+                'vehicles'          => $vehicles,
+                'total_income'      => $totalIncome,
+                'total_expense'     => $totalExpense,
+                'total_profit'      => $totalIncome - $totalExpense,
+                'income_breakdown'  => $incomeBreakdown,
+                'expense_breakdown' => $expenseBreakdown,
             ],
         ]);
     }

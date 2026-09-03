@@ -86,11 +86,11 @@ async function changePassword() {
 </script>
 
 <template>
-  <div class="space-y-5 max-w-2xl">
-    <h1 class="text-xl font-bold text-slate-900 dark:text-white">Pengaturan</h1>
+  <div class="space-y-4 sm:space-y-5 max-w-2xl">
+    <h1 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">Pengaturan</h1>
 
     <!-- Profile Section -->
-    <div class="card p-6">
+    <div class="card p-4 sm:p-6">
       <div class="flex items-center gap-2.5 mb-5">
         <div class="w-8 h-8 bg-primary-50 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
           <UserCircleIcon class="w-5 h-5 text-primary-600 dark:text-primary-400" />
@@ -139,8 +139,8 @@ async function changePassword() {
     </div>
 
     <!-- Theme Section -->
-    <div class="card p-6">
-      <div class="flex items-center gap-2.5 mb-5">
+    <div class="card p-4 sm:p-6">
+      <div class="flex items-center gap-2.5 mb-4 sm:mb-5">
         <div class="w-8 h-8 bg-amber-50 dark:bg-amber-900/30 rounded-lg flex items-center justify-center">
           <SwatchIcon class="w-5 h-5 text-amber-600 dark:text-amber-400" />
         </div>
@@ -188,8 +188,8 @@ async function changePassword() {
     </div>
 
     <!-- Change Password -->
-    <div class="card p-6">
-      <div class="flex items-center gap-2.5 mb-5">
+    <div class="card p-4 sm:p-6">
+      <div class="flex items-center gap-2.5 mb-4 sm:mb-5">
         <div class="w-8 h-8 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center">
           <LockClosedIcon class="w-5 h-5 text-slate-500 dark:text-slate-400" />
         </div>
@@ -223,7 +223,7 @@ async function changePassword() {
     </div>
 
     <!-- Logout -->
-    <div class="card p-6 border border-rose-100 dark:border-rose-900/40">
+    <div class="card p-4 sm:p-6 border border-rose-100 dark:border-rose-900/40">
       <div class="flex items-center gap-2.5 mb-4">
         <div class="w-8 h-8 bg-rose-50 dark:bg-rose-900/30 rounded-lg flex items-center justify-center">
           <ArrowRightStartOnRectangleIcon class="w-5 h-5 text-rose-500" />
@@ -233,7 +233,7 @@ async function changePassword() {
       <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">
         Anda akan keluar dari semua sesi pada perangkat ini.
       </p>
-      <button @click="handleLogout" class="btn-danger text-sm flex items-center gap-2">
+      <button @click="showLogoutModal = true" class="btn-danger text-sm flex items-center gap-2">
         <ArrowRightStartOnRectangleIcon class="w-4 h-4" />
         Keluar dari Akun
       </button>

@@ -19,10 +19,11 @@ class BudgetService
             ->where('month', $month)
             ->get();
 
-        // Get spending per category for this user in this month (strictly expense, excluding transfers)
+        // Get spending per category for this user in this month (strictly expense, excluding transfers and rental)
         $expenses = Transaction::where('user_id', $userId)
             ->where('type', 'expense')
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->groupBy('category_id')
@@ -114,6 +115,7 @@ class BudgetService
             ->where('category_id', $categoryId)
             ->where('type', 'expense')
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->sum('amount');

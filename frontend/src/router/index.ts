@@ -98,6 +98,11 @@ const router = createRouter({
           component: () => import('@/pages/rental/RentalTransactionsPage.vue'),
         },
         {
+          path: 'rental/kategori',
+          name: 'rental-categories',
+          component: () => import('@/pages/rental/RentalCategoriesPage.vue'),
+        },
+        {
           path: 'rental/laporan',
           name: 'rental-laporan',
           component: () => import('@/pages/rental/RentalReportPage.vue'),

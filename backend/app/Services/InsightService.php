@@ -28,6 +28,7 @@ class InsightService
         $currExpenses = Transaction::where('user_id', $userId)
             ->where('type', 'expense')
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->whereYear('date', $currDate->year)
             ->whereMonth('date', $currDate->month)
             ->sum('amount');
@@ -35,6 +36,7 @@ class InsightService
         $prevExpenses = Transaction::where('user_id', $userId)
             ->where('type', 'expense')
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->whereYear('date', $prevDate->year)
             ->whereMonth('date', $prevDate->month)
             ->sum('amount');
@@ -42,6 +44,7 @@ class InsightService
         $currIncome = Transaction::where('user_id', $userId)
             ->where('type', 'income')
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->whereYear('date', $currDate->year)
             ->whereMonth('date', $currDate->month)
             ->sum('amount');
@@ -82,6 +85,7 @@ class InsightService
             ->where('user_id', $userId)
             ->where('type', 'expense')
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->whereYear('date', $currDate->year)
             ->whereMonth('date', $currDate->month)
             ->select('category_id', DB::raw('SUM(amount) as total'))
@@ -109,6 +113,7 @@ class InsightService
         $currCatBreakdown = Transaction::where('user_id', $userId)
             ->where('type', 'expense')
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->whereYear('date', $currDate->year)
             ->whereMonth('date', $currDate->month)
             ->groupBy('category_id')
@@ -117,6 +122,7 @@ class InsightService
         $prevCatBreakdown = Transaction::where('user_id', $userId)
             ->where('type', 'expense')
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->whereYear('date', $prevDate->year)
             ->whereMonth('date', $prevDate->month)
             ->groupBy('category_id')

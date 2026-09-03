@@ -47,8 +47,8 @@ class Account extends Model
      */
     public function recalculateBalance(): void
     {
-        $income     = $this->transactions()->where('type', 'income')->whereNull('transfer_id')->sum('amount');
-        $expense    = $this->transactions()->where('type', 'expense')->whereNull('transfer_id')->sum('amount');
+        $income     = $this->transactions()->where('type', 'income')->whereNull('transfer_id')->whereNull('vehicle_id')->sum('amount');
+        $expense    = $this->transactions()->where('type', 'expense')->whereNull('transfer_id')->whereNull('vehicle_id')->sum('amount');
         $transferIn = Transfer::where('to_account_id', $this->id)->sum('amount');
         $transferOut = Transfer::where('from_account_id', $this->id)->sum('amount')
                     + Transfer::where('from_account_id', $this->id)->sum('fee');

@@ -24,3 +24,6 @@ backend/bootstrap/cache/*.php
 Thumbs.db
 .vscode/
 .idea/
+
+# Scratch & Temporary scripts
+*.py

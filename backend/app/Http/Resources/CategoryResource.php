@@ -16,6 +16,7 @@ class CategoryResource extends JsonResource
             'icon'       => $this->icon,
             'color'      => $this->color,
             'is_default' => $this->is_default,
+            'is_rental'  => (bool) $this->is_rental,
             'user_id'    => $this->user_id,
         ];
     }

@@ -95,11 +95,12 @@ const generalNavItems = [
 ]
 
 const rentalNavItems = [
-  { name: 'rental-dashboard', route: '/rental',          icon: Squares2X2Icon,            label: 'Ringkasan Rental' },
-  { name: 'rental-vehicles',  route: '/rental/armada',   icon: TruckIcon,                 label: 'Armada Mobil' },
-  { name: 'rental-transaksi', route: '/rental/transaksi',icon: ArrowsRightLeftIcon,       label: 'Catat Transaksi' },
-  { name: 'rental-laporan',   route: '/rental/laporan',  icon: ClipboardDocumentListIcon, label: 'Laporan Armada' },
-  { name: 'pengaturan',       route: '/pengaturan',      icon: Cog6ToothIcon,             label: 'Pengaturan' },
+  { name: 'rental-dashboard',  route: '/rental',          icon: Squares2X2Icon,            label: 'Ringkasan Rental' },
+  { name: 'rental-vehicles',   route: '/rental/armada',   icon: TruckIcon,                 label: 'Armada Mobil' },
+  { name: 'rental-transaksi',  route: '/rental/transaksi',icon: ArrowsRightLeftIcon,       label: 'Catat Transaksi' },
+  { name: 'rental-categories', route: '/rental/kategori', icon: TagIcon,                   label: 'Kategori Rental' },
+  { name: 'rental-laporan',    route: '/rental/laporan',  icon: ClipboardDocumentListIcon, label: 'Laporan Armada' },
+  { name: 'pengaturan',        route: '/pengaturan',      icon: Cog6ToothIcon,             label: 'Pengaturan' },
 ]
 
 const navItems = computed(() =>
@@ -218,18 +219,19 @@ function prevStep() {
 
 function isActive(item: { route: string }) {
   if (item.route === '/') return route.path === '/'
-  return route.path.startsWith(item.route)
+  if (item.route === '/rental') return route.path === '/rental'
+  return route.path === item.route || route.path.startsWith(item.route + '/')
 }
 
 const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase() ?? '?')
 </script>
 
 <template>
-  <div class="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-900">
-    <!-- Desktop Sidebar (Hidden on Mobile) -->
+  <div class="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-900 print:h-auto print:overflow-visible print:bg-white">
+    <!-- Desktop Sidebar (Hidden on Mobile & Print) -->
     <aside
       :class="[
-        'hidden md:flex flex-col bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transition-all duration-300 z-20 shrink-0',
+        'hidden md:flex flex-col bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transition-all duration-300 z-20 shrink-0 print:!hidden',
         uiStore.sidebarOpen ? 'w-60' : 'w-[60px]',
       ]"
     >
@@ -281,9 +283,9 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden print:overflow-visible print:h-auto print:block">
       <!-- Topbar -->
-      <header class="flex items-center justify-between px-4 sm:px-5 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 h-[61px] shrink-0">
+      <header class="flex items-center justify-between px-4 sm:px-5 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 h-[61px] shrink-0 print:!hidden">
         <!-- Left: Desktop Toggle / Mobile Hamburger & Brand -->
         <div class="flex items-center gap-2">
           <!-- Sidebar toggle on Desktop -->
@@ -312,8 +314,19 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
 
         <!-- Right: Actions -->
         <div class="flex items-center gap-1.5">
-          <!-- Tanya AI Assistant Button in Top Navbar -->
+
+          <!-- Rental Mode Badge (only in rental mode) -->
+          <div
+            v-if="modeStore.mode === 'rental'"
+            class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-sm"
+          >
+            <TruckIcon class="w-4 h-4 shrink-0" />
+            <span>Mode Rental</span>
+          </div>
+
+          <!-- Tanya AI Button — hidden in rental mode -->
           <button
+            v-if="modeStore.mode === 'general'"
             @click="aiAdvisorRef?.toggleDrawer()"
             class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-[#0066FF] dark:text-blue-300 border border-blue-200/60 dark:border-blue-800/50 font-bold text-xs transition-all shadow-xs active:scale-95 mr-0.5"
             title="Tanya FinanceFlow AI"
@@ -331,11 +344,12 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
             <Cog6ToothIcon class="w-5 h-5" />
           </RouterLink>
 
-          <!-- Notifications -->
-          <NotificationDropdown />
+          <!-- Notifications — hidden in rental mode -->
+          <NotificationDropdown v-if="modeStore.mode === 'general'" />
 
-          <!-- Help / Guide -->
+          <!-- Help / Guide — hidden in rental mode -->
           <button
+            v-if="modeStore.mode === 'general'"
             @click="openGuide"
             class="p-2 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 text-slate-400 dark:text-slate-500 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             title="Panduan Pemakaian"
@@ -343,7 +357,7 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
             <QuestionMarkCircleIcon class="w-5 h-5" />
           </button>
 
-          <!-- Dark mode toggle -->
+          <!-- Dark mode toggle — always visible -->
           <button
             @click="uiStore.toggleTheme"
             class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
@@ -353,7 +367,7 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
             <MoonIcon v-else class="w-5 h-5" />
           </button>
 
-          <!-- Logout -->
+          <!-- Logout — always visible -->
           <button
             @click="handleLogout"
             class="flex items-center gap-1.5 px-2.5 py-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors ml-1"
@@ -365,8 +379,9 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
         </div>
       </header>
 
+
       <!-- Page content with smooth transitions -->
-      <main class="flex-1 overflow-y-auto p-4 sm:p-6 pb-24 md:pb-6">
+      <main class="flex-1 overflow-y-auto p-4 sm:p-6 pb-24 md:pb-6 print:p-0 print:overflow-visible print:h-auto print:block">
         <RouterView v-slot="{ Component, route }">
           <Transition name="app-slide" mode="out-in">
             <KeepAlive :max="10">
@@ -378,94 +393,112 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
     </div>
 
     <!-- Banking-style Mobile Bottom Navigation Bar -->
-    <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200/90 dark:border-slate-800/90 shadow-[0_-4px_25px_rgba(0,0,0,0.06)] pb-[env(safe-area-inset-bottom)]">
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200/90 dark:border-slate-800/90 shadow-[0_-4px_25px_rgba(0,0,0,0.06)] pb-[env(safe-area-inset-bottom)] print:!hidden">
       <div class="flex items-center justify-around h-[66px] px-2 relative max-w-lg mx-auto">
-        <!-- 1. Dasbor -->
-        <RouterLink
-          to="/"
-          :class="[
-            'flex flex-col items-center justify-center flex-1 h-full py-1.5 transition-all duration-200 select-none relative',
-            isActive({ route: '/' })
-              ? 'text-[#0066FF] dark:text-[#389eff] font-bold'
-              : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium',
-          ]"
-        >
-          <div
-            v-if="isActive({ route: '/' })"
-            class="absolute top-0 w-8 h-[3px] bg-[#0066FF] dark:bg-[#389eff] rounded-b-full shadow-[0_2px_8px_rgba(0,102,255,0.6)]"
-          ></div>
-          <Squares2X2Icon :class="['w-6 h-6 transition-transform duration-200', isActive({ route: '/' }) ? 'stroke-[2.2] scale-105 text-[#0066FF] dark:text-[#389eff]' : 'stroke-[1.6]']" />
-          <span class="text-[11px] tracking-tight mt-1 leading-tight">Dasbor</span>
-        </RouterLink>
 
-        <!-- 2. Transaksi -->
-        <RouterLink
-          to="/transaksi"
-          :class="[
-            'flex flex-col items-center justify-center flex-1 h-full py-1.5 transition-all duration-200 select-none relative',
-            isActive({ route: '/transaksi' })
-              ? 'text-[#0066FF] dark:text-[#389eff] font-bold'
-              : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium',
-          ]"
-        >
-          <div
-            v-if="isActive({ route: '/transaksi' })"
-            class="absolute top-0 w-8 h-[3px] bg-[#0066FF] dark:bg-[#389eff] rounded-b-full shadow-[0_2px_8px_rgba(0,102,255,0.6)]"
-          ></div>
-          <ArrowsRightLeftIcon :class="['w-6 h-6 transition-transform duration-200', isActive({ route: '/transaksi' }) ? 'stroke-[2.2] scale-105 text-[#0066FF] dark:text-[#389eff]' : 'stroke-[1.6]']" />
-          <span class="text-[11px] tracking-tight mt-1 leading-tight">Transaksi</span>
-        </RouterLink>
-
-        <!-- 3. CENTER ELEVATED ACTION BUTTON: Scan Struk (Ala Bank / QRIS) -->
-        <div class="flex-1 flex flex-col items-center justify-center h-full relative -top-3">
-          <button
-            @click="showScanner = true"
-            class="w-[50px] h-[50px] rounded-full bg-[#0066FF] hover:bg-[#0052CC] text-white shadow-[0_6px_20px_rgba(0,102,255,0.45)] hover:shadow-[0_8px_25px_rgba(0,102,255,0.6)] active:scale-90 hover:scale-105 transition-all duration-200 ring-4 ring-white dark:ring-slate-900 flex items-center justify-center group"
-            title="Scan Struk / Bukti Transaksi"
-            aria-label="Scan Struk"
+        <!-- ── RENTAL MODE BOTTOM NAV ─────────────────────────── -->
+        <template v-if="modeStore.mode === 'rental'">
+          <RouterLink
+            v-for="item in mobileNavItems"
+            :key="item.name"
+            :to="item.route"
+            :class="[
+              'flex flex-col items-center justify-center flex-1 h-full py-1.5 transition-all duration-200 select-none relative',
+              isActive(item)
+                ? 'text-[#0066FF] dark:text-[#389eff] font-bold'
+                : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium',
+            ]"
           >
-            <CameraIcon class="w-6 h-6 transition-transform duration-200 group-hover:scale-110 stroke-[2.2]" />
-          </button>
-          <span class="text-[11px] font-bold text-[#0066FF] dark:text-[#389eff] tracking-tight mt-1 leading-tight">Scan</span>
-        </div>
+            <div
+              v-if="isActive(item)"
+              class="absolute top-0 w-8 h-[3px] bg-[#0066FF] dark:bg-[#389eff] rounded-b-full shadow-[0_2px_8px_rgba(0,102,255,0.6)]"
+            ></div>
+            <component
+              :is="item.icon"
+              :class="['w-6 h-6 transition-transform duration-200', isActive(item) ? 'stroke-[2.2] scale-105 text-[#0066FF] dark:text-[#389eff]' : 'stroke-[1.6]']"
+            />
+            <span class="text-[11px] tracking-tight mt-1 leading-tight">{{ item.label }}</span>
+          </RouterLink>
+        </template>
 
-        <!-- 4. Anggaran -->
-        <RouterLink
-          to="/anggaran"
-          :class="[
-            'flex flex-col items-center justify-center flex-1 h-full py-1.5 transition-all duration-200 select-none relative',
-            isActive({ route: '/anggaran' })
-              ? 'text-[#0066FF] dark:text-[#389eff] font-bold'
-              : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium',
-          ]"
-        >
-          <div
-            v-if="isActive({ route: '/anggaran' })"
-            class="absolute top-0 w-8 h-[3px] bg-[#0066FF] dark:bg-[#389eff] rounded-b-full shadow-[0_2px_8px_rgba(0,102,255,0.6)]"
-          ></div>
-          <ChartPieIcon :class="['w-6 h-6 transition-transform duration-200', isActive({ route: '/anggaran' }) ? 'stroke-[2.2] scale-105 text-[#0066FF] dark:text-[#389eff]' : 'stroke-[1.6]']" />
-          <span class="text-[11px] tracking-tight mt-1 leading-tight">Anggaran</span>
-        </RouterLink>
+        <!-- ── GENERAL MODE BOTTOM NAV (original) ────────────── -->
+        <template v-else>
+          <!-- 1. Dasbor -->
+          <RouterLink
+            to="/"
+            :class="[
+              'flex flex-col items-center justify-center flex-1 h-full py-1.5 transition-all duration-200 select-none relative',
+              isActive({ route: '/' })
+                ? 'text-[#0066FF] dark:text-[#389eff] font-bold'
+                : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium',
+            ]"
+          >
+            <div v-if="isActive({ route: '/' })" class="absolute top-0 w-8 h-[3px] bg-[#0066FF] dark:bg-[#389eff] rounded-b-full shadow-[0_2px_8px_rgba(0,102,255,0.6)]"></div>
+            <Squares2X2Icon :class="['w-6 h-6 transition-transform duration-200', isActive({ route: '/' }) ? 'stroke-[2.2] scale-105 text-[#0066FF] dark:text-[#389eff]' : 'stroke-[1.6]']" />
+            <span class="text-[11px] tracking-tight mt-1 leading-tight">Dasbor</span>
+          </RouterLink>
 
-        <!-- 5. Laporan -->
-        <RouterLink
-          to="/laporan"
-          :class="[
-            'flex flex-col items-center justify-center flex-1 h-full py-1.5 transition-all duration-200 select-none relative',
-            isActive({ route: '/laporan' })
-              ? 'text-[#0066FF] dark:text-[#389eff] font-bold'
-              : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium',
-          ]"
-        >
-          <div
-            v-if="isActive({ route: '/laporan' })"
-            class="absolute top-0 w-8 h-[3px] bg-[#0066FF] dark:bg-[#389eff] rounded-b-full shadow-[0_2px_8px_rgba(0,102,255,0.6)]"
-          ></div>
-          <ChartBarIcon :class="['w-6 h-6 transition-transform duration-200', isActive({ route: '/laporan' }) ? 'stroke-[2.2] scale-105 text-[#0066FF] dark:text-[#389eff]' : 'stroke-[1.6]']" />
-          <span class="text-[11px] tracking-tight mt-1 leading-tight">Laporan</span>
-        </RouterLink>
+          <!-- 2. Transaksi -->
+          <RouterLink
+            to="/transaksi"
+            :class="[
+              'flex flex-col items-center justify-center flex-1 h-full py-1.5 transition-all duration-200 select-none relative',
+              isActive({ route: '/transaksi' })
+                ? 'text-[#0066FF] dark:text-[#389eff] font-bold'
+                : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium',
+            ]"
+          >
+            <div v-if="isActive({ route: '/transaksi' })" class="absolute top-0 w-8 h-[3px] bg-[#0066FF] dark:bg-[#389eff] rounded-b-full shadow-[0_2px_8px_rgba(0,102,255,0.6)]"></div>
+            <ArrowsRightLeftIcon :class="['w-6 h-6 transition-transform duration-200', isActive({ route: '/transaksi' }) ? 'stroke-[2.2] scale-105 text-[#0066FF] dark:text-[#389eff]' : 'stroke-[1.6]']" />
+            <span class="text-[11px] tracking-tight mt-1 leading-tight">Transaksi</span>
+          </RouterLink>
+
+          <!-- 3. CENTER ELEVATED ACTION BUTTON: Scan Struk -->
+          <div class="flex-1 flex flex-col items-center justify-center h-full relative -top-3">
+            <button
+              @click="showScanner = true"
+              class="w-[50px] h-[50px] rounded-full bg-[#0066FF] hover:bg-[#0052CC] text-white shadow-[0_6px_20px_rgba(0,102,255,0.45)] hover:shadow-[0_8px_25px_rgba(0,102,255,0.6)] active:scale-90 hover:scale-105 transition-all duration-200 ring-4 ring-white dark:ring-slate-900 flex items-center justify-center group"
+              title="Scan Struk / Bukti Transaksi"
+              aria-label="Scan Struk"
+            >
+              <CameraIcon class="w-6 h-6 transition-transform duration-200 group-hover:scale-110 stroke-[2.2]" />
+            </button>
+            <span class="text-[11px] font-bold text-[#0066FF] dark:text-[#389eff] tracking-tight mt-1 leading-tight">Scan</span>
+          </div>
+
+          <!-- 4. Anggaran -->
+          <RouterLink
+            to="/anggaran"
+            :class="[
+              'flex flex-col items-center justify-center flex-1 h-full py-1.5 transition-all duration-200 select-none relative',
+              isActive({ route: '/anggaran' })
+                ? 'text-[#0066FF] dark:text-[#389eff] font-bold'
+                : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium',
+            ]"
+          >
+            <div v-if="isActive({ route: '/anggaran' })" class="absolute top-0 w-8 h-[3px] bg-[#0066FF] dark:bg-[#389eff] rounded-b-full shadow-[0_2px_8px_rgba(0,102,255,0.6)]"></div>
+            <ChartPieIcon :class="['w-6 h-6 transition-transform duration-200', isActive({ route: '/anggaran' }) ? 'stroke-[2.2] scale-105 text-[#0066FF] dark:text-[#389eff]' : 'stroke-[1.6]']" />
+            <span class="text-[11px] tracking-tight mt-1 leading-tight">Anggaran</span>
+          </RouterLink>
+
+          <!-- 5. Laporan -->
+          <RouterLink
+            to="/laporan"
+            :class="[
+              'flex flex-col items-center justify-center flex-1 h-full py-1.5 transition-all duration-200 select-none relative',
+              isActive({ route: '/laporan' })
+                ? 'text-[#0066FF] dark:text-[#389eff] font-bold'
+                : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium',
+            ]"
+          >
+            <div v-if="isActive({ route: '/laporan' })" class="absolute top-0 w-8 h-[3px] bg-[#0066FF] dark:bg-[#389eff] rounded-b-full shadow-[0_2px_8px_rgba(0,102,255,0.6)]"></div>
+            <ChartBarIcon :class="['w-6 h-6 transition-transform duration-200', isActive({ route: '/laporan' }) ? 'stroke-[2.2] scale-105 text-[#0066FF] dark:text-[#389eff]' : 'stroke-[1.6]']" />
+            <span class="text-[11px] tracking-tight mt-1 leading-tight">Laporan</span>
+          </RouterLink>
+        </template>
       </div>
     </nav>
+
 
     <!-- Global Mobile Smart Receipt Scanner Modal -->
     <ReceiptScannerModal v-model="showScanner" @saved="handleScanSaved" />
@@ -515,6 +548,15 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
 
           <!-- Navigation Links (All Menu Items) -->
           <nav class="flex-1 overflow-y-auto py-3 px-3 space-y-1">
+            <!-- Mode Switcher in Drawer -->
+            <div class="mb-3">
+              <ModeSwitcher />
+            </div>
+
+            <p class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 mb-1">
+              {{ modeStore.mode === 'rental' ? 'Menu Rental Mobil' : 'Menu Keuangan' }}
+            </p>
+
             <RouterLink
               v-for="item in navItems"
               :key="item.name"
@@ -523,7 +565,7 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
               :class="[
                 'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors',
                 isActive(item)
-                  ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 font-semibold'
+                  ? 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white font-semibold'
                   : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60',
               ]"
             >

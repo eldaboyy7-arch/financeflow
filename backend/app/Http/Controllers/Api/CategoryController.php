@@ -14,15 +14,31 @@ class CategoryController extends Controller
 {
     public function index(Request $request): AnonymousResourceCollection
     {
-        $query = Category::forUser($request->user()->id)
-            ->orderBy('type')
-            ->orderBy('name');
+        $userId = $request->user()->id;
+        $mode   = $request->get('mode');
+
+        if ($mode === 'rental') {
+            // Auto-seed rental categories if this user has none yet
+            $hasRental = Category::forUser($userId)->rental()->exists();
+            if (!$hasRental) {
+                foreach (Category::defaultRentalCategories() as $cat) {
+                    Category::create(array_merge($cat, ['user_id' => $userId]));
+                }
+            }
+
+            $query = Category::forUser($userId)->rental();
+        } elseif ($mode === 'all') {
+            $query = Category::forUser($userId);
+        } else {
+            // Default to general finance categories (isolated from rental)
+            $query = Category::forUser($userId)->general();
+        }
 
         if ($request->has('type')) {
             $query->where('type', $request->type);
         }
 
-        return CategoryResource::collection($query->get());
+        return CategoryResource::collection($query->orderBy('name')->get());
     }
 
     public function store(StoreCategoryRequest $request): CategoryResource

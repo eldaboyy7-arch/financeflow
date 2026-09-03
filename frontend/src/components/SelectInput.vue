@@ -78,7 +78,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onOutsideClick))
       :disabled="disabled"
       :class="[
         'input flex items-center justify-between gap-2 text-left cursor-pointer transition-all',
-        open ? 'ring-2 ring-primary-500 border-transparent' : '',
+        open ? 'ring-2 ring-slate-400 dark:ring-slate-500 border-transparent' : '',
         disabled ? 'opacity-50 cursor-not-allowed' : '',
         !selectedOption ? 'text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-slate-100',
       ]"
@@ -115,10 +115,10 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onOutsideClick))
             :key="opt.value"
             @click="select(opt)"
             :class="[
-              'flex items-center justify-between gap-2 px-3 py-2.5 text-xs sm:text-sm cursor-pointer transition-colors',
+              'flex items-center justify-between gap-2 px-3.5 py-2.5 text-xs sm:text-sm cursor-pointer transition-colors',
               String(opt.value) === String(modelValue)
-                ? 'bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 font-bold'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white',
+                ? 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white font-bold'
+                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/60 hover:text-slate-900 dark:hover:text-white',
             ]"
           >
             <span class="flex items-center gap-2 truncate">
@@ -127,7 +127,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onOutsideClick))
             </span>
             <CheckIcon
               v-if="String(opt.value) === String(modelValue)"
-              class="w-4 h-4 shrink-0 text-primary-600 dark:text-primary-400 stroke-2"
+              class="w-4 h-4 shrink-0 text-slate-900 dark:text-white stroke-2"
             />
           </li>
         </ul>

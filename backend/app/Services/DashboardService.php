@@ -17,9 +17,10 @@ class DashboardService
         $year = now()->year;
         $month = now()->month;
 
-        // Single query for both income and expense of this month
+        // Single query for both income and expense of this month (General Finance only)
         $thisMonthSums = Transaction::where('user_id', $userId)
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
             ->select('type', DB::raw('SUM(amount) as total'))
@@ -42,6 +43,7 @@ class DashboardService
         $txs = Transaction::with(['account', 'category'])
             ->where('user_id', $userId)
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->orderByDesc('date')
             ->orderByDesc('id')
             ->limit($limit)
@@ -130,6 +132,7 @@ class DashboardService
 
         $results = Transaction::where('user_id', $userId)
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->whereBetween('date', [$from, $to])
             ->selectRaw("TO_CHAR(date, 'YYYY-MM-DD') as date_str, type, SUM(amount) as total")
             ->groupByRaw("TO_CHAR(date, 'YYYY-MM-DD'), type")
@@ -177,6 +180,7 @@ class DashboardService
         // Single optimized query for all 6 months
         $results = Transaction::where('user_id', $userId)
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->whereBetween('date', [$startDate, $endDate])
             ->selectRaw("TO_CHAR(date, 'YYYY-MM') as ym, type, SUM(amount) as total")
             ->groupByRaw("TO_CHAR(date, 'YYYY-MM'), type")
@@ -216,6 +220,7 @@ class DashboardService
             ->where('user_id', $userId)
             ->where('type', 'expense')
             ->whereNull('transfer_id')
+            ->whereNull('vehicle_id')
             ->thisMonth()
             ->select('category_id', DB::raw('SUM(amount) as total'))
             ->groupBy('category_id')

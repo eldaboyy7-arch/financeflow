@@ -14,10 +14,11 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'  => 'required|string|max:100',
-            'type'  => 'required|in:income,expense',
-            'icon'  => 'nullable|string|max:10',
-            'color' => 'nullable|string|max:7',
+            'name'      => 'required|string|max:100',
+            'type'      => 'required|in:income,expense',
+            'icon'      => 'nullable|string|max:10',
+            'color'     => 'nullable|string|max:7',
+            'is_rental' => 'nullable|boolean',
         ];
     }
 }

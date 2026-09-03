@@ -12,12 +12,12 @@ class ReportService
     public function getMonthlyReport(int $userId, int $year, int $month): array
     {
         $totalIncome = Transaction::where('user_id', $userId)
-            ->where('type', 'income')->whereNull('transfer_id')
+            ->where('type', 'income')->whereNull('transfer_id')->whereNull('vehicle_id')
             ->whereMonth('date', $month)->whereYear('date', $year)
             ->sum('amount');
 
         $totalExpense = Transaction::where('user_id', $userId)
-            ->where('type', 'expense')->whereNull('transfer_id')
+            ->where('type', 'expense')->whereNull('transfer_id')->whereNull('vehicle_id')
             ->whereMonth('date', $month)->whereYear('date', $year)
             ->sum('amount');
 
@@ -25,7 +25,7 @@ class ReportService
         $savingRate  = $totalIncome > 0 ? ($netCashFlow / $totalIncome) * 100 : 0;
 
         $incomeBreakdown = Transaction::with('category')
-            ->where('user_id', $userId)->where('type', 'income')->whereNull('transfer_id')
+            ->where('user_id', $userId)->where('type', 'income')->whereNull('transfer_id')->whereNull('vehicle_id')
             ->whereMonth('date', $month)->whereYear('date', $year)
             ->select('category_id', DB::raw('SUM(amount) as total'))
             ->groupBy('category_id')->orderByDesc('total')->get()
@@ -37,7 +37,7 @@ class ReportService
             ]);
 
         $expenseBreakdown = Transaction::with('category')
-            ->where('user_id', $userId)->where('type', 'expense')->whereNull('transfer_id')
+            ->where('user_id', $userId)->where('type', 'expense')->whereNull('transfer_id')->whereNull('vehicle_id')
             ->whereMonth('date', $month)->whereYear('date', $year)
             ->select('category_id', DB::raw('SUM(amount) as total'))
             ->groupBy('category_id')->orderByDesc('total')->get()
@@ -59,9 +59,9 @@ class ReportService
 
         // Previous month comparison
         $prevDate    = Carbon::createFromDate($year, $month, 1)->subMonth();
-        $prevIncome  = Transaction::where('user_id', $userId)->where('type', 'income')->whereNull('transfer_id')
+        $prevIncome  = Transaction::where('user_id', $userId)->where('type', 'income')->whereNull('transfer_id')->whereNull('vehicle_id')
             ->whereMonth('date', $prevDate->month)->whereYear('date', $prevDate->year)->sum('amount');
-        $prevExpense = Transaction::where('user_id', $userId)->where('type', 'expense')->whereNull('transfer_id')
+        $prevExpense = Transaction::where('user_id', $userId)->where('type', 'expense')->whereNull('transfer_id')->whereNull('vehicle_id')
             ->whereMonth('date', $prevDate->month)->whereYear('date', $prevDate->year)->sum('amount');
 
         return [

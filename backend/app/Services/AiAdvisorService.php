@@ -114,8 +114,8 @@ TEXT;
         $month = now()->month;
 
         $totalBalance = Account::where('user_id', $userId)->where('is_active', true)->sum('current_balance');
-        $incomeThisMonth = Transaction::where('user_id', $userId)->where('type', 'income')->whereNull('transfer_id')->whereMonth('date', $month)->whereYear('date', $year)->sum('amount');
-        $expenseThisMonth = Transaction::where('user_id', $userId)->where('type', 'expense')->whereNull('transfer_id')->whereMonth('date', $month)->whereYear('date', $year)->sum('amount');
+        $incomeThisMonth = Transaction::where('user_id', $userId)->where('type', 'income')->whereNull('transfer_id')->whereNull('vehicle_id')->whereMonth('date', $month)->whereYear('date', $year)->sum('amount');
+        $expenseThisMonth = Transaction::where('user_id', $userId)->where('type', 'expense')->whereNull('transfer_id')->whereNull('vehicle_id')->whereMonth('date', $month)->whereYear('date', $year)->sum('amount');
         $netCashFlow = $incomeThisMonth - $expenseThisMonth;
         $savingRate = $incomeThisMonth > 0 ? round(($netCashFlow / $incomeThisMonth) * 100, 1) : 0;
 

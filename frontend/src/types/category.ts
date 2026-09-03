@@ -7,6 +7,7 @@ export interface Category {
   icon: string
   color: string
   is_default: boolean
+  is_rental?: boolean
   user_id: number | null
 }
 
@@ -15,4 +16,5 @@ export interface CategoryPayload {
   type: CategoryType
   icon?: string
   color?: string
+  is_rental?: boolean
 }

@@ -44,8 +44,14 @@ class TransactionController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        if ($request->filled('vehicle_id')) {
+        // Filter by application mode (rental vs general)
+        if ($request->get('mode') === 'rental') {
+            $query->whereNotNull('vehicle_id');
+        } elseif ($request->filled('vehicle_id')) {
             $query->where('vehicle_id', $request->vehicle_id);
+        } elseif ($request->get('mode') !== 'all') {
+            // Default to general transactions only (isolation from rental mode)
+            $query->whereNull('vehicle_id');
         }
 
         if ($request->filled('date_from') && $request->filled('date_to')) {
