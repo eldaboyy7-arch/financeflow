@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\RecurringController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\InsightController;
 use App\Http\Controllers\Api\AiAdvisorController;
+use App\Http\Controllers\Api\VehicleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -91,4 +92,8 @@ Route::middleware(['auth:sanctum', 'throttle:api.general'])->group(function () {
 
     // Reports
     Route::get('/reports/monthly', [ReportController::class, 'monthly']);
+
+    // Vehicles (Rental Mode)
+    Route::get('/vehicles/report', [VehicleController::class, 'report']);
+    Route::apiResource('vehicles', VehicleController::class);
 });

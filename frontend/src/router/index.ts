@@ -81,6 +81,27 @@ const router = createRouter({
           name: 'settings',
           component: () => import('@/pages/SettingsPage.vue'),
         },
+        // ── Rental Mode Routes ──────────────────────────────────
+        {
+          path: 'rental',
+          name: 'rental-dashboard',
+          component: () => import('@/pages/rental/RentalDashboardPage.vue'),
+        },
+        {
+          path: 'rental/armada',
+          name: 'rental-vehicles',
+          component: () => import('@/pages/rental/VehiclesPage.vue'),
+        },
+        {
+          path: 'rental/transaksi',
+          name: 'rental-transaksi',
+          component: () => import('@/pages/rental/RentalTransactionsPage.vue'),
+        },
+        {
+          path: 'rental/laporan',
+          name: 'rental-laporan',
+          component: () => import('@/pages/rental/RentalReportPage.vue'),
+        },
       ],
     },
   ],

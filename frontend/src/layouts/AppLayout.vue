@@ -3,7 +3,9 @@ import { ref, computed, onMounted } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useUiStore } from '@/stores/ui'
+import { useAppModeStore } from '@/stores/appMode'
 import BrandLogo from '@/components/BrandLogo.vue'
+import ModeSwitcher from '@/components/ModeSwitcher.vue'
 import NotificationDropdown from '@/components/NotificationDropdown.vue'
 import AiAdvisorDrawer from '@/components/AiAdvisorDrawer.vue'
 import ReceiptScannerModal from '@/components/ReceiptScannerModal.vue'
@@ -29,10 +31,13 @@ import {
   DocumentTextIcon,
   LightBulbIcon,
   ArrowRightIcon,
+  TruckIcon,
+  ClipboardDocumentListIcon,
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
 const uiStore = useUiStore()
+const modeStore = useAppModeStore()
 const route = useRoute()
 const router = useRouter()
 
@@ -77,7 +82,7 @@ function markGuideSeen() {
   }
 }
 
-const navItems = [
+const generalNavItems = [
   { name: 'dashboard',   route: '/',          icon: Squares2X2Icon,        label: 'Dasbor' },
   { name: 'transaksi',  route: '/transaksi',  icon: ArrowsRightLeftIcon,   label: 'Transaksi' },
   { name: 'anggaran',   route: '/anggaran',   icon: ChartPieIcon,          label: 'Anggaran' },
@@ -89,14 +94,36 @@ const navItems = [
   { name: 'pengaturan', route: '/pengaturan', icon: Cog6ToothIcon,         label: 'Pengaturan' },
 ]
 
-// 5 item utama untuk bottom navigation di mobile ala Instagram
-const mobileNavItems = [
-  { name: 'dashboard',   route: '/',          icon: Squares2X2Icon,        label: 'Dasbor' },
-  { name: 'transaksi',  route: '/transaksi',  icon: ArrowsRightLeftIcon,   label: 'Transaksi' },
-  { name: 'anggaran',   route: '/anggaran',   icon: ChartPieIcon,          label: 'Anggaran' },
-  { name: 'laporan',    route: '/laporan',    icon: ChartBarIcon,          label: 'Laporan' },
-  { name: 'rekening',   route: '/rekening',   icon: BuildingLibraryIcon,   label: 'Rekening' },
+const rentalNavItems = [
+  { name: 'rental-dashboard', route: '/rental',          icon: Squares2X2Icon,            label: 'Ringkasan Rental' },
+  { name: 'rental-vehicles',  route: '/rental/armada',   icon: TruckIcon,                 label: 'Armada Mobil' },
+  { name: 'rental-transaksi', route: '/rental/transaksi',icon: ArrowsRightLeftIcon,       label: 'Catat Transaksi' },
+  { name: 'rental-laporan',   route: '/rental/laporan',  icon: ClipboardDocumentListIcon, label: 'Laporan Armada' },
+  { name: 'pengaturan',       route: '/pengaturan',      icon: Cog6ToothIcon,             label: 'Pengaturan' },
 ]
+
+const navItems = computed(() =>
+  modeStore.mode === 'rental' ? rentalNavItems : generalNavItems
+)
+
+// 5 item utama untuk bottom navigation di mobile ala Instagram
+const mobileNavItems = computed(() =>
+  modeStore.mode === 'rental'
+    ? [
+        { name: 'rental-dashboard', route: '/rental',           icon: Squares2X2Icon,       label: 'Ringkasan' },
+        { name: 'rental-vehicles',  route: '/rental/armada',    icon: TruckIcon,            label: 'Armada' },
+        { name: 'rental-transaksi', route: '/rental/transaksi', icon: ArrowsRightLeftIcon,  label: 'Transaksi' },
+        { name: 'rental-laporan',   route: '/rental/laporan',   icon: ClipboardDocumentListIcon, label: 'Laporan' },
+        { name: 'pengaturan',       route: '/pengaturan',       icon: Cog6ToothIcon,        label: 'Pengaturan' },
+      ]
+    : [
+        { name: 'dashboard',   route: '/',          icon: Squares2X2Icon,      label: 'Dasbor' },
+        { name: 'transaksi',  route: '/transaksi',  icon: ArrowsRightLeftIcon, label: 'Transaksi' },
+        { name: 'anggaran',   route: '/anggaran',   icon: ChartPieIcon,        label: 'Anggaran' },
+        { name: 'laporan',    route: '/laporan',    icon: ChartBarIcon,        label: 'Laporan' },
+        { name: 'rekening',   route: '/rekening',   icon: BuildingLibraryIcon, label: 'Rekening' },
+      ]
+)
 
 const guideSteps = [
   {
@@ -212,14 +239,17 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
       </div>
 
       <!-- Navigation -->
-      <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
+      <nav class="flex-1 overflow-y-auto py-3 space-y-0.5">
+        <!-- Mode Switcher (only when sidebar expanded) -->
+        <ModeSwitcher v-if="uiStore.sidebarOpen" />
+
         <RouterLink
           v-for="item in navItems"
           :key="item.name"
           :to="item.route"
           :title="!uiStore.sidebarOpen ? item.label : undefined"
           :class="[
-            'flex items-center gap-3 px-2.5 py-2 rounded-lg transition-all duration-150 group',
+            'flex items-center gap-3 px-2.5 py-2 mx-2 rounded-lg transition-all duration-150 group',
             isActive(item)
               ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400'
               : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/60 hover:text-slate-900 dark:hover:text-white',

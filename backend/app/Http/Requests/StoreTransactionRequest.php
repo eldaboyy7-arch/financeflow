@@ -31,6 +31,10 @@ class StoreTransactionRequest extends FormRequest
                 Rule::exists('accounts', 'id')->where('user_id', $userId),
             ],
             'description' => 'nullable|string|max:500',
+            'vehicle_id'  => [
+                'nullable',
+                Rule::exists('vehicles', 'id')->where('user_id', $userId),
+            ],
             'receipt_path'=> [
                 'nullable',
                 'string',

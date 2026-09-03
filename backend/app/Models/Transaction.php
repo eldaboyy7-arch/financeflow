@@ -16,6 +16,7 @@ class Transaction extends Model
         'user_id',
         'account_id',
         'category_id',
+        'vehicle_id',
         'type',
         'amount',
         'date',
@@ -43,6 +44,11 @@ class Transaction extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function vehicle(): BelongsTo
+    {
+        return $this->belongsTo(Vehicle::class);
     }
 
     public function scopeThisMonth(Builder $query): Builder
