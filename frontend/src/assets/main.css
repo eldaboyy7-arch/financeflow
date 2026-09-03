@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 0 102 255;
+    --color-income: 16 185 129;
+    --color-expense: 244 63 94;
+    --color-transfer: 245 158 11;
+  }
+
+  html {
+    @apply antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100;
+  }
+
+  * {
+    @apply border-slate-200 dark:border-slate-700;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 dark:bg-slate-600 rounded-full;
+  }
+}
+
+@layer components {
+  /* Card */
+  .card {
+    @apply bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm;
+  }
+
+  /* Input */
+  .input {
+    @apply w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600
+           bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100
+           placeholder-slate-400 dark:placeholder-slate-500
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent
+           transition-all duration-200 text-sm;
+  }
+
+  /* Label */
+  .label {
+    @apply block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5;
+  }
+
+  /* Button variants */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
+           transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-primary-600 hover:bg-primary-700 text-white focus:ring-primary-500;
+  }
+  .btn-secondary {
+    @apply btn bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600
+           text-slate-700 dark:text-slate-200 focus:ring-slate-400;
+  }
+  .btn-danger {
+    @apply btn bg-rose-600 hover:bg-rose-700 text-white focus:ring-rose-500;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent hover:bg-slate-100 dark:hover:bg-slate-700
+           text-slate-600 dark:text-slate-400 focus:ring-slate-400;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+  .badge-income {
+    @apply badge bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400;
+  }
+  .badge-expense {
+    @apply badge bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400;
+  }
+  .badge-transfer {
+    @apply badge bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400;
+  }
+
+  /* Select */
+  .select {
+    @apply input appearance-none pr-10 cursor-pointer;
+  }
+}
