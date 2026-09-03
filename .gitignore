@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-backend/vendor/
 frontend/node_modules/
 
 # Environment files (never commit real credentials)
