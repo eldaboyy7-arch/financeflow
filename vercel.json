@@ -5,10 +5,18 @@
   "outputDirectory": "frontend/dist",
   "functions": {
     "api/index.php": {
+      "runtime": "vercel-php@0.9.0",
+      "includeFiles": "backend/**"
+    },
+    "api/health.php": {
       "runtime": "vercel-php@0.9.0"
     }
   },
   "routes": [
+    {
+      "src": "/api/health",
+      "dest": "/api/health.php"
+    },
     {
       "src": "/api/(.*)",
       "dest": "/api/index.php"
