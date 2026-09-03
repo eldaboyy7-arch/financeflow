@@ -1,29 +1,11 @@
 {
   "version": 2,
-  "framework": null,
   "buildCommand": "cd frontend && npm install --legacy-peer-deps && npm run build",
   "outputDirectory": "frontend/dist",
-  "functions": {
-    "api/*.php": {
-      "runtime": "vercel-php@0.7.1",
-      "includeFiles": "backend/**"
-    }
-  },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/health",
-      "dest": "/api/health.php"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.php"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
