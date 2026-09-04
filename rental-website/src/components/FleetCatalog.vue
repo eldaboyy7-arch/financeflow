@@ -75,16 +75,18 @@ const activePreviewUrl = computed<string | null>(() => {
 </script>
 
 <template>
-  <section id="katalog" class="py-10 sm:py-14">
+  <section id="armada" class="py-12 sm:py-16 scroll-mt-16">
+    <!-- Anchor backward compatibility -->
+    <span id="katalog" class="sr-only"></span>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Section Header -->
       <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-3">
         <div>
           <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Katalog Armada
+            Pilihan Armada Kami
           </h2>
           <p class="text-sm text-slate-500 mt-1">
-            Pilihan armada resmi terawat siap untuk disewa.
+            Unit yang siap digunakan untuk perjalanan Anda. Informasi status ketersediaan terhubung langsung dengan sistem operasional.
           </p>
         </div>
         <div class="text-xs text-slate-500 flex items-center gap-2">

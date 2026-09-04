@@ -2,14 +2,14 @@
 import { onMounted, computed } from 'vue'
 import { useFleet } from '@/composables/useFleet'
 import HeroSection from '@/components/HeroSection.vue'
+import TravelOptions from '@/components/TravelOptions.vue'
 import FleetFilter from '@/components/FleetFilter.vue'
 import FleetCatalog from '@/components/FleetCatalog.vue'
-import TourPackages from '@/components/TourPackages.vue'
-import RentalPackages from '@/components/RentalPackages.vue'
-import RentalTerms from '@/components/RentalTerms.vue'
+import TripInspirations from '@/components/TripInspirations.vue'
 import TrustGuarantees from '@/components/TrustGuarantees.vue'
 import LocationSection from '@/components/LocationSection.vue'
 import FaqSection from '@/components/FaqSection.vue'
+import FinalCtaSection from '@/components/FinalCtaSection.vue'
 
 const {
   vehicles,
@@ -31,7 +31,7 @@ const featuredVehicle = computed(() => {
 })
 
 onMounted(() => {
-  document.title = '3 Putri Mulya - Rental Mobil Lepas Kunci & Driver Bintan'
+  document.title = '3 Putri Mulya - Rental Mobil & Tour Bintan'
   fetchVehicles()
 })
 
@@ -43,10 +43,13 @@ const resetFilters = () => {
 
 <template>
   <div>
-    <!-- Hero Section -->
+    <!-- 1. Hero Section -->
     <HeroSection :featured-vehicle="featuredVehicle" />
 
-    <!-- Fleet Catalog & Filter -->
+    <!-- 2. Pilih Cara Perjalanan (Rental Mobil Harian vs Paket Tour HiAce) -->
+    <TravelOptions />
+
+    <!-- 3. Pilihan Armada (Katalog Live dari Public Fleet API FinanceFlow) -->
     <FleetCatalog
       :vehicles="filteredVehicles"
       :loading="loading"
@@ -66,22 +69,19 @@ const resetFilters = () => {
       </template>
     </FleetCatalog>
 
-    <!-- Paket Tour & Travel Bintan (Section Baru Phase 1) -->
-    <TourPackages />
+    <!-- 4. Inspirasi Perjalanan di Bintan (4 Destinasi Pendukung) -->
+    <TripInspirations />
 
-    <!-- Paket Layanan Rental Harian (Lepas Kunci & Driver - Hanya tampil jika dikonfigurasi) -->
-    <RentalPackages />
-
-    <!-- Ketentuan & Persyaratan Rental (Hanya tampil jika dikonfigurasi) -->
-    <RentalTerms />
-
-    <!-- Jaminan Kualitas Layanan -->
+    <!-- 5. Kenapa Memilih 3 Putri Mulya (4 Nilai Konkret) -->
     <TrustGuarantees />
 
-    <!-- Lokasi & Koordinasi Serah Terima -->
+    <!-- 6. Area Layanan & Titik Koordinasi -->
     <LocationSection />
 
-    <!-- Pertanyaan Umum (FAQ) -->
+    <!-- 7. Pertanyaan Umum (FAQ 6 Topik) -->
     <FaqSection />
+
+    <!-- 8. Final CTA (WhatsApp) -->
+    <FinalCtaSection />
   </div>
 </template>

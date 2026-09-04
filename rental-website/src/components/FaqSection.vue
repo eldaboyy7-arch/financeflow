@@ -8,24 +8,28 @@ interface FaqItem {
 
 const faqs: FaqItem[] = [
   {
-    question: 'Bagaimana cara melakukan reservasi armada?',
-    answer: 'Pilih unit mobil yang Anda inginkan pada katalog di atas, lalu klik tombol "Chat Sewa". Anda akan terhubung langsung ke WhatsApp admin dengan data mobil yang sudah terisi otomatis untuk memeriksa ketersediaan tanggal yang Anda rencanakan.'
+    question: 'Apa saja syarat untuk sewa mobil lepas kunci?',
+    answer: 'Untuk sewa lepas kunci (self-drive), penyewa wajib menunjukkan identitas diri asli yang masih berlaku (KTP), Surat Izin Mengemudi (SIM A) aktif, serta dokumen pendukung atau jaminan yang telah diverifikasi oleh admin kami saat proses reservasi.'
   },
   {
-    question: 'Bagaimana jika unit mobil yang saya inginkan berstatus "Sedang Disewa"?',
-    answer: 'Anda tetap dapat mengklik tombol "Jadwal Lain" untuk menanyakan kepada admin perkiraan tanggal unit tersebut kembali tersedia atau untuk melakukan pemesanan di jadwal berikutnya.'
+    question: 'Apakah melayani rental mobil dengan driver?',
+    answer: 'Ya, kami melayani rental mobil harian lengkap dengan pengemudi berpengalaman yang ramah dan memahami rute jalan di Pulau Bintan maupun Kota Tanjungpinang.'
   },
   {
-    question: 'Apakah tarif yang tercantum sudah termasuk bahan bakar atau pengemudi?',
-    answer: 'Tarif yang tercantum pada katalog adalah tarif sewa harian kendaraan. Detail mengenai bahan bakar, pengemudi, atau biaya operasional lainnya dapat disesuaikan dan dikonfirmasi langsung dengan admin sesuai opsi paket yang Anda pilih.'
+    question: 'Berapa durasi minimal penyewaan mobil?',
+    answer: 'Durasi sewa harian minimal adalah 1 hari (24 jam untuk sistem lepas kunci, atau full-day sesuai kesepakatan pemakaian dengan driver). Untuk kebutuhan sewa jangka panjang (mingguan atau bulanan), silakan hubungi admin kami.'
   },
   {
-    question: 'Bagaimana mekanisme serah terima kendaraan?',
-    answer: 'Serah terima dilakukan dengan pengecekan kondisi fisik kendaraan dan kelengkapan dokumen bersama di lokasi garasi atau titik temu yang telah disepakati bersama admin.'
+    question: 'Apakah durasi sewa mobil bisa diperpanjang?',
+    answer: 'Bisa, selama unit kendaraan yang sedang Anda gunakan belum dipesan oleh penyewa lain pada jadwal berikutnya. Harap informasikan rencana perpanjangan kepada admin sesegera mungkin sebelum masa sewa berakhir.'
   },
   {
-    question: 'Kapan kepastian booking dianggap resmi?',
-    answer: 'Kepastian jadwal dan ketersediaan armada dinyatakan resmi setelah konfirmasi langsung dan persetujuan dari admin rental melalui WhatsApp.'
+    question: 'Apakah paket tour HiAce sudah termasuk supir dan BBM?',
+    answer: 'Ya, khusus Paket Tour & Charter Toyota HiAce 15 Kursi, tarif yang tercantum sudah termasuk unit HiAce, supir, dan bahan bakar minyak (BBM) untuk rute wisata yang disepakati.'
+  },
+  {
+    question: 'Bagaimana cara melakukan pemesanan armada atau paket tour?',
+    answer: 'Pilih unit kendaraan atau paket tour yang Anda inginkan di halaman website ini, lalu klik tombol WhatsApp. Anda akan langsung terhubung dengan admin 3 Putri Mulya untuk konfirmasi tanggal, ketersediaan unit, dan detail penjemputan.'
   }
 ]
 
@@ -37,7 +41,7 @@ const toggleFaq = (index: number) => {
 </script>
 
 <template>
-  <section id="faq" class="py-10 sm:py-14 bg-white border-t border-slate-200">
+  <section id="faq" class="py-12 sm:py-16 bg-white border-t border-slate-200 scroll-mt-16">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center max-w-2xl mx-auto mb-10">
         <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">

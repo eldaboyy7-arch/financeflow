@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 import { siteConfig } from '@/config/site'
 import { generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
 
@@ -19,7 +20,7 @@ const currentYear = new Date().getFullYear()
             </div>
             <div>
               <span class="text-base font-extrabold text-white block leading-tight">{{ siteConfig.rentalName }}</span>
-              <span class="text-[10px] text-slate-400 font-normal">Rental &amp; Sewa Mobil</span>
+              <span class="text-[10px] text-slate-400 font-normal">Rental Mobil &amp; Tour Bintan</span>
             </div>
           </div>
           <p class="text-slate-400 leading-relaxed max-w-sm mb-4">
@@ -34,9 +35,11 @@ const currentYear = new Date().getFullYear()
         <div>
           <h4 class="text-slate-200 font-bold uppercase tracking-wider text-[11px] mb-3">Tautan Cepat</h4>
           <ul class="space-y-2">
-            <li><a href="#katalog" class="hover:text-white transition-colors">Katalog Armada</a></li>
-            <li><a href="#faq" class="hover:text-white transition-colors">Tanya Jawab (FAQ)</a></li>
-            <li><a :href="waUrl" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors">Konsultasi WhatsApp</a></li>
+            <li><a href="/#cara-perjalanan" class="hover:text-white transition-colors">Pilihan Layanan</a></li>
+            <li><a href="/#armada" class="hover:text-white transition-colors">Pilihan Armada</a></li>
+            <li><RouterLink to="/paket-tour-bintan" class="hover:text-white transition-colors">Paket Tour HiAce</RouterLink></li>
+            <li><a href="/#inspirasi" class="hover:text-white transition-colors">Inspirasi Perjalanan</a></li>
+            <li><a href="/#faq" class="hover:text-white transition-colors">Pertanyaan Umum (FAQ)</a></li>
           </ul>
         </div>
 

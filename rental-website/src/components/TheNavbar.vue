@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { siteConfig } from '@/config/site'
-import { rentalPackages, rentalRequirements } from '@/config/rentalPolicy'
 import { generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
 
 const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, siteConfig.rentalName))
-const hasPackages = computed(() => rentalPackages.length > 0)
-const hasTerms = computed(() => rentalRequirements.length > 0)
-const hasLocation = computed(() => Boolean(siteConfig.rentalAddress || siteConfig.rentalMapsUrl))
 </script>
 
 <template>
@@ -28,19 +24,18 @@ const hasLocation = computed(() => Boolean(siteConfig.rentalAddress || siteConfi
               {{ siteConfig.rentalName }}
             </span>
             <span class="text-[11px] text-slate-500 font-medium block leading-none mt-0.5">
-              {{ siteConfig.rentalCity || 'Rental & Sewa Mobil' }}
+              Rental Mobil &amp; Tour Bintan
             </span>
           </div>
         </RouterLink>
 
         <!-- Desktop Navigation -->
-        <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
-          <RouterLink to="/#katalog" class="hover:text-blue-600 transition-colors">Armada</RouterLink>
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+          <RouterLink to="/#cara-perjalanan" class="hover:text-blue-600 transition-colors">Layanan</RouterLink>
+          <RouterLink to="/#armada" class="hover:text-blue-600 transition-colors">Armada</RouterLink>
           <RouterLink to="/paket-tour-bintan" class="text-blue-600 font-semibold hover:text-blue-700 transition-colors">Paket Tour</RouterLink>
-          <RouterLink v-if="hasPackages" to="/#paket" class="hover:text-blue-600 transition-colors">Paket Sewa</RouterLink>
-          <RouterLink v-if="hasTerms" to="/#syarat" class="hover:text-blue-600 transition-colors">Ketentuan</RouterLink>
-          <RouterLink v-if="hasLocation" to="/#lokasi" class="hover:text-blue-600 transition-colors">Lokasi</RouterLink>
-          <RouterLink to="/#faq" class="hover:text-blue-600 transition-colors">Bantuan</RouterLink>
+          <RouterLink to="/#inspirasi" class="hover:text-blue-600 transition-colors">Inspirasi</RouterLink>
+          <RouterLink to="/#faq" class="hover:text-blue-600 transition-colors">FAQ</RouterLink>
         </nav>
 
         <!-- WhatsApp CTA -->
