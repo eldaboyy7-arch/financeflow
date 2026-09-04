@@ -15,7 +15,7 @@ const hasLocation = computed(() => Boolean(siteConfig.rentalAddress || siteConfi
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Brand Logo & Name -->
-        <a href="#" class="flex items-center gap-3 group">
+        <RouterLink to="/" class="flex items-center gap-3 group">
           <div class="w-10 h-10 rounded-xl bg-slate-950 flex items-center justify-center p-1 border border-amber-500/20 shadow-sm shrink-0 overflow-hidden">
             <img
               src="/images/logo-3pm.png"
@@ -31,15 +31,16 @@ const hasLocation = computed(() => Boolean(siteConfig.rentalAddress || siteConfi
               {{ siteConfig.rentalCity || 'Rental & Sewa Mobil' }}
             </span>
           </div>
-        </a>
+        </RouterLink>
 
         <!-- Desktop Navigation -->
-        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-          <a href="#katalog" class="hover:text-blue-600 transition-colors">Armada</a>
-          <a v-if="hasPackages" href="#paket" class="hover:text-blue-600 transition-colors">Paket Sewa</a>
-          <a v-if="hasTerms" href="#syarat" class="hover:text-blue-600 transition-colors">Ketentuan</a>
-          <a v-if="hasLocation" href="#lokasi" class="hover:text-blue-600 transition-colors">Lokasi</a>
-          <a href="#faq" class="hover:text-blue-600 transition-colors">Bantuan</a>
+        <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
+          <RouterLink to="/#katalog" class="hover:text-blue-600 transition-colors">Armada</RouterLink>
+          <RouterLink to="/paket-tour-bintan" class="text-blue-600 font-semibold hover:text-blue-700 transition-colors">Paket Tour</RouterLink>
+          <RouterLink v-if="hasPackages" to="/#paket" class="hover:text-blue-600 transition-colors">Paket Sewa</RouterLink>
+          <RouterLink v-if="hasTerms" to="/#syarat" class="hover:text-blue-600 transition-colors">Ketentuan</RouterLink>
+          <RouterLink v-if="hasLocation" to="/#lokasi" class="hover:text-blue-600 transition-colors">Lokasi</RouterLink>
+          <RouterLink to="/#faq" class="hover:text-blue-600 transition-colors">Bantuan</RouterLink>
         </nav>
 
         <!-- WhatsApp CTA -->
