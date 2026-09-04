@@ -44,7 +44,7 @@ const closeVideoModal = () => {
         </div>
         <div class="text-xs text-slate-500 flex items-center gap-1.5">
           <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span>Data langsung dari sistem operasional garasi</span>
+          <span>Informasi ketersediaan armada diperbarui berkala</span>
         </div>
       </div>
 
@@ -176,27 +176,27 @@ const closeVideoModal = () => {
           <!-- Card Content -->
           <div class="p-2.5 sm:p-4 flex-1 flex flex-col justify-between">
             <div>
-              <!-- Brand & Model Year -->
-              <div class="text-[11px] sm:text-xs text-slate-500 font-medium tracking-wide">
-                <span v-if="car.brand">{{ car.brand }} &bull; </span>
-                <span>Tahun {{ car.model_year }}</span>
-              </div>
-
-              <!-- Car Name -->
-              <h3 class="text-xs sm:text-base font-bold text-slate-900 leading-snug line-clamp-1 mt-0.5">
+              <!-- 1. Car Name (Primary Identifier) -->
+              <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug line-clamp-1">
                 {{ car.name }}
               </h3>
 
-              <!-- Compact Specs Pill -->
-              <div class="flex items-center gap-2 text-[11px] sm:text-xs text-slate-500 mt-2">
-                <span class="inline-flex items-center gap-1 bg-slate-100 px-1.5 py-0.5 rounded">
+              <!-- 2. Year & Brand -->
+              <div class="text-[11px] sm:text-xs text-slate-500 font-medium tracking-wide mt-0.5">
+                <span>Tahun {{ car.model_year }}</span>
+                <span v-if="car.brand"> &bull; {{ car.brand }}</span>
+              </div>
+
+              <!-- 3. Key Specifications -->
+              <div class="flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-600 mt-2.5">
+                <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded font-medium">
                   <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                   </svg>
-                  {{ car.capacity }} Seat
+                  {{ car.capacity }} Kursi
                 </span>
 
-                <span class="inline-flex items-center gap-1 bg-slate-100 px-1.5 py-0.5 rounded">
+                <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded font-medium">
                   {{ car.transmission_label }}
                 </span>
               </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useFleet } from '@/composables/useFleet'
 import TheNavbar from '@/components/TheNavbar.vue'
 import HeroSection from '@/components/HeroSection.vue'
@@ -14,6 +14,7 @@ import TheFooter from '@/components/TheFooter.vue'
 import FloatingWhatsappBar from '@/components/FloatingWhatsappBar.vue'
 
 const {
+  vehicles,
   filteredVehicles,
   loading,
   error,
@@ -22,6 +23,11 @@ const {
   stats,
   fetchVehicles
 } = useFleet()
+
+// Unit unggulan hero yang diambil langsung dari armada live (utamakan yang tersedia)
+const featuredVehicle = computed(() => {
+  return vehicles.value.find(v => v.status === 'available') || vehicles.value[0] || null
+})
 
 onMounted(() => {
   fetchVehicles()
@@ -41,7 +47,7 @@ const resetFilters = () => {
     <!-- Main Content -->
     <main class="flex-1">
       <!-- Hero Section -->
-      <HeroSection />
+      <HeroSection :featured-vehicle="featuredVehicle" />
 
       <!-- Fleet Catalog & Filter -->
       <FleetCatalog
