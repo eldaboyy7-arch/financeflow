@@ -252,26 +252,44 @@ class VehicleController extends Controller
             $path = trim($validated['photo_path']);
 
             // Reject directory traversal
-            if (str_contains($path, '..') || str_starts_with($path, '/') || str_starts_with($path, '\\')) {
+            if (str_contains($path, '..') || str_starts_with($path, '\\')) {
                 abort(422, 'Format photo_path tidak valid atau terdeteksi directory traversal.');
             }
 
-            // Must match format: {user_id}/{vehicle_id_or_new}/{filename}.{ext}
-            if (!preg_match('/^(\d+)\/([a-zA-Z0-9_\-]+)\/[a-zA-Z0-9_\-]+\.(jpg|jpeg|png|webp|avif)$/i', $path, $matches)) {
-                abort(422, 'Format photo_path harus sesuai pola: {user_id}/{vehicle_id}/{filename}.ext');
-            }
+            $isUnchangedExisting = $vehicle && ($path === trim($vehicle->photo_path ?? ''));
+            $isFullUrl = str_starts_with($path, 'http://') || str_starts_with($path, 'https://');
 
-            $pathUserId = (int) $matches[1];
-            $pathVehicleId = $matches[2];
+            // If photo is unchanged or is an existing valid storage URL, allow it
+            if ($isUnchangedExisting) {
+                // Keep unchanged photo path
+            } elseif ($isFullUrl) {
+                // Allow valid URLs from storage or server
+                if (filter_var($path, FILTER_VALIDATE_URL) === false) {
+                    abort(422, 'URL photo_path tidak valid.');
+                }
+            } else {
+                // Reject leading slash for relative storage keys
+                if (str_starts_with($path, '/')) {
+                    abort(422, 'Format photo_path tidak valid atau terdeteksi directory traversal.');
+                }
 
-            // Tenant isolation: folder pertama WAJIB sama dengan Auth::id()
-            if ($pathUserId !== (int) Auth::id()) {
-                abort(403, 'Akses ditolak: Anda tidak memiliki izin untuk menggunakan path foto milik user lain.');
-            }
+                // Must match Supabase object key format: {user_id}/{vehicle_id_or_new}/{filename}.{ext}
+                if (!preg_match('/^(\d+)\/([a-zA-Z0-9_\-]+)\/[a-zA-Z0-9_\-]+\.(jpg|jpeg|png|webp|avif)$/i', $path, $matches)) {
+                    abort(422, 'Format photo_path harus sesuai pola: {user_id}/{vehicle_id}/{filename}.ext');
+                }
 
-            // Pada update kendaraan, vehicle_id pada path tidak boleh milik kendaraan lain
-            if ($vehicle && is_numeric($pathVehicleId) && (int) $pathVehicleId !== (int) $vehicle->id) {
-                abort(403, 'Akses ditolak: photo_path tidak sesuai dengan ID kendaraan ini.');
+                $pathUserId = (int) $matches[1];
+                $pathVehicleId = $matches[2];
+
+                // Tenant isolation: folder pertama WAJIB sama dengan Auth::id()
+                if ($pathUserId !== (int) Auth::id()) {
+                    abort(403, 'Akses ditolak: Anda tidak memiliki izin untuk menggunakan path foto milik user lain.');
+                }
+
+                // Pada update kendaraan, vehicle_id pada path tidak boleh milik kendaraan lain
+                if ($vehicle && is_numeric($pathVehicleId) && (int) $pathVehicleId !== (int) $vehicle->id) {
+                    abort(403, 'Akses ditolak: photo_path tidak sesuai dengan ID kendaraan ini.');
+                }
             }
         }
 

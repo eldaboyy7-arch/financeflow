@@ -269,4 +269,33 @@ class FleetSecurityAndIsolationTest extends TestCase
         // Transaction count must be exactly identical
         $this->assertEquals($initialTxCount, Transaction::count());
     }
+
+    /**
+     * Test user can update status to 'maintenance' (di bengkel) with existing photo_path.
+     */
+    public function test_user_can_update_vehicle_status_to_maintenance_with_existing_photo_path(): void
+    {
+        Sanctum::actingAs($this->userA);
+
+        $vehicle = Vehicle::create([
+            'user_id'    => $this->userA->id,
+            'name'       => 'Toyota Agya Kuning',
+            'daily_rate' => 200000,
+            'status'     => 'available',
+            'photo_path' => 'http://127.0.0.1:8000/storage/fleet/agya-kuning-bp1496mm.jpg',
+        ]);
+
+        // Simulating the edit form submission from frontend:
+        // status changed to maintenance, photo_path sends existing value
+        $response = $this->putJson("/api/vehicles/{$vehicle->id}", [
+            'name'       => 'Toyota Agya Kuning',
+            'status'     => 'maintenance',
+            'daily_rate' => 200000,
+            'photo_path' => 'http://127.0.0.1:8000/storage/fleet/agya-kuning-bp1496mm.jpg',
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertEquals('maintenance', $vehicle->fresh()->status);
+        $this->assertEquals('http://127.0.0.1:8000/storage/fleet/agya-kuning-bp1496mm.jpg', $vehicle->fresh()->photo_path);
+    }
 }
