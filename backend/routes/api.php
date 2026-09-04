@@ -15,7 +15,15 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\InsightController;
 use App\Http\Controllers\Api\AiAdvisorController;
 use App\Http\Controllers\Api\VehicleController;
+use App\Http\Controllers\Api\PublicFleetController;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Public Fleet Catalog (Read-only, no auth, rate-limited)
+|--------------------------------------------------------------------------
+*/
+Route::get('/public/fleet', [PublicFleetController::class, 'index'])->middleware('throttle:60,1');
 
 /*
 |--------------------------------------------------------------------------

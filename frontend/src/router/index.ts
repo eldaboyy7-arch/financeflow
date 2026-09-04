@@ -13,9 +13,11 @@ const router = createRouter({
     },
     {
       path: '/daftar',
-      name: 'register',
-      component: () => import('@/pages/auth/RegisterPage.vue'),
-      meta: { guest: true, depth: 1 },
+      redirect: '/login',
+    },
+    {
+      path: '/register',
+      redirect: '/login',
     },
     {
       path: '/lupa-password',

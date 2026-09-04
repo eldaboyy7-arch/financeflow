@@ -21,11 +21,39 @@ class Vehicle extends Model
         'daily_rate',
         'color',
         'notes',
+        'photo_path',
+        'video_url',
+        'video_path',
+        'transmission',
+        'capacity',
+        'fuel_type',
+        'description',
     ];
 
     protected $casts = [
         'daily_rate' => 'decimal:2',
+        'capacity'   => 'integer',
     ];
+
+    protected $appends = [
+        'photo_url',
+        'safe_video_embed_url',
+    ];
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return app(\App\Services\SupabaseStorageService::class)->getPublicUrl($this->photo_path);
+    }
+
+    public function getSafeVideoEmbedUrlAttribute(): ?string
+    {
+        return app(\App\Services\VideoEmbedService::class)->toSafeEmbedUrl($this->video_url);
+    }
+
+    public function getVideoStorageUrlAttribute(): ?string
+    {
+        return app(\App\Services\SupabaseStorageService::class)->getPublicUrl($this->video_path);
+    }
 
     public function user(): BelongsTo
     {

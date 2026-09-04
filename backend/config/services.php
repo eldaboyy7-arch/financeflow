@@ -33,11 +33,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    'slack' => [
-        'notifications' => [
-            'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
-            'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
-        ],
+    'supabase' => [
+        'url' => env('SUPABASE_URL', ''),
+        'service_role_key' => env('SUPABASE_SERVICE_ROLE_KEY', ''),
+        'storage_bucket' => env('SUPABASE_STORAGE_BUCKET', 'fleet'),
     ],
 
 ];

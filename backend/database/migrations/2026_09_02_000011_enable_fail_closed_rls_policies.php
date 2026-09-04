@@ -10,6 +10,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (DB::getDriverName() !== 'pgsql') {
+            return;
+        }
+
         // 1. Create Hardened Identity Resolver Function (Safe search_path, STABLE, SECURITY DEFINER)
         DB::unprepared("
             CREATE OR REPLACE FUNCTION public.requesting_user_id() 
@@ -299,6 +303,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (DB::getDriverName() !== 'pgsql') {
+            return;
+        }
+
         $policies = [
             'accounts'               => ['accounts_isolation_policy'],
             'goals'                  => ['goals_isolation_policy'],

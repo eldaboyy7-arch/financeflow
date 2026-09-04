@@ -288,15 +288,15 @@ function handleSocialLogin(provider: string) {
         </button>
       </form>
 
-      <!-- Footer Register CTA -->
-      <div class="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
-        Belum punya akun?
-        <RouterLink
-          to="/daftar"
-          class="font-bold text-[#0066FF] hover:text-[#0052CC] dark:text-blue-400 dark:hover:text-blue-300 transition-colors ml-1"
-        >
-          Daftar sekarang
-        </RouterLink>
+      <!-- Private System Notice (Register Hidden) -->
+      <div class="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800/80 text-center text-xs text-slate-400">
+        <div class="inline-flex items-center gap-1.5 font-medium text-slate-500 dark:text-slate-400">
+          <LockClosedIcon class="w-3.5 h-3.5" />
+          <span>Sistem Manajemen Internal Privat</span>
+        </div>
+        <p class="text-[11px] text-slate-400/80 mt-0.5">
+          Akses dibatasi khusus pengguna terdaftar
+        </p>
       </div>
     </AuthLayout>
   </div>

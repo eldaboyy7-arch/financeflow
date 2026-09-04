@@ -20,6 +20,15 @@ export interface Vehicle {
   daily_rate: number
   color: string
   notes: string | null
+  photo_path: string | null
+  photo_url: string | null
+  video_url: string | null
+  video_path: string | null
+  safe_video_embed_url: string | null
+  transmission: 'matic' | 'manual'
+  capacity: number
+  fuel_type: 'bensin' | 'diesel'
+  description: string | null
   created_at: string
   summary: VehicleSummary
 }

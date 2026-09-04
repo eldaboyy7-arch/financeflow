@@ -2,6 +2,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useVehiclesStore, type Vehicle } from '@/stores/vehicles'
 import { useUiStore } from '@/stores/ui'
+import { useAuthStore } from '@/stores/auth'
+import { uploadFleetPhoto } from '@/services/supabaseStorage'
 import { useFormatCurrency } from '@/composables/useFormatCurrency'
 import MoneySpinner from '@/components/MoneySpinner.vue'
 import CurrencyInput from '@/components/CurrencyInput.vue'
@@ -13,11 +15,16 @@ import {
   XMarkIcon,
   TruckIcon,
   CheckIcon,
-  MagnifyingGlassIcon
+  MagnifyingGlassIcon,
+  CameraIcon,
+  FilmIcon,
+  ArrowPathIcon,
+  PhotoIcon
 } from '@heroicons/vue/24/outline'
 
 const store = useVehiclesStore()
 const uiStore = useUiStore()
+const authStore = useAuthStore()
 const { formatCurrency } = useFormatCurrency()
 
 const searchQuery = ref('')
@@ -67,6 +74,16 @@ const presetColors = [
   '#DC2626', '#475569', '#0284C7', '#0F172A'
 ]
 
+const transmissionOptions: SelectOption[] = [
+  { value: 'matic', label: 'Matic (Otomatis)' },
+  { value: 'manual', label: 'Manual' },
+]
+
+const fuelOptions: SelectOption[] = [
+  { value: 'bensin', label: 'Bensin' },
+  { value: 'diesel', label: 'Diesel' },
+]
+
 const defaultForm = {
   name: '',
   plate_number: '',
@@ -75,9 +92,18 @@ const defaultForm = {
   status: 'available' as 'available' | 'rented' | 'maintenance',
   daily_rate: 0 as number,
   color: '#2563EB',
+  transmission: 'matic' as 'matic' | 'manual',
+  capacity: 7,
+  fuel_type: 'bensin' as 'bensin' | 'diesel',
+  description: '',
+  photo_path: '',
+  photo_url: '',
+  video_url: '',
   notes: '',
 }
 const form = ref({ ...defaultForm })
+const uploadingPhoto = ref(false)
+const photoFileInput = ref<HTMLInputElement | null>(null)
 
 onMounted(() => store.fetchVehicles())
 
@@ -98,10 +124,45 @@ function openEdit(v: Vehicle) {
     status: v.status,
     daily_rate: Number(v.daily_rate) || 0,
     color: v.color || '#2563EB',
+    transmission: v.transmission || 'matic',
+    capacity: Number(v.capacity) || 7,
+    fuel_type: v.fuel_type || 'bensin',
+    description: v.description ?? '',
+    photo_path: v.photo_path ?? '',
+    photo_url: v.photo_url ?? '',
+    video_url: v.video_url ?? '',
     notes: v.notes ?? '',
   }
   modalError.value = ''
   showModal.value = true
+}
+
+async function handlePhotoChange(e: Event) {
+  const target = e.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) return
+
+  uploadingPhoto.value = true
+  modalError.value = ''
+
+  try {
+    const userId = authStore.user?.id || 1
+    const vehicleId = editingId.value ?? 'new'
+    const result = await uploadFleetPhoto(file, userId, vehicleId)
+    form.value.photo_path = result.path
+    form.value.photo_url = result.url
+    uiStore.showToast('Foto berhasil diunggah ke Storage!')
+  } catch (err: any) {
+    modalError.value = err.message || 'Gagal mengunggah foto ke storage.'
+  } finally {
+    uploadingPhoto.value = false
+    if (photoFileInput.value) photoFileInput.value.value = ''
+  }
+}
+
+function removePhoto() {
+  form.value.photo_path = ''
+  form.value.photo_url = ''
 }
 
 async function submitVehicle() {
@@ -313,12 +374,20 @@ function statusBadge(s: string) {
               </div>
             </div>
 
-            <!-- Vehicle Visual Avatar (Marketplace Showcase) -->
+            <!-- Vehicle Visual Avatar or Real Photo (Marketplace Showcase) -->
             <div
-              class="w-full h-16 sm:h-20 rounded-xl flex items-center justify-center mb-2 transition-transform group-hover:scale-105"
+              class="w-full h-20 sm:h-24 rounded-xl overflow-hidden mb-2 transition-transform group-hover:scale-[1.02] flex items-center justify-center relative bg-slate-100 dark:bg-slate-800"
               :style="{ backgroundColor: (v.color || '#2563EB') + '15' }"
             >
-              <TruckIcon class="w-8 h-8 sm:w-10 sm:h-10" :style="{ color: v.color || '#2563EB' }" />
+              <img
+                v-if="v.photo_url"
+                :src="v.photo_url"
+                :alt="v.name"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover"
+              />
+              <TruckIcon v-else class="w-8 h-8 sm:w-10 sm:h-10" :style="{ color: v.color || '#2563EB' }" />
             </div>
 
             <!-- Vehicle Details -->
@@ -329,9 +398,14 @@ function statusBadge(s: string) {
               <h3 class="font-bold text-slate-900 dark:text-white text-xs sm:text-sm truncate leading-snug">
                 {{ v.name }}
               </h3>
-              <p v-if="v.model_year" class="text-[10px] text-slate-400">
-                Tahun {{ v.model_year }}
-              </p>
+              <div class="flex items-center gap-1.5 flex-wrap pt-0.5">
+                <span v-if="v.transmission" class="text-[9px] px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-700/70 text-slate-600 dark:text-slate-300 font-medium">
+                  {{ v.transmission === 'matic' ? 'Matic' : 'Manual' }}
+                </span>
+                <span v-if="v.capacity" class="text-[9px] px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-700/70 text-slate-600 dark:text-slate-300 font-medium">
+                  {{ v.capacity }} Seat
+                </span>
+              </div>
             </div>
 
           <!-- Marketplace Daily Rate Price Tag -->
@@ -424,6 +498,113 @@ function statusBadge(s: string) {
               </div>
             </div>
 
+            <!-- Foto Armada (Direct Upload to Supabase Storage) -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
+                Foto Kendaraan <span class="text-slate-400 font-normal">(Direct Upload)</span>
+              </label>
+
+              <!-- Photo Preview if exists -->
+              <div v-if="form.photo_url" class="relative mb-2 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 aspect-[16/9] bg-slate-100 dark:bg-slate-800">
+                <img :src="form.photo_url" alt="Foto Mobil" class="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  @click="removePhoto"
+                  class="absolute top-2 right-2 p-1.5 rounded-lg bg-black/60 hover:bg-black/80 text-white text-xs backdrop-blur-sm transition-all flex items-center gap-1"
+                >
+                  <TrashIcon class="w-3.5 h-3.5 text-rose-300" />
+                  <span class="text-[10px]">Hapus Foto</span>
+                </button>
+              </div>
+
+              <!-- Upload Button & File Input -->
+              <div class="flex items-center gap-2">
+                <input
+                  ref="photoFileInput"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/avif"
+                  class="hidden"
+                  @change="handlePhotoChange"
+                />
+                <button
+                  type="button"
+                  :disabled="uploadingPhoto"
+                  @click="photoFileInput?.click()"
+                  class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-all disabled:opacity-60"
+                >
+                  <ArrowPathIcon v-if="uploadingPhoto" class="w-4 h-4 animate-spin text-slate-500" />
+                  <CameraIcon v-else class="w-4 h-4 text-slate-500" />
+                  <span>{{ uploadingPhoto ? 'Mengunggah ke Storage...' : (form.photo_url ? 'Ganti Foto' : 'Unggah Foto Mobil') }}</span>
+                </button>
+                <span class="text-[11px] text-slate-400">Maks. 3 MB (JPG, PNG, WebP)</span>
+              </div>
+            </div>
+
+            <!-- Spesifikasi Publik: Transmisi, Kursi, BBM -->
+            <div class="grid grid-cols-3 gap-2.5">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Transmisi</label>
+                <SelectInput
+                  v-model="form.transmission"
+                  :options="transmissionOptions"
+                  placeholder="Transmisi"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Kapasitas</label>
+                <div class="relative">
+                  <input
+                    v-model.number="form.capacity"
+                    type="number"
+                    min="1"
+                    max="50"
+                    class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-500 focus:bg-white dark:focus:bg-slate-800 transition-all"
+                  />
+                  <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none">Seat</span>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Bahan Bakar</label>
+                <SelectInput
+                  v-model="form.fuel_type"
+                  :options="fuelOptions"
+                  placeholder="BBM"
+                />
+              </div>
+            </div>
+
+            <!-- Media Video: YouTube / TikTok / Reels -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
+                Link Video Review <span class="text-slate-400 font-normal">(YouTube / TikTok / IG Reels)</span>
+              </label>
+              <div class="relative">
+                <input
+                  v-model="form.video_url"
+                  type="url"
+                  class="w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 text-xs focus:outline-none focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-500 focus:bg-white dark:focus:bg-slate-800 transition-all"
+                  placeholder="https://www.youtube.com/watch?v=..."
+                />
+                <FilmIcon class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1">Tempel link resmi YouTube, TikTok, atau Instagram</p>
+            </div>
+
+            <!-- Deskripsi Publik Website -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
+                Deskripsi Publik <span class="text-slate-400 font-normal">(Tampil di Website Rental)</span>
+              </label>
+              <textarea
+                v-model="form.description"
+                rows="2"
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-500 focus:bg-white dark:focus:bg-slate-800 transition-all"
+                placeholder="cth. Kondisi prima, AC dingin, kabin wangi, bebas asap rokok, gratis charger HP..."
+              ></textarea>
+            </div>
+
             <!-- Warna Label -->
             <div>
               <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-2">Warna Identitas Armada</label>
@@ -444,10 +625,10 @@ function statusBadge(s: string) {
               </div>
             </div>
 
-            <!-- Catatan -->
+            <!-- Catatan Internal -->
             <div>
               <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
-                Catatan <span class="text-slate-400 font-normal">(opsional)</span>
+                Catatan Internal <span class="text-slate-400 font-normal">(Rahasia / Hanya Admin)</span>
               </label>
               <textarea
                 v-model="form.notes"
@@ -461,21 +642,23 @@ function statusBadge(s: string) {
               {{ modalError }}
             </div>
 
-            <!-- Action Buttons: Neutral Dark Theme (No Purple!) -->
+            <!-- Action Buttons: Race Condition Protected (disabled during submit or upload) -->
             <div class="flex gap-2.5 pt-2">
               <button
                 type="button"
                 @click="showModal = false"
-                class="flex-1 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-semibold transition-all"
+                :disabled="submitting || uploadingPhoto"
+                class="flex-1 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-semibold transition-all disabled:opacity-60"
               >
                 Batal
               </button>
               <button
                 type="submit"
-                :disabled="submitting"
-                class="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-sm font-semibold transition-all shadow-sm disabled:opacity-60"
+                :disabled="submitting || uploadingPhoto"
+                class="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-sm font-semibold transition-all shadow-sm disabled:opacity-60 flex items-center justify-center gap-2"
               >
-                {{ submitting ? 'Menyimpan...' : (editingId ? 'Simpan Perubahan' : 'Simpan Kendaraan') }}
+                <ArrowPathIcon v-if="submitting" class="w-4 h-4 animate-spin" />
+                <span>{{ submitting ? 'Menyimpan...' : (editingId ? 'Simpan Perubahan' : 'Simpan Kendaraan') }}</span>
               </button>
             </div>
           </form>

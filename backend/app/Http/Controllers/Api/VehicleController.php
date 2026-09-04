@@ -34,16 +34,7 @@ class VehicleController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'name'        => 'required|string|max:255',
-            'plate_number'=> 'nullable|string|max:20',
-            'brand'       => 'nullable|string|max:100',
-            'model_year'  => 'nullable|string|max:10',
-            'status'      => 'nullable|in:available,rented,maintenance',
-            'daily_rate'  => 'nullable|numeric|min:0',
-            'color'       => 'nullable|string|max:7',
-            'notes'       => 'nullable|string',
-        ]);
+        $validated = $this->validateVehicleData($request);
 
         $vehicle = Vehicle::create([
             ...$validated,
@@ -72,24 +63,38 @@ class VehicleController extends Controller
     }
 
     /**
-     * Update a vehicle.
+     * Update a vehicle with safe distributed photo replacement.
      */
     public function update(Request $request, Vehicle $vehicle): JsonResponse
     {
         $this->authorizeVehicle($vehicle);
 
-        $validated = $request->validate([
-            'name'        => 'sometimes|string|max:255',
-            'plate_number'=> 'nullable|string|max:20',
-            'brand'       => 'nullable|string|max:100',
-            'model_year'  => 'nullable|string|max:10',
-            'status'      => 'nullable|in:available,rented,maintenance',
-            'daily_rate'  => 'nullable|numeric|min:0',
-            'color'       => 'nullable|string|max:7',
-            'notes'       => 'nullable|string',
-        ]);
+        $validated = $this->validateVehicleData($request, $vehicle);
 
-        $vehicle->update($validated);
+        $oldPhotoPath = null;
+        $shouldDeleteOldPhoto = false;
+
+        // DB Transaction ensures local database consistency
+        DB::transaction(function () use ($vehicle, $validated, &$oldPhotoPath, &$shouldDeleteOldPhoto) {
+            $locked = Vehicle::where('id', $vehicle->id)
+                ->where('user_id', Auth::id())
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $oldPhotoPath = $locked->photo_path;
+
+            $locked->update($validated);
+
+            // Flag old photo for deletion if path changed and old path exists
+            if (array_key_exists('photo_path', $validated) && $validated['photo_path'] !== $oldPhotoPath && !empty($oldPhotoPath)) {
+                $shouldDeleteOldPhoto = true;
+            }
+        });
+
+        // Outside DB transaction: Attempt cleanup of old photo in Supabase Storage
+        if ($shouldDeleteOldPhoto && $oldPhotoPath) {
+            app(\App\Services\SupabaseStorageService::class)->deleteFile('fleet', $oldPhotoPath);
+        }
 
         return response()->json([
             'message' => 'Kendaraan berhasil diperbarui.',
@@ -98,15 +103,22 @@ class VehicleController extends Controller
     }
 
     /**
-     * Delete a vehicle.
+     * Delete a vehicle and its associated storage photo.
      */
     public function destroy(Vehicle $vehicle): JsonResponse
     {
         $this->authorizeVehicle($vehicle);
 
-        // Detach transactions (set vehicle_id null) instead of blocking delete
+        $photoPath = $vehicle->photo_path;
+
+        // Detach transactions instead of blocking delete
         $vehicle->transactions()->update(['vehicle_id' => null]);
         $vehicle->delete();
+
+        // Cleanup storage file outside DB
+        if (!empty($photoPath)) {
+            app(\App\Services\SupabaseStorageService::class)->deleteFile('fleet', $photoPath);
+        }
 
         return response()->json(['message' => 'Kendaraan berhasil dihapus.']);
     }
@@ -215,6 +227,65 @@ class VehicleController extends Controller
 
     // ── Private helpers ────────────────────────────────────────────────
 
+    private function validateVehicleData(Request $request, ?Vehicle $vehicle = null): array
+    {
+        $validated = $request->validate([
+            'name'         => ($vehicle ? 'sometimes|' : '') . 'required|string|max:255',
+            'plate_number' => 'nullable|string|max:20',
+            'brand'        => 'nullable|string|max:100',
+            'model_year'   => 'nullable|string|max:10',
+            'status'       => 'nullable|in:available,rented,maintenance',
+            'daily_rate'   => 'nullable|numeric|min:0',
+            'color'        => 'nullable|string|max:7',
+            'notes'        => 'nullable|string',
+            'photo_path'   => 'nullable|string|max:500',
+            'video_url'    => 'nullable|string|max:500',
+            'video_path'   => 'nullable|string|max:500',
+            'transmission' => 'nullable|in:matic,manual',
+            'capacity'     => 'nullable|integer|min:1|max:100',
+            'fuel_type'    => 'nullable|in:bensin,diesel',
+            'description'  => 'nullable|string|max:2000',
+        ]);
+
+        // 1. Strict Tenant-Aware Photo Path Validation
+        if (!empty($validated['photo_path'])) {
+            $path = trim($validated['photo_path']);
+
+            // Reject directory traversal
+            if (str_contains($path, '..') || str_starts_with($path, '/') || str_starts_with($path, '\\')) {
+                abort(422, 'Format photo_path tidak valid atau terdeteksi directory traversal.');
+            }
+
+            // Must match format: {user_id}/{vehicle_id_or_new}/{filename}.{ext}
+            if (!preg_match('/^(\d+)\/([a-zA-Z0-9_\-]+)\/[a-zA-Z0-9_\-]+\.(jpg|jpeg|png|webp|avif)$/i', $path, $matches)) {
+                abort(422, 'Format photo_path harus sesuai pola: {user_id}/{vehicle_id}/{filename}.ext');
+            }
+
+            $pathUserId = (int) $matches[1];
+            $pathVehicleId = $matches[2];
+
+            // Tenant isolation: folder pertama WAJIB sama dengan Auth::id()
+            if ($pathUserId !== (int) Auth::id()) {
+                abort(403, 'Akses ditolak: Anda tidak memiliki izin untuk menggunakan path foto milik user lain.');
+            }
+
+            // Pada update kendaraan, vehicle_id pada path tidak boleh milik kendaraan lain
+            if ($vehicle && is_numeric($pathVehicleId) && (int) $pathVehicleId !== (int) $vehicle->id) {
+                abort(403, 'Akses ditolak: photo_path tidak sesuai dengan ID kendaraan ini.');
+            }
+        }
+
+        // 2. Strict Video URL Validation
+        if (!empty($validated['video_url'])) {
+            $videoService = app(\App\Services\VideoEmbedService::class);
+            if (!$videoService->isValidPlatformUrl($validated['video_url'])) {
+                abort(422, 'URL video harus berasal dari platform yang diizinkan (YouTube, TikTok, atau Instagram).');
+            }
+        }
+
+        return $validated;
+    }
+
     private function authorizeVehicle(Vehicle $vehicle): void
     {
         if ($vehicle->user_id !== Auth::id()) {
@@ -228,16 +299,25 @@ class VehicleController extends Controller
         $expense = $vehicle->expenseForPeriod($month, $year);
 
         return [
-            'id'           => $vehicle->id,
-            'name'         => $vehicle->name,
-            'plate_number' => $vehicle->plate_number,
-            'brand'        => $vehicle->brand,
-            'model_year'   => $vehicle->model_year,
-            'status'       => $vehicle->status,
-            'daily_rate'   => (float) $vehicle->daily_rate,
-            'color'        => $vehicle->color,
-            'notes'        => $vehicle->notes,
-            'created_at'   => $vehicle->created_at,
+            'id'                   => $vehicle->id,
+            'name'                 => $vehicle->name,
+            'plate_number'         => $vehicle->plate_number,
+            'brand'                => $vehicle->brand,
+            'model_year'           => $vehicle->model_year,
+            'status'               => $vehicle->status,
+            'daily_rate'           => (float) $vehicle->daily_rate,
+            'color'                => $vehicle->color,
+            'notes'                => $vehicle->notes,
+            'photo_path'           => $vehicle->photo_path,
+            'photo_url'            => $vehicle->photo_url,
+            'video_url'            => $vehicle->video_url,
+            'video_path'           => $vehicle->video_path,
+            'safe_video_embed_url' => $vehicle->safe_video_embed_url,
+            'transmission'         => $vehicle->transmission ?? 'matic',
+            'capacity'             => (int) ($vehicle->capacity ?? 7),
+            'fuel_type'            => $vehicle->fuel_type ?? 'bensin',
+            'description'          => $vehicle->description,
+            'created_at'           => $vehicle->created_at,
             'summary' => [
                 'income'  => $income,
                 'expense' => $expense,
