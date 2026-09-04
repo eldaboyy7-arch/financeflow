@@ -59,6 +59,26 @@ class FleetSecurityAndIsolationTest extends TestCase
     }
 
     /**
+     * Test User A can store vehicle with UUID-based non-predictable photo_path.
+     */
+    public function test_user_can_use_uuid_based_photo_path(): void
+    {
+        Sanctum::actingAs($this->userA);
+
+        $uuid = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+        $path = "{$this->userA->id}/new/{$uuid}.webp";
+
+        $response = $this->postJson('/api/vehicles', [
+            'name'       => 'UUID Car',
+            'daily_rate' => 350000,
+            'photo_path' => $path,
+        ]);
+
+        $response->assertStatus(201);
+        $this->assertEquals($path, $response->json('data.photo_path'));
+    }
+
+    /**
      * Test User B CANNOT hijack or use User A's photo_path.
      */
     public function test_user_b_cannot_use_user_a_photo_path(): void

@@ -34,9 +34,12 @@ export async function uploadFleetPhoto(
     )
   }
 
-  // 2. Generate Tenant-Aware Path: {userId}/{vehicleId}/{timestamp}.ext
+  // 2. Generate Tenant-Aware Path with Non-Predictable UUID: {userId}/{vehicleId}/{uuid}.ext
   const ext = file.name.split('.').pop()?.toLowerCase() || 'webp'
-  const filename = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`
+  const fileUuid = typeof crypto !== 'undefined' && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `${Date.now()}_${Math.random().toString(36).substring(2, 10)}`
+  const filename = `${fileUuid}.${ext}`
   const objectPath = `${userId}/${vehicleId}/${filename}`
 
   const uploadEndpoint = `${supabaseUrl}/storage/v1/object/${bucket}/${objectPath}`
