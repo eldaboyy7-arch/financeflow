@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import type { PublicVehicle } from '@/types/fleet'
 import { siteConfig } from '@/config/site'
 import { generateGeneralWhatsAppUrl, generateVehicleWhatsAppUrl } from '@/utils/whatsapp'
@@ -8,11 +8,26 @@ const props = defineProps<{
   featuredVehicle?: PublicVehicle | null
 }>()
 
+const activeAngle = ref<number>(0)
+
 const waGeneralUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, siteConfig.rentalName))
 
 const featuredWaUrl = computed(() => {
   if (!props.featuredVehicle) return waGeneralUrl.value
   return generateVehicleWhatsAppUrl(props.featuredVehicle, siteConfig.rentalPhone, siteConfig.rentalName)
+})
+
+const hasMultipleAngles = computed(() => {
+  return Boolean(props.featuredVehicle?.name.toLowerCase().includes('veloz'))
+})
+
+const currentDisplayPhoto = computed(() => {
+  if (!props.featuredVehicle) return null
+  if (activeAngle.value === 1 && hasMultipleAngles.value) {
+    return props.featuredVehicle.photo_url?.replace('veloz-putih-bp1815oq.jpg', 'veloz-putih-bp1815oq-front.jpg')
+      || '/images/fleet/veloz-putih-bp1815oq-front.jpg'
+  }
+  return props.featuredVehicle.photo_url || null
 })
 </script>
 
@@ -113,10 +128,10 @@ const featuredWaUrl = computed(() => {
             </div>
 
             <!-- Vehicle Visual Container -->
-            <div class="relative aspect-[16/10] bg-slate-950/60 overflow-hidden flex items-center justify-center p-4">
+            <div class="relative aspect-[16/10] bg-slate-950/60 overflow-hidden flex items-center justify-center p-3">
               <img
-                v-if="featuredVehicle.photo_url"
-                :src="featuredVehicle.photo_url"
+                v-if="currentDisplayPhoto"
+                :src="currentDisplayPhoto"
                 :alt="featuredVehicle.name"
                 class="w-full h-full object-cover rounded-lg"
               />
@@ -129,6 +144,30 @@ const featuredWaUrl = computed(() => {
                   <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
                 </svg>
                 <span class="text-xs text-slate-400 font-medium">Foto Unit dari Sistem Armada</span>
+              </div>
+
+              <!-- Angle Switcher for Twin Vehicle Preview -->
+              <div
+                v-if="hasMultipleAngles"
+                class="absolute bottom-5 right-5 z-10 flex items-center gap-1 bg-slate-900/85 backdrop-blur-xs px-2 py-1 rounded-lg border border-slate-700/80 text-xs shadow-md"
+              >
+                <span class="text-[10px] text-slate-400 mr-1 hidden sm:inline">Sudut Foto:</span>
+                <button
+                  @click="activeAngle = 0"
+                  type="button"
+                  :class="activeAngle === 0 ? 'bg-blue-600 text-white font-semibold' : 'text-slate-300 hover:text-white'"
+                  class="px-2 py-0.5 rounded text-[10px] transition-colors"
+                >
+                  Samping (3/4)
+                </button>
+                <button
+                  @click="activeAngle = 1"
+                  type="button"
+                  :class="activeAngle === 1 ? 'bg-blue-600 text-white font-semibold' : 'text-slate-300 hover:text-white'"
+                  class="px-2 py-0.5 rounded text-[10px] transition-colors"
+                >
+                  Tampak Depan
+                </button>
               </div>
             </div>
 

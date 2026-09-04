@@ -24,9 +24,12 @@ const {
   fetchVehicles
 } = useFleet()
 
-// Unit unggulan hero yang diambil langsung dari armada live (utamakan yang tersedia)
+// Unit unggulan hero yang diambil langsung dari armada live (utamakan Veloz unit kembar yang tersedia)
 const featuredVehicle = computed(() => {
-  return vehicles.value.find(v => v.status === 'available') || vehicles.value[0] || null
+  return vehicles.value.find(v => v.name.toLowerCase().includes('veloz') && v.status === 'available')
+    || vehicles.value.find(v => v.status === 'available')
+    || vehicles.value[0]
+    || null
 })
 
 onMounted(() => {
