@@ -1,10 +1,23 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { tourPackages } from '@/config/tourPackages'
+import { tourPackages, type TourPackage } from '@/config/tourPackages'
 import { siteConfig } from '@/config/site'
 
 const packages = computed(() => tourPackages)
+
+// Active gallery photo per package card
+const activePhotos = ref<Record<string, number>>({})
+
+const getActivePhoto = (pkg: TourPackage) => {
+  if (!pkg.galleryPhotos || pkg.galleryPhotos.length === 0) return pkg.vehiclePhoto
+  const idx = activePhotos.value[pkg.id] ?? 0
+  return pkg.galleryPhotos[idx] || pkg.vehiclePhoto
+}
+
+const setActivePhoto = (pkgId: string, idx: number) => {
+  activePhotos.value[pkgId] = idx
+}
 
 const getWhatsAppUrl = (text: string) => {
   const phone = siteConfig.rentalPhone.replace(/\D/g, '')
@@ -23,13 +36,13 @@ const getWhatsAppUrl = (text: string) => {
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span>Wisata &amp; Rombongan</span>
+            <span>Khusus Armada Toyota HiAce 15 Kursi</span>
           </div>
           <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Paket Tour &amp; Travel Bintan
+            Paket Tour &amp; Wisata Bintan
           </h2>
           <p class="text-sm sm:text-base text-slate-600 mt-1 max-w-2xl">
-            Solusi transportasi wisata keluarga, instansi dinas, dan rombongan. Siap jemput dari Pelabuhan Sri Bintan Pura, Bandara RHF, atau Resort.
+            Jelajahi keindahan Pulau Bintan bersama rombongan keluarga &amp; rekan kerja. Mobil berfasilitas <strong>Karaoke System</strong>, sudah <strong>Include Supir &amp; BBM</strong>.
           </p>
         </div>
 
@@ -37,7 +50,7 @@ const getWhatsAppUrl = (text: string) => {
           to="/paket-tour-bintan"
           class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-white border border-slate-300 hover:border-slate-400 hover:bg-slate-100 text-slate-800 text-xs sm:text-sm font-semibold transition-colors shadow-xs shrink-0 self-start md:self-auto"
         >
-          <span>Lihat Rincian Semua Paket</span>
+          <span>Lihat Rincian Itinerary Lengkap</span>
           <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
@@ -45,7 +58,7 @@ const getWhatsAppUrl = (text: string) => {
       </div>
 
       <!-- Packages Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div
           v-for="pkg in packages"
           :key="pkg.id"
@@ -54,21 +67,11 @@ const getWhatsAppUrl = (text: string) => {
           <!-- Vehicle Visual / Header Thumbnail -->
           <div class="relative aspect-[16/10] bg-slate-100 overflow-hidden">
             <img
-              v-if="pkg.vehiclePhoto"
-              :src="pkg.vehiclePhoto"
+              :src="getActivePhoto(pkg)"
               :alt="pkg.title"
               loading="lazy"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
-            <div
-              v-else
-              class="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-100 p-4 text-center"
-            >
-              <svg class="w-12 h-12 text-slate-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-              <span class="text-xs font-medium text-slate-500">Rute Fleksibel Sesuai Request</span>
-            </div>
 
             <!-- Badge Category -->
             <div v-if="pkg.badge" class="absolute top-3 left-3 z-10">
@@ -77,74 +80,99 @@ const getWhatsAppUrl = (text: string) => {
               </span>
             </div>
 
-            <!-- Duration Pill -->
-            <div class="absolute bottom-3 right-3 z-10">
-              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white/95 text-slate-800 shadow-sm border border-slate-200/80">
-                <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {{ pkg.duration }}
+            <!-- Capacity & Include Pill -->
+            <div class="absolute bottom-3 left-3 z-10">
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-600 text-white shadow-sm">
+                Include Supir &amp; BBM &bull; 15 Person
               </span>
+            </div>
+
+            <!-- Gallery switcher thumbnails if multiple photos exist -->
+            <div
+              v-if="pkg.galleryPhotos && pkg.galleryPhotos.length > 1"
+              class="absolute bottom-3 right-3 z-10 flex items-center gap-1 bg-slate-900/80 backdrop-blur-xs p-1 rounded-lg border border-slate-700/80 shadow-md"
+            >
+              <button
+                v-for="(photo, pIdx) in pkg.galleryPhotos"
+                :key="pIdx"
+                @click.stop="setActivePhoto(pkg.id, pIdx)"
+                type="button"
+                :class="(activePhotos[pkg.id] ?? 0) === pIdx ? 'ring-2 ring-blue-500 scale-110' : 'opacity-70 hover:opacity-100'"
+                class="w-5 h-5 rounded overflow-hidden transition-all shrink-0"
+                :title="'Foto ' + (pIdx + 1)"
+              >
+                <img :src="photo" class="w-full h-full object-cover" />
+              </button>
             </div>
           </div>
 
           <!-- Card Content Body -->
           <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
             <div>
-              <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-snug group-hover:text-blue-600 transition-colors">
+              <!-- Subtitle & Title -->
+              <span class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">
+                {{ pkg.subtitle }}
+              </span>
+              <h3 class="text-lg font-bold text-slate-900 leading-snug group-hover:text-blue-600 transition-colors mt-0.5">
                 {{ pkg.title }}
               </h3>
 
-              <!-- Vehicle & Capacity Badges -->
-              <div class="flex flex-wrap items-center gap-2 mt-2 text-xs text-slate-600">
-                <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded font-medium">
-                  <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 19H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2z"/>
-                  </svg>
-                  {{ pkg.vehicle }}
-                </span>
-                <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded font-medium">
-                  <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                  </svg>
-                  {{ pkg.capacity }}
-                </span>
+              <!-- Price Box (1-to-1 matching client reference) -->
+              <div class="mt-3.5 p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">
+                    {{ pkg.priceLabel }}
+                  </span>
+                  <div class="text-xl font-extrabold text-blue-600 leading-tight">
+                    {{ pkg.price }}
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                    🎤 Karaoke System
+                  </span>
+                </div>
               </div>
 
-              <!-- Brief Description -->
-              <p class="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed line-clamp-2">
-                {{ pkg.description }}
-              </p>
+              <!-- Rute Tur & Facilities Highlights -->
+              <div class="mt-3.5 space-y-2 text-xs">
+                <div class="bg-blue-50/50 p-2.5 rounded-lg border border-blue-100/60">
+                  <span class="text-[11px] font-bold text-blue-900 block mb-0.5">📍 Rute Tur Populer:</span>
+                  <p class="text-[11px] text-slate-700 leading-relaxed font-medium">
+                    {{ pkg.tourRoute }}
+                  </p>
+                </div>
+
+                <div class="text-slate-600 text-[11px] flex items-center gap-1.5 pt-1">
+                  <svg class="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                  <span>{{ pkg.facilities[0] }}</span>
+                </div>
+              </div>
             </div>
 
-            <!-- Card Footer: Price Note & Action Buttons -->
-            <div class="pt-4 border-t border-slate-100 space-y-3">
-              <div class="text-xs text-slate-500 font-medium">
-                <span class="block text-[11px] text-slate-400">Status Tarif:</span>
-                <span class="font-semibold text-slate-800">{{ pkg.priceNote }}</span>
-              </div>
+            <!-- Card Footer: WhatsApp Action & Detail Link -->
+            <div class="pt-3 border-t border-slate-100 flex items-center gap-2">
+              <a
+                :href="getWhatsAppUrl(pkg.ctaWhatsappText)"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shadow-xs"
+              >
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
+                </svg>
+                Booking via WhatsApp
+              </a>
 
-              <div class="flex items-center gap-2">
-                <a
-                  :href="getWhatsAppUrl(pkg.ctaWhatsappText)"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shadow-xs"
-                >
-                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
-                  </svg>
-                  Tanya Paket
-                </a>
-
-                <RouterLink
-                  to="/paket-tour-bintan"
-                  class="px-3 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors"
-                  title="Lihat detail itinerary dan fasilitas"
-                >
-                  Detail
-                </RouterLink>
-              </div>
+              <RouterLink
+                to="/paket-tour-bintan"
+                class="px-3 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors"
+                title="Lihat detail rute & fasilitas"
+              >
+                Detail
+              </RouterLink>
             </div>
           </div>
         </div>
