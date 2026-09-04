@@ -109,47 +109,59 @@ onMounted(() => {
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
             
             <!-- Left/Top: Vehicle Visual & Photo Switcher -->
-            <div class="lg:col-span-5 bg-slate-900 flex flex-col justify-between relative overflow-hidden">
-              <div class="relative aspect-[16/11] lg:aspect-auto lg:h-[400px] w-full bg-slate-950 flex items-center justify-center overflow-hidden">
-                <img
-                  :src="getActivePhoto(pkg)"
-                  :alt="pkg.title"
-                  class="w-full h-full object-cover"
-                />
+            <div class="lg:col-span-5 relative overflow-hidden min-h-[340px] lg:min-h-full flex flex-col justify-between bg-slate-950 group">
+              <!-- Full-bleed Active Photo (Fills 100% height of column) -->
+              <img
+                :src="getActivePhoto(pkg)"
+                :alt="pkg.title"
+                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
 
-                <!-- Badge -->
-                <div v-if="pkg.badge" class="absolute top-4 left-4 z-10">
-                  <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-md">
-                    {{ pkg.badge }}
-                  </span>
-                </div>
+              <!-- Gradient overlay for contrast -->
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-slate-950/50 pointer-events-none"></div>
 
-                <!-- Capacity Badge Overlay -->
-                <div class="absolute bottom-4 left-4 z-10">
-                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-900/90 text-white backdrop-blur-xs border border-slate-700 shadow-sm">
-                    👥 {{ pkg.capacity }}
-                  </span>
-                </div>
+              <!-- Top Controls: Badge & Capacity -->
+              <div class="relative z-10 p-4 sm:p-5 flex items-center justify-between gap-2">
+                <span
+                  v-if="pkg.badge"
+                  class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-md"
+                >
+                  {{ pkg.badge }}
+                </span>
+
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-900/80 text-white backdrop-blur-xs border border-white/10 shadow-sm">
+                  👥 {{ pkg.capacity }}
+                </span>
               </div>
 
-              <!-- Thumbnail Gallery Bar -->
-              <div
-                v-if="pkg.galleryPhotos && pkg.galleryPhotos.length > 1"
-                class="p-3 bg-slate-900/95 border-t border-slate-800 flex items-center gap-2 overflow-x-auto scrollbar-none shrink-0"
-              >
-                <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mr-1 hidden sm:inline">
-                  Foto Unit:
-                </span>
-                <button
-                  v-for="(img, idx) in pkg.galleryPhotos"
-                  :key="idx"
-                  @click="setActivePhoto(pkg.id, idx)"
-                  type="button"
-                  :class="(activePhotoIndexes[pkg.id] ?? 0) === idx ? 'ring-2 ring-blue-500 scale-105' : 'opacity-60 hover:opacity-100'"
-                  class="w-14 h-10 rounded-lg overflow-hidden shrink-0 transition-all border border-slate-700"
+              <!-- Bottom Controls: Interactive Thumbnail Gallery Switcher -->
+              <div class="relative z-10 p-4 sm:p-5 space-y-2">
+                <div class="flex items-center justify-between text-white text-xs font-medium">
+                  <span class="flex items-center gap-1 text-[11px] text-slate-200">
+                    <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Galeri Unit &amp; Interior:</span>
+                  </span>
+                  <span class="text-[10px] text-slate-300">Klik untuk ganti foto</span>
+                </div>
+
+                <div
+                  v-if="pkg.galleryPhotos && pkg.galleryPhotos.length > 1"
+                  class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none"
                 >
-                  <img :src="img" class="w-full h-full object-cover" />
-                </button>
+                  <button
+                    v-for="(img, idx) in pkg.galleryPhotos"
+                    :key="idx"
+                    @click="setActivePhoto(pkg.id, idx)"
+                    type="button"
+                    :class="(activePhotoIndexes[pkg.id] ?? 0) === idx ? 'ring-2 ring-blue-500 scale-105 shadow-md' : 'opacity-70 hover:opacity-100'"
+                    class="w-16 h-12 rounded-xl overflow-hidden shrink-0 border border-white/20 transition-all bg-slate-900"
+                    :title="'Lihat foto ' + (idx + 1)"
+                  >
+                    <img :src="img" class="w-full h-full object-cover" />
+                  </button>
+                </div>
               </div>
             </div>
 
