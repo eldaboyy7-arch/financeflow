@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { PublicVehicle } from '@/types/fleet'
 import { siteConfig } from '@/config/site'
 import { generateVehicleWhatsAppUrl } from '@/utils/whatsapp'
+import { getVehicleAngles, type VehiclePhotoAngle } from '@/utils/vehiclePhotos'
 
 defineProps<{
   vehicles: PublicVehicle[]
@@ -27,6 +28,47 @@ const closeVideoModal = () => {
   activeVideoUrl.value = null
   activeVideoTitle.value = ''
 }
+
+// Active photo angle per vehicle card in the grid
+const activeCardAngles = ref<Record<number, number>>({})
+
+const getCardPhotoUrl = (car: PublicVehicle): string | null => {
+  const angles = getVehicleAngles(car)
+  if (angles.length === 0) return car.photo_url
+  const idx = activeCardAngles.value[car.id] ?? 0
+  return angles[idx]?.url || car.photo_url
+}
+
+const setCardAngle = (carId: number, idx: number) => {
+  activeCardAngles.value[carId] = idx
+}
+
+// Modal Photo Preview / Gallery state
+const previewVehicle = ref<PublicVehicle | null>(null)
+const previewAngleIdx = ref<number>(0)
+
+const openPhotoModal = (car: PublicVehicle, initialAngleIdx = 0) => {
+  previewVehicle.value = car
+  previewAngleIdx.value = initialAngleIdx
+}
+
+const closePhotoModal = () => {
+  previewVehicle.value = null
+  previewAngleIdx.value = 0
+}
+
+const previewAngles = computed<VehiclePhotoAngle[]>(() => {
+  if (!previewVehicle.value) return []
+  return getVehicleAngles(previewVehicle.value)
+})
+
+const activePreviewUrl = computed<string | null>(() => {
+  if (!previewVehicle.value) return null
+  if (previewAngles.value.length > 0 && previewAngles.value[previewAngleIdx.value]) {
+    return previewAngles.value[previewAngleIdx.value].url
+  }
+  return previewVehicle.value.photo_url
+})
 </script>
 
 <template>
@@ -116,10 +158,14 @@ const closeVideoModal = () => {
           class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col hover:border-slate-300 hover:shadow-sm transition-all group"
         >
           <!-- Vehicle Photo Container -->
-          <div class="relative aspect-[16/10] bg-slate-100 overflow-hidden">
+          <div
+            class="relative aspect-[16/10] bg-slate-100 overflow-hidden cursor-pointer"
+            @click="openPhotoModal(car, activeCardAngles[car.id] ?? 0)"
+            title="Klik untuk melihat preview foto unit"
+          >
             <img
-              v-if="car.photo_url"
-              :src="car.photo_url"
+              v-if="getCardPhotoUrl(car)"
+              :src="getCardPhotoUrl(car)!"
               :alt="car.name"
               loading="lazy"
               decoding="async"
@@ -159,18 +205,51 @@ const closeVideoModal = () => {
               </span>
             </div>
 
-            <!-- Video Preview Button (Top-Right, if safe embed URL available) -->
-            <button
-              v-if="car.safe_video_embed_url"
-              @click="openVideoModal(car.safe_video_embed_url, car.name)"
-              type="button"
-              class="absolute top-2 right-2 z-10 w-7 h-7 rounded-full bg-slate-900/80 hover:bg-slate-900 text-white flex items-center justify-center transition-colors shadow-sm"
-              title="Tonton video unit"
+            <!-- Top-Right Action Cluster: Video & Photo Gallery Zoom -->
+            <div class="absolute top-2 right-2 z-10 flex items-center gap-1">
+              <!-- Video Preview Button (if safe embed URL available) -->
+              <button
+                v-if="car.safe_video_embed_url"
+                @click.stop="openVideoModal(car.safe_video_embed_url, car.name)"
+                type="button"
+                class="w-7 h-7 rounded-full bg-slate-900/80 hover:bg-slate-900 text-white flex items-center justify-center transition-colors shadow-sm"
+                title="Tonton video unit"
+              >
+                <svg class="w-3.5 h-3.5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </button>
+
+              <!-- Photo Gallery Preview Icon Button -->
+              <button
+                @click.stop="openPhotoModal(car, activeCardAngles[car.id] ?? 0)"
+                type="button"
+                class="w-7 h-7 rounded-full bg-slate-900/80 hover:bg-slate-900 text-white flex items-center justify-center transition-colors shadow-sm"
+                title="Perbesar foto unit"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Twin / Multi-angle Switcher Pills (Bottom Right of photo) -->
+            <div
+              v-if="getVehicleAngles(car).length > 1"
+              class="absolute bottom-1.5 right-1.5 z-10 flex items-center gap-1 bg-slate-900/85 backdrop-blur-xs p-0.5 rounded-md border border-slate-700/80 shadow-sm"
             >
-              <svg class="w-3.5 h-3.5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-            </button>
+              <button
+                v-for="(angle, aIdx) in getVehicleAngles(car)"
+                :key="angle.id"
+                @click.stop="setCardAngle(car.id, aIdx)"
+                type="button"
+                :class="(activeCardAngles[car.id] ?? 0) === aIdx ? 'bg-blue-600 text-white font-bold' : 'text-slate-300 hover:text-white'"
+                class="px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] transition-colors leading-none"
+                :title="'Sudut ' + angle.label"
+              >
+                {{ angle.label }}
+              </button>
+            </div>
           </div>
 
           <!-- Card Content -->
@@ -281,6 +360,89 @@ const closeVideoModal = () => {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
           ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Photo Preview / Gallery Modal Dialog -->
+    <div
+      v-if="previewVehicle"
+      class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-xs"
+      @click.self="closePhotoModal"
+    >
+      <div class="bg-slate-900 rounded-2xl overflow-hidden max-w-2xl w-full border border-slate-800 shadow-2xl text-white flex flex-col max-h-[92vh]">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-800 shrink-0">
+          <div>
+            <h4 class="text-sm sm:text-base font-bold text-white">{{ previewVehicle.name }}</h4>
+            <p class="text-xs text-slate-400">
+              Tahun {{ previewVehicle.model_year }} &bull; {{ previewVehicle.transmission_label }} &bull; {{ previewVehicle.capacity }} Kursi
+            </p>
+          </div>
+          <button
+            @click="closePhotoModal"
+            class="text-slate-400 hover:text-white p-1 rounded-lg transition-colors"
+            type="button"
+            title="Tutup preview"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Large Photo Viewport -->
+        <div class="relative bg-slate-950 flex-1 flex items-center justify-center overflow-hidden min-h-[260px] sm:min-h-[380px] p-2">
+          <img
+            v-if="activePreviewUrl"
+            :src="activePreviewUrl"
+            :alt="previewVehicle.name"
+            class="w-full h-full max-h-[60vh] object-contain rounded-lg"
+          />
+          <div v-else class="text-slate-500 text-sm">
+            Foto tidak tersedia
+          </div>
+
+          <!-- Angle Indicator Badges / Switcher in Modal -->
+          <div
+            v-if="previewAngles.length > 1"
+            class="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-xs px-3 py-1 rounded-full border border-slate-700/80 shadow-lg"
+          >
+            <span class="text-[11px] text-slate-400 mr-1 hidden sm:inline">Sudut:</span>
+            <button
+              v-for="(angle, idx) in previewAngles"
+              :key="angle.id"
+              @click="previewAngleIdx = idx"
+              type="button"
+              :class="previewAngleIdx === idx ? 'bg-blue-600 text-white font-bold' : 'text-slate-300 hover:text-white'"
+              class="px-2.5 py-0.5 rounded-full text-xs transition-colors"
+            >
+              {{ angle.label }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal Footer with CTA & Price -->
+        <div class="px-4 sm:px-5 py-3.5 bg-slate-900 border-t border-slate-800 flex items-center justify-between gap-3 shrink-0">
+          <div>
+            <span class="text-[10px] sm:text-xs text-slate-400 block">Tarif Sewa</span>
+            <div class="text-sm sm:text-base font-extrabold text-white">
+              {{ previewVehicle.daily_rate_formatted }}
+              <span class="text-xs font-normal text-slate-400">/hari</span>
+            </div>
+          </div>
+
+          <a
+            :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName)"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-colors shadow-xs"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
+            </svg>
+            Tanya Unit via WhatsApp
+          </a>
         </div>
       </div>
     </div>

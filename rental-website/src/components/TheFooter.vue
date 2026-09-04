@@ -13,13 +13,14 @@ const currentYear = new Date().getFullYear()
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
         <!-- Brand & Info -->
         <div>
-          <div class="flex items-center gap-2.5 text-white font-bold text-base mb-2">
-            <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
-              </svg>
+          <div class="flex items-center gap-3 text-white font-bold text-base mb-2">
+            <div class="w-9 h-9 rounded-xl bg-slate-950 flex items-center justify-center p-1 border border-amber-500/30 shrink-0 overflow-hidden">
+              <img src="/images/logo-3pm.png" alt="Logo 3 Putri Mulya" class="w-full h-full object-contain" />
             </div>
-            <span>{{ siteConfig.rentalName }}</span>
+            <div>
+              <span class="text-base font-extrabold text-white block leading-tight">{{ siteConfig.rentalName }}</span>
+              <span class="text-[10px] text-slate-400 font-normal">Rental &amp; Sewa Mobil</span>
+            </div>
           </div>
           <p class="text-slate-400 leading-relaxed max-w-sm mb-4">
             {{ siteConfig.rentalTagline }}

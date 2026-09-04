@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import type { PublicVehicle } from '@/types/fleet'
 import { siteConfig } from '@/config/site'
 import { generateGeneralWhatsAppUrl, generateVehicleWhatsAppUrl } from '@/utils/whatsapp'
+import { getVehicleAngles } from '@/utils/vehiclePhotos'
 
 const props = defineProps<{
   featuredVehicle?: PublicVehicle | null
@@ -17,15 +18,15 @@ const featuredWaUrl = computed(() => {
   return generateVehicleWhatsAppUrl(props.featuredVehicle, siteConfig.rentalPhone, siteConfig.rentalName)
 })
 
-const hasMultipleAngles = computed(() => {
-  return Boolean(props.featuredVehicle?.name.toLowerCase().includes('veloz'))
+const availableAngles = computed(() => {
+  if (!props.featuredVehicle) return []
+  return getVehicleAngles(props.featuredVehicle)
 })
 
 const currentDisplayPhoto = computed(() => {
   if (!props.featuredVehicle) return null
-  if (activeAngle.value === 1 && hasMultipleAngles.value) {
-    return props.featuredVehicle.photo_url?.replace('veloz-putih-bp1815oq.jpg', 'veloz-putih-bp1815oq-front.jpg')
-      || '/images/fleet/veloz-putih-bp1815oq-front.jpg'
+  if (availableAngles.value.length > 0 && availableAngles.value[activeAngle.value]) {
+    return availableAngles.value[activeAngle.value].url
   }
   return props.featuredVehicle.photo_url || null
 })
@@ -39,8 +40,11 @@ const currentDisplayPhoto = computed(() => {
         <div class="lg:col-span-7">
           <!-- Status Pill -->
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium mb-5 border border-slate-200">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span>Armada Terawat & Bersih</span>
+            <img src="/images/logo-3pm.png" alt="3PM" class="w-4 h-4 object-contain" />
+            <span class="font-semibold text-slate-900">3 Putri Mulya</span>
+            <span class="text-slate-300">&bull;</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <span>Armada Terawat &amp; Bersih</span>
           </div>
 
           <!-- Natural, Customer-Centric Headline -->
@@ -148,25 +152,19 @@ const currentDisplayPhoto = computed(() => {
 
               <!-- Angle Switcher for Twin Vehicle Preview -->
               <div
-                v-if="hasMultipleAngles"
+                v-if="availableAngles.length > 1"
                 class="absolute bottom-5 right-5 z-10 flex items-center gap-1 bg-slate-900/85 backdrop-blur-xs px-2 py-1 rounded-lg border border-slate-700/80 text-xs shadow-md"
               >
-                <span class="text-[10px] text-slate-400 mr-1 hidden sm:inline">Sudut Foto:</span>
+                <span class="text-[10px] text-slate-400 mr-1 hidden sm:inline">Sudut:</span>
                 <button
-                  @click="activeAngle = 0"
+                  v-for="(angle, idx) in availableAngles"
+                  :key="angle.id"
+                  @click="activeAngle = idx"
                   type="button"
-                  :class="activeAngle === 0 ? 'bg-blue-600 text-white font-semibold' : 'text-slate-300 hover:text-white'"
+                  :class="activeAngle === idx ? 'bg-blue-600 text-white font-semibold' : 'text-slate-300 hover:text-white'"
                   class="px-2 py-0.5 rounded text-[10px] transition-colors"
                 >
-                  Samping (3/4)
-                </button>
-                <button
-                  @click="activeAngle = 1"
-                  type="button"
-                  :class="activeAngle === 1 ? 'bg-blue-600 text-white font-semibold' : 'text-slate-300 hover:text-white'"
-                  class="px-2 py-0.5 rounded text-[10px] transition-colors"
-                >
-                  Tampak Depan
+                  {{ angle.label }}
                 </button>
               </div>
             </div>
