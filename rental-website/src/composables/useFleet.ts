@@ -2,9 +2,9 @@ import { ref, computed } from 'vue'
 import type { PublicVehicle, TransmissionFilter } from '@/types/fleet'
 import { siteConfig } from '@/config/site'
 
-const CACHE_KEY_DATA = 'financeflow_public_fleet_data_v3'
-const CACHE_KEY_TIME = 'financeflow_public_fleet_timestamp_v3'
-const CACHE_TTL_MS = 90 * 1000 // 90 detik TTL cache
+const CACHE_KEY_DATA = 'financeflow_public_fleet_data_v4'
+const CACHE_KEY_TIME = 'financeflow_public_fleet_timestamp_v4'
+const CACHE_TTL_MS = 30 * 1000 // 30 detik TTL cache
 
 const vehicles = ref<PublicVehicle[]>([])
 const loading = ref<boolean>(false)
@@ -12,10 +12,47 @@ const error = ref<string | null>(null)
 const searchQuery = ref<string>('')
 const transmissionFilter = ref<TransmissionFilter>('all')
 
+// Deteksi apakah pemanggilan berasal dari browser reload (F5 / tombol reload browser)
+function isBrowserReload(): boolean {
+  if (typeof window === 'undefined' || typeof performance === 'undefined') return false
+  try {
+    const navEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[]
+    if (navEntries && navEntries.length > 0) {
+      return navEntries[0].type === 'reload'
+    }
+    return (performance as any).navigation?.type === 1
+  } catch {
+    return false
+  }
+}
+
+// Inisialisasi listener visibilitychange sekali di client
+let isVisibilityListenerAttached = false
+function setupVisibilityListener(fetchFn: (force: boolean) => Promise<void>) {
+  if (isVisibilityListenerAttached || typeof window === 'undefined' || typeof document === 'undefined') return
+  isVisibilityListenerAttached = true
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      const cachedTime = sessionStorage.getItem(CACHE_KEY_TIME)
+      const now = Date.now()
+      // Jika tab diaktifkan kembali dan data sudah berumur lebih dari 15 detik, revalidate di background
+      if (!cachedTime || now - Number(cachedTime) > 15 * 1000) {
+        fetchFn(true)
+      }
+    }
+  })
+}
+
 export function useFleet() {
   const fetchVehicles = async (forceRefresh = false): Promise<void> => {
+    setupVisibilityListener(fetchVehicles)
+
+    // Deteksi reload: jika user menekan F5 / reload, otomatis paksa refresh agar perubahan terbaru langsung terlihat
+    const shouldBypassCache = forceRefresh || isBrowserReload()
+
     // 1. Cek Client-Side TTL Cache pada sessionStorage jika tidak force refresh
-    if (!forceRefresh && typeof window !== 'undefined') {
+    if (!shouldBypassCache && typeof window !== 'undefined') {
       try {
         const cachedData = sessionStorage.getItem(CACHE_KEY_DATA)
         const cachedTime = sessionStorage.getItem(CACHE_KEY_TIME)
@@ -31,7 +68,7 @@ export function useFleet() {
       }
     }
 
-    // 2. Cache kedaluwarsa atau belum ada -> panggil Public Fleet API
+    // 2. Cache kedaluwarsa, reload, atau force refresh -> panggil Public Fleet API
     loading.value = true
     error.value = null
 
