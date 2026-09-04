@@ -1,6 +1,7 @@
 # Dependencies
 node_modules/
 frontend/node_modules/
+rental-website/node_modules/
 
 # Environment files (never commit real credentials)
 *.env
@@ -10,6 +11,7 @@ frontend/node_modules/
 
 # Build outputs
 frontend/dist/
+rental-website/dist/
 
 # Laravel Storage & Cache
 backend/storage/*.key
