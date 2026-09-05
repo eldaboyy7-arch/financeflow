@@ -18,13 +18,16 @@ defineProps<{
         <img
           src="/images/hero-desktop.jpg"
           alt="Rental Mobil &amp; Tour Bintan - 3 Putri Mulya"
-          class="w-full h-auto object-cover max-h-[75vh] lg:max-h-[82vh] mx-auto block"
+          class="w-full h-auto object-cover object-top min-h-[480px] sm:min-h-[560px] lg:min-h-[640px] max-h-[88vh] mx-auto block"
           loading="eager"
         />
       </picture>
 
+      <!-- Top Subtle Dark Gradient for seamless transparent Navbar overlay -->
+      <div class="absolute inset-x-0 top-0 h-28 sm:h-36 bg-gradient-to-b from-slate-950/85 via-slate-950/40 to-transparent pointer-events-none z-10"></div>
+
       <!-- Bottom Gradient Mask for smooth blending into the dock -->
-      <div class="absolute inset-x-0 bottom-0 h-28 sm:h-40 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent pointer-events-none"></div>
+      <div class="absolute inset-x-0 bottom-0 h-32 sm:h-48 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent pointer-events-none"></div>
     </div>
 
     <!-- Integrated Modern Action Dock (Full 1 Section) -->
