@@ -18,25 +18,25 @@ defineProps<{
         <img
           src="/images/hero-desktop.png"
           alt="Rental Mobil &amp; Tour Bintan - 3 Putri Mulya"
-          class="w-full h-auto block"
+          class="w-full h-[78vh] sm:h-auto object-cover object-bottom sm:object-contain sm:object-top block"
           loading="eager"
         />
       </picture>
 
       <!-- 2. Clean Typography & CTA in the Open Sky (Zero Overlap on Cars) -->
-      <div class="absolute inset-x-0 top-20 sm:top-24 md:top-28 lg:top-32 z-20 text-center px-4 max-w-4xl mx-auto pointer-events-auto">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-tight drop-shadow-xs">
+      <div class="absolute inset-x-0 top-16 sm:top-24 md:top-28 lg:top-32 z-20 text-center px-4 max-w-4xl mx-auto pointer-events-auto">
+        <h1 class="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-tight drop-shadow-xs">
           Jelajahi Bintan dengan Nyaman
         </h1>
 
-        <p class="text-sm sm:text-base md:text-lg text-slate-800 font-semibold mt-2.5 sm:mt-3 max-w-2xl mx-auto leading-relaxed drop-shadow-xs">
+        <p class="text-xs sm:text-base md:text-lg text-slate-800 font-semibold mt-1.5 sm:mt-3 max-w-xs sm:max-w-2xl mx-auto leading-relaxed drop-shadow-xs">
           Rental mobil dan paket perjalanan di Bintan untuk kebutuhan pribadi, keluarga, maupun rombongan.
         </p>
 
-        <div class="mt-3.5 sm:mt-5 flex flex-wrap items-center justify-center gap-3">
+        <div class="mt-3 sm:mt-5 flex flex-wrap items-center justify-center gap-3">
           <a
             href="#cara-perjalanan"
-            class="inline-flex items-center gap-2 px-6 py-2.5 sm:px-7 sm:py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-xl hover:shadow-blue-600/40 transition-all active:scale-95 text-center"
+            class="inline-flex items-center gap-2 px-5 py-2.5 sm:px-7 sm:py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-xl hover:shadow-blue-600/40 transition-all active:scale-95 text-center"
           >
             <span>Lihat Pilihan Armada</span>
             <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
