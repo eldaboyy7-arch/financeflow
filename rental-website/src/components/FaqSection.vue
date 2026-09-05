@@ -41,49 +41,65 @@ const toggleFaq = (index: number) => {
 </script>
 
 <template>
-  <section id="faq" class="py-12 sm:py-16 bg-white border-t border-slate-200 scroll-mt-16">
+  <section id="faq" class="py-16 sm:py-24 bg-white border-t border-slate-200 scroll-mt-16">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center max-w-2xl mx-auto mb-10">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+      
+      <!-- Section Header -->
+      <div class="max-w-2xl mx-auto text-center mb-12 sm:mb-16">
+        <p class="text-xs sm:text-sm font-bold uppercase tracking-widest text-blue-600 mb-2">
+          Bantuan &amp; Informasi
+        </p>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
           Pertanyaan yang Sering Diajukan
         </h2>
-        <p class="text-sm text-slate-500 mt-2">
-          Informasi ringkas seputar proses pemesanan dan penyewaan kendaraan.
+        <p class="text-sm sm:text-base text-slate-600 mt-2.5 leading-relaxed">
+          Informasi ringkas seputar proses reservasi dan ketentuan sewa armada di 3 Putri Mulya.
         </p>
       </div>
 
-      <div class="space-y-3">
+      <!-- Clean Divider Accordion (No Individual Cards, Generous Spacing) -->
+      <div class="border-y border-slate-200 divide-y divide-slate-200">
         <div
           v-for="(faq, idx) in faqs"
           :key="idx"
-          class="rounded-xl border border-slate-200 overflow-hidden transition-colors"
-          :class="openIndex === idx ? 'border-slate-300 bg-slate-50/50' : 'bg-white'"
+          class="transition-colors"
         >
           <button
             @click="toggleFaq(idx)"
             type="button"
-            class="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-semibold text-sm sm:text-base text-slate-900 focus:outline-none"
+            class="w-full py-5 sm:py-6 text-left flex items-center justify-between gap-4 group focus:outline-none"
+            :aria-expanded="openIndex === idx"
           >
-            <span>{{ faq.question }}</span>
-            <svg
-              class="w-4 h-4 text-slate-500 transition-transform duration-200 shrink-0"
-              :class="{ 'rotate-180': openIndex === idx }"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <span
+              class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+              {{ faq.question }}
+            </span>
+            <div
+              class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all text-slate-500 group-hover:text-blue-600 group-hover:bg-blue-50"
+              :class="openIndex === idx ? 'bg-blue-50 text-blue-600' : 'bg-slate-100'"
+            >
+              <svg
+                class="w-4 h-4 transition-transform duration-200"
+                :class="{ 'rotate-180': openIndex === idx }"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
           </button>
 
           <div
             v-show="openIndex === idx"
-            class="px-5 pb-4 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100"
+            class="pb-6 pr-4 sm:pr-12 text-sm sm:text-base text-slate-600 leading-relaxed"
           >
             {{ faq.answer }}
           </div>
         </div>
       </div>
+
     </div>
   </section>
 </template>

@@ -1,57 +1,61 @@
 <script setup lang="ts">
 const reasons = [
   {
-    title: 'Armada Bersih & Prima',
-    desc: 'Setiap mobil selalu dicuci wangi, AC dingin maksimal, dan diservis berkala sebelum kunci diserahkan ke tangan Anda.',
-    icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
+    number: '01',
+    title: 'Armada Siap Digunakan',
+    desc: 'Unit mobil selalu dalam kondisi prima, bersih wangi, dan dicek berkala sebelum kunci diserahkan ke tangan Anda.'
   },
   {
-    title: 'Lepas Kunci / Driver',
-    desc: 'Bebas pilih: setir sendiri untuk privasi perjalanan, atau santai didampingi driver lokal yang hafal seluruh rute Bintan.',
-    icon: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'
+    number: '02',
+    title: 'Pilihan Perjalanan Fleksibel',
+    desc: 'Bebas tentukan gaya perjalanan: setir sendiri dengan sistem lepas kunci atau didampingi driver lokal berpengalaman.'
   },
   {
-    title: 'HiAce Spesial Rombongan',
-    desc: 'Muat 15 penumpang dengan kabin lapang, dilengkapi fasilitas Karaoke System & Smart TV agar perjalanan makin seru.',
-    icon: 'M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3'
+    number: '03',
+    title: 'HiAce dengan Fasilitas Hiburan',
+    desc: 'Khusus rombongan, unit Toyota HiAce 15 kursi dilengkapi Karaoke System & Smart TV agar perjalanan makin menyenangkan.'
   },
   {
-    title: 'Tarif Jujur & Transparan',
-    desc: 'Harga sewa jelas di depan tanpa biaya siluman. Syarat rental mudah dan proses konfirmasi cepat via WhatsApp.',
-    icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4'
+    number: '04',
+    title: 'Informasi Harga yang Jelas',
+    desc: 'Tarif sewa transparan tanpa biaya tersembunyi. Syarat rental mudah dan proses konfirmasi cepat via WhatsApp.'
   }
 ]
 </script>
 
 <template>
-  <section id="kenapa-kami" class="py-12 sm:py-16 bg-white border-t border-slate-200 scroll-mt-16">
+  <section id="kenapa-kami" class="py-16 sm:py-24 bg-white border-t border-slate-200 scroll-mt-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="max-w-3xl mb-10">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold mb-3 border border-slate-200">
-          <span>Kepercayaan &amp; Kenyamanan</span>
-        </div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+      <!-- Section Header -->
+      <div class="max-w-3xl mb-12 sm:mb-16">
+        <p class="text-xs sm:text-sm font-bold uppercase tracking-widest text-blue-600 mb-2">
+          Standar Layanan
+        </p>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
           Kenapa Memilih 3 Putri Mulya?
         </h2>
-        <p class="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">
-          Komitmen kami memberikan layanan sewa mobil yang aman, nyaman, dan terpercaya di Bintan.
+        <p class="text-sm sm:text-base text-slate-600 mt-2.5 leading-relaxed">
+          Komitmen kami menghadirkan perjalanan yang aman, nyaman, dan terpercaya selama Anda berada di Bintan.
         </p>
       </div>
 
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+      <!-- Editorial 4-Column Layout (Typography & Whitespace Driven, No Mini-Cards) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
         <div
-          v-for="(item, idx) in reasons"
-          :key="idx"
-          class="p-3.5 sm:p-6 rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50/50 flex flex-col justify-start hover:border-slate-300 hover:bg-white transition-all shadow-2xs"
+          v-for="item in reasons"
+          :key="item.number"
+          class="border-t border-slate-200 pt-5 sm:pt-6 flex flex-col justify-start"
         >
-          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-2.5 sm:mb-4 shrink-0">
-            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="item.icon"/>
-            </svg>
-          </div>
-          <h3 class="text-xs sm:text-base font-bold text-slate-900 mb-1 sm:mb-2 leading-snug">{{ item.title }}</h3>
-          <p class="text-[11px] sm:text-sm text-slate-600 leading-snug sm:leading-relaxed">{{ item.desc }}</p>
+          <span class="text-xs font-bold text-blue-600 font-mono tracking-wider mb-2.5 block">
+            {{ item.number }}
+          </span>
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-2 leading-snug">
+            {{ item.title }}
+          </h3>
+          <p class="text-sm text-slate-600 leading-relaxed">
+            {{ item.desc }}
+          </p>
         </div>
       </div>
 

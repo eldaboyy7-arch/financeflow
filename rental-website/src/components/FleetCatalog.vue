@@ -163,15 +163,15 @@ const activePreviewUrl = computed<string | null>(() => {
         </p>
       </div>
 
-      <!-- Marketplace Fleet Grid: 2 Columns on Mobile, 3-4 Columns on Desktop -->
+      <!-- Fleet Grid: 1 Column on Mobile (Comfortable & Generous), 2-3-4 Columns on Tablet/Desktop -->
       <div
         v-else
-        class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-5"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6"
       >
         <article
           v-for="car in vehicles"
           :key="car.id"
-          class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col hover:border-slate-300 hover:shadow-sm transition-all group"
+          class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-md transition-all group"
         >
           <!-- Vehicle Photo Container -->
           <div
@@ -199,38 +199,31 @@ const activePreviewUrl = computed<string | null>(() => {
             </div>
 
             <!-- Status Badge (Top-Left) -->
-            <div class="absolute top-2 left-2 z-10">
+            <div class="absolute top-2.5 left-2.5 z-10">
               <span
                 v-if="car.status === 'available'"
-                class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-sm"
               >
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                Tersedia
+                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                <span>Tersedia</span>
               </span>
               <span
                 v-else-if="car.status === 'rented'"
-                class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 shadow-sm"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-900/80 text-slate-200 backdrop-blur-xs shadow-sm"
               >
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                Sedang Disewa
-              </span>
-              <span
-                v-else-if="car.status === 'maintenance'"
-                class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600 border border-slate-200 shadow-sm"
-              >
-                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                Perawatan
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                <span>Sedang Disewa</span>
               </span>
               <span
                 v-else
-                class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600 border border-slate-200 shadow-sm"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-900/70 text-slate-300 backdrop-blur-xs shadow-sm"
               >
-                {{ car.status_label || 'Tidak Tersedia' }}
+                <span>{{ car.status_label || 'Tidak Tersedia' }}</span>
               </span>
             </div>
 
             <!-- Top-Right Action Cluster: Video & Photo Gallery Zoom -->
-            <div class="absolute top-2 right-2 z-10 flex items-center gap-1">
+            <div class="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5">
               <!-- Video Preview Button (if safe embed URL available) -->
               <button
                 v-if="car.safe_video_embed_url"
@@ -257,10 +250,10 @@ const activePreviewUrl = computed<string | null>(() => {
               </button>
             </div>
 
-            <!-- Twin / Multi-angle Switcher Pills (Bottom Right of photo) -->
+            <!-- Multi-angle Switcher Pills (Bottom Right of photo) -->
             <div
               v-if="getVehicleAngles(car).length > 1"
-              class="absolute bottom-1.5 right-1.5 z-10 flex items-center gap-1 bg-slate-900/85 backdrop-blur-xs p-0.5 rounded-md border border-slate-700/80 shadow-sm"
+              class="absolute bottom-2 right-2 z-10 flex items-center gap-1 bg-slate-900/85 backdrop-blur-xs p-0.5 rounded-md border border-slate-700/80 shadow-sm"
             >
               <button
                 v-for="(angle, aIdx) in getVehicleAngles(car)"
@@ -277,73 +270,62 @@ const activePreviewUrl = computed<string | null>(() => {
           </div>
 
           <!-- Card Content -->
-          <div class="p-2.5 sm:p-4 flex-1 flex flex-col justify-between">
+          <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between">
             <div>
-              <!-- 1. Car Name (Primary Identifier) -->
+              <!-- Car Name -->
               <h3
-                class="text-sm sm:text-base font-bold text-slate-900 leading-snug line-clamp-1 cursor-pointer hover:text-blue-600 transition-colors"
+                class="text-base sm:text-lg font-bold text-slate-900 leading-snug line-clamp-1 cursor-pointer hover:text-blue-600 transition-colors"
                 @click="openPhotoModal(car, activeCardAngles[car.id] ?? 0)"
                 title="Lihat detail lengkap unit"
               >
                 {{ car.name }}
               </h3>
 
-              <!-- 2. Year & Brand -->
-              <div class="text-[11px] sm:text-xs text-slate-500 font-medium tracking-wide mt-0.5">
+              <!-- Brand & Year -->
+              <p class="text-xs text-slate-500 font-medium mt-0.5">
+                <span v-if="car.brand">{{ car.brand }} &bull; </span>
                 <span>Tahun {{ car.model_year }}</span>
-                <span v-if="car.brand"> &bull; {{ car.brand }}</span>
-              </div>
+              </p>
 
-              <!-- 3. Key Specifications & Detail Link -->
-              <div class="flex items-center justify-between text-[10px] sm:text-xs text-slate-600 mt-2 sm:mt-2.5">
-                <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
-                  <span class="inline-flex items-center gap-1 bg-slate-100 px-1.5 sm:px-2 py-0.5 rounded font-medium whitespace-nowrap">
-                    <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
-                    {{ car.capacity }} Kursi
-                  </span>
-
-                  <span class="inline-flex items-center gap-1 bg-slate-100 px-1.5 sm:px-2 py-0.5 rounded font-medium whitespace-nowrap">
-                    {{ car.transmission_label }}
-                  </span>
-                </div>
-
-                <button
-                  type="button"
-                  @click.stop="openPhotoModal(car, activeCardAngles[car.id] ?? 0)"
-                  class="text-[11px] text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-0.5 group-hover:underline shrink-0"
-                >
-                  <span>Detail</span>
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              <!-- Specifications -->
+              <div class="flex items-center gap-3 text-xs text-slate-600 mt-3 pt-2.5 border-t border-slate-100">
+                <span class="inline-flex items-center gap-1 font-medium">
+                  <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                   </svg>
-                </button>
+                  <span>{{ car.capacity }} Kursi</span>
+                </span>
+
+                <span class="text-slate-300">&bull;</span>
+
+                <span class="inline-flex items-center gap-1 font-medium">
+                  <span>{{ car.transmission_label }}</span>
+                </span>
               </div>
             </div>
 
-            <!-- Price & Direct WhatsApp CTA -->
-            <div class="pt-3 mt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <!-- Price & WhatsApp CTA -->
+            <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-3">
               <div>
-                <span class="text-[10px] sm:text-[11px] text-slate-500 block leading-tight">Mulai dari</span>
-                <div class="text-xs sm:text-sm font-extrabold text-slate-900">
+                <span class="text-[10px] sm:text-[11px] text-slate-400 block leading-tight">Tarif sewa</span>
+                <div class="text-sm sm:text-base font-extrabold text-slate-900">
                   {{ car.daily_rate_formatted }}
-                  <span class="text-[10px] font-normal text-slate-500">/hari</span>
+                  <span class="text-[11px] font-normal text-slate-500">/hari</span>
                 </div>
               </div>
 
-              <!-- Contextual WhatsApp Action Button -->
+              <!-- Primary WhatsApp Action Button -->
               <a
                 v-if="car.status === 'available'"
                 :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName)"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="w-full sm:w-auto inline-flex items-center justify-center px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors shadow-xs"
+                class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold transition-all shadow-xs active:scale-95 shrink-0"
               >
-                <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
                 </svg>
-                Pesan via WA
+                <span>Pesan via WA</span>
               </a>
 
               <a
@@ -351,25 +333,17 @@ const activePreviewUrl = computed<string | null>(() => {
                 :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName)"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="w-full sm:w-auto inline-flex items-center justify-center px-2 py-1.5 sm:px-2.5 sm:py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors"
+                class="inline-flex items-center justify-center px-3 py-2 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors shrink-0"
               >
-                Jadwal Lain
+                <span>Jadwal Lain</span>
               </a>
-
-              <button
-                v-else-if="car.status === 'maintenance'"
-                disabled
-                class="w-full sm:w-auto inline-flex items-center justify-center px-2 py-1.5 sm:px-2.5 sm:py-2 rounded-lg bg-slate-100 text-slate-400 border border-slate-200 text-xs font-medium cursor-not-allowed"
-              >
-                Perawatan
-              </button>
 
               <button
                 v-else
                 disabled
-                class="w-full sm:w-auto inline-flex items-center justify-center px-2 py-1.5 sm:px-2.5 sm:py-2 rounded-lg bg-slate-100 text-slate-400 text-xs font-medium cursor-not-allowed"
+                class="inline-flex items-center justify-center px-3 py-2 rounded-xl bg-slate-100 text-slate-400 text-xs font-medium cursor-not-allowed shrink-0"
               >
-                {{ car.status_label || 'Tidak Tersedia' }}
+                <span>{{ car.status_label || 'Tidak Tersedia' }}</span>
               </button>
             </div>
           </div>

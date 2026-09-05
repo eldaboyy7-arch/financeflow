@@ -21,7 +21,7 @@ const currentYear = new Date().getFullYear()
             </div>
             <div>
               <span class="font-display text-base font-black text-white block leading-tight tracking-tight">{{ siteConfig.rentalName }}</span>
-              <span class="text-[9.5px] font-bold tracking-widest uppercase text-amber-400 block leading-none mt-1">Rental Mobil &bull; Tour Bintan</span>
+              <span class="text-[10px] sm:text-[11px] font-medium tracking-wide text-slate-300 block leading-none mt-1">Rental Mobil &amp; Tour Bintan</span>
             </div>
           </div>
           <p class="text-slate-400 leading-relaxed max-w-sm mb-4">

@@ -50,11 +50,11 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
             />
           </div>
           <div>
-            <span class="font-display text-base sm:text-lg font-black text-white tracking-tight block leading-tight drop-shadow-md group-hover:text-amber-200 transition-colors">
+            <span class="font-display text-base sm:text-lg font-black text-white tracking-tight block leading-tight group-hover:text-slate-100 transition-colors">
               {{ siteConfig.rentalName }}
             </span>
-            <span class="text-[9.5px] sm:text-[10px] font-bold tracking-widest uppercase text-amber-400 block leading-none mt-1 drop-shadow-xs">
-              Rental Mobil &bull; Tour Bintan
+            <span class="text-[10px] sm:text-[11px] font-medium tracking-wide text-slate-300 block leading-none mt-1">
+              Rental Mobil &amp; Tour Bintan
             </span>
           </div>
         </RouterLink>
