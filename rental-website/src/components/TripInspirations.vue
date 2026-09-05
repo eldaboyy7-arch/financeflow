@@ -11,6 +11,8 @@ interface DestinationItem {
   ctaText: string
   waText: string
   image?: string
+  photoCredit: string
+  photoCreditFull: string
 }
 
 const destinations: DestinationItem[] = [
@@ -22,7 +24,9 @@ const destinations: DestinationItem[] = [
     description: 'Nikmati kawasan wisata di utara Bintan dengan pantai berpasir putih, area resort, dan berbagai pilihan aktivitas santai seperti di Lagoi Bay dan Treasure Bay.',
     ctaText: 'Rencanakan perjalanan ke Lagoi',
     waText: 'Halo 3 Putri Mulya, saya ingin tanya sewa mobil atau paket tour untuk rute ke Kawasan Lagoi.',
-    image: '/images/destinations/lagoi.jpg'
+    image: '/images/destinations/lagoi.jpg',
+    photoCredit: 'Dok. Kemenparekraf',
+    photoCreditFull: 'Dokumentasi Resmi Kemenparekraf RI (Indonesia.travel)'
   },
   {
     id: 'busung',
@@ -32,7 +36,9 @@ const destinations: DestinationItem[] = [
     description: 'Kawasan perbukitan pasir dengan pemandangan danau berwarna biru toska, menjadi salah satu titik singgah favorit untuk berfoto saat melintasi rute Tanjung Uban.',
     ctaText: 'Rencanakan rute ke Danau Biru',
     waText: 'Halo 3 Putri Mulya, saya ingin tanya kendaraan yang cocok untuk kunjungan ke Danau Biru & Gurun Pasir Busung.',
-    image: '/images/destinations/busung.jpg'
+    image: '/images/destinations/busung.jpg',
+    photoCredit: 'Dok. Dispar Kepri',
+    photoCreditFull: 'Dokumentasi Resmi Dinas Pariwisata Pemprov Kepulauan Riau'
   },
   {
     id: 'trikora',
@@ -42,7 +48,9 @@ const destinations: DestinationItem[] = [
     description: 'Garis pantai alami dengan susunan batu granit besar dan suasana pesisir yang tenang, cocok untuk menikmati hembusan angin laut dan kuliner lokal pesisir.',
     ctaText: 'Rencanakan perjalanan ke Trikora',
     waText: 'Halo 3 Putri Mulya, saya ingin sewa kendaraan untuk rute santai ke Pantai Trikora.',
-    image: '/images/destinations/trikora.jpg'
+    image: '/images/destinations/trikora.jpg',
+    photoCredit: 'CC BY-SA 4.0',
+    photoCreditFull: 'Foto oleh Andrian Vernandes (Wikimedia Commons, Lisensi CC BY-SA 4.0)'
   },
   {
     id: 'patung-seribu',
@@ -52,7 +60,9 @@ const destinations: DestinationItem[] = [
     description: 'Destinasi religi dan budaya di Tanjungpinang dengan ratusan patung arhat yang tertata rapi di area perbukitan dengan arsitektur yang megah.',
     ctaText: 'Kunjungi Patung Seribu bersama kami',
     waText: 'Halo 3 Putri Mulya, saya ingin tanya sewa mobil atau tur untuk ke Vihara Patung Seribu.',
-    image: '/images/destinations/patung-seribu.jpg'
+    image: '/images/destinations/patung-seribu.jpg',
+    photoCredit: 'Dok. Dispar Kepri',
+    photoCreditFull: 'Dokumentasi Resmi Dinas Pariwisata Pemprov Kepulauan Riau'
   }
 ]
 
@@ -107,7 +117,21 @@ const getWhatsAppUrl = (text: string) => {
             <div class="absolute top-2 left-2 sm:top-3 sm:left-3 z-10">
               <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold bg-slate-900/80 text-slate-100 border border-white/20 backdrop-blur-md shadow-xs">
                 <span>{{ dest.icon }}</span>
-                <span class="truncate max-w-[80px] sm:max-w-none">{{ dest.badge }}</span>
+                <span class="truncate max-w-[65px] sm:max-w-none">{{ dest.badge }}</span>
+              </span>
+            </div>
+
+            <!-- Top Right Photo Credit Tag (Opsi 1) -->
+            <div class="absolute top-2 right-2 sm:top-3 sm:right-3 z-10">
+              <span
+                :title="'Sumber foto: ' + dest.photoCreditFull"
+                class="inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded text-[8px] sm:text-[9px] font-medium bg-slate-950/65 hover:bg-slate-950/85 text-slate-200/90 hover:text-white backdrop-blur-md border border-white/15 transition-all shadow-xs cursor-help"
+              >
+                <svg class="w-2.5 h-2.5 text-slate-300 opacity-80 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span class="truncate max-w-[68px] sm:max-w-none">{{ dest.photoCredit }}</span>
               </span>
             </div>
 
@@ -153,6 +177,11 @@ const getWhatsAppUrl = (text: string) => {
           <RouterLink to="/paket-tour-bintan" class="font-semibold text-blue-600 hover:text-blue-800 hover:underline">Paket Tour HiAce &rarr;</RouterLink>
         </div>
       </div>
+
+      <!-- Micro Disclaimer / Attribution Note -->
+      <p class="text-[10px] text-slate-400 mt-3 text-center sm:text-left">
+        * Foto destinasi merupakan dokumentasi resmi dari instansi terkait (Kemenparekraf RI / Indonesia.travel, Dinas Pariwisata Pemprov Kepri, &amp; Lisensi Wikimedia Commons CC BY-SA 4.0).
+      </p>
 
     </div>
   </section>
