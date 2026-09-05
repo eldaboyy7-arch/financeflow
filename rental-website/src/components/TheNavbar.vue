@@ -1,43 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 import { siteConfig } from '@/config/site'
 import { generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
-
-const route = useRoute()
-const isHome = computed(() => route.path === '/')
-
-const isScrolled = ref(false)
-
-const handleScroll = () => {
-  isScrolled.value = window.scrollY > 20
-}
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll, { passive: true })
-  handleScroll()
-})
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
 
 const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, siteConfig.rentalName))
 </script>
 
 <template>
-  <header
-    class="sticky top-0 z-40 transition-all duration-300"
-    :class="[
-      isHome ? '-mb-16' : 'bg-slate-950/95 backdrop-blur-md border-b border-slate-800 text-white',
-      isHome && !isScrolled
-        ? 'bg-gradient-to-b from-slate-950/80 via-slate-950/40 to-transparent text-white'
-        : '',
-      isHome && isScrolled
-        ? 'bg-slate-950/90 backdrop-blur-md border-b border-white/10 text-white shadow-2xl'
-        : ''
-    ]"
-  >
+  <header class="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-md border-b border-slate-800 text-white shadow-md transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Brand Logo & Name -->

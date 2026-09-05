@@ -8,9 +8,9 @@ defineProps<{
 
 <template>
   <section class="relative bg-slate-950 text-white overflow-hidden border-b border-slate-800">
-    <!-- Full-Width Edge-to-Edge Hero Artwork (Desktop & Mobile Responsive) -->
-    <div class="relative w-full overflow-hidden bg-slate-950">
-      <picture>
+    <!-- Clean Full-Width Hero Visual (100% Unobstructed - Zero Overlap on Cars) -->
+    <div class="relative w-full bg-slate-950 flex justify-center items-center overflow-hidden">
+      <picture class="w-full">
         <!-- Mobile portrait visual (< 640px) -->
         <source media="(max-width: 639px)" srcset="/images/hero-mobile.jpg" />
         <!-- Desktop landscape visual (>= 640px) -->
@@ -18,20 +18,14 @@ defineProps<{
         <img
           src="/images/hero-desktop.jpg"
           alt="Rental Mobil &amp; Tour Bintan - 3 Putri Mulya"
-          class="w-full h-auto object-cover object-top min-h-[480px] sm:min-h-[560px] lg:min-h-[640px] max-h-[88vh] mx-auto block"
+          class="w-full h-auto max-h-[65vh] sm:max-h-[75vh] lg:max-h-[82vh] object-contain mx-auto block"
           loading="eager"
         />
       </picture>
-
-      <!-- Top Subtle Dark Gradient for seamless transparent Navbar overlay -->
-      <div class="absolute inset-x-0 top-0 h-28 sm:h-36 bg-gradient-to-b from-slate-950/85 via-slate-950/40 to-transparent pointer-events-none z-10"></div>
-
-      <!-- Bottom Gradient Mask for smooth blending into the dock -->
-      <div class="absolute inset-x-0 bottom-0 h-32 sm:h-48 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent pointer-events-none"></div>
     </div>
 
-    <!-- Integrated Modern Action Dock (Full 1 Section) -->
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 sm:-mt-20 pb-10 sm:pb-14">
+    <!-- Clean Action & Introduction Bar (Positioned Below Photo - No Overlap) -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
       <div class="bg-slate-900/90 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/15 p-6 sm:p-8 shadow-2xl">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           
