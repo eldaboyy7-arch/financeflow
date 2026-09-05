@@ -8,28 +8,28 @@ interface FaqItem {
 
 const faqs: FaqItem[] = [
   {
-    question: 'Apa saja syarat untuk sewa mobil lepas kunci?',
-    answer: 'Untuk sewa lepas kunci (self-drive), penyewa wajib menunjukkan identitas diri asli yang masih berlaku (KTP), Surat Izin Mengemudi (SIM A) aktif, serta dokumen pendukung atau jaminan yang telah diverifikasi oleh admin kami saat proses reservasi.'
+    question: 'Apa saja syarat sewa lepas kunci?',
+    answer: 'Penyewa wajib menunjukkan KTP asli yang masih berlaku, SIM A aktif, serta dokumen pendukung atau jaminan yang diverifikasi oleh admin saat proses reservasi.'
   },
   {
-    question: 'Apakah melayani rental mobil dengan driver?',
-    answer: 'Ya, kami melayani rental mobil harian lengkap dengan pengemudi berpengalaman yang ramah dan memahami rute jalan di Pulau Bintan maupun Kota Tanjungpinang.'
+    question: 'Apakah tersedia rental mobil dengan driver?',
+    answer: 'Ya, kami menyediakan layanan sewa harian lengkap dengan driver berpengalaman yang ramah dan memahami rute jalan di seluruh Pulau Bintan.'
   },
   {
-    question: 'Berapa durasi minimal penyewaan mobil?',
-    answer: 'Durasi sewa harian minimal adalah 1 hari (24 jam untuk sistem lepas kunci, atau full-day sesuai kesepakatan pemakaian dengan driver). Untuk kebutuhan sewa jangka panjang (mingguan atau bulanan), silakan hubungi admin kami.'
+    question: 'Berapa lama minimal durasi sewa?',
+    answer: 'Minimal sewa harian adalah 1 hari (24 jam untuk sistem lepas kunci, atau full-day sesuai kesepakatan pemakaian dengan driver).'
   },
   {
-    question: 'Apakah durasi sewa mobil bisa diperpanjang?',
-    answer: 'Bisa, selama unit kendaraan yang sedang Anda gunakan belum dipesan oleh penyewa lain pada jadwal berikutnya. Harap informasikan rencana perpanjangan kepada admin sesegera mungkin sebelum masa sewa berakhir.'
+    question: 'Apakah durasi sewa bisa diperpanjang?',
+    answer: 'Bisa, selama unit yang sedang Anda gunakan belum dipesan oleh penyewa lain pada jadwal berikutnya. Harap informasikan ke admin sebelum masa sewa berakhir.'
   },
   {
     question: 'Apakah paket tour HiAce sudah termasuk supir dan BBM?',
-    answer: 'Ya, khusus Paket Tour & Charter Toyota HiAce 15 Kursi, tarif yang tercantum sudah termasuk unit HiAce, supir, dan bahan bakar minyak (BBM) untuk rute wisata yang disepakati.'
+    answer: 'Ya, tarif Paket Tour & Charter Toyota HiAce 15 Kursi sudah termasuk armada HiAce, supir profesional, dan bahan bakar minyak (BBM) sesuai rute yang disepakati.'
   },
   {
-    question: 'Bagaimana cara melakukan pemesanan armada atau paket tour?',
-    answer: 'Pilih unit kendaraan atau paket tour yang Anda inginkan di halaman website ini, lalu klik tombol WhatsApp. Anda akan langsung terhubung dengan admin 3 Putri Mulya untuk konfirmasi tanggal, ketersediaan unit, dan detail penjemputan.'
+    question: 'Bagaimana cara melakukan pemesanan?',
+    answer: 'Pilih unit armada atau paket tour di website ini, lalu klik tombol WhatsApp untuk konfirmasi tanggal, ketersediaan unit, dan titik penjemputan bersama admin.'
   }
 ]
 
@@ -41,46 +41,42 @@ const toggleFaq = (index: number) => {
 </script>
 
 <template>
-  <section id="faq" class="py-16 sm:py-24 bg-white border-t border-slate-200 scroll-mt-16">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <!-- Section Header -->
-      <div class="max-w-2xl mx-auto text-center mb-12 sm:mb-16">
-        <p class="text-xs sm:text-sm font-bold uppercase tracking-widest text-blue-600 mb-2">
-          Bantuan &amp; Informasi
-        </p>
-        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Pertanyaan yang Sering Diajukan
-        </h2>
-        <p class="text-sm sm:text-base text-slate-600 mt-2.5 leading-relaxed">
-          Informasi ringkas seputar proses reservasi dan ketentuan sewa armada di 3 Putri Mulya.
-        </p>
-      </div>
+  <div class="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-8 flex flex-col justify-between shadow-xs">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
+        Bantuan &amp; Informasi
+      </p>
+      <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight mb-2">
+        Pertanyaan yang Sering Diajukan
+      </h3>
+      <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
+        Jawaban singkat untuk pertanyaan yang paling sering ditanyakan seputar layanan kami.
+      </p>
 
-      <!-- Clean Divider Accordion (No Individual Cards, Generous Spacing) -->
-      <div class="border-y border-slate-200 divide-y divide-slate-200">
+      <!-- Accordion List -->
+      <div class="divide-y divide-slate-100 border-t border-b border-slate-100">
         <div
           v-for="(faq, idx) in faqs"
           :key="idx"
-          class="transition-colors"
+          class="py-3 sm:py-3.5"
         >
           <button
             @click="toggleFaq(idx)"
             type="button"
-            class="w-full py-5 sm:py-6 text-left flex items-center justify-between gap-4 group focus:outline-none"
+            class="w-full text-left flex items-center justify-between gap-3 group focus:outline-none"
             :aria-expanded="openIndex === idx"
           >
             <span
-              class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug"
+              class="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors leading-snug"
             >
               {{ faq.question }}
             </span>
             <div
-              class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all text-slate-500 group-hover:text-blue-600 group-hover:bg-blue-50"
-              :class="openIndex === idx ? 'bg-blue-50 text-blue-600' : 'bg-slate-100'"
+              class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all"
+              :class="openIndex === idx ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-400'"
             >
               <svg
-                class="w-4 h-4 transition-transform duration-200"
+                class="w-3.5 h-3.5 transition-transform duration-200"
                 :class="{ 'rotate-180': openIndex === idx }"
                 fill="none"
                 stroke="currentColor"
@@ -93,13 +89,18 @@ const toggleFaq = (index: number) => {
 
           <div
             v-show="openIndex === idx"
-            class="pb-6 pr-4 sm:pr-12 text-sm sm:text-base text-slate-600 leading-relaxed"
+            class="pt-2 pr-4 text-xs sm:text-sm text-slate-600 leading-relaxed"
           >
             {{ faq.answer }}
           </div>
         </div>
       </div>
-
     </div>
-  </section>
+
+    <div class="mt-6 pt-4 text-center">
+      <p class="text-xs text-slate-500">
+        Ada pertanyaan lain? Hubungi admin via WhatsApp untuk respons cepat.
+      </p>
+    </div>
+  </div>
 </template>

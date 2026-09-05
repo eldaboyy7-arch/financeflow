@@ -28,10 +28,10 @@ Apakah ada unit sejenis yang sedang siap pakai? Terima kasih.`
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`
 }
 
-export function generateGeneralWhatsAppUrl(phone: string, rentalName: string): string {
+export function generateGeneralWhatsAppUrl(phone: string, rentalName: string, customMessage?: string): string {
   const cleanPhone = cleanPhoneNumber(phone)
   if (!cleanPhone) return '#'
 
-  const text = `Halo ${rentalName}, saya ingin menanyakan informasi sewa mobil. Terima kasih.`
+  const text = customMessage || `Halo ${rentalName}, saya ingin menanyakan informasi sewa mobil. Terima kasih.`
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`
 }

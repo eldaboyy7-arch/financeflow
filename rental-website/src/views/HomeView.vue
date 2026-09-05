@@ -22,7 +22,6 @@ const {
   fetchVehicles
 } = useFleet()
 
-// Unit unggulan hero yang diambil langsung dari armada live (utamakan Veloz unit kembar yang tersedia)
 const featuredVehicle = computed(() => {
   return vehicles.value.find(v => v.name.toLowerCase().includes('veloz') && v.status === 'available')
     || vehicles.value.find(v => v.status === 'available')
@@ -69,17 +68,23 @@ const resetFilters = () => {
       </template>
     </FleetCatalog>
 
-    <!-- 4. Inspirasi Perjalanan di Bintan (4 Destinasi Pendukung) -->
+    <!-- 4. Inspirasi Perjalanan di Bintan (4 Destinasi) -->
     <TripInspirations />
 
     <!-- 5. Kenapa Memilih 3 Putri Mulya (4 Nilai Konkret) -->
     <TrustGuarantees />
 
-    <!-- 6. Area Layanan & Titik Koordinasi -->
-    <LocationSection />
-
-    <!-- 7. Pertanyaan Umum (FAQ 6 Topik) -->
-    <FaqSection />
+    <!-- 6 & 7. Side-by-Side: Area Layanan & Titik Koordinasi + Pertanyaan Umum (FAQ) -->
+    <section id="lokasi-faq" class="py-14 sm:py-20 bg-slate-50 border-t border-slate-200 scroll-mt-16">
+      <span id="lokasi" class="sr-only"></span>
+      <span id="faq" class="sr-only"></span>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch">
+          <LocationSection />
+          <FaqSection />
+        </div>
+      </div>
+    </section>
 
     <!-- 8. Final CTA (WhatsApp) -->
     <FinalCtaSection />

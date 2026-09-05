@@ -73,112 +73,126 @@ const getWhatsAppUrl = (text: string) => {
 </script>
 
 <template>
-  <section id="inspirasi" class="py-12 sm:py-16 bg-slate-50 border-t border-slate-200 scroll-mt-16">
+  <section id="inspirasi" class="py-14 sm:py-20 bg-slate-50 border-t border-slate-200 scroll-mt-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <!-- Section Header -->
-      <!-- Section Header -->
-      <div class="max-w-3xl mb-10 sm:mb-12">
-        <p class="text-xs sm:text-sm font-bold uppercase tracking-widest text-blue-600 mb-2">
-          Inspirasi Perjalanan
-        </p>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-          Destinasi Populer di Bintan
-        </h2>
-        <p class="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">
-          Pilihan kawasan wisata favorit yang siap kami antar dengan unit rental atau paket tour.
-        </p>
-      </div>
 
-      <!-- 4 Destination Cards Grid (2x2 on mobile, 4 columns on desktop) -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-        <div
-          v-for="dest in destinations"
-          :key="dest.id"
-          class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-md transition-all group"
-        >
-          <!-- Image Top Section with smooth zoom & contrast gradient -->
-          <div class="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden bg-slate-900">
-            <img
-              v-if="dest.image"
-              :src="dest.image"
-              :alt="dest.name"
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-              loading="lazy"
-            />
-            
-            <!-- Soft Bottom Gradient for Text Legibility -->
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-slate-950/20 pointer-events-none"></div>
+      <!-- Desktop: judul kiri + kartu kanan (2-kolom) -->
+      <!-- Mobile: judul di atas, 4 kartu horizontal scroll -->
+      <div class="lg:flex lg:gap-12 xl:gap-16">
 
-            <!-- Top Left Floating Badge -->
-            <div class="absolute top-2 left-2 sm:top-3 sm:left-3 z-10">
-              <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold bg-slate-900/80 text-slate-100 border border-white/20 backdrop-blur-md shadow-xs">
-                <span>{{ dest.icon }}</span>
-                <span class="truncate max-w-[65px] sm:max-w-none">{{ dest.badge }}</span>
-              </span>
-            </div>
-
-            <!-- Top Right Photo Credit Tag (Opsi 1) -->
-            <div class="absolute top-2 right-2 sm:top-3 sm:right-3 z-10">
-              <span
-                :title="'Sumber foto: ' + dest.photoCreditFull"
-                class="inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded text-[8px] sm:text-[9px] font-medium bg-slate-950/65 hover:bg-slate-950/85 text-slate-200/90 hover:text-white backdrop-blur-md border border-white/15 transition-all shadow-xs cursor-help"
-              >
-                <svg class="w-2.5 h-2.5 text-slate-300 opacity-80 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span class="truncate max-w-[68px] sm:max-w-none">{{ dest.photoCredit }}</span>
-              </span>
-            </div>
-
-            <!-- Bottom Left Title over image -->
-            <div class="absolute bottom-2 left-2.5 right-2.5 sm:bottom-3 sm:left-4 sm:right-4 z-10">
-              <h3 class="text-xs sm:text-lg font-bold text-white leading-tight sm:leading-snug drop-shadow-md group-hover:text-blue-200 transition-colors line-clamp-2">
-                {{ dest.name }}
-              </h3>
-            </div>
-          </div>
-
-          <!-- Card Content Body -->
-          <div class="p-3 sm:p-5 flex-1 flex flex-col justify-between">
-            <p class="text-[11px] sm:text-sm text-slate-600 leading-snug sm:leading-relaxed mb-3 sm:mb-4">
-              {{ dest.description }}
+        <!-- Kolom Judul (kiri di desktop, atas di mobile) -->
+        <div class="lg:w-72 xl:w-80 shrink-0 mb-8 lg:mb-0 lg:pt-2">
+          <p class="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
+            Inspirasi Perjalanan
+          </p>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">
+            Destinasi Populer di Bintan
+          </h2>
+          <p class="text-sm text-slate-600 leading-relaxed mb-6">
+            Pilihan kawasan wisata favorit yang siap kami antar dengan unit rental atau paket tour.
+          </p>
+          <!-- Note (desktop only) -->
+          <div class="hidden lg:block text-xs text-slate-500 space-y-2">
+            <p class="flex items-start gap-2">
+              <span>💡</span>
+              <span>Punya rencana custom keliling Bintan? Konsultasikan langsung bersama tim kami.</span>
             </p>
-
-            <!-- Small, elegant CTA link -->
-            <div class="pt-2.5 border-t border-slate-100">
-              <a
-                :href="getWhatsAppUrl(dest.waText)"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors group-hover:translate-x-0.5"
-              >
-                <span>Tanya Rute</span>
-                <span aria-hidden="true">&rarr;</span>
-              </a>
+            <div class="flex gap-3 pt-1">
+              <a href="#armada" class="font-semibold text-blue-600 hover:underline text-xs">Lihat Armada →</a>
+              <RouterLink to="/paket-tour-bintan" class="font-semibold text-blue-600 hover:underline text-xs">Paket HiAce →</RouterLink>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Supporting Note: Bridge back to core services -->
-      <div class="mt-8 p-4 rounded-xl bg-white border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
-        <div class="flex items-center gap-2">
-          <span class="text-base">💡</span>
-          <span>Punya rencana rute wisata lain atau custom keliling Bintan? Konsultasikan langsung bersama tim kami.</span>
+        <!-- Kolom Kartu -->
+        <div class="flex-1 min-w-0">
+          <!-- Mobile: horizontal scroll -->
+          <!-- Desktop: 2x2 atau 4-col grid -->
+          <div class="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory
+                      lg:grid lg:grid-cols-2 xl:grid-cols-4 lg:gap-4 lg:overflow-visible lg:pb-0">
+            <div
+              v-for="dest in destinations"
+              :key="dest.id"
+              class="snap-start shrink-0 w-[72vw] sm:w-[44vw] lg:w-auto
+                     bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col
+                     hover:border-slate-300 hover:shadow-md transition-all group"
+            >
+              <!-- Image -->
+              <div class="relative aspect-[4/3] overflow-hidden bg-slate-900">
+                <img
+                  v-if="dest.image"
+                  :src="dest.image"
+                  :alt="dest.name"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-slate-950/10 pointer-events-none"></div>
+                <!-- Badge -->
+                <div class="absolute top-2 left-2 z-10">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-900/80 text-slate-100 border border-white/20 backdrop-blur-sm">
+                    <span>{{ dest.icon }}</span>
+                    <span class="truncate max-w-[70px]">{{ dest.badge }}</span>
+                  </span>
+                </div>
+                <!-- Credit -->
+                <div class="absolute top-2 right-2 z-10">
+                  <span
+                    :title="'Sumber foto: ' + dest.photoCreditFull"
+                    class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-medium bg-slate-950/65 text-slate-200/90 backdrop-blur-sm border border-white/15 cursor-help"
+                  >
+                    <svg class="w-2.5 h-2.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span class="truncate max-w-[68px]">{{ dest.photoCredit }}</span>
+                  </span>
+                </div>
+                <!-- Title over image -->
+                <div class="absolute bottom-2 left-3 right-3 z-10">
+                  <h3 class="text-sm font-bold text-white leading-tight drop-shadow-md group-hover:text-blue-200 transition-colors line-clamp-1">
+                    {{ dest.name }}
+                  </h3>
+                </div>
+              </div>
+              <!-- Body -->
+              <div class="p-3 flex-1 flex flex-col justify-between">
+                <p class="text-[11px] text-slate-600 leading-snug mb-3">
+                  {{ dest.description }}
+                </p>
+                <div class="pt-2 border-t border-slate-100">
+                  <a
+                    :href="getWhatsAppUrl(dest.waText)"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                  >
+                    <span>Tanya Rute</span>
+                    <span aria-hidden="true">&rarr;</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile note (below cards) -->
+          <div class="lg:hidden mt-5 text-xs text-slate-500 flex flex-col gap-2">
+            <p class="flex items-start gap-2">
+              <span>💡</span>
+              <span>Punya rencana custom keliling Bintan? Konsultasikan langsung bersama tim kami.</span>
+            </p>
+            <div class="flex gap-3">
+              <a href="#armada" class="font-semibold text-blue-600 hover:underline">Lihat Armada →</a>
+              <RouterLink to="/paket-tour-bintan" class="font-semibold text-blue-600 hover:underline">Paket HiAce →</RouterLink>
+            </div>
+          </div>
+
+          <!-- Attribution -->
+          <p class="text-[10px] text-slate-400 mt-4">
+            * Foto destinasi: Kemenparekraf RI / Indonesia.travel, Dinas Pariwisata Pemprov Kepri, &amp; Wikimedia Commons CC BY-SA 4.0.
+          </p>
         </div>
-        <div class="flex items-center gap-3 shrink-0">
-          <a href="#armada" class="font-semibold text-blue-600 hover:text-blue-800 hover:underline">Lihat Armada &rarr;</a>
-          <RouterLink to="/paket-tour-bintan" class="font-semibold text-blue-600 hover:text-blue-800 hover:underline">Paket Tour HiAce &rarr;</RouterLink>
-        </div>
+
       </div>
-
-      <!-- Micro Disclaimer / Attribution Note -->
-      <p class="text-[10px] text-slate-400 mt-3 text-center sm:text-left">
-        * Foto destinasi merupakan dokumentasi resmi dari instansi terkait (Kemenparekraf RI / Indonesia.travel, Dinas Pariwisata Pemprov Kepri, &amp; Lisensi Wikimedia Commons CC BY-SA 4.0).
-      </p>
-
     </div>
   </section>
 </template>
