@@ -8,57 +8,67 @@ defineProps<{
 </script>
 
 <template>
-  <section class="relative bg-slate-950 text-white overflow-hidden border-b border-slate-800">
-    <!-- 1. Full-Bleed Edge-to-Edge Hero Image Container -->
-    <div class="relative w-full overflow-hidden">
-      <picture class="w-full">
-        <!-- Mobile portrait visual (< 640px) -->
-        <source media="(max-width: 639px)" srcset="/images/hero-mobile.png" />
-        <!-- Desktop landscape visual (>= 640px) -->
-        <source media="(min-width: 640px)" srcset="/images/hero-desktop.png" />
-        <img
-          src="/images/hero-desktop.png"
-          alt="Rental Mobil &amp; Tour Bintan - 3 Putri Mulya"
-          class="w-full h-[75svh] sm:h-auto object-cover object-bottom sm:object-contain sm:object-top block"
-          loading="eager"
-        />
-      </picture>
+  <!-- Hero: Split Layout — Teks Kiri + Foto Kanan Full Height -->
+  <section class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- lg: baris dengan tinggi tetap agar kolom kanan bisa self-stretch -->
+      <div class="flex flex-col lg:flex-row lg:min-h-[500px] xl:min-h-[540px]">
 
-      <!-- 2. Clean Typography & 2 CTAs Centered in the Open Sky (Zero Overlap on Cars) -->
-      <div class="absolute inset-x-0 top-[18%] sm:top-20 md:top-24 lg:top-28 z-20 text-center px-4 max-w-4xl mx-auto pointer-events-auto">
-        <!-- Eyebrow Tag -->
-        <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/80 text-slate-800 text-[10px] sm:text-xs font-semibold tracking-wider uppercase mb-2.5 sm:mb-3 shadow-xs">
-          <span>RENTAL MOBIL &amp; TOUR BINTAN</span>
+        <!-- Kolom Kiri: Teks & CTAs -->
+        <div class="w-full lg:w-[48%] flex flex-col justify-center text-left
+                    pt-10 pb-4 sm:pt-12 sm:pb-6 lg:py-14 lg:pr-10 xl:pr-14 min-w-0">
+          <p class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-blue-600 mb-3">
+            RENTAL MOBIL &amp; TOUR BINTAN
+          </p>
+          <h1 class="font-display text-[1.55rem] leading-tight sm:text-4xl lg:text-5xl xl:text-[3.25rem] font-black text-slate-900 tracking-tight lg:leading-[1.08] mb-4">
+            Jelajahi Bintan<br />dengan Nyaman
+          </h1>
+          <p class="text-sm sm:text-base text-slate-600 leading-relaxed mb-6 max-w-sm lg:max-w-none">
+            Rental mobil dan paket perjalanan di Bintan untuk kebutuhan pribadi, keluarga, maupun rombongan.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a
+              href="#armada"
+              class="inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-md transition-all active:scale-95"
+            >
+              Lihat Pilihan Armada
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </a>
+            <RouterLink
+              to="/paket-tour-bintan"
+              class="inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-sm shadow-sm transition-all active:scale-95"
+            >
+              Paket Tour HiAce
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </RouterLink>
+          </div>
         </div>
 
-        <h1 class="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-tight">
-          Jelajahi Bintan dengan Nyaman
-        </h1>
-
-        <p class="text-xs sm:text-base md:text-lg text-slate-700 font-medium mt-1.5 sm:mt-2.5 max-w-xs sm:max-w-2xl mx-auto leading-relaxed">
-          Rental mobil dan paket perjalanan di Bintan untuk kebutuhan pribadi, keluarga, maupun rombongan.
-        </p>
-
-        <!-- 2 CTAs (Lihat Pilihan Armada + Paket Tour HiAce) -->
-        <div class="mt-4 sm:mt-6 flex flex-wrap items-center justify-center gap-3">
-          <a
-            href="#armada"
-            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm shadow-md transition-all active:scale-95 text-center"
-          >
-            <span>Lihat Pilihan Armada</span>
-            <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </a>
-
-          <RouterLink
-            to="/paket-tour-bintan"
-            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-white/95 hover:bg-white text-slate-900 border border-slate-300 hover:border-slate-400 font-semibold text-xs sm:text-sm shadow-sm backdrop-blur-xs transition-all active:scale-95 text-center"
-          >
-            <span>Paket Tour HiAce</span>
-            <span class="text-blue-600 font-bold">&rarr;</span>
-          </RouterLink>
+        <!-- Kolom Kanan Desktop: Foto Armada Full-Height (self-stretch + absolute) -->
+        <!-- Desktop: div ini stretch ke penuh tinggi flex parent, foto mengisi 100% -->
+        <div class="hidden lg:block lg:w-[52%] relative self-stretch min-h-[360px]">
+          <img
+            src="/images/hero-desktop.png"
+            alt="Armada Rental Mobil & Tour Bintan - 3 Putri Mulya"
+            class="absolute inset-0 w-full h-full object-cover object-center"
+            loading="eager"
+          />
         </div>
+
+        <!-- Mobile: Foto kecil di bawah teks (block hanya di < lg) -->
+        <div class="lg:hidden w-full pb-4">
+          <img
+            src="/images/hero-mobile.png"
+            alt="Armada Rental Mobil & Tour Bintan - 3 Putri Mulya"
+            class="w-full max-h-[180px] object-contain object-center"
+            loading="eager"
+          />
+        </div>
+
       </div>
     </div>
   </section>
