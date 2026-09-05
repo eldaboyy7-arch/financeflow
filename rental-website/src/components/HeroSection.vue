@@ -23,8 +23,8 @@ defineProps<{
         />
       </picture>
 
-      <!-- 2. Clean Typography & CTA in the Open Sky (Zero Overlap on Cars) -->
-      <div class="absolute inset-x-0 top-16 sm:top-24 md:top-28 lg:top-32 z-20 text-center px-4 max-w-4xl mx-auto pointer-events-auto">
+      <!-- 2. Clean Typography & CTA Centered in the Open Sky (Zero Overlap on Cars) -->
+      <div class="absolute inset-x-0 top-[24%] sm:top-24 md:top-28 lg:top-32 z-20 text-center px-4 max-w-4xl mx-auto pointer-events-auto">
         <h1 class="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-tight drop-shadow-xs">
           Jelajahi Bintan dengan Nyaman
         </h1>
