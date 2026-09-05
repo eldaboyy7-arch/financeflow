@@ -83,15 +83,15 @@ const getWhatsAppUrl = (text: string) => {
         </p>
       </div>
 
-      <!-- 4 Destination Cards Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- 4 Destination Cards Grid (2x2 on mobile, 4 columns on desktop) -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         <div
           v-for="dest in destinations"
           :key="dest.id"
-          class="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-lg transition-all group"
+          class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-lg transition-all group"
         >
           <!-- Image Top Section with smooth zoom & contrast gradient -->
-          <div class="relative aspect-[16/10] overflow-hidden bg-slate-900">
+          <div class="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden bg-slate-900">
             <img
               v-if="dest.image"
               :src="dest.image"
@@ -104,37 +104,38 @@ const getWhatsAppUrl = (text: string) => {
             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-slate-950/20 pointer-events-none"></div>
 
             <!-- Top Left Floating Badge -->
-            <div class="absolute top-3 left-3 z-10">
-              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-900/80 text-slate-100 border border-white/20 backdrop-blur-md shadow-xs">
+            <div class="absolute top-2 left-2 sm:top-3 sm:left-3 z-10">
+              <span class="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold bg-slate-900/80 text-slate-100 border border-white/20 backdrop-blur-md shadow-xs">
                 <span>{{ dest.icon }}</span>
-                <span>{{ dest.badge }}</span>
+                <span class="truncate max-w-[80px] sm:max-w-none">{{ dest.badge }}</span>
               </span>
             </div>
 
             <!-- Bottom Left Title over image -->
-            <div class="absolute bottom-3 left-4 right-4 z-10">
-              <h3 class="text-base sm:text-lg font-bold text-white leading-snug drop-shadow-md group-hover:text-blue-200 transition-colors">
+            <div class="absolute bottom-2 left-2.5 right-2.5 sm:bottom-3 sm:left-4 sm:right-4 z-10">
+              <h3 class="text-xs sm:text-lg font-bold text-white leading-tight sm:leading-snug drop-shadow-md group-hover:text-blue-200 transition-colors line-clamp-2">
                 {{ dest.name }}
               </h3>
             </div>
           </div>
 
           <!-- Card Content Body -->
-          <div class="p-5 flex-1 flex flex-col justify-between">
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-5">
+          <div class="p-3 sm:p-5 flex-1 flex flex-col justify-between">
+            <p class="text-[11px] sm:text-sm text-slate-600 leading-snug sm:leading-relaxed mb-3 sm:mb-5 line-clamp-2 sm:line-clamp-none">
               {{ dest.description }}
             </p>
 
             <!-- Subtle Link CTA to WhatsApp planning -->
-            <div class="pt-3 border-t border-slate-100">
+            <div class="pt-2 sm:pt-3 border-t border-slate-100">
               <a
                 :href="getWhatsAppUrl(dest.waText)"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800 group-hover:translate-x-0.5 transition-all"
+                class="inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-semibold text-blue-600 hover:text-blue-800 group-hover:translate-x-0.5 transition-all w-full justify-between sm:justify-start"
               >
-                <span>{{ dest.ctaText }}</span>
-                <span class="text-sm leading-none">&rarr;</span>
+                <span class="sm:hidden">Tanya Rute WA</span>
+                <span class="hidden sm:inline">{{ dest.ctaText }}</span>
+                <span class="text-xs sm:text-sm leading-none shrink-0">&rarr;</span>
               </a>
             </div>
           </div>
