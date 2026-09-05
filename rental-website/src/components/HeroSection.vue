@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
   <section class="relative bg-slate-950 text-white overflow-hidden border-b border-slate-800">
-    <!-- Clean Full-Width Hero Visual (True Edge-to-Edge, No Black Pillarboxes) -->
+    <!-- 1. Full-Width Edge-to-Edge Hero Banner (100% Clean & Unobstructed) -->
     <div class="w-full bg-slate-950">
       <picture class="w-full">
         <!-- Mobile portrait visual (< 640px) -->
@@ -24,59 +24,29 @@ defineProps<{
       </picture>
     </div>
 
-    <!-- Clean Action & Introduction Bar (Positioned Below Photo - No Overlap) -->
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-      <div class="bg-slate-900/90 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/15 p-6 sm:p-8 shadow-2xl">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          
-          <div class="max-w-2xl">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold mb-3 border border-blue-400/30 backdrop-blur-xs">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>Armada Resmi Terawat &amp; Siap Jalan</span>
-            </div>
-
-            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
-              Jelajahi Bintan dengan Nyaman
-            </h1>
-
-            <p class="text-sm sm:text-base text-slate-300 mt-2 leading-relaxed">
-              Rental mobil dan paket perjalanan di Bintan untuk kebutuhan pribadi, keluarga, maupun rombongan.
-            </p>
-
-            <div class="flex flex-wrap items-center gap-y-1.5 gap-x-5 text-xs text-slate-400 mt-4 pt-3 border-t border-white/10">
-              <span class="flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                Tarif Harian Transparan
-              </span>
-              <span class="flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                Unit Siap Jalan
-              </span>
-              <span class="flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                Include Supir &amp; BBM (HiAce)
-              </span>
-            </div>
+    <!-- 2. Clean Minimalist Action Strip (Positioned Directly Below Banner - Zero Overlap) -->
+    <div class="bg-slate-900 border-t border-slate-800/80 py-4 sm:py-5">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="text-xs sm:text-sm font-bold text-white tracking-tight">Jelajahi Bintan dengan Nyaman</span>
           </div>
+          <p class="text-xs text-slate-400 mt-0.5 hidden sm:block">
+            Rental mobil harian &amp; paket perjalanan di Bintan untuk kebutuhan pribadi, keluarga, maupun rombongan.
+          </p>
+        </div>
 
-          <div class="flex items-center shrink-0">
-            <a
-              href="#armada"
-              class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm sm:text-base shadow-xl hover:shadow-blue-600/40 transition-all text-center"
-            >
-              <span>Lihat Pilihan Armada</span>
-              <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-              </svg>
-            </a>
-          </div>
-
+        <div class="flex items-center gap-3 shrink-0 w-full sm:w-auto">
+          <a
+            href="#cara-perjalanan"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-blue-600/30 transition-all text-center"
+          >
+            <span>Lihat Pilihan Armada</span>
+            <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </a>
         </div>
       </div>
     </div>
