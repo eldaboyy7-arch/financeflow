@@ -13,7 +13,7 @@ const waUrlSecondary = computed(() => getWaUrl(siteConfig.rentalPhoneSecondary))
 </script>
 
 <template>
-  <section id="kontak" class="py-14 sm:py-20 bg-gradient-to-b from-slate-900 to-slate-950 text-white relative overflow-hidden">
+  <section id="kontak" class="py-14 sm:py-20 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white relative overflow-hidden">
     <!-- Subtle background accent -->
     <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
 
@@ -31,35 +31,40 @@ const waUrlSecondary = computed(() => getWaUrl(siteConfig.rentalPhoneSecondary))
         Ceritakan kebutuhan transportasi Anda di Bintan, tim kami siap membantu memberikan pilihan armada atau rute yang paling tepat.
       </p>
 
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-xl mx-auto">
+      <!-- Single Focused Primary Action -->
+      <div class="max-w-md mx-auto">
         <a
           :href="waUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="w-full sm:flex-1 inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm sm:text-base shadow-lg hover:shadow-emerald-600/30 transition-all active:scale-95"
+          class="w-full inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm sm:text-base shadow-lg shadow-emerald-950/40 hover:shadow-emerald-600/30 transition-all active:scale-98 group"
         >
-          <svg class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
           </svg>
-          <span>Admin 1 (0813-7237-1120)</span>
+          <span>Chat WhatsApp (0813-7237-1120)</span>
         </a>
 
-        <a
-          :href="waUrlSecondary"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="w-full sm:flex-1 inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 font-semibold text-sm sm:text-base border border-slate-700 transition-all active:scale-95"
-        >
-          <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
-          </svg>
-          <span>Admin 2 (0852-6326-7909)</span>
-        </a>
+        <!-- Clean Subtle Alternative Link -->
+        <p class="text-xs text-slate-400 mt-4">
+          Jalur alternatif:
+          <a
+            :href="waUrlSecondary"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-slate-300 hover:text-emerald-400 font-medium underline underline-offset-2 transition-colors ml-1"
+          >
+            Admin 2 (0852-6326-7909)
+          </a>
+        </p>
       </div>
 
-      <p class="text-xs text-slate-400 mt-6">
-        Respons langsung dari admin &bull; Konfirmasi ketersediaan unit &amp; jadwal sewa
-      </p>
+      <!-- Reassurance Points -->
+      <div class="mt-8 pt-6 border-t border-slate-800/80 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs text-slate-400">
+        <span class="flex items-center gap-1.5"><span class="text-emerald-400 font-bold">✓</span> Respon Cepat dari Admin</span>
+        <span class="flex items-center gap-1.5"><span class="text-emerald-400 font-bold">✓</span> Konfirmasi Unit Instan</span>
+        <span class="flex items-center gap-1.5"><span class="text-emerald-400 font-bold">✓</span> Bebas Konsultasi Rute</span>
+      </div>
     </div>
   </section>
 </template>
