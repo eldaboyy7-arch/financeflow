@@ -42,11 +42,11 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
       <div class="flex items-center justify-between h-16">
         <!-- Brand Logo & Name -->
         <RouterLink to="/" class="flex items-center gap-3 group">
-          <div class="w-10 h-10 rounded-xl bg-slate-950 flex items-center justify-center p-1 border border-amber-500/30 shadow-md shrink-0 overflow-hidden">
+          <div class="w-10 h-10 flex items-center justify-center shrink-0">
             <img
               src="/images/logo-3pm.png"
               alt="Logo 3 Putri Mulya"
-              class="w-full h-full object-contain"
+              class="w-full h-full object-contain drop-shadow-md group-hover:scale-105 transition-transform"
             />
           </div>
           <div>
