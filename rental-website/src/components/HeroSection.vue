@@ -8,8 +8,8 @@ defineProps<{
 
 <template>
   <section class="relative bg-slate-950 text-white overflow-hidden border-b border-slate-800">
-    <!-- Clean Full-Width Hero Visual (100% Unobstructed - Zero Overlap on Cars) -->
-    <div class="relative w-full bg-slate-950 flex justify-center items-center overflow-hidden">
+    <!-- Clean Full-Width Hero Visual (True Edge-to-Edge, No Black Pillarboxes) -->
+    <div class="w-full bg-slate-950">
       <picture class="w-full">
         <!-- Mobile portrait visual (< 640px) -->
         <source media="(max-width: 639px)" srcset="/images/hero-mobile.jpg" />
@@ -18,7 +18,7 @@ defineProps<{
         <img
           src="/images/hero-desktop.jpg"
           alt="Rental Mobil &amp; Tour Bintan - 3 Putri Mulya"
-          class="w-full h-auto max-h-[65vh] sm:max-h-[75vh] lg:max-h-[82vh] object-contain mx-auto block"
+          class="w-full h-auto block"
           loading="eager"
         />
       </picture>
