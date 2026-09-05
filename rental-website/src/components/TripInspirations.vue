@@ -21,7 +21,8 @@ const destinations: DestinationItem[] = [
     icon: '🏖️',
     description: 'Nikmati kawasan wisata di utara Bintan dengan pantai berpasir putih, area resort, dan berbagai pilihan aktivitas santai seperti di Lagoi Bay dan Treasure Bay.',
     ctaText: 'Rencanakan perjalanan ke Lagoi',
-    waText: 'Halo 3 Putri Mulya, saya ingin tanya sewa mobil atau paket tour untuk rute ke Kawasan Lagoi.'
+    waText: 'Halo 3 Putri Mulya, saya ingin tanya sewa mobil atau paket tour untuk rute ke Kawasan Lagoi.',
+    image: '/images/destinations/lagoi.jpg'
   },
   {
     id: 'busung',
@@ -30,7 +31,8 @@ const destinations: DestinationItem[] = [
     icon: '🏜️',
     description: 'Kawasan perbukitan pasir dengan pemandangan danau berwarna biru toska, menjadi salah satu titik singgah favorit untuk berfoto saat melintasi rute Tanjung Uban.',
     ctaText: 'Rencanakan rute ke Danau Biru',
-    waText: 'Halo 3 Putri Mulya, saya ingin tanya kendaraan yang cocok untuk kunjungan ke Danau Biru & Gurun Pasir Busung.'
+    waText: 'Halo 3 Putri Mulya, saya ingin tanya kendaraan yang cocok untuk kunjungan ke Danau Biru & Gurun Pasir Busung.',
+    image: '/images/destinations/busung.jpg'
   },
   {
     id: 'trikora',
@@ -39,7 +41,8 @@ const destinations: DestinationItem[] = [
     icon: '🌴',
     description: 'Garis pantai alami dengan susunan batu granit besar dan suasana pesisir yang tenang, cocok untuk menikmati hembusan angin laut dan kuliner lokal pesisir.',
     ctaText: 'Rencanakan perjalanan ke Trikora',
-    waText: 'Halo 3 Putri Mulya, saya ingin sewa kendaraan untuk rute santai ke Pantai Trikora.'
+    waText: 'Halo 3 Putri Mulya, saya ingin sewa kendaraan untuk rute santai ke Pantai Trikora.',
+    image: '/images/destinations/trikora.jpg'
   },
   {
     id: 'patung-seribu',
@@ -48,7 +51,8 @@ const destinations: DestinationItem[] = [
     icon: '🏛️',
     description: 'Destinasi religi dan budaya di Tanjungpinang dengan ratusan patung arhat yang tertata rapi di area perbukitan dengan arsitektur yang megah.',
     ctaText: 'Kunjungi Patung Seribu bersama kami',
-    waText: 'Halo 3 Putri Mulya, saya ingin tanya sewa mobil atau tur untuk ke Vihara Patung Seribu.'
+    waText: 'Halo 3 Putri Mulya, saya ingin tanya sewa mobil atau tur untuk ke Vihara Patung Seribu.',
+    image: '/images/destinations/patung-seribu.jpg'
   }
 ]
 
@@ -84,27 +88,40 @@ const getWhatsAppUrl = (text: string) => {
         <div
           v-for="dest in destinations"
           :key="dest.id"
-          class="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-md transition-all group"
+          class="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-lg transition-all group"
         >
-          <!-- Visual Top Section (Clean atmospheric header with badge & icon) -->
-          <div class="p-6 bg-gradient-to-br from-slate-900 via-slate-850 to-blue-950 text-white relative overflow-hidden">
-            <div class="absolute -right-4 -bottom-4 text-5xl opacity-20 select-none pointer-events-none">
-              {{ dest.icon }}
-            </div>
-            <div class="relative z-10 flex items-center justify-between gap-2 mb-3">
-              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/10 text-slate-200 border border-white/15 backdrop-blur-xs">
+          <!-- Image Top Section with smooth zoom & contrast gradient -->
+          <div class="relative aspect-[16/10] overflow-hidden bg-slate-900">
+            <img
+              v-if="dest.image"
+              :src="dest.image"
+              :alt="dest.name"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+              loading="lazy"
+            />
+            
+            <!-- Soft Bottom Gradient for Text Legibility -->
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-slate-950/20 pointer-events-none"></div>
+
+            <!-- Top Left Floating Badge -->
+            <div class="absolute top-3 left-3 z-10">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-900/80 text-slate-100 border border-white/20 backdrop-blur-md shadow-xs">
                 <span>{{ dest.icon }}</span>
                 <span>{{ dest.badge }}</span>
               </span>
             </div>
-            <h3 class="relative z-10 text-lg font-bold text-white leading-snug group-hover:text-blue-300 transition-colors">
-              {{ dest.name }}
-            </h3>
+
+            <!-- Bottom Left Title over image -->
+            <div class="absolute bottom-3 left-4 right-4 z-10">
+              <h3 class="text-base sm:text-lg font-bold text-white leading-snug drop-shadow-md group-hover:text-blue-200 transition-colors">
+                {{ dest.name }}
+              </h3>
+            </div>
           </div>
 
           <!-- Card Content Body -->
           <div class="p-5 flex-1 flex flex-col justify-between">
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-5">
               {{ dest.description }}
             </p>
 
