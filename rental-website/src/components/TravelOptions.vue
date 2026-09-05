@@ -30,16 +30,16 @@ import { RouterLink } from 'vue-router'
           <div>
             <div class="flex items-center justify-between gap-3 mb-4">
               <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                🚗 Perjalanan Mandiri
+                🚗 Sewa Mobil Harian
               </span>
-              <span class="text-xs text-slate-400 font-medium">Sewa Harian</span>
+              <span class="text-xs text-slate-400 font-medium">Lepas Kunci / Driver</span>
             </div>
 
             <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2.5">
               Rental Mobil Harian
             </h3>
             <p class="text-sm text-slate-600 leading-relaxed mb-6">
-              Pilihan tepat jika Anda ingin bebas menentukan rute dan jadwal sendiri. Tersedia opsi lepas kunci maupun dengan driver untuk berbagai pilihan mobil.
+              Bebas tentukan rute wisata atau urusan bisnis Anda di Bintan. Tersedia unit matic &amp; manual, bisa lepas kunci maupun didampingi driver lokal.
             </p>
 
             <ul class="space-y-3 mb-6 pt-2 border-t border-slate-100 text-xs sm:text-sm text-slate-700">
@@ -53,13 +53,13 @@ import { RouterLink } from 'vue-router'
                 <svg class="w-4 h-4 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
-                <span>Tersedia unit transmisi matic dan manual (Veloz, Avanza, dll.)</span>
+                <span>Unit matic &amp; manual terawat (Veloz, Avanza, Agya)</span>
               </li>
               <li class="flex items-start gap-2.5">
                 <svg class="w-4 h-4 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
-                <span>Durasi sewa harian sesuai kebutuhan Anda</span>
+                <span>Bisa sewa harian, mingguan, maupun bulanan</span>
               </li>
             </ul>
           </div>
@@ -67,7 +67,7 @@ import { RouterLink } from 'vue-router'
           <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <a
               href="#armada"
-              class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold transition-colors shadow-xs"
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold transition-colors shadow-xs"
             >
               <span>Lihat Pilihan Mobil</span>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,7 +75,7 @@ import { RouterLink } from 'vue-router'
               </svg>
             </a>
             <span class="text-[11px] text-slate-400 italic text-center sm:text-right">
-              *Syarat lepas kunci berlaku
+              *Syarat lepas kunci mudah &amp; jelas
             </span>
           </div>
         </div>
@@ -92,16 +92,16 @@ import { RouterLink } from 'vue-router'
           <div>
             <div class="flex items-center justify-between gap-3 mb-4">
               <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                🌴 Perjalanan Rombongan
+                🚐 Paket Tour Rombongan
               </span>
-              <span class="text-xs text-slate-400 font-medium">15 Kursi</span>
+              <span class="text-xs text-slate-400 font-medium">Toyota HiAce 15 Kursi</span>
             </div>
 
             <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2.5">
               Paket Tour &amp; Charter HiAce
             </h3>
             <p class="text-sm text-slate-600 leading-relaxed mb-6">
-              Pilihan praktis untuk perjalanan bersama keluarga besar atau rekan kerja. Menggunakan unit Toyota HiAce 15 kursi yang sudah termasuk supir dan BBM.
+              Liburan seru keluarga besar atau rombongan kantor tanpa repot menyetir. Unit HiAce 15 kursi ber-AC dingin, supir ramah, dan BBM sudah termasuk.
             </p>
 
             <ul class="space-y-3 mb-6 pt-2 border-t border-slate-100 text-xs sm:text-sm text-slate-700">
@@ -115,7 +115,7 @@ import { RouterLink } from 'vue-router'
                 <svg class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
-                <span>Fasilitas <strong>Karaoke System</strong> &amp; <strong>Smart TV</strong> pada unit tertentu</span>
+                <span>Fasilitas <strong>Karaoke System &amp; Smart TV</strong> (perjalanan makin seru)</span>
               </li>
               <li class="flex items-start gap-2.5">
                 <svg class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

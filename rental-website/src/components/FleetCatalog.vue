@@ -86,12 +86,12 @@ const activePreviewUrl = computed<string | null>(() => {
             Pilihan Armada Kami
           </h2>
           <p class="text-sm text-slate-500 mt-1">
-            Unit yang siap digunakan untuk perjalanan Anda. Informasi status ketersediaan terhubung langsung dengan sistem operasional.
+            Mobil bersih dan terawat untuk keliling Bintan. Status unit selalu ter-update sesuai ketersediaan di garasi kami.
           </p>
         </div>
         <div class="text-xs text-slate-500 flex items-center gap-2">
           <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span>Informasi ketersediaan armada diperbarui berkala</span>
+          <span>Unit dicek berkala</span>
           <button
             @click="emit('retry')"
             type="button"
@@ -101,7 +101,7 @@ const activePreviewUrl = computed<string | null>(() => {
             <svg class="w-3 h-3" :class="{ 'animate-spin': loading }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-            <span>Refresh</span>
+            <span>Cek Status</span>
           </button>
         </div>
       </div>
@@ -295,16 +295,16 @@ const activePreviewUrl = computed<string | null>(() => {
               </div>
 
               <!-- 3. Key Specifications & Detail Link -->
-              <div class="flex items-center justify-between text-[11px] sm:text-xs text-slate-600 mt-2.5">
-                <div class="flex items-center gap-1.5">
-                  <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded font-medium">
+              <div class="flex items-center justify-between text-[10px] sm:text-xs text-slate-600 mt-2 sm:mt-2.5">
+                <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
+                  <span class="inline-flex items-center gap-1 bg-slate-100 px-1.5 sm:px-2 py-0.5 rounded font-medium whitespace-nowrap">
                     <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
                     {{ car.capacity }} Kursi
                   </span>
 
-                  <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded font-medium">
+                  <span class="inline-flex items-center gap-1 bg-slate-100 px-1.5 sm:px-2 py-0.5 rounded font-medium whitespace-nowrap">
                     {{ car.transmission_label }}
                   </span>
                 </div>
@@ -312,7 +312,7 @@ const activePreviewUrl = computed<string | null>(() => {
                 <button
                   type="button"
                   @click.stop="openPhotoModal(car, activeCardAngles[car.id] ?? 0)"
-                  class="text-[11px] text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-0.5 group-hover:underline"
+                  class="text-[11px] text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-0.5 group-hover:underline shrink-0"
                 >
                   <span>Detail</span>
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -343,7 +343,7 @@ const activePreviewUrl = computed<string | null>(() => {
                 <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
                 </svg>
-                Chat Sewa
+                Pesan via WA
               </a>
 
               <a
@@ -378,7 +378,7 @@ const activePreviewUrl = computed<string | null>(() => {
 
       <!-- Mandatory Transparency Disclaimer -->
       <div class="mt-8 pt-4 border-t border-slate-200 text-center text-xs text-slate-500 leading-relaxed max-w-2xl mx-auto">
-        Status ketersediaan armada diperbarui secara berkala dari sistem operasional. Kepastian jadwal dan serah terima unit dikonfirmasi langsung oleh admin melalui WhatsApp.
+        *Ketersediaan armada diperbarui secara berkala. Titik antar-jemput unit (bandara, pelabuhan, hotel) akan langsung dikonfirmasi oleh admin melalui WhatsApp.
       </div>
     </div>
 

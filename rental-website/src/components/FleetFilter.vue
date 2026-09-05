@@ -35,7 +35,7 @@ const transmissionOptions: { label: string; value: TransmissionFilter }[] = [
           type="text"
           :value="searchQuery"
           @input="emit('update:searchQuery', ($event.target as HTMLInputElement).value)"
-          placeholder="Cari nama atau merk mobil (misal: Avanza, Innova, Brio)..."
+          placeholder="Cari mobil (Veloz, Avanza, Agya, HiAce)..."
           class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
         />
         <button

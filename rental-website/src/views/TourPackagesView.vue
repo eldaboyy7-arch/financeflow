@@ -50,7 +50,7 @@ onMounted(() => {
         </div>
 
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.15] mb-4">
-          Paket Tour Bintan — Toyota HiAce (Include Supir &amp; BBM)
+          Paket Tour Bintan — Toyota HiAce (Sudah Termasuk Supir &amp; BBM)
         </h1>
 
         <p class="text-base sm:text-lg text-slate-600 leading-relaxed">
@@ -208,12 +208,12 @@ onMounted(() => {
                     <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
                     </svg>
-                    <span>Tour Itinerary &amp; Facilities</span>
+                    <span>Rencana Perjalanan &amp; Fasilitas Tour</span>
                   </h3>
 
                   <!-- Facilities List -->
                   <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2">
-                    <span class="text-xs font-bold text-slate-800 block">Fasilitas Kendaraan (Facility):</span>
+                    <span class="text-xs font-bold text-slate-800 block">Fasilitas Kendaraan:</span>
                     <ul class="space-y-1.5 text-xs text-slate-600">
                       <li v-for="(fac, fIdx) in pkg.facilities" :key="fIdx" class="flex items-start gap-2">
                         <span class="text-blue-600 font-bold">&bull;</span>
@@ -224,7 +224,7 @@ onMounted(() => {
 
                   <!-- Rute Tur -->
                   <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100/80">
-                    <span class="text-xs font-bold text-blue-900 block mb-1">Rute Tur (Tour Route):</span>
+                    <span class="text-xs font-bold text-blue-900 block mb-1">Rute Wisata yang Dikunjungi:</span>
                     <p class="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed">
                       {{ pkg.tourRoute }}
                     </p>
@@ -266,12 +266,12 @@ onMounted(() => {
                   :href="getWhatsAppUrl(pkg.ctaWhatsappText)"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-95 shrink-0"
+                  class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-95 shrink-0"
                 >
                   <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
                   </svg>
-                  Book This Tour via WhatsApp
+                  Pesan Paket Tour via WhatsApp
                 </a>
               </div>
             </div>
