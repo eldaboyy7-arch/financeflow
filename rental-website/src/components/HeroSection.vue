@@ -1,36 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { PublicVehicle } from '@/types/fleet'
-import { siteConfig } from '@/config/site'
-import { generateGeneralWhatsAppUrl, generateVehicleWhatsAppUrl } from '@/utils/whatsapp'
-import { getVehicleAngles } from '@/utils/vehiclePhotos'
 
-const props = defineProps<{
+defineProps<{
   featuredVehicle?: PublicVehicle | null
 }>()
-
-const activeAngle = ref<number>(0)
-
-const waGeneralUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, siteConfig.rentalName))
-
-const featuredWaUrl = computed(() => {
-  if (!props.featuredVehicle) return waGeneralUrl.value
-  return generateVehicleWhatsAppUrl(props.featuredVehicle, siteConfig.rentalPhone, siteConfig.rentalName)
-})
-
-const availableAngles = computed(() => {
-  if (!props.featuredVehicle) return []
-  return getVehicleAngles(props.featuredVehicle)
-})
-
-const currentDisplayPhoto = computed(() => {
-  if (!props.featuredVehicle) return null
-  if (availableAngles.value.length > 0 && availableAngles.value[activeAngle.value]) {
-    return availableAngles.value[activeAngle.value].url
-  }
-  return props.featuredVehicle.photo_url || null
-})
 </script>
 
 <template>
@@ -38,7 +12,7 @@ const currentDisplayPhoto = computed(() => {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         <!-- Left Column: Customer-Oriented Copy & CTAs -->
-        <div class="lg:col-span-7">
+        <div class="lg:col-span-5">
           <!-- Status Pill -->
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium mb-5 border border-slate-200">
             <img src="/images/logo-3pm.png" alt="3PM" class="w-4 h-4 object-contain" />
@@ -62,7 +36,7 @@ const currentDisplayPhoto = computed(() => {
           <div class="flex flex-wrap items-center gap-3.5 mb-8">
             <a
               href="#armada"
-              class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm transition-colors"
+              class="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm transition-colors"
             >
               Lihat Pilihan Armada
               <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +46,7 @@ const currentDisplayPhoto = computed(() => {
 
             <RouterLink
               to="/paket-tour-bintan"
-              class="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold text-sm shadow-sm transition-colors"
+              class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold text-sm shadow-sm transition-colors"
             >
               Paket Tour HiAce
               <svg class="w-4 h-4 ml-2 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,126 +73,37 @@ const currentDisplayPhoto = computed(() => {
               <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
               </svg>
-              <span>Konfirmasi Cepat via WhatsApp</span>
+              <span>Include Supir &amp; BBM (HiAce)</span>
             </div>
           </div>
         </div>
 
-        <!-- Right Column: Featured Vehicle Showcase (Tangible Automotive Hero) -->
-        <div class="lg:col-span-5">
-          <div
-            v-if="featuredVehicle"
-            class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-xl text-white relative group"
-          >
-            <!-- Card Header Tag -->
-            <div class="flex items-center justify-between px-5 pt-4 pb-2">
-              <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                Unit Rekomendasi
-              </span>
-              <span
-                v-if="featuredVehicle.status === 'available'"
-                class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-              >
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                Tersedia Sekarang
-              </span>
-              <span
-                v-else-if="featuredVehicle.status === 'maintenance'"
-                class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30"
-              >
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                Di Bengkel
-              </span>
-              <span
-                v-else
-                class="text-xs text-slate-400 font-medium"
-              >
-                {{ featuredVehicle.status_label }}
-              </span>
-            </div>
-
-            <!-- Vehicle Visual Container -->
-            <div class="relative aspect-[16/10] bg-slate-950/60 overflow-hidden flex items-center justify-center p-3">
+        <!-- Right Column: Official 3 Putri Mulya Fleet Hero Visual (Desktop & Mobile Responsive) -->
+        <div class="lg:col-span-7">
+          <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-slate-200/90 bg-slate-900 group">
+            <picture>
+              <!-- Mobile portrait visual for screens < 640px -->
+              <source media="(max-width: 639px)" srcset="/images/hero-mobile.jpg" />
+              <!-- Desktop landscape visual for screens >= 640px -->
+              <source media="(min-width: 640px)" srcset="/images/hero-desktop.jpg" />
               <img
-                v-if="currentDisplayPhoto"
-                :src="currentDisplayPhoto"
-                :alt="featuredVehicle.name"
-                class="w-full h-full object-cover rounded-lg"
+                src="/images/hero-desktop.jpg"
+                alt="Armada Resmi 3 Putri Mulya di Bintan: Agya, Avanza, Veloz, HiAce Premio"
+                class="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                loading="eager"
               />
-              <div
-                v-else
-                class="w-full h-full flex flex-col items-center justify-center text-slate-500"
-              >
-                <!-- Sleek Car Silhouette -->
-                <svg class="w-24 h-24 text-slate-700 mb-2" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
-                </svg>
-                <span class="text-xs text-slate-400 font-medium">Foto Unit dari Sistem Armada</span>
-              </div>
+            </picture>
 
-              <!-- Angle Switcher for Twin Vehicle Preview -->
-              <div
-                v-if="availableAngles.length > 1"
-                class="absolute bottom-5 right-5 z-10 flex items-center gap-1 bg-slate-900/85 backdrop-blur-xs px-2 py-1 rounded-lg border border-slate-700/80 text-xs shadow-md"
-              >
-                <span class="text-[10px] text-slate-400 mr-1 hidden sm:inline">Sudut:</span>
-                <button
-                  v-for="(angle, idx) in availableAngles"
-                  :key="angle.id"
-                  @click="activeAngle = idx"
-                  type="button"
-                  :class="activeAngle === idx ? 'bg-blue-600 text-white font-semibold' : 'text-slate-300 hover:text-white'"
-                  class="px-2 py-0.5 rounded text-[10px] transition-colors"
-                >
-                  {{ angle.label }}
-                </button>
-              </div>
+            <!-- Bottom Floating Caption -->
+            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/85 via-slate-950/40 to-transparent p-3 sm:p-4 flex items-center justify-between text-white text-xs">
+              <span class="inline-flex items-center gap-1.5 font-semibold text-white">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                Armada Resmi 3 Putri Mulya
+              </span>
+              <span class="text-slate-300 text-[11px] font-medium hidden sm:inline">
+                Agya &bull; Avanza &bull; Veloz &bull; HiAce Premio
+              </span>
             </div>
-
-            <!-- Vehicle Details Bar -->
-            <div class="p-5 bg-slate-900 border-t border-slate-800">
-              <div class="flex items-start justify-between gap-3 mb-3">
-                <div>
-                  <h3 class="text-lg font-bold text-white leading-snug">
-                    {{ featuredVehicle.name }}
-                  </h3>
-                  <div class="text-xs text-slate-400 mt-0.5">
-                    Tahun {{ featuredVehicle.model_year }} &bull; {{ featuredVehicle.transmission_label }} &bull; {{ featuredVehicle.capacity }} Kursi
-                  </div>
-                </div>
-                <div class="text-right shrink-0">
-                  <span class="text-[10px] text-slate-400 block uppercase tracking-wider">Tarif Sewa</span>
-                  <span class="text-base font-extrabold text-white">
-                    {{ featuredVehicle.daily_rate_formatted }}
-                  </span>
-                  <span class="text-[10px] text-slate-400">/hari</span>
-                </div>
-              </div>
-
-              <a
-                :href="featuredWaUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-colors shadow-xs"
-              >
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
-                </svg>
-                Pesan Unit Ini via WhatsApp
-              </a>
-            </div>
-          </div>
-
-          <!-- Fallback subtle badge if no vehicles loaded yet -->
-          <div
-            v-else
-            class="aspect-[16/10] bg-slate-100 rounded-2xl border border-slate-200 flex flex-col items-center justify-center p-6 text-center"
-          >
-            <svg class="w-16 h-16 text-slate-300 mb-3" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
-            </svg>
-            <span class="text-sm font-semibold text-slate-600">Armada Rental Terawat</span>
-            <span class="text-xs text-slate-400 mt-1">Lihat katalog lengkap di bawah</span>
           </div>
         </div>
       </div>
