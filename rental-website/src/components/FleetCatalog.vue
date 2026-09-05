@@ -209,16 +209,17 @@ const activePreviewUrl = computed<string | null>(() => {
               </span>
               <span
                 v-else-if="car.status === 'rented'"
-                class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-slate-800/85 text-white backdrop-blur-xs shadow-sm"
+                class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 shadow-sm"
               >
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                 Sedang Disewa
               </span>
               <span
                 v-else-if="car.status === 'maintenance'"
-                class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200 shadow-sm"
+                class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600 border border-slate-200 shadow-sm"
               >
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                Di Bengkel
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                Perawatan
               </span>
               <span
                 v-else
@@ -358,9 +359,9 @@ const activePreviewUrl = computed<string | null>(() => {
               <button
                 v-else-if="car.status === 'maintenance'"
                 disabled
-                class="w-full sm:w-auto inline-flex items-center justify-center px-2 py-1.5 sm:px-2.5 sm:py-2 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 text-xs font-medium cursor-not-allowed"
+                class="w-full sm:w-auto inline-flex items-center justify-center px-2 py-1.5 sm:px-2.5 sm:py-2 rounded-lg bg-slate-100 text-slate-400 border border-slate-200 text-xs font-medium cursor-not-allowed"
               >
-                Di Bengkel
+                Perawatan
               </button>
 
               <button
@@ -476,16 +477,23 @@ const activePreviewUrl = computed<string | null>(() => {
             </span>
             <span
               v-else-if="previewVehicle.status === 'maintenance'"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-700 text-slate-100 shadow-md"
+            >
+              <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+              Dalam Perawatan
+            </span>
+            <span
+              v-else-if="previewVehicle.status === 'rented'"
               class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-600 text-white shadow-md"
             >
               <span class="w-2 h-2 rounded-full bg-white"></span>
-              Sedang Di Bengkel
+              Sedang Disewa
             </span>
             <span
               v-else
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-white shadow-md"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-700 text-white shadow-md"
             >
-              Sedang Disewa
+              {{ previewVehicle.status_label || 'Tidak Tersedia' }}
             </span>
           </div>
 
@@ -655,10 +663,10 @@ const activePreviewUrl = computed<string | null>(() => {
 
           <div
             v-else-if="previewVehicle.status === 'maintenance'"
-            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-50 text-amber-800 border border-amber-300 text-xs font-semibold"
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 text-slate-500 border border-slate-200 text-xs font-semibold"
           >
-            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-            Sedang Di Bengkel
+            <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+            Dalam Perawatan
           </div>
 
           <a
@@ -666,9 +674,9 @@ const activePreviewUrl = computed<string | null>(() => {
             :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName)"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs transition-all"
+            class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-all shadow-xs"
           >
-            Tanya Jadwal Kosong
+            Tanya Jadwal Lain
           </a>
         </div>
       </div>
