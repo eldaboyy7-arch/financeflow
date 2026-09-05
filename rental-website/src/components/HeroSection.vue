@@ -24,21 +24,12 @@ defineProps<{
       </picture>
 
       <!-- 2. Clean Typography & CTA in the Open Sky (Zero Overlap on Cars) -->
-      <div class="absolute inset-x-0 top-16 sm:top-20 md:top-24 lg:top-28 z-20 text-center px-4 max-w-4xl mx-auto pointer-events-auto">
-        <!-- Official Transparent 3PM Gold Crown Logo -->
-        <div class="mb-2 sm:mb-3">
-          <img
-            src="/images/logo-3pm.png"
-            alt="Logo 3 Putri Mulya"
-            class="w-14 h-14 sm:w-18 sm:h-18 md:w-22 md:h-22 mx-auto object-contain drop-shadow-xl"
-          />
-        </div>
-
-        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-950 tracking-tight leading-tight drop-shadow-xs">
+      <div class="absolute inset-x-0 top-20 sm:top-24 md:top-28 lg:top-32 z-20 text-center px-4 max-w-4xl mx-auto pointer-events-auto">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-tight drop-shadow-xs">
           Jelajahi Bintan dengan Nyaman
         </h1>
 
-        <p class="text-xs sm:text-sm md:text-base text-slate-800 font-semibold mt-1.5 sm:mt-2 max-w-2xl mx-auto leading-relaxed drop-shadow-xs">
+        <p class="text-sm sm:text-base md:text-lg text-slate-800 font-semibold mt-2.5 sm:mt-3 max-w-2xl mx-auto leading-relaxed drop-shadow-xs">
           Rental mobil dan paket perjalanan di Bintan untuk kebutuhan pribadi, keluarga, maupun rombongan.
         </p>
 
