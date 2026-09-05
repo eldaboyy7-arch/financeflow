@@ -2,12 +2,11 @@
 import { RouterView } from 'vue-router'
 import TheNavbar from '@/components/TheNavbar.vue'
 import TheFooter from '@/components/TheFooter.vue'
-import FloatingWhatsappBar from '@/components/FloatingWhatsappBar.vue'
 </script>
 
 <template>
   <div class="min-h-screen flex flex-col bg-slate-50 text-slate-800">
-    <!-- Navbar -->
+    <!-- Navbar (Sticky persistent WhatsApp access) -->
     <TheNavbar />
 
     <!-- Routed Page Content -->
@@ -17,8 +16,5 @@ import FloatingWhatsappBar from '@/components/FloatingWhatsappBar.vue'
 
     <!-- Footer -->
     <TheFooter />
-
-    <!-- Sticky Floating WhatsApp Bar (Mobile only) -->
-    <FloatingWhatsappBar />
   </div>
 </template>
