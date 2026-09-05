@@ -20,8 +20,8 @@ const currentYear = new Date().getFullYear()
               <img src="/images/logo-3pm.png" alt="Logo 3 Putri Mulya" class="w-full h-full object-contain" />
             </div>
             <div>
-              <span class="text-base font-extrabold text-white block leading-tight">{{ siteConfig.rentalName }}</span>
-              <span class="text-[10px] text-slate-400 font-normal">Rental Mobil &amp; Tour Bintan</span>
+              <span class="font-display text-base font-black text-white block leading-tight tracking-tight">{{ siteConfig.rentalName }}</span>
+              <span class="text-[9.5px] font-bold tracking-widest uppercase text-amber-400 block leading-none mt-1">Rental Mobil &bull; Tour Bintan</span>
             </div>
           </div>
           <p class="text-slate-400 leading-relaxed max-w-sm mb-4">
