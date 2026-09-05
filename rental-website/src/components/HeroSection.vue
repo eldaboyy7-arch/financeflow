@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <section class="relative bg-slate-950 text-white overflow-hidden border-b border-slate-800">
+  <section class="relative bg-slate-950 text-white overflow-hidden border-b border-slate-800 min-h-[100svh] sm:min-h-0">
     <!-- 1. Full-Bleed Edge-to-Edge Hero (Starts at y=0, Zero Top Padding, Clean HD Visual) -->
     <div class="relative w-full overflow-hidden">
       <picture class="w-full">
@@ -18,7 +18,7 @@ defineProps<{
         <img
           src="/images/hero-desktop.png"
           alt="Rental Mobil &amp; Tour Bintan - 3 Putri Mulya"
-          class="w-full h-[78vh] sm:h-auto object-cover object-bottom sm:object-contain sm:object-top block"
+          class="w-full h-[100svh] sm:h-auto object-cover object-bottom sm:object-contain sm:object-top block"
           loading="eager"
         />
       </picture>
