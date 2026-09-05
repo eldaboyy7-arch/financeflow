@@ -39,19 +39,19 @@ const reasons = [
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         <div
           v-for="(item, idx) in reasons"
           :key="idx"
-          class="p-6 rounded-2xl border border-slate-200 bg-slate-50/50 flex flex-col justify-start hover:border-slate-300 hover:bg-white transition-all"
+          class="p-3.5 sm:p-6 rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50/50 flex flex-col justify-start hover:border-slate-300 hover:bg-white transition-all shadow-2xs"
         >
-          <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 shrink-0">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-2.5 sm:mb-4 shrink-0">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="item.icon"/>
             </svg>
           </div>
-          <h3 class="text-base font-bold text-slate-900 mb-2">{{ item.title }}</h3>
-          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">{{ item.desc }}</p>
+          <h3 class="text-xs sm:text-base font-bold text-slate-900 mb-1 sm:mb-2 leading-snug">{{ item.title }}</h3>
+          <p class="text-[11px] sm:text-sm text-slate-600 leading-snug sm:leading-relaxed">{{ item.desc }}</p>
         </div>
       </div>
 
