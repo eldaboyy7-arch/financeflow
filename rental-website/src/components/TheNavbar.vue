@@ -71,7 +71,7 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
       isMobileMenuOpen || (isHome && isScrolled)
         ? 'bg-slate-950/95 backdrop-blur-md border-b border-slate-800 text-white shadow-xl'
         : (isHome && !isScrolled
-            ? 'bg-gradient-to-b from-slate-950/80 via-slate-950/30 to-transparent text-white border-b border-transparent'
+            ? 'bg-gradient-to-b from-slate-950/80 via-slate-950/30 to-transparent text-white'
             : '')
     ]"
   >
