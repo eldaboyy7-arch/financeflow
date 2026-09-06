@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import type { PublicVehicle } from '@/types/fleet'
 import { siteConfig } from '@/config/site'
 import { generateVehicleWhatsAppUrl } from '@/utils/whatsapp'
@@ -71,6 +71,48 @@ const activePreviewUrl = computed<string | null>(() => {
     return previewAngles.value[previewAngleIdx.value].url
   }
   return previewVehicle.value.photo_url
+})
+
+const nextModalAngle = () => {
+  if (previewAngles.value.length <= 1) return
+  previewAngleIdx.value = (previewAngleIdx.value + 1) % previewAngles.value.length
+}
+
+const prevModalAngle = () => {
+  if (previewAngles.value.length <= 1) return
+  previewAngleIdx.value = (previewAngleIdx.value - 1 + previewAngles.value.length) % previewAngles.value.length
+}
+
+const handleKeydown = (e: KeyboardEvent) => {
+  if (e.key === 'Escape') {
+    if (previewVehicle.value) closePhotoModal()
+    if (activeVideoUrl.value) closeVideoModal()
+  } else if (previewVehicle.value && previewAngles.value.length > 1) {
+    if (e.key === 'ArrowRight') nextModalAngle()
+    if (e.key === 'ArrowLeft') prevModalAngle()
+  }
+}
+
+watch([previewVehicle, activeVideoUrl], ([vehicle, video]) => {
+  if (typeof document === 'undefined') return
+  if (vehicle || video) {
+    document.body.classList.add('overflow-hidden')
+  } else {
+    document.body.classList.remove('overflow-hidden')
+  }
+})
+
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    window.addEventListener('keydown', handleKeydown)
+  }
+})
+
+onUnmounted(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('keydown', handleKeydown)
+    document.body.classList.remove('overflow-hidden')
+  }
 })
 </script>
 
@@ -219,6 +261,13 @@ const activePreviewUrl = computed<string | null>(() => {
                 <span>Tersedia</span>
               </span>
               <span
+                v-else-if="car.status === 'maintenance'"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-sm"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                <span>Perawatan</span>
+              </span>
+              <span
                 v-else-if="car.status === 'rented'"
                 class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-900/80 text-slate-200 backdrop-blur-xs shadow-sm"
               >
@@ -350,11 +399,19 @@ const activePreviewUrl = computed<string | null>(() => {
               </a>
 
               <button
+                v-else-if="car.status === 'maintenance'"
+                disabled
+                class="w-full h-10 px-2.5 rounded-xl bg-slate-100 text-slate-500 border border-slate-200 text-xs font-semibold whitespace-nowrap inline-flex items-center justify-center cursor-not-allowed"
+              >
+                <span>Perawatan</span>
+              </button>
+
+              <button
                 v-else
                 disabled
                 class="w-full h-10 px-2.5 rounded-xl bg-slate-100 text-slate-400 text-xs font-medium whitespace-nowrap inline-flex items-center justify-center cursor-not-allowed"
               >
-                <span>{{ car.status_label || 'Sedang Diservis' }}</span>
+                <span>{{ car.status_label || 'Tidak Tersedia' }}</span>
               </button>
             </div>
           </div>
@@ -410,272 +467,367 @@ const activePreviewUrl = computed<string | null>(() => {
       </div>
     </div>
 
-    <!-- Vehicle Details & Gallery Modal Dialog -->
+    <!-- Vehicle Details & Photo Gallery Modal Dialog -->
     <div
       v-if="previewVehicle"
-      class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/75 backdrop-blur-xs transition-all"
+      class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-950/80 backdrop-blur-sm transition-all"
       @click.self="closePhotoModal"
     >
-      <div class="bg-white rounded-t-3xl sm:rounded-3xl overflow-hidden max-w-xl w-full border border-slate-200 shadow-2xl text-slate-900 flex flex-col max-h-[92vh] sm:max-h-[90vh] animate-in fade-in slide-in-from-bottom-4 duration-200">
-        <!-- 1. Media Viewport (Photo & Video) -->
-        <div class="relative aspect-[16/10] bg-slate-100 overflow-hidden shrink-0">
-          <!-- Photo View -->
-          <div v-if="activeModalTab === 'photo'" class="w-full h-full relative flex items-center justify-center bg-slate-50">
-            <img
-              v-if="activePreviewUrl"
-              :src="activePreviewUrl"
-              :alt="previewVehicle.name"
-              class="w-full h-full object-cover"
-            />
-            <div v-else class="text-slate-400 text-xs flex flex-col items-center justify-center p-4">
-              <svg class="w-10 h-10 text-slate-300 mb-1" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
-              </svg>
-              <span>Foto unit belum tersedia</span>
+      <div
+        class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden w-full max-w-4xl lg:max-w-5xl xl:max-w-6xl border border-slate-200 shadow-2xl text-slate-900 flex flex-col md:flex-row md:max-h-[88vh] max-h-[94vh] animate-in fade-in zoom-in-95 duration-200"
+      >
+        <!-- 1. LEFT COLUMN: Media Showcase Stage (Photo, Angle Switcher, Video) -->
+        <div class="md:w-7/12 lg:w-3/5 bg-slate-950 flex flex-col justify-between relative overflow-hidden p-4 sm:p-5 lg:p-6 select-none border-b md:border-b-0 md:border-r border-slate-800 shrink-0">
+          
+          <!-- Subtle Showroom Spotlight Glow behind vehicle -->
+          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-800/40 via-slate-950 to-black pointer-events-none"></div>
+
+          <!-- Top Stage Bar: Status Badge & Controls -->
+          <div class="relative z-10 flex items-center justify-between gap-2">
+            <!-- Status Badge -->
+            <div>
+              <span
+                v-if="previewVehicle.status === 'available'"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-600/95 text-white backdrop-blur-md shadow-md"
+              >
+                <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                <span>Tersedia Siap Jalan</span>
+              </span>
+              <span
+                v-else-if="previewVehicle.status === 'maintenance'"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-white backdrop-blur-md shadow-md"
+              >
+                <span class="w-2 h-2 rounded-full bg-white"></span>
+                <span>Perawatan</span>
+              </span>
+              <span
+                v-else-if="previewVehicle.status === 'rented'"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-800/90 text-slate-200 backdrop-blur-md shadow-md"
+              >
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                <span>Sedang Disewa</span>
+              </span>
+              <span
+                v-else
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-800/90 text-slate-300 backdrop-blur-md shadow-md"
+              >
+                <span>{{ previewVehicle.status_label || 'Tidak Tersedia' }}</span>
+              </span>
             </div>
 
-            <!-- Angle Switcher Pills (Bottom Center) -->
+            <!-- Right Controls: Media Switcher, Open Full Image, & Mobile Close -->
+            <div class="flex items-center gap-2">
+              <!-- Media Toggle (Photo vs Video) -->
+              <div
+                v-if="previewVehicle.safe_video_embed_url"
+                class="flex items-center bg-slate-900/90 backdrop-blur-md p-0.5 rounded-full border border-slate-700 text-xs shadow-md"
+              >
+                <button
+                  @click="activeModalTab = 'photo'"
+                  :class="activeModalTab === 'photo' ? 'bg-white text-slate-900 font-bold shadow-xs' : 'text-slate-300 hover:text-white'"
+                  class="px-2.5 py-1 rounded-full transition-colors text-[11px]"
+                  type="button"
+                >
+                  Foto Unit
+                </button>
+                <button
+                  @click="activeModalTab = 'video'"
+                  :class="activeModalTab === 'video' ? 'bg-white text-slate-900 font-bold shadow-xs' : 'text-slate-300 hover:text-white'"
+                  class="px-2.5 py-1 rounded-full transition-colors flex items-center gap-1 text-[11px]"
+                  type="button"
+                >
+                  <svg class="w-3 h-3 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  Video
+                </button>
+              </div>
+
+              <!-- Fullscreen / Open Image in New Tab -->
+              <a
+                v-if="activePreviewUrl"
+                :href="activePreviewUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-8 h-8 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 backdrop-blur-md flex items-center justify-center transition-colors"
+                title="Buka foto resolusi penuh"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+              </a>
+
+              <!-- Mobile Close Button (visible only below md) -->
+              <button
+                @click="closePhotoModal"
+                class="md:hidden w-8 h-8 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 backdrop-blur-md flex items-center justify-center transition-colors"
+                type="button"
+                title="Tutup dialog"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Center Stage: Photo Display or Video Player -->
+          <div class="relative z-10 my-auto py-2 sm:py-5 flex items-center justify-center min-h-[220px] sm:min-h-[300px] md:min-h-[360px] lg:min-h-[420px]">
+            <!-- Photo Tab View -->
+            <div v-if="activeModalTab === 'photo'" class="relative w-full h-full flex items-center justify-center group">
+              <img
+                v-if="activePreviewUrl"
+                :src="activePreviewUrl"
+                :alt="previewVehicle.name"
+                class="w-full h-full max-h-[260px] sm:max-h-[340px] md:max-h-[420px] object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.6)] transition-all duration-300"
+              />
+              <div v-else class="text-slate-400 text-xs flex flex-col items-center justify-center p-8">
+                <svg class="w-12 h-12 text-slate-600 mb-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
+                </svg>
+                <span>Foto unit belum tersedia</span>
+              </div>
+
+              <!-- Previous & Next Angle Arrows (Visible if multi-angle) -->
+              <button
+                v-if="previewAngles.length > 1"
+                @click="prevModalAngle"
+                type="button"
+                class="absolute left-0 sm:left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-900/80 hover:bg-slate-800 text-white backdrop-blur-md flex items-center justify-center transition-all border border-slate-700/80 shadow-lg"
+                title="Sudut foto sebelumnya (Panah Kiri)"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+                </svg>
+              </button>
+              <button
+                v-if="previewAngles.length > 1"
+                @click="nextModalAngle"
+                type="button"
+                class="absolute right-0 sm:right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-900/80 hover:bg-slate-800 text-white backdrop-blur-md flex items-center justify-center transition-all border border-slate-700/80 shadow-lg"
+                title="Sudut foto berikutnya (Panah Kanan)"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Video Tab View -->
+            <div v-else-if="activeModalTab === 'video' && previewVehicle.safe_video_embed_url" class="w-full aspect-video rounded-xl overflow-hidden shadow-2xl border border-slate-800 bg-black">
+              <iframe
+                :src="previewVehicle.safe_video_embed_url"
+                class="w-full h-full"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </div>
+
+          <!-- Bottom Gallery Navigation & Angle Strip -->
+          <div class="relative z-10 pt-3 border-t border-slate-800/80 flex flex-col items-center gap-1.5">
             <div
               v-if="previewAngles.length > 1"
-              class="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1 bg-slate-900/80 backdrop-blur-xs p-1 rounded-full border border-slate-700/60 shadow-lg"
+              class="flex items-center justify-center gap-2 flex-wrap"
             >
               <button
                 v-for="(angle, idx) in previewAngles"
                 :key="angle.id"
                 @click="previewAngleIdx = idx"
                 type="button"
-                :class="previewAngleIdx === idx ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-300 hover:text-white'"
-                class="px-2.5 py-0.5 rounded-full text-[11px] transition-colors leading-tight"
+                :class="previewAngleIdx === idx
+                  ? 'border-blue-500 bg-blue-600 text-white font-bold shadow-md ring-2 ring-blue-500/50'
+                  : 'border-slate-700/80 bg-slate-900/80 text-slate-300 hover:text-white hover:border-slate-600'"
+                class="px-3 py-1 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-all"
               >
-                {{ angle.label }}
+                <span>{{ angle.label }}</span>
               </button>
             </div>
+            <div class="text-[11px] text-slate-400 font-medium text-center">
+              <span v-if="previewAngles.length > 1">Pilih sudut untuk melihat foto dari sisi lain</span>
+              <span v-else>Foto asli armada kami &bull; Unit terawat siap jalan</span>
+            </div>
           </div>
+        </div>
 
-          <!-- Video View -->
-          <div v-else-if="activeModalTab === 'video' && previewVehicle.safe_video_embed_url" class="w-full h-full bg-black">
-            <iframe
-              :src="previewVehicle.safe_video_embed_url"
-              class="w-full h-full"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>
-
-          <!-- Top-Left Status Badge -->
-          <div class="absolute top-3 left-3 z-10">
-            <span
-              v-if="previewVehicle.status === 'available'"
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-600 text-white shadow-md"
-            >
-              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-              Tersedia Siap Jalan
-            </span>
-            <span
-              v-else-if="previewVehicle.status === 'maintenance'"
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-700 text-slate-100 shadow-md"
-            >
-              <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-              Dalam Perawatan
-            </span>
-            <span
-              v-else-if="previewVehicle.status === 'rented'"
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-600 text-white shadow-md"
-            >
-              <span class="w-2 h-2 rounded-full bg-white"></span>
-              Sedang Disewa
-            </span>
-            <span
-              v-else
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-700 text-white shadow-md"
-            >
-              {{ previewVehicle.status_label || 'Tidak Tersedia' }}
-            </span>
-          </div>
-
-          <!-- Top-Right Actions: Media Toggle & Close -->
-          <div class="absolute top-3 right-3 z-10 flex items-center gap-2">
-            <!-- Media Toggle if Video available -->
-            <div
-              v-if="previewVehicle.safe_video_embed_url"
-              class="flex items-center bg-slate-900/80 backdrop-blur-xs p-0.5 rounded-full border border-slate-700/60 shadow-md text-[11px]"
-            >
-              <button
-                @click="activeModalTab = 'photo'"
-                :class="activeModalTab === 'photo' ? 'bg-white text-slate-900 font-bold' : 'text-slate-300 hover:text-white'"
-                class="px-2.5 py-0.5 rounded-full transition-colors"
-                type="button"
-              >
-                Foto
-              </button>
-              <button
-                @click="activeModalTab = 'video'"
-                :class="activeModalTab === 'video' ? 'bg-white text-slate-900 font-bold' : 'text-slate-300 hover:text-white'"
-                class="px-2.5 py-0.5 rounded-full transition-colors flex items-center gap-1"
-                type="button"
-              >
-                <svg class="w-3 h-3 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                Video
-              </button>
+        <!-- 2. RIGHT COLUMN: Vehicle Specs Sheet, Description, Checklist & Booking CTA -->
+        <div class="md:w-5/12 lg:w-2/5 flex flex-col justify-between bg-white overflow-hidden">
+          
+          <!-- Header (Brand, Name, Year, Desktop Close Button) -->
+          <div class="p-5 sm:p-6 pb-4 border-b border-slate-100 flex items-start justify-between gap-3 shrink-0">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[11px] font-bold uppercase tracking-wider">
+                  {{ previewVehicle.brand || 'Armada' }}
+                </span>
+                <span class="text-xs text-slate-400 font-medium">&bull; Tahun {{ previewVehicle.model_year }}</span>
+              </div>
+              <h3 class="text-xl sm:text-2xl font-black text-slate-900 leading-tight mt-1">
+                {{ previewVehicle.name }}
+              </h3>
             </div>
 
-            <!-- Close Button -->
+            <!-- Desktop Close Button -->
             <button
               @click="closePhotoModal"
-              class="w-8 h-8 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-slate-900 shadow-md backdrop-blur-xs flex items-center justify-center transition-transform hover:scale-105"
+              class="hidden md:flex w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 items-center justify-center transition-colors shrink-0"
               type="button"
-              title="Tutup dialog"
+              title="Tutup dialog (Esc)"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
               </svg>
             </button>
           </div>
-        </div>
 
-        <!-- 2. Scrollable Details Body -->
-        <div class="overflow-y-auto px-5 py-4 space-y-4 flex-1">
-          <!-- Title & Meta Subtitle -->
-          <div>
-            <h3 class="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
-              {{ previewVehicle.name }}
-            </h3>
-            <div class="text-xs sm:text-sm text-slate-500 font-medium mt-1 flex items-center gap-2">
-              <span>Tahun {{ previewVehicle.model_year }}</span>
-              <span v-if="previewVehicle.brand">&bull; {{ previewVehicle.brand }}</span>
-              <span v-if="previewVehicle.fuel_type_label">&bull; Bahan Bakar {{ previewVehicle.fuel_type_label }}</span>
+          <!-- Scrollable Body (Specs, Description, Services) -->
+          <div class="overflow-y-auto p-5 sm:p-6 space-y-4 flex-1">
+            <!-- 2x2 Specs Grid -->
+            <div class="grid grid-cols-2 gap-2.5">
+              <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex flex-col justify-center">
+                <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Kapasitas</span>
+                <div class="flex items-center gap-1.5 mt-1">
+                  <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                  </svg>
+                  <span class="text-xs sm:text-sm font-bold text-slate-800">{{ previewVehicle.capacity }} Kursi</span>
+                </div>
+              </div>
+
+              <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex flex-col justify-center">
+                <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Transmisi</span>
+                <div class="flex items-center gap-1.5 mt-1">
+                  <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                  </svg>
+                  <span class="text-xs sm:text-sm font-bold text-slate-800">{{ previewVehicle.transmission_label }}</span>
+                </div>
+              </div>
+
+              <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex flex-col justify-center">
+                <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Bahan Bakar</span>
+                <div class="flex items-center gap-1.5 mt-1">
+                  <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  </svg>
+                  <span class="text-xs sm:text-sm font-bold text-slate-800">{{ previewVehicle.fuel_type_label }}</span>
+                </div>
+              </div>
+
+              <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex flex-col justify-center">
+                <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Kondisi</span>
+                <div class="flex items-center gap-1.5 mt-1">
+                  <svg
+                    v-if="previewVehicle.status === 'maintenance'"
+                    class="w-4 h-4 text-amber-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <svg
+                    v-else
+                    class="w-4 h-4 text-emerald-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <span class="text-xs sm:text-sm font-bold" :class="previewVehicle.status === 'maintenance' ? 'text-amber-700' : 'text-slate-800'">
+                    {{ previewVehicle.status === 'maintenance' ? 'Perawatan' : 'Siap Jalan' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description Box (Operational Notes) -->
+            <div v-if="previewVehicle.description" class="bg-blue-50/50 border border-blue-100/80 rounded-xl p-3.5">
+              <h5 class="text-[11px] font-bold text-blue-900 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                </svg>
+                Catatan &amp; Deskripsi Unit
+              </h5>
+              <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">{{ previewVehicle.description }}</p>
+            </div>
+
+            <!-- Included Service Checklist -->
+            <div class="rounded-xl border border-slate-200/80 p-3.5 space-y-2 bg-slate-50/50">
+              <h5 class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Fasilitas &amp; Jaminan Layanan</h5>
+              <div class="space-y-1.5 text-xs text-slate-600">
+                <div class="flex items-center gap-2">
+                  <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span>Unit bersih, harum, &amp; disanitasi berkala</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span>AC dingin, mesin sehat, servis rutin</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span>Lepas kunci / dengan driver berpengalaman</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span>Antar-jemput fleksibel bandara, hotel &amp; pelabuhan</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Quick Specifications 4-Card Grid -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex flex-col justify-center">
-              <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Kapasitas</span>
-              <div class="flex items-center gap-1.5 mt-1">
-                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                </svg>
-                <span class="text-xs sm:text-sm font-bold text-slate-800">{{ previewVehicle.capacity }} Kursi</span>
+          <!-- Sticky Bottom Action Bar -->
+          <div class="p-4 sm:p-5 bg-white border-t border-slate-100 flex items-center justify-between gap-3 shrink-0">
+            <div>
+              <span class="text-[10px] text-slate-400 block font-medium">Tarif Sewa Harian</span>
+              <div class="text-base sm:text-lg font-extrabold text-slate-900 leading-tight">
+                {{ previewVehicle.daily_rate_formatted }}
+                <span class="text-xs font-normal text-slate-500">/hari</span>
               </div>
             </div>
 
-            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex flex-col justify-center">
-              <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Transmisi</span>
-              <div class="flex items-center gap-1.5 mt-1">
-                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-                </svg>
-                <span class="text-xs sm:text-sm font-bold text-slate-800">{{ previewVehicle.transmission_label }}</span>
-              </div>
-            </div>
-
-            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex flex-col justify-center">
-              <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Bahan Bakar</span>
-              <div class="flex items-center gap-1.5 mt-1">
-                <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-                <span class="text-xs sm:text-sm font-bold text-slate-800">{{ previewVehicle.fuel_type_label }}</span>
-              </div>
-            </div>
-
-            <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex flex-col justify-center">
-              <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Kondisi</span>
-              <div class="flex items-center gap-1.5 mt-1">
-                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span class="text-xs sm:text-sm font-bold text-slate-800">Siap Jalan</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Description Box (Operational Notes) -->
-          <div v-if="previewVehicle.description" class="bg-blue-50/50 border border-blue-100/80 rounded-xl p-3.5">
-            <h5 class="text-[11px] font-bold text-blue-900 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              <svg class="w-3.5 h-3.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+            <!-- Dynamic CTA Button -->
+            <a
+              v-if="previewVehicle.status === 'available'"
+              :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName)"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-sm transition-all active:scale-95"
+            >
+              <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
               </svg>
-              Catatan &amp; Deskripsi Unit
-            </h5>
-            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">{{ previewVehicle.description }}</p>
-          </div>
+              <span>Pesan via WhatsApp</span>
+            </a>
 
-          <!-- Included Service & Reassurance Checklist -->
-          <div class="rounded-xl border border-slate-200/80 p-3.5 space-y-2.5 bg-slate-50/50">
-            <h5 class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Fasilitas &amp; Jaminan Layanan</h5>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600">
-              <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span>Unit bersih, harum, &amp; disanitasi</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span>AC sejuk &amp; servis berkala rutin</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span>Opsi sewa lepas kunci / dengan driver</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span>Koordinasi serah terima fleksibel</span>
-              </div>
+            <div
+              v-else-if="previewVehicle.status === 'maintenance'"
+              class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 text-slate-600 border border-slate-200 text-xs font-semibold"
+            >
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              <span>Perawatan</span>
             </div>
+
+            <a
+              v-else
+              :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName)"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors"
+            >
+              <span>Tanya Jadwal Lain</span>
+            </a>
           </div>
         </div>
 
-        <!-- 3. Sticky Bottom Action Bar -->
-        <div class="px-5 py-3.5 bg-white border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
-          <div>
-            <span class="text-[10px] text-slate-400 block font-medium">Tarif Sewa Harian</span>
-            <div class="text-base sm:text-lg font-extrabold text-slate-900">
-              {{ previewVehicle.daily_rate_formatted }}
-              <span class="text-xs font-normal text-slate-500">/hari</span>
-            </div>
-          </div>
-
-          <!-- Dynamic Action Button -->
-          <a
-            v-if="previewVehicle.status === 'available'"
-            :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName)"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-95"
-          >
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
-            </svg>
-            Sewa via WhatsApp
-          </a>
-
-          <div
-            v-else-if="previewVehicle.status === 'maintenance'"
-            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 text-slate-500 border border-slate-200 text-xs font-semibold"
-          >
-            <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-            Dalam Perawatan
-          </div>
-
-          <a
-            v-else
-            :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName)"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-all shadow-xs"
-          >
-            Tanya Jadwal Lain
-          </a>
-        </div>
       </div>
     </div>
   </section>

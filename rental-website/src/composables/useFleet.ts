@@ -2,8 +2,8 @@ import { ref, computed } from 'vue'
 import type { PublicVehicle, TransmissionFilter } from '@/types/fleet'
 import { siteConfig } from '@/config/site'
 
-const CACHE_KEY_DATA = 'financeflow_public_fleet_data_v4'
-const CACHE_KEY_TIME = 'financeflow_public_fleet_timestamp_v4'
+const CACHE_KEY_DATA = 'financeflow_public_fleet_data_v5'
+const CACHE_KEY_TIME = 'financeflow_public_fleet_timestamp_v5'
 const CACHE_TTL_MS = 90 * 1000 // 90 detik TTL cache
 
 const vehicles = ref<PublicVehicle[]>([])

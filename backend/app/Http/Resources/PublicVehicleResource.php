@@ -16,7 +16,7 @@ class PublicVehicleResource extends JsonResource
         $statusLabel = match ($this->status) {
             'available'   => 'Tersedia',
             'rented'      => 'Sedang Disewa',
-            'maintenance' => 'Di Bengkel / Servis',
+            'maintenance' => 'Perawatan',
             default       => 'Tersedia',
         };
 
