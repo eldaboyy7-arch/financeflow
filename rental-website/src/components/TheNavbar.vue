@@ -5,14 +5,7 @@ import { siteConfig } from '@/config/site'
 import { generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
 
 const route = useRoute()
-const isHome = computed(() => route.path === '/')
-
-const isScrolled = ref(false)
 const isMobileMenuOpen = ref(false)
-
-const handleScroll = () => {
-  isScrolled.value = window.scrollY > 20
-}
 
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value
@@ -47,13 +40,10 @@ const handleKeydown = (e: KeyboardEvent) => {
 }
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll, { passive: true })
   window.addEventListener('keydown', handleKeydown)
-  handleScroll()
 })
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
   window.removeEventListener('keydown', handleKeydown)
   if (typeof document !== 'undefined') {
     document.body.classList.remove('overflow-hidden')
@@ -65,15 +55,7 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
 
 <template>
   <header
-    class="z-50 transition-all duration-300"
-    :class="[
-      isHome ? 'fixed top-0 inset-x-0' : 'sticky top-0 bg-slate-950 border-b border-slate-800 text-white shadow-md',
-      isMobileMenuOpen || (isHome && isScrolled)
-        ? 'bg-slate-950/98 backdrop-blur-md border-b border-slate-800 text-white shadow-2xl'
-        : (isHome && !isScrolled
-            ? 'bg-gradient-to-b from-slate-950/80 via-slate-950/30 to-transparent text-white'
-            : '')
-    ]"
+    class="sticky top-0 z-50 bg-slate-950 border-b border-slate-800 text-white shadow-md"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
@@ -152,14 +134,14 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
           <button
             @click="toggleMobileMenu"
             type="button"
-            class="md:hidden w-9 h-9 rounded-xl bg-white/10 hover:bg-white/15 active:bg-white/20 text-white flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-blue-400 border border-white/10"
+            class="md:hidden w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-800 active:bg-slate-700 text-slate-200 hover:text-white flex items-center justify-center transition-colors border border-slate-700/60 focus:outline-none"
             :aria-expanded="isMobileMenuOpen"
             aria-label="Toggle menu navigasi"
           >
             <!-- Hamburger Lines when closed -->
             <svg
               v-if="!isMobileMenuOpen"
-              class="w-5 h-5 text-white transition-transform"
+              class="w-5 h-5 text-slate-200 transition-transform"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -169,7 +151,7 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
             <!-- Close Icon when open -->
             <svg
               v-else
-              class="w-5 h-5 text-white transition-transform"
+              class="w-5 h-5 text-slate-200 transition-transform"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -212,115 +194,150 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
         class="fixed top-16 inset-x-0 bg-slate-950 border-b border-slate-800 text-white z-50 md:hidden shadow-2xl overflow-y-auto max-h-[calc(100vh-4rem)]"
       >
         <div class="max-w-7xl mx-auto px-4 py-4 space-y-4">
-          <!-- Primary Navigation Links (Clean SVG Icons, Zero Tacky Emojis) -->
+          <!-- Primary Navigation Links (Clean Monochromatic Slate Style, No Rainbow Colors) -->
           <nav class="space-y-1">
+            <!-- 1. Beranda -->
             <RouterLink
               to="/"
               @click="closeMobileMenu"
-              class="flex items-center justify-between px-3.5 py-3 rounded-xl transition-all"
-              :class="route.path === '/' && !route.hash ? 'bg-slate-900 text-blue-400 font-bold' : 'text-slate-200 hover:bg-slate-900/60 font-medium'"
+              class="group flex items-center justify-between px-3.5 py-3 rounded-xl transition-all border"
+              :class="route.path === '/' && !route.hash
+                ? 'bg-slate-900/90 border-slate-800 text-white font-medium'
+                : 'border-transparent text-slate-300 hover:text-white hover:bg-slate-900/50'"
             >
               <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
+                <span
+                  class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors border"
+                  :class="route.path === '/' && !route.hash
+                    ? 'bg-blue-600/15 text-blue-400 border-blue-500/30'
+                    : 'bg-slate-900/90 text-slate-400 border-slate-800/80 group-hover:text-slate-200 group-hover:border-slate-700'"
+                >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                   </svg>
                 </span>
                 <div>
-                  <div class="text-sm">Beranda</div>
+                  <div class="text-sm" :class="route.path === '/' && !route.hash ? 'text-white font-semibold' : 'text-slate-200 font-medium'">Beranda</div>
                   <div class="text-[11px] text-slate-400 font-normal">Halaman utama rental &amp; tour</div>
                 </div>
               </div>
-              <span class="text-xs text-slate-500">&rarr;</span>
+              <svg class="w-4 h-4 transition-colors" :class="route.path === '/' && !route.hash ? 'text-blue-400' : 'text-slate-500 group-hover:text-slate-300'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
             </RouterLink>
 
+            <!-- 2. Katalog Lengkap Armada -->
             <RouterLink
               to="/armada"
               @click="closeMobileMenu"
-              class="flex items-center justify-between px-3.5 py-3 rounded-xl transition-all"
-              :class="route.path === '/armada' ? 'bg-slate-900 text-blue-400 font-bold' : 'text-slate-200 hover:bg-slate-900/60 font-medium'"
+              class="group flex items-center justify-between px-3.5 py-3 rounded-xl transition-all border"
+              :class="route.path === '/armada'
+                ? 'bg-slate-900/90 border-slate-800 text-white font-medium'
+                : 'border-transparent text-slate-300 hover:text-white hover:bg-slate-900/50'"
             >
               <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 flex items-center justify-center shrink-0">
+                <span
+                  class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors border"
+                  :class="route.path === '/armada'
+                    ? 'bg-blue-600/15 text-blue-400 border-blue-500/30'
+                    : 'bg-slate-900/90 text-slate-400 border-slate-800/80 group-hover:text-slate-200 group-hover:border-slate-700'"
+                >
                   <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
                   </svg>
                 </span>
                 <div>
-                  <div class="text-sm">Katalog Lengkap Armada</div>
+                  <div class="text-sm" :class="route.path === '/armada' ? 'text-white font-semibold' : 'text-slate-200 font-medium'">Katalog Lengkap Armada</div>
                   <div class="text-[11px] text-slate-400 font-normal">City Car, MPV, HiAce &amp; Bus Pariwisata</div>
                 </div>
               </div>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-600 text-white">Etalase</span>
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-800/90 text-slate-300 border border-slate-700/60">Etalase</span>
             </RouterLink>
 
+            <!-- 3. Paket Tour Bintan -->
             <RouterLink
               to="/paket-tour-bintan"
               @click="closeMobileMenu"
-              class="flex items-center justify-between px-3.5 py-3 rounded-xl transition-all"
-              :class="route.path === '/paket-tour-bintan' ? 'bg-slate-900 text-blue-400 font-bold' : 'text-slate-200 hover:bg-slate-900/60 font-medium'"
+              class="group flex items-center justify-between px-3.5 py-3 rounded-xl transition-all border"
+              :class="route.path === '/paket-tour-bintan'
+                ? 'bg-slate-900/90 border-slate-800 text-white font-medium'
+                : 'border-transparent text-slate-300 hover:text-white hover:bg-slate-900/50'"
             >
               <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-lg bg-amber-600/20 text-amber-400 flex items-center justify-center shrink-0">
+                <span
+                  class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors border"
+                  :class="route.path === '/paket-tour-bintan'
+                    ? 'bg-blue-600/15 text-blue-400 border-blue-500/30'
+                    : 'bg-slate-900/90 text-slate-400 border-slate-800/80 group-hover:text-slate-200 group-hover:border-slate-700'"
+                >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
                   </svg>
                 </span>
                 <div>
-                  <div class="text-sm">Paket Tour Bintan</div>
+                  <div class="text-sm" :class="route.path === '/paket-tour-bintan' ? 'text-white font-semibold' : 'text-slate-200 font-medium'">Paket Tour Bintan</div>
                   <div class="text-[11px] text-slate-400 font-normal">Wisata All-In HiAce + BBM + Supir</div>
                 </div>
               </div>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Populer</span>
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-800/90 text-slate-300 border border-slate-700/60">Tour All-In</span>
             </RouterLink>
 
+            <!-- 4. Layanan & Cara Sewa -->
             <RouterLink
               to="/#cara-perjalanan"
               @click="closeMobileMenu"
-              class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-900/60 font-medium transition-colors"
+              class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-transparent text-slate-300 hover:text-white hover:bg-slate-900/50 transition-colors"
             >
               <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center shrink-0">
+                <span class="w-9 h-9 rounded-xl bg-slate-900/90 text-slate-400 border border-slate-800/80 group-hover:text-slate-200 group-hover:border-slate-700 flex items-center justify-center shrink-0 transition-colors">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                   </svg>
                 </span>
-                <span class="text-sm">Layanan &amp; Cara Sewa</span>
+                <span class="text-sm font-medium text-slate-200">Layanan &amp; Cara Sewa</span>
               </div>
-              <span class="text-xs text-slate-500">&rarr;</span>
+              <svg class="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
             </RouterLink>
 
+            <!-- 5. Inspirasi Destinasi -->
             <RouterLink
               to="/#inspirasi"
               @click="closeMobileMenu"
-              class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-900/60 font-medium transition-colors"
+              class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-transparent text-slate-300 hover:text-white hover:bg-slate-900/50 transition-colors"
             >
               <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-lg bg-sky-600/20 text-sky-400 flex items-center justify-center shrink-0">
+                <span class="w-9 h-9 rounded-xl bg-slate-900/90 text-slate-400 border border-slate-800/80 group-hover:text-slate-200 group-hover:border-slate-700 flex items-center justify-center shrink-0 transition-colors">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                   </svg>
                 </span>
-                <span class="text-sm">Inspirasi Destinasi</span>
+                <span class="text-sm font-medium text-slate-200">Inspirasi Destinasi</span>
               </div>
-              <span class="text-xs text-slate-500">&rarr;</span>
+              <svg class="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
             </RouterLink>
 
+            <!-- 6. Tanya Jawab (FAQ) -->
             <RouterLink
               to="/#faq"
               @click="closeMobileMenu"
-              class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-200 hover:bg-slate-900/60 font-medium transition-colors"
+              class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-transparent text-slate-300 hover:text-white hover:bg-slate-900/50 transition-colors"
             >
               <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-lg bg-rose-600/20 text-rose-400 flex items-center justify-center shrink-0">
+                <span class="w-9 h-9 rounded-xl bg-slate-900/90 text-slate-400 border border-slate-800/80 group-hover:text-slate-200 group-hover:border-slate-700 flex items-center justify-center shrink-0 transition-colors">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
                 </span>
-                <span class="text-sm">Tanya Jawab (FAQ)</span>
+                <span class="text-sm font-medium text-slate-200">Tanya Jawab (FAQ)</span>
               </div>
-              <span class="text-xs text-slate-500">&rarr;</span>
+              <svg class="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
             </RouterLink>
           </nav>
 
@@ -339,7 +356,7 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
                 :href="waUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="w-full h-10 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold inline-flex items-center justify-center gap-2 shadow-md transition-all active:scale-98"
+                class="w-full h-10 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold inline-flex items-center justify-center gap-2 shadow-md transition-all active:scale-95"
               >
                 <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
