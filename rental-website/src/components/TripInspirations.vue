@@ -6,7 +6,6 @@ interface DestinationItem {
   id: string
   name: string
   badge: string
-  icon: string
   description: string
   ctaText: string
   waText: string
@@ -20,7 +19,6 @@ const destinations: DestinationItem[] = [
     id: 'lagoi',
     name: 'Kawasan Lagoi',
     badge: 'Pantai & Resort',
-    icon: '🏖️',
     description: 'Kawasan resort utara Bintan dengan pantai pasir putih, Lagoi Bay, dan Treasure Bay.',
     ctaText: 'Tanya Rute Lagoi',
     waText: 'Halo 3 Putri Mulya, saya ingin tanya sewa mobil atau paket tour untuk rute ke Kawasan Lagoi.',
@@ -32,7 +30,6 @@ const destinations: DestinationItem[] = [
     id: 'busung',
     name: 'Gurun Pasir & Danau Biru',
     badge: 'Spot Foto Ikonik',
-    icon: '🏜️',
     description: 'Perbukitan pasir eksotis berpadu danau toska, spot foto ikonik rute Tanjung Uban.',
     ctaText: 'Tanya Rute Danau Biru',
     waText: 'Halo 3 Putri Mulya, saya ingin tanya kendaraan yang cocok untuk kunjungan ke Danau Biru & Gurun Pasir Busung.',
@@ -44,7 +41,6 @@ const destinations: DestinationItem[] = [
     id: 'trikora',
     name: 'Pantai Trikora',
     badge: 'Pesisir Alami',
-    icon: '🌴',
     description: 'Pesisir timur berpasir putih alami dengan susunan batu granit besar dan suasana tenang.',
     ctaText: 'Tanya Rute Trikora',
     waText: 'Halo 3 Putri Mulya, saya ingin sewa kendaraan untuk rute santai ke Pantai Trikora.',
@@ -56,7 +52,6 @@ const destinations: DestinationItem[] = [
     id: 'patung-seribu',
     name: 'Vihara Patung Seribu',
     badge: 'Religi & Budaya',
-    icon: '🏛️',
     description: 'Kompleks vihara megah di perbukitan dengan ratusan patung arhat beraneka ekspresi.',
     ctaText: 'Tanya Rute Patung Seribu',
     waText: 'Halo 3 Putri Mulya, saya ingin tanya sewa mobil atau tur untuk ke Vihara Patung Seribu.',
@@ -94,7 +89,9 @@ const getWhatsAppUrl = (text: string) => {
           <!-- Note (desktop only) -->
           <div class="hidden lg:block text-xs text-slate-500 space-y-2">
             <p class="flex items-start gap-2">
-              <span>💡</span>
+              <svg class="w-4 h-4 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
               <span>Punya rencana custom keliling Bintan? Konsultasikan langsung bersama tim kami.</span>
             </p>
             <div class="flex gap-3 pt-1">
@@ -129,9 +126,9 @@ const getWhatsAppUrl = (text: string) => {
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-slate-950/10 pointer-events-none"></div>
                 <!-- Badge -->
                 <div class="absolute top-2 left-2 z-10">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-900/80 text-slate-100 border border-white/20 backdrop-blur-sm">
-                    <span>{{ dest.icon }}</span>
-                    <span class="truncate max-w-[70px]">{{ dest.badge }}</span>
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-900/80 text-slate-100 border border-white/20 backdrop-blur-sm">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                    <span class="truncate max-w-[80px]">{{ dest.badge }}</span>
                   </span>
                 </div>
                 <!-- Credit -->
@@ -177,7 +174,9 @@ const getWhatsAppUrl = (text: string) => {
           <!-- Mobile note (below cards) -->
           <div class="lg:hidden mt-5 text-xs text-slate-500 flex flex-col gap-2">
             <p class="flex items-start gap-2">
-              <span>💡</span>
+              <svg class="w-4 h-4 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
               <span>Punya rencana custom keliling Bintan? Konsultasikan langsung bersama tim kami.</span>
             </p>
             <div class="flex gap-3">

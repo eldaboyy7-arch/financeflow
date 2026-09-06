@@ -128,8 +128,11 @@ const getWhatsAppUrl = (text: string) => {
                   </div>
                 </div>
                 <div class="text-right">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                    🎤 Karaoke System
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                    <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                    </svg>
+                    <span>Karaoke System</span>
                   </span>
                 </div>
               </div>
@@ -137,7 +140,7 @@ const getWhatsAppUrl = (text: string) => {
               <!-- Rute Tur & Facilities Highlights -->
               <div class="mt-3.5 space-y-2 text-xs">
                 <div class="bg-blue-50/50 p-2.5 rounded-lg border border-blue-100/60">
-                  <span class="text-[11px] font-bold text-blue-900 block mb-0.5">📍 Rute Tur Populer:</span>
+                  <span class="text-[11px] font-bold text-blue-900 block mb-0.5">Rute Tur Populer:</span>
                   <p class="text-[11px] text-slate-700 leading-relaxed font-medium">
                     {{ pkg.tourRoute }}
                   </p>

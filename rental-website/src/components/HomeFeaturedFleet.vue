@@ -354,7 +354,9 @@ onUnmounted(() => {
       <!-- Mobile Hint & Link (di bawah slider mobile, mirip Inspirasi Destinasi) -->
       <div class="lg:hidden mt-3 flex items-center justify-between text-xs text-slate-500 px-1">
         <span class="inline-flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
-          <span>👉</span>
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
           <span>Geser untuk melihat unit</span>
         </span>
         <RouterLink
