@@ -5,7 +5,13 @@ import { siteConfig } from '@/config/site'
 import { generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
 
 const route = useRoute()
+const isHome = computed(() => route.path === '/')
+const isScrolled = ref(false)
 const isMobileMenuOpen = ref(false)
+
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 20
+}
 
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value
@@ -15,11 +21,12 @@ const closeMobileMenu = () => {
   isMobileMenuOpen.value = false
 }
 
-// Close mobile menu whenever route or hash changes
+// Close mobile menu whenever route or hash changes & update scroll state
 watch(
   () => [route.path, route.hash],
   () => {
     closeMobileMenu()
+    setTimeout(handleScroll, 50)
   }
 )
 
@@ -40,10 +47,13 @@ const handleKeydown = (e: KeyboardEvent) => {
 }
 
 onMounted(() => {
+  window.addEventListener('scroll', handleScroll, { passive: true })
   window.addEventListener('keydown', handleKeydown)
+  handleScroll()
 })
 
 onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
   window.removeEventListener('keydown', handleKeydown)
   if (typeof document !== 'undefined') {
     document.body.classList.remove('overflow-hidden')
@@ -55,7 +65,15 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
 
 <template>
   <header
-    class="sticky top-0 z-50 bg-slate-950 border-b border-slate-800 text-white shadow-md"
+    class="z-50 transition-all duration-300"
+    :class="[
+      isHome ? 'fixed top-0 inset-x-0' : 'sticky top-0 bg-slate-950 border-b border-slate-800 text-white shadow-md',
+      isMobileMenuOpen || (isHome && isScrolled)
+        ? 'bg-slate-950/95 backdrop-blur-md border-b border-slate-800 text-white shadow-xl'
+        : (isHome && !isScrolled
+            ? 'bg-gradient-to-b from-slate-950/80 via-slate-950/30 to-transparent text-white border-b border-transparent'
+            : '')
+    ]"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
