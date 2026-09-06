@@ -111,30 +111,30 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
 </script>
 
 <template>
-  <div class="bg-slate-50 min-h-screen py-8 sm:py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="bg-slate-50 min-h-screen py-5 sm:py-12">
+    <div class="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
 
       <!-- Breadcrumb Navigation -->
-      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-6" aria-label="Breadcrumb">
+      <nav class="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-500 mb-3 sm:mb-6" aria-label="Breadcrumb">
         <RouterLink to="/" class="hover:text-blue-600 transition-colors">Beranda</RouterLink>
         <span>/</span>
         <span class="text-slate-900 font-semibold">Katalog Armada</span>
       </nav>
 
       <!-- Page Header -->
-      <header class="max-w-3xl mb-8">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-3">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <header class="max-w-3xl mb-4 sm:mb-8">
+        <div class="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[11px] sm:text-xs font-semibold mb-2 sm:mb-3">
+          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
           </svg>
           <span>Etalase Lengkap Armada 3 Putri Mulya</span>
         </div>
 
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.15] mb-3">
+        <h1 class="text-xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.2] mb-1.5 sm:mb-3">
           Pilihan Sewa Mobil &amp; Bus Pariwisata
         </h1>
 
-        <p class="text-base text-slate-600 leading-relaxed">
+        <p class="text-xs sm:text-base text-slate-600 leading-relaxed">
           Temukan kendaraan yang tepat untuk kebutuhan Anda di Pulau Bintan. Tersedia city car hemat, MPV keluarga lega, hingga minibus HiAce dan bus pariwisata untuk rombongan besar.
         </p>
       </header>
@@ -176,11 +176,11 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
       </div>
 
       <!-- 2. Search & Secondary Transmission Filter Bar -->
-      <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 mb-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3.5">
+      <div class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 p-3 sm:p-5 mb-5 sm:mb-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3.5">
         <!-- Search Box -->
         <div class="relative w-full sm:w-80">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
           </div>
@@ -188,18 +188,18 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
             v-model="searchQuery"
             type="text"
             placeholder="Cari tipe mobil (misal: Veloz, Agya, HiAce)..."
-            class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+            class="w-full pl-8 sm:pl-9 pr-3 sm:pr-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
           />
         </div>
 
         <!-- Filter Dropdown & Status Counter -->
-        <div class="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-3 shrink-0">
+        <div class="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-2 sm:gap-3 shrink-0">
           <!-- Transmission Select -->
-          <div class="flex items-center gap-2 text-xs">
+          <div class="flex items-center gap-1.5 sm:gap-2 text-xs">
             <span class="text-slate-500 font-medium hidden md:inline">Transmisi:</span>
             <select
               v-model="transmissionFilter"
-              class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
             >
               <option value="all">Semua Transmisi</option>
               <option value="matic">Matic</option>
@@ -211,7 +211,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
           <button
             @click="fetchVehicles(true)"
             type="button"
-            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:text-blue-600 hover:bg-slate-50 transition-colors"
+            class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:text-blue-600 hover:bg-slate-50 transition-colors"
             title="Perbarui status armada"
           >
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -258,16 +258,16 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
           </button>
         </div>
 
-        <!-- Vehicles Grid -->
-        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5 sm:gap-6">
+        <!-- Vehicles Grid (Etalase 2-Kolom di Mobile, 3-Kolom di Desktop) -->
+        <div v-else class="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-6">
           <article
             v-for="car in filteredVehicles"
             :key="car.id"
-            class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-md transition-all group"
+            class="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-md transition-all group"
           >
             <!-- Vehicle Photo Container -->
             <div
-              class="relative aspect-[16/10] bg-slate-100 overflow-hidden cursor-pointer"
+              class="relative aspect-[4/3] sm:aspect-[16/10] bg-slate-100 overflow-hidden cursor-pointer"
               @click="openPhotoModal(car, activeCardAngles[car.id] ?? 0)"
               title="Klik untuk melihat detail foto unit"
             >
@@ -284,51 +284,51 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                 v-else
                 class="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-50"
               >
-                <svg class="w-10 h-10 mb-1 text-slate-300" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-8 h-8 sm:w-10 sm:h-10 mb-1 text-slate-300" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
                 </svg>
-                <span class="text-[11px] text-slate-400 font-medium">Foto Belum Tersedia</span>
+                <span class="text-[9px] sm:text-[11px] text-slate-400 font-medium">Foto Belum Tersedia</span>
               </div>
 
               <!-- Top-Left Badges: Status & Driver Policy -->
-              <div class="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1.5 items-start">
+              <div class="absolute top-1.5 left-1.5 sm:top-2.5 sm:left-2.5 z-10 flex flex-col gap-1 items-start">
                 <!-- Status Badge -->
                 <span
                   v-if="car.status === 'available'"
-                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-sm"
+                  class="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-xs font-bold bg-emerald-600 text-white shadow-xs"
                 >
                   <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                   <span>Tersedia</span>
                 </span>
                 <span
                   v-else-if="car.status === 'maintenance'"
-                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-sm"
+                  class="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-xs font-bold bg-amber-500 text-white shadow-xs"
                 >
                   <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
                   <span>Perawatan</span>
                 </span>
                 <span
                   v-else-if="car.status === 'rented'"
-                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-900/80 text-slate-200 backdrop-blur-xs shadow-sm"
+                  class="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-xs font-semibold bg-slate-900/80 text-slate-200 backdrop-blur-xs shadow-xs"
                 >
                   <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                  <span>Sedang Disewa</span>
+                  <span>Disewa</span>
                 </span>
 
                 <!-- Mandatory Driver Badge for HiAce & Bus -->
                 <span
                   v-if="isDriverMandatory(car.capacity)"
-                  class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-600 text-white shadow-sm"
+                  class="inline-flex items-center gap-0.5 sm:gap-1 px-1.5 py-0.5 rounded text-[8px] sm:text-[10px] font-bold bg-indigo-600 text-white shadow-xs"
                 >
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                  Include Supir
+                  <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                  <span>+Supir</span>
                 </span>
               </div>
 
               <!-- Multi-angle Switcher Pills (Bottom Right of photo) -->
               <div
                 v-if="getVehicleAngles(car).length > 1"
-                class="absolute bottom-2 right-2 z-10 flex items-center gap-1 bg-slate-900/85 backdrop-blur-xs p-0.5 rounded-md border border-slate-700/80 shadow-sm"
+                class="absolute bottom-1.5 right-1.5 sm:bottom-2 sm:right-2 z-10 flex items-center gap-0.5 sm:gap-1 bg-slate-900/85 backdrop-blur-xs p-0.5 rounded sm:rounded-md border border-slate-700/80 shadow-xs"
               >
                 <button
                   v-for="(angle, aIdx) in getVehicleAngles(car)"
@@ -336,7 +336,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                   @click.stop="setCardAngle(car.id, aIdx)"
                   type="button"
                   :class="(activeCardAngles[car.id] ?? 0) === aIdx ? 'bg-blue-600 text-white font-bold' : 'text-slate-300 hover:text-white'"
-                  class="px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] transition-colors leading-none"
+                  class="px-1 sm:px-1.5 py-0.5 rounded text-[8px] sm:text-[10px] transition-colors leading-none"
                   :title="'Sudut ' + angle.label"
                 >
                   {{ angle.label }}
@@ -345,19 +345,19 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
             </div>
 
             <!-- Card Content -->
-            <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between">
+            <div class="p-2.5 sm:p-5 flex-1 flex flex-col justify-between">
               <div>
                 <!-- Category Tag & Year -->
-                <div class="flex items-center justify-between text-[11px] text-slate-500 mb-1 font-medium">
-                  <span class="text-blue-600 font-bold uppercase tracking-wider">
+                <div class="flex items-center justify-between text-[9px] sm:text-[11px] text-slate-500 mb-1 font-medium">
+                  <span class="text-blue-600 font-bold uppercase tracking-wider line-clamp-1">
                     {{ getVehicleCategoryBracket(car.capacity).shortLabel }}
                   </span>
-                  <span>Tahun {{ car.model_year }}</span>
+                  <span class="text-slate-400 shrink-0 ml-1">’{{ String(car.model_year).slice(-2) }}</span>
                 </div>
 
                 <!-- Car Name -->
                 <h3
-                  class="text-base sm:text-lg font-bold text-slate-900 leading-snug line-clamp-1 cursor-pointer hover:text-blue-600 transition-colors"
+                  class="text-xs sm:text-lg font-bold text-slate-900 leading-snug line-clamp-1 cursor-pointer hover:text-blue-600 transition-colors"
                   @click="openPhotoModal(car, activeCardAngles[car.id] ?? 0)"
                   :title="car.name"
                 >
@@ -365,9 +365,9 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                 </h3>
 
                 <!-- Specifications Chips -->
-                <div class="flex items-center gap-2 text-xs text-slate-600 mt-2.5 pt-2 border-t border-slate-100">
+                <div class="flex items-center flex-wrap gap-1 sm:gap-2 text-[10px] sm:text-xs text-slate-500 mt-1.5 sm:mt-2.5 pt-1.5 sm:pt-2 border-t border-slate-100">
                   <span class="inline-flex items-center gap-1 font-medium">
-                    <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
                     <span>{{ car.capacity }} Kursi</span>
@@ -379,42 +379,42 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                     <span>{{ car.transmission_label }}</span>
                   </span>
 
-                  <span class="text-slate-300">&bull;</span>
+                  <span class="hidden sm:inline text-slate-300">&bull;</span>
 
-                  <span class="inline-flex items-center gap-1 font-medium">
+                  <span class="hidden sm:inline-flex items-center gap-1 font-medium">
                     <span>{{ car.fuel_type_label }}</span>
                   </span>
                 </div>
 
-                <!-- Cross-selling Banner for HiAce/Bus -->
+                <!-- Cross-selling Banner for HiAce/Bus (Compact on mobile) -->
                 <div
                   v-if="isDriverMandatory(car.capacity)"
-                  class="mt-3 p-2.5 rounded-xl bg-blue-50/70 border border-blue-100 text-[11px] text-blue-900 leading-relaxed"
+                  class="mt-2 sm:mt-3 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl bg-blue-50/70 border border-blue-100 text-[10px] sm:text-[11px] text-blue-900 leading-tight"
                 >
-                  <p class="font-medium">
+                  <p class="font-medium hidden sm:block">
                     Butuh paket wisata keliling Bintan lengkap Supir + BBM + Karaoke?
                   </p>
                   <RouterLink
                     :to="TOUR_PACKAGE_ROUTE"
-                    class="font-bold text-blue-700 hover:text-blue-900 inline-flex items-center gap-1 mt-1 underline"
+                    class="font-bold text-blue-700 hover:text-blue-900 inline-flex items-center gap-0.5 underline text-[10px] sm:text-[11px]"
                   >
-                    <span>Cek Paket Tour Wisata &rarr;</span>
+                    <span>Paket Tour All-In &rarr;</span>
                   </RouterLink>
                 </div>
               </div>
 
               <!-- Price & Button Area -->
-              <div class="pt-3 mt-3 border-t border-slate-100 flex flex-col gap-2.5">
+              <div class="pt-2 sm:pt-3 mt-2 sm:mt-3 border-t border-slate-100 flex flex-col gap-1.5 sm:gap-2.5">
                 <!-- Price Row -->
                 <div class="flex flex-col">
                   <div class="flex items-baseline gap-1">
-                    <span class="text-lg sm:text-xl font-black text-slate-900 tracking-tight leading-none">
+                    <span class="text-xs sm:text-xl font-black text-slate-900 tracking-tight leading-none">
                       {{ car.daily_rate_formatted }}
                     </span>
-                    <span class="text-xs text-slate-500 font-normal leading-none">/hari</span>
+                    <span class="text-[9px] sm:text-xs text-slate-500 font-normal leading-none">/hari</span>
                   </div>
-                  <span v-if="isDriverMandatory(car.capacity)" class="text-[10px] text-slate-400 mt-1 font-medium">
-                    *Tarif sewa harian unit + supir (BBM terpisah sesuai rute)
+                  <span v-if="isDriverMandatory(car.capacity)" class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5 sm:mt-1 font-medium line-clamp-1">
+                    *Termasuk supir
                   </span>
                 </div>
 
@@ -424,18 +424,19 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                   :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName)"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="w-full h-10 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold whitespace-nowrap inline-flex items-center justify-center gap-1.5 transition-all shadow-xs hover:shadow-sm active:scale-98"
+                  class="w-full h-8 sm:h-10 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] sm:text-xs font-bold whitespace-nowrap inline-flex items-center justify-center gap-1 sm:gap-1.5 transition-all shadow-xs hover:shadow-sm active:scale-95"
                 >
-                  <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
                   </svg>
-                  <span>Pesan via WhatsApp</span>
+                  <span class="sm:hidden">Pesan</span>
+                  <span class="hidden sm:inline">Pesan via WhatsApp</span>
                 </a>
 
                 <button
                   v-else-if="car.status === 'maintenance'"
                   disabled
-                  class="w-full h-10 px-3 rounded-xl bg-slate-100 text-slate-500 border border-slate-200 text-xs font-semibold whitespace-nowrap inline-flex items-center justify-center cursor-not-allowed"
+                  class="w-full h-8 sm:h-10 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-slate-100 text-slate-400 border border-slate-200 text-[10px] sm:text-xs font-semibold whitespace-nowrap inline-flex items-center justify-center cursor-not-allowed"
                 >
                   <span>Perawatan</span>
                 </button>
@@ -445,9 +446,10 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                   :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName)"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="w-full h-10 px-3 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold whitespace-nowrap inline-flex items-center justify-center transition-colors"
+                  class="w-full h-8 sm:h-10 px-2 sm:px-3 rounded-lg sm:rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 text-[10px] sm:text-xs font-semibold whitespace-nowrap inline-flex items-center justify-center transition-colors"
                 >
-                  <span>Tanya Jadwal Lain</span>
+                  <span class="sm:hidden">Jadwal Lain</span>
+                  <span class="hidden sm:inline">Tanya Jadwal Lain</span>
                 </a>
               </div>
             </div>
