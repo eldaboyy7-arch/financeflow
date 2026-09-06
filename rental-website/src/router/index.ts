@@ -9,9 +9,18 @@ const router = createRouter({
       component: () => import('@/views/HomeView.vue')
     },
     {
+      path: '/armada',
+      name: 'fleet',
+      component: () => import('@/views/FleetView.vue')
+    },
+    {
       path: '/paket-tour-bintan',
       name: 'tour-packages',
       component: () => import('@/views/TourPackagesView.vue')
+    },
+    {
+      path: '/paket-tour',
+      redirect: '/paket-tour-bintan'
     },
     {
       path: '/:pathMatch(.*)*',

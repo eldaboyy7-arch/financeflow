@@ -17,6 +17,7 @@ export interface PublicVehicle {
   video_url: string | null;
   safe_video_embed_url: string | null;
   description: string | null;
+  is_featured?: boolean;
 }
 
 export type TransmissionFilter = 'all' | 'matic' | 'manual';

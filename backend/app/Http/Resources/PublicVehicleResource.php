@@ -39,6 +39,7 @@ class PublicVehicleResource extends JsonResource
             'video_url'            => $this->video_url,
             'safe_video_embed_url' => $this->safe_video_embed_url,
             'description'          => $this->description,
+            'is_featured'          => (bool) $this->is_featured,
         ];
     }
 }

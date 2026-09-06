@@ -1,16 +1,24 @@
 import { ref, computed } from 'vue'
 import type { PublicVehicle, TransmissionFilter } from '@/types/fleet'
 import { siteConfig } from '@/config/site'
+import { getVehicleCategoryBracket } from '@/config/fleetCategories'
 
-const CACHE_KEY_DATA = 'financeflow_public_fleet_data_v5'
-const CACHE_KEY_TIME = 'financeflow_public_fleet_timestamp_v5'
+const CACHE_KEY_DATA = 'financeflow_public_fleet_data_v6'
+const CACHE_KEY_TIME = 'financeflow_public_fleet_timestamp_v6'
+const CACHE_KEY_FEATURED_DATA = 'financeflow_featured_fleet_data_v6'
+const CACHE_KEY_FEATURED_TIME = 'financeflow_featured_fleet_timestamp_v6'
 const CACHE_TTL_MS = 90 * 1000 // 90 detik TTL cache
 
 const vehicles = ref<PublicVehicle[]>([])
+const featuredVehicles = ref<PublicVehicle[]>([])
+const totalFleetCount = ref<number>(0)
 const loading = ref<boolean>(false)
+const featuredLoading = ref<boolean>(false)
 const error = ref<string | null>(null)
+const featuredError = ref<string | null>(null)
 const searchQuery = ref<string>('')
 const transmissionFilter = ref<TransmissionFilter>('all')
+const categoryFilter = ref<string>('all')
 
 // Deteksi apakah pemanggilan berasal dari browser reload (F5 / tombol reload browser)
 function isBrowserReload(): boolean {
@@ -45,13 +53,15 @@ function setupVisibilityListener(fetchFn: (force: boolean) => Promise<void>) {
 }
 
 export function useFleet() {
+  /**
+   * Mengambil SELURUH armada untuk halaman etalase lengkap (/armada)
+   */
   const fetchVehicles = async (forceRefresh = false): Promise<void> => {
     setupVisibilityListener(fetchVehicles)
 
-    // Deteksi reload: jika user menekan F5 / reload, otomatis paksa refresh agar perubahan terbaru langsung terlihat
     const shouldBypassCache = forceRefresh || isBrowserReload()
 
-    // 1. Cek Client-Side TTL Cache pada sessionStorage jika tidak force refresh
+    // 1. Cek Client-Side TTL Cache
     if (!shouldBypassCache && typeof window !== 'undefined') {
       try {
         const cachedData = sessionStorage.getItem(CACHE_KEY_DATA)
@@ -60,6 +70,8 @@ export function useFleet() {
 
         if (cachedData && cachedTime && (now - Number(cachedTime) < CACHE_TTL_MS)) {
           vehicles.value = JSON.parse(cachedData)
+          const cachedTotal = sessionStorage.getItem('financeflow_total_fleet_count')
+          if (cachedTotal) totalFleetCount.value = Number(cachedTotal)
           error.value = null
           return
         }
@@ -68,7 +80,7 @@ export function useFleet() {
       }
     }
 
-    // 2. Cache kedaluwarsa, reload, atau force refresh -> panggil Public Fleet API
+    // 2. Fetch seluruh armada dari API
     loading.value = true
     error.value = null
 
@@ -87,12 +99,18 @@ export function useFleet() {
       const data: PublicVehicle[] = Array.isArray(json.data) ? json.data : (Array.isArray(json) ? json : [])
       
       vehicles.value = data
+      if (typeof json.meta?.total_fleet === 'number') {
+        totalFleetCount.value = json.meta.total_fleet
+      } else if (data.length > 0) {
+        totalFleetCount.value = data.length
+      }
 
-      // 3. Simpan hasil response baru ke sessionStorage
+      // 3. Simpan hasil response ke sessionStorage
       if (typeof window !== 'undefined') {
         try {
           sessionStorage.setItem(CACHE_KEY_DATA, JSON.stringify(data))
           sessionStorage.setItem(CACHE_KEY_TIME, String(Date.now()))
+          sessionStorage.setItem('financeflow_total_fleet_count', String(totalFleetCount.value))
         } catch (e) {
           console.warn('Gagal menyimpan ke sessionStorage cache:', e)
         }
@@ -105,7 +123,75 @@ export function useFleet() {
     }
   }
 
-  // Filter reaktif: hanya berdasarkan nama/brand dan transmisi (tanpa kategori fiktif)
+  /**
+   * Mengambil armada pilihan (Featured) khusus untuk Beranda (limit 3, backend filtering)
+   */
+  const fetchFeaturedVehicles = async (forceRefresh = false): Promise<void> => {
+    const shouldBypassCache = forceRefresh || isBrowserReload()
+
+    if (!shouldBypassCache && typeof window !== 'undefined') {
+      try {
+        const cachedData = sessionStorage.getItem(CACHE_KEY_FEATURED_DATA)
+        const cachedTime = sessionStorage.getItem(CACHE_KEY_FEATURED_TIME)
+        const now = Date.now()
+
+        if (cachedData && cachedTime && (now - Number(cachedTime) < CACHE_TTL_MS)) {
+          featuredVehicles.value = JSON.parse(cachedData)
+          const cachedTotal = sessionStorage.getItem('financeflow_total_fleet_count')
+          if (cachedTotal) totalFleetCount.value = Number(cachedTotal)
+          featuredError.value = null
+          return
+        }
+      } catch (e) {
+        console.warn('Gagal membaca featured cache:', e)
+      }
+    }
+
+    featuredLoading.value = true
+    featuredError.value = null
+
+    try {
+      const url = `${siteConfig.apiUrl}?featured=true&limit=3`
+      const response = await fetch(url, {
+        headers: {
+          'Accept': 'application/json',
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error(`Server merespons dengan status ${response.status}`)
+      }
+
+      const json = await response.json()
+      const data: PublicVehicle[] = Array.isArray(json.data) ? json.data : (Array.isArray(json) ? json : [])
+      
+      featuredVehicles.value = data
+      if (typeof json.meta?.total_fleet === 'number') {
+        totalFleetCount.value = json.meta.total_fleet
+      } else if (data.length > 0 && totalFleetCount.value === 0) {
+        totalFleetCount.value = data.length
+      }
+
+      if (typeof window !== 'undefined') {
+        try {
+          sessionStorage.setItem(CACHE_KEY_FEATURED_DATA, JSON.stringify(data))
+          sessionStorage.setItem(CACHE_KEY_FEATURED_TIME, String(Date.now()))
+          if (totalFleetCount.value > 0) {
+            sessionStorage.setItem('financeflow_total_fleet_count', String(totalFleetCount.value))
+          }
+        } catch (e) {
+          console.warn('Gagal menyimpan ke featured cache:', e)
+        }
+      }
+    } catch (err: any) {
+      console.error('Error fetching featured fleet:', err)
+      featuredError.value = err.message || 'Gagal memuat armada pilihan.'
+    } finally {
+      featuredLoading.value = false
+    }
+  }
+
+  // Filter reaktif: nama/brand, transmisi, dan kategori kapasitas kursi
   const filteredVehicles = computed(() => {
     return vehicles.value.filter((vehicle) => {
       // 1. Cocokkan pencarian nama atau brand
@@ -121,13 +207,19 @@ export function useFleet() {
         if (vehicle.transmission !== transmissionFilter.value) return false
       }
 
+      // 3. Cocokkan filter kategori kapasitas kursi
+      if (categoryFilter.value !== 'all') {
+        const bracket = getVehicleCategoryBracket(vehicle.capacity)
+        if (bracket.id !== categoryFilter.value) return false
+      }
+
       return true
     })
   })
 
   // Ringkasan status ketersediaan armada riil
   const stats = computed(() => {
-    const total = vehicles.value.length
+    const total = vehicles.value.length > 0 ? vehicles.value.length : totalFleetCount.value
     const available = vehicles.value.filter(v => v.status === 'available').length
     const rented = vehicles.value.filter(v => v.status === 'rented').length
     const maintenance = vehicles.value.filter(v => v.status === 'maintenance').length
@@ -136,12 +228,18 @@ export function useFleet() {
 
   return {
     vehicles,
+    featuredVehicles,
+    totalFleetCount,
     filteredVehicles,
     loading,
+    featuredLoading,
     error,
+    featuredError,
     searchQuery,
     transmissionFilter,
+    categoryFilter,
     stats,
-    fetchVehicles
+    fetchVehicles,
+    fetchFeaturedVehicles
   }
 }

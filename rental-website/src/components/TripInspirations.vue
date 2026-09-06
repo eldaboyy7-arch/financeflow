@@ -98,7 +98,7 @@ const getWhatsAppUrl = (text: string) => {
               <span>Punya rencana custom keliling Bintan? Konsultasikan langsung bersama tim kami.</span>
             </p>
             <div class="flex gap-3 pt-1">
-              <a href="#armada" class="font-semibold text-blue-600 hover:underline text-xs">Lihat Armada →</a>
+              <RouterLink to="/armada" class="font-semibold text-blue-600 hover:underline text-xs">Lihat Semua Armada →</RouterLink>
               <RouterLink to="/paket-tour-bintan" class="font-semibold text-blue-600 hover:underline text-xs">Paket HiAce →</RouterLink>
             </div>
           </div>
@@ -181,7 +181,7 @@ const getWhatsAppUrl = (text: string) => {
               <span>Punya rencana custom keliling Bintan? Konsultasikan langsung bersama tim kami.</span>
             </p>
             <div class="flex gap-3">
-              <a href="#armada" class="font-semibold text-blue-600 hover:underline">Lihat Armada →</a>
+              <RouterLink to="/armada" class="font-semibold text-blue-600 hover:underline">Lihat Semua Armada →</RouterLink>
               <RouterLink to="/paket-tour-bintan" class="font-semibold text-blue-600 hover:underline">Paket HiAce →</RouterLink>
             </div>
           </div>

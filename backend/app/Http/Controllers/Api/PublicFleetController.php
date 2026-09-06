@@ -48,8 +48,56 @@ class PublicFleetController extends Controller
             $query->where('status', $request->get('status'));
         }
 
+        // Dedicated Featured Vehicles query for Homepage (with automatic fallback to available units)
+        if ($request->boolean('featured')) {
+            $limit = $request->integer('limit', 3);
+            if ($limit <= 0) {
+                $limit = 3;
+            }
+
+            // 1. Fetch featured vehicles
+            $featuredVehicles = (clone $query)
+                ->where('is_featured', true)
+                ->orderBy('name')
+                ->limit($limit)
+                ->get();
+
+            // 2. Pad with available units if featured count < limit
+            if ($featuredVehicles->count() < $limit) {
+                $needed = $limit - $featuredVehicles->count();
+                $excludedIds = $featuredVehicles->pluck('id')->toArray();
+
+                $fallbackVehicles = (clone $query)
+                    ->whereNotIn('id', $excludedIds)
+                    ->where('status', 'available')
+                    ->orderBy('name')
+                    ->limit($needed)
+                    ->get();
+
+                $vehicles = $featuredVehicles->concat($fallbackVehicles);
+            } else {
+                $vehicles = $featuredVehicles;
+            }
+
+            return PublicVehicleResource::collection($vehicles)->additional([
+                'meta' => [
+                    'total_fleet' => (clone $query)->count(),
+                ],
+            ]);
+        }
+
+        $totalFleet = (clone $query)->count();
+
+        if ($request->filled('limit') && (int) $request->get('limit') > 0) {
+            $query->limit((int) $request->get('limit'));
+        }
+
         $vehicles = $query->orderBy('name')->get();
 
-        return PublicVehicleResource::collection($vehicles);
+        return PublicVehicleResource::collection($vehicles)->additional([
+            'meta' => [
+                'total_fleet' => $totalFleet,
+            ],
+        ]);
     }
 }

@@ -12,26 +12,41 @@ import FaqSection from '@/components/FaqSection.vue'
 import FinalCtaSection from '@/components/FinalCtaSection.vue'
 
 const {
-  vehicles,
-  filteredVehicles,
-  loading,
-  error,
+  featuredVehicles,
+  featuredLoading,
+  featuredError,
+  totalFleetCount,
   searchQuery,
   transmissionFilter,
-  stats,
-  fetchVehicles
+  fetchFeaturedVehicles
 } = useFleet()
 
+// Filter 3 unit pilihan jika user melakukan pencarian cepat di homepage
+const displayVehicles = computed(() => {
+  return featuredVehicles.value.filter((vehicle) => {
+    if (searchQuery.value.trim()) {
+      const q = searchQuery.value.toLowerCase().trim()
+      const matchName = vehicle.name.toLowerCase().includes(q)
+      const matchBrand = vehicle.brand ? vehicle.brand.toLowerCase().includes(q) : false
+      if (!matchName && !matchBrand) return false
+    }
+    if (transmissionFilter.value !== 'all') {
+      if (vehicle.transmission !== transmissionFilter.value) return false
+    }
+    return true
+  })
+})
+
 const featuredVehicle = computed(() => {
-  return vehicles.value.find(v => v.name.toLowerCase().includes('veloz') && v.status === 'available')
-    || vehicles.value.find(v => v.status === 'available')
-    || vehicles.value[0]
+  return featuredVehicles.value.find(v => v.name.toLowerCase().includes('veloz') && v.status === 'available')
+    || featuredVehicles.value.find(v => v.status === 'available')
+    || featuredVehicles.value[0]
     || null
 })
 
 onMounted(() => {
   document.title = '3 Putri Mulya - Rental Mobil & Tour Bintan'
-  fetchVehicles()
+  fetchFeaturedVehicles()
 })
 
 const resetFilters = () => {
@@ -48,19 +63,20 @@ const resetFilters = () => {
     <!-- 2. Pilih Cara Perjalanan (Rental Mobil Harian vs Paket Tour HiAce) -->
     <TravelOptions />
 
-    <!-- 3. Pilihan Armada (Katalog Live dari Public Fleet API FinanceFlow) -->
+    <!-- 3. Pilihan Armada Pilihan (Featured 3 Unit Live dari Public Fleet API FinanceFlow) -->
     <FleetCatalog
-      :vehicles="filteredVehicles"
-      :loading="loading"
-      :error="error"
-      @retry="fetchVehicles(true)"
+      :vehicles="displayVehicles"
+      :loading="featuredLoading"
+      :error="featuredError"
+      :total-fleet-count="totalFleetCount"
+      @retry="fetchFeaturedVehicles(true)"
     >
       <template #filter>
         <FleetFilter
           :search-query="searchQuery"
           :transmission-filter="transmissionFilter"
-          :total-units="stats.total"
-          :available-units="stats.available"
+          :total-units="totalFleetCount || featuredVehicles.length"
+          :available-units="featuredVehicles.filter(v => v.status === 'available').length"
           @update:search-query="searchQuery = $event"
           @update:transmission-filter="transmissionFilter = $event"
           @reset="resetFilters"

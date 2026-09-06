@@ -62,7 +62,7 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-200">
           <RouterLink to="/#cara-perjalanan" class="hover:text-white hover:drop-shadow transition-colors">Layanan</RouterLink>
-          <RouterLink to="/#armada" class="hover:text-white hover:drop-shadow transition-colors">Armada</RouterLink>
+          <RouterLink to="/armada" class="hover:text-white hover:drop-shadow transition-colors">Armada</RouterLink>
           <RouterLink to="/paket-tour-bintan" class="text-blue-400 font-semibold hover:text-blue-300 transition-colors">Paket Tour</RouterLink>
           <RouterLink to="/#inspirasi" class="hover:text-white hover:drop-shadow transition-colors">Inspirasi</RouterLink>
           <RouterLink to="/#faq" class="hover:text-white hover:drop-shadow transition-colors">FAQ</RouterLink>

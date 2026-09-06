@@ -48,7 +48,7 @@ const currentYear = new Date().getFullYear()
           <h4 class="text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-3">Navigasi</h4>
           <ul class="space-y-2 text-xs">
             <li><a href="/#cara-perjalanan" class="hover:text-blue-600 transition-colors">Pilihan Layanan</a></li>
-            <li><a href="/#armada" class="hover:text-blue-600 transition-colors">Pilihan Armada</a></li>
+            <li><RouterLink to="/armada" class="hover:text-blue-600 transition-colors">Pilihan Armada</RouterLink></li>
             <li><RouterLink to="/paket-tour-bintan" class="hover:text-blue-600 transition-colors">Paket Tour HiAce</RouterLink></li>
             <li><a href="/#inspirasi" class="hover:text-blue-600 transition-colors">Inspirasi Destinasi</a></li>
             <li><a href="/#faq" class="hover:text-blue-600 transition-colors">Pertanyaan Umum (FAQ)</a></li>

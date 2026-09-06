@@ -1,15 +1,28 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { RouterLink } from 'vue-router'
 import type { PublicVehicle } from '@/types/fleet'
 import { siteConfig } from '@/config/site'
 import { generateVehicleWhatsAppUrl } from '@/utils/whatsapp'
 import { getVehicleAngles, type VehiclePhotoAngle } from '@/utils/vehiclePhotos'
 
-defineProps<{
-  vehicles: PublicVehicle[]
-  loading: boolean
-  error: string | null
-}>()
+withDefaults(
+  defineProps<{
+    vehicles: PublicVehicle[]
+    loading: boolean
+    error: string | null
+    title?: string
+    subtitle?: string
+    badgeText?: string
+    totalFleetCount?: number
+  }>(),
+  {
+    title: 'Pilihan Armada Terpopuler',
+    subtitle: '3 unit terfavorit & siap jalan untuk menemani perjalanan Anda di Bintan.',
+    badgeText: 'Armada Pilihan',
+    totalFleetCount: 0
+  }
+)
 
 const emit = defineEmits<{
   (e: 'retry'): void
@@ -129,17 +142,31 @@ onUnmounted(() => {
         <div class="w-full lg:w-48 xl:w-56 shrink-0">
           <!-- Section Header -->
           <div class="mb-5">
-            <p class="text-xs font-bold uppercase tracking-widest text-blue-600 mb-1.5">Armada Tersedia</p>
+            <p class="text-xs font-bold uppercase tracking-widest text-blue-600 mb-1.5">{{ badgeText }}</p>
             <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-snug mb-1">
-              Pilihan Armada Kami
+              {{ title }}
             </h2>
             <p class="text-xs text-slate-500 leading-relaxed">
-              Terjangkau &amp; Terpercaya. Status unit terhubung langsung ke garasi.
+              {{ subtitle }}
             </p>
           </div>
 
           <!-- Filter Slot -->
           <slot name="filter"></slot>
+
+          <!-- Shortcut Card ke Etalase Lengkap -->
+          <div class="mt-4 p-3.5 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50/70 border border-blue-100 text-slate-700">
+            <p class="text-[11px] font-bold text-blue-900 mb-1">Cari tipe mobil lain?</p>
+            <p class="text-[11px] text-slate-600 mb-2.5 leading-relaxed">
+              Tersedia City Car, MPV Keluarga, HiAce hingga Bus Pariwisata.
+            </p>
+            <RouterLink
+              to="/armada"
+              class="inline-flex items-center justify-center w-full px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition-colors"
+            >
+              Lihat Katalog Lengkap &rarr;
+            </RouterLink>
+          </div>
 
           <!-- Refresh CTA -->
           <div class="mt-3 flex items-center gap-2 text-xs text-slate-400">
@@ -418,14 +445,37 @@ onUnmounted(() => {
         </article>
       </div>
 
-      <!-- Lihat semua armada link + Disclaimer (bawah grid kanan) -->
-      <div class="mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-4 border-t border-slate-100">
-        <p class="text-xs text-slate-500 leading-relaxed">
+      <!-- Bottom CTA Banner: Jelajahi Seluruh Armada -->
+      <div class="mt-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md border border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-white">Butuh kapasitas lebih besar atau bus pariwisata?</h4>
+            <p class="text-xs text-slate-300">
+              Lihat seluruh koleksi City Car, MPV, HiAce 15 Seat, hingga Bus Pariwisata di etalase resmi kami.
+            </p>
+          </div>
+        </div>
+        <RouterLink
+          to="/armada"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-blue-600/30 transition-all shrink-0 active:scale-95"
+        >
+          <span>Lihat Semua Armada {{ totalFleetCount > 0 ? `(${totalFleetCount} Unit)` : '' }}</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </RouterLink>
+      </div>
+
+      <!-- Disclaimer info -->
+      <div class="mt-3 flex items-center justify-between text-xs text-slate-400">
+        <p class="leading-relaxed">
           *Ketersediaan armada diperbarui berkala. Titik antar-jemput dikonfirmasi admin via WhatsApp.
         </p>
-        <a href="#armada" class="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors shrink-0">
-          Lihat semua armada &rarr;
-        </a>
       </div>
 
         </div>

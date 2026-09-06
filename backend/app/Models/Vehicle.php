@@ -28,11 +28,13 @@ class Vehicle extends Model
         'capacity',
         'fuel_type',
         'description',
+        'is_featured',
     ];
 
     protected $casts = [
-        'daily_rate' => 'decimal:2',
-        'capacity'   => 'integer',
+        'daily_rate'  => 'decimal:2',
+        'capacity'    => 'integer',
+        'is_featured' => 'boolean',
     ];
 
     protected $appends = [
