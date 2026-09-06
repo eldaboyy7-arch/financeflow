@@ -3,8 +3,7 @@ import { onMounted, computed } from 'vue'
 import { useFleet } from '@/composables/useFleet'
 import HeroSection from '@/components/HeroSection.vue'
 import TravelOptions from '@/components/TravelOptions.vue'
-import FleetFilter from '@/components/FleetFilter.vue'
-import FleetCatalog from '@/components/FleetCatalog.vue'
+import HomeFeaturedFleet from '@/components/HomeFeaturedFleet.vue'
 import TripInspirations from '@/components/TripInspirations.vue'
 import TrustGuarantees from '@/components/TrustGuarantees.vue'
 import LocationSection from '@/components/LocationSection.vue'
@@ -16,26 +15,8 @@ const {
   featuredLoading,
   featuredError,
   totalFleetCount,
-  searchQuery,
-  transmissionFilter,
   fetchFeaturedVehicles
 } = useFleet()
-
-// Filter 3 unit pilihan jika user melakukan pencarian cepat di homepage
-const displayVehicles = computed(() => {
-  return featuredVehicles.value.filter((vehicle) => {
-    if (searchQuery.value.trim()) {
-      const q = searchQuery.value.toLowerCase().trim()
-      const matchName = vehicle.name.toLowerCase().includes(q)
-      const matchBrand = vehicle.brand ? vehicle.brand.toLowerCase().includes(q) : false
-      if (!matchName && !matchBrand) return false
-    }
-    if (transmissionFilter.value !== 'all') {
-      if (vehicle.transmission !== transmissionFilter.value) return false
-    }
-    return true
-  })
-})
 
 const featuredVehicle = computed(() => {
   return featuredVehicles.value.find(v => v.name.toLowerCase().includes('veloz') && v.status === 'available')
@@ -48,11 +29,6 @@ onMounted(() => {
   document.title = '3 Putri Mulya - Rental Mobil & Tour Bintan'
   fetchFeaturedVehicles()
 })
-
-const resetFilters = () => {
-  searchQuery.value = ''
-  transmissionFilter.value = 'all'
-}
 </script>
 
 <template>
@@ -63,26 +39,14 @@ const resetFilters = () => {
     <!-- 2. Pilih Cara Perjalanan (Rental Mobil Harian vs Paket Tour HiAce) -->
     <TravelOptions />
 
-    <!-- 3. Pilihan Armada Pilihan (Featured 3 Unit Live dari Public Fleet API FinanceFlow) -->
-    <FleetCatalog
-      :vehicles="displayVehicles"
+    <!-- 3. Pilihan Armada Pilihan (Featured 3 Unit Live, Ringkas & Bersih) -->
+    <HomeFeaturedFleet
+      :vehicles="featuredVehicles"
       :loading="featuredLoading"
       :error="featuredError"
       :total-fleet-count="totalFleetCount"
       @retry="fetchFeaturedVehicles(true)"
-    >
-      <template #filter>
-        <FleetFilter
-          :search-query="searchQuery"
-          :transmission-filter="transmissionFilter"
-          :total-units="totalFleetCount || featuredVehicles.length"
-          :available-units="featuredVehicles.filter(v => v.status === 'available').length"
-          @update:search-query="searchQuery = $event"
-          @update:transmission-filter="transmissionFilter = $event"
-          @reset="resetFilters"
-        />
-      </template>
-    </FleetCatalog>
+    />
 
     <!-- 4. Inspirasi Perjalanan di Bintan (4 Destinasi) -->
     <TripInspirations />
