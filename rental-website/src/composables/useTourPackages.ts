@@ -64,22 +64,43 @@ function normalizeApiPackage(item: any): TourPackage {
   }
 }
 
-// Listener visibilitychange untuk background revalidation saat tab kembali aktif
-let isVisibilityListenerAttached = false
-function setupVisibilityListener(fetchFn: (force: boolean) => Promise<void>) {
-  if (isVisibilityListenerAttached || typeof window === 'undefined' || typeof document === 'undefined') return
-  isVisibilityListenerAttached = true
+// Listener visibilitychange dan focus untuk background revalidation saat tab/jendela kembali aktif
+let isRevalidateListenerAttached = false
+let periodicTimerAttached = false
 
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
+function setupRevalidationListeners(fetchFn: (force: boolean) => Promise<void>) {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return
+
+  const checkAndRevalidate = () => {
+    const cachedTime = sessionStorage.getItem(CACHE_KEY_TIME)
+    const now = Date.now()
+    // Jika tab/jendela aktif kembali dan data sudah berumur > 15 detik, revalidate diam-diam
+    if (!cachedTime || now - Number(cachedTime) > 15 * 1000) {
+      fetchFn(true)
+    }
+  }
+
+  if (!isRevalidateListenerAttached) {
+    isRevalidateListenerAttached = true
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        checkAndRevalidate()
+      }
+    })
+    window.addEventListener('focus', checkAndRevalidate)
+  }
+
+  // Timer idle: periksa setiap 30 detik apakah cache sudah melewati 90s saat user tetap di halaman
+  if (!periodicTimerAttached) {
+    periodicTimerAttached = true
+    setInterval(() => {
       const cachedTime = sessionStorage.getItem(CACHE_KEY_TIME)
       const now = Date.now()
-      // Jika tab aktif kembali dan data sudah berumur > 15 detik, revalidate diam-diam (silent update)
-      if (!cachedTime || now - Number(cachedTime) > 15 * 1000) {
+      if (!cachedTime || now - Number(cachedTime) >= CACHE_TTL_MS) {
         fetchFn(true)
       }
-    }
-  })
+    }, 30 * 1000)
+  }
 }
 
 export function useTourPackages() {
@@ -87,7 +108,7 @@ export function useTourPackages() {
    * Mengambil paket tour dari API dengan TTL cache 90s dan silent background update
    */
   const fetchTourPackages = async (forceRefresh = false): Promise<void> => {
-    setupVisibilityListener(fetchTourPackages)
+    setupRevalidationListeners(fetchTourPackages)
 
     const shouldBypassCache = forceRefresh || isBrowserReload()
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useTourPackagesStore, type TourPackage } from '@/stores/tourPackages'
 import { useVehiclesStore } from '@/stores/vehicles'
 import { useUiStore } from '@/stores/ui'
@@ -126,6 +126,15 @@ onMounted(async () => {
     store.fetchPackages(),
     vehiclesStore.fetchVehicles()
   ])
+})
+
+// Sinkronisasi otomatis template WhatsApp dengan nama paket jika admin belum kustom manual
+watch(() => form.value.title, (newTitle) => {
+  if (!editingId.value && newTitle) {
+    if (!form.value.cta_whatsapp_text || form.value.cta_whatsapp_text.includes('booking') || form.value.cta_whatsapp_text.includes('Paket')) {
+      form.value.cta_whatsapp_text = `Halo Admin Bintan Travel, saya tertarik booking Paket Tour ${newTitle.trim()} untuk tanggal...`
+    }
+  }
 })
 
 function openCreate() {
