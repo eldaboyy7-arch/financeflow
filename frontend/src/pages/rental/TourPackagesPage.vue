@@ -9,6 +9,7 @@ import { useFormatCurrency } from '@/composables/useFormatCurrency'
 import MoneySpinner from '@/components/MoneySpinner.vue'
 import CurrencyInput from '@/components/CurrencyInput.vue'
 import SelectInput, { type SelectOption } from '@/components/SelectInput.vue'
+import api from '@/api/axios'
 import {
   PlusIcon,
   PencilSquareIcon,
@@ -27,7 +28,8 @@ import {
   SparklesIcon,
   ChatBubbleLeftRightIcon,
   ListBulletIcon,
-  InformationCircleIcon
+  InformationCircleIcon,
+  BanknotesIcon,
 } from '@heroicons/vue/24/outline'
 
 const store = useTourPackagesStore()
@@ -87,6 +89,105 @@ const vehicleOptions = computed<SelectOption[]>(() => {
   return opts
 })
 
+// ── Quick Transaction Modal (Pencatatan Pemasukan 1-Klik) ────
+const showQuickTxModal = ref(false)
+const quickTxSubmitting = ref(false)
+const quickTxError = ref('')
+const selectedPackageForTx = ref<TourPackage | null>(null)
+
+const accounts = ref<any[]>([])
+const categories = ref<any[]>([])
+
+const accountOptions = computed<SelectOption[]>(() =>
+  accounts.value.map((a: any) => ({
+    value: a.id,
+    label: a.name,
+    icon: '💳',
+  }))
+)
+
+const rentalCategoryOptions = computed<SelectOption[]>(() =>
+  categories.value
+    .filter((c: any) => c.type === 'income')
+    .map((c: any) => ({
+      value: c.id,
+      label: c.name,
+      icon: '💰',
+    }))
+)
+
+const quickTxForm = ref({
+  amount: 0,
+  date: new Date().toISOString().slice(0, 10),
+  account_id: '' as string | number,
+  category_id: '' as string | number,
+  vehicle_id: '' as string | number,
+  description: '',
+  guest_name: '',
+})
+
+function openQuickTransaction(pkg: TourPackage) {
+  selectedPackageForTx.value = pkg
+  quickTxError.value = ''
+
+  // 1. Cari armada yang cocok (dari pkg.vehicle_id atau nama mobil)
+  let matchedVehicleId: string | number = ''
+  if (pkg.vehicle_id) {
+    matchedVehicleId = String(pkg.vehicle_id)
+  } else if (vehiclesStore.vehicles.length > 0) {
+    const found = vehiclesStore.vehicles.find(v =>
+      pkg.vehicle_name && v.name.toLowerCase().includes(pkg.vehicle_name.toLowerCase().slice(0, 6))
+    )
+    matchedVehicleId = found ? String(found.id) : String(vehiclesStore.vehicles[0].id)
+  }
+
+  // 2. Kategori pemasukan default
+  const incomeCats = categories.value.filter((c: any) => c.type === 'income')
+  const defaultCat = incomeCats.find((c: any) =>
+    c.name.toLowerCase().includes('sewa') || c.name.toLowerCase().includes('paket') || c.name.toLowerCase().includes('tour')
+  ) || incomeCats[0]
+
+  quickTxForm.value = {
+    amount: Number(pkg.price) || 1000000,
+    date: new Date().toISOString().slice(0, 10),
+    account_id: accounts.value.length ? accounts.value[0].id : '',
+    category_id: defaultCat ? defaultCat.id : '',
+    vehicle_id: matchedVehicleId,
+    description: `Pemesanan Paket Tour ${pkg.title}`,
+    guest_name: '',
+  }
+
+  showQuickTxModal.value = true
+}
+
+async function submitQuickTransaction() {
+  quickTxSubmitting.value = true
+  quickTxError.value = ''
+
+  try {
+    const finalDesc = quickTxForm.value.guest_name.trim()
+      ? `${quickTxForm.value.description} - Rombongan ${quickTxForm.value.guest_name.trim()}`
+      : quickTxForm.value.description
+
+    await api.post('/transactions', {
+      type: 'income',
+      amount: quickTxForm.value.amount,
+      date: quickTxForm.value.date,
+      description: finalDesc,
+      account_id: quickTxForm.value.account_id,
+      category_id: quickTxForm.value.category_id,
+      vehicle_id: quickTxForm.value.vehicle_id ? Number(quickTxForm.value.vehicle_id) : null,
+    })
+
+    showQuickTxModal.value = false
+    uiStore.showToast(`Pemasukan paket tour berhasil dicatat & masuk ke laporan!`)
+  } catch (e: any) {
+    quickTxError.value = e?.response?.data?.message || 'Gagal menyimpan transaksi pemasukan.'
+  } finally {
+    quickTxSubmitting.value = false
+  }
+}
+
 const defaultForm = {
   title: '',
   subtitle: '',
@@ -122,10 +223,14 @@ const coverFileInput = ref<HTMLInputElement | null>(null)
 const galleryFileInput = ref<HTMLInputElement | null>(null)
 
 onMounted(async () => {
-  await Promise.all([
+  const [_, __, accs, cats] = await Promise.all([
     store.fetchPackages(),
-    vehiclesStore.fetchVehicles()
+    vehiclesStore.fetchVehicles(),
+    api.get('/accounts').catch(() => ({ data: { data: [] } })),
+    api.get('/categories', { params: { mode: 'rental' } }).catch(() => ({ data: { data: [] } })),
   ])
+  accounts.value = accs.data?.data ?? accs.data ?? []
+  categories.value = cats.data?.data ?? cats.data ?? []
 })
 
 // Sinkronisasi otomatis template WhatsApp dengan nama paket jika admin belum kustom manual
@@ -608,13 +713,20 @@ function getBadgeStyle(color: string) {
           </div>
         </div>
 
-        <!-- Card Footer Actions -->
-        <div class="p-4 pt-0 border-t border-slate-100 dark:border-slate-700/60 mt-2 flex items-center justify-between">
-          <span class="text-[11px] text-slate-400">
-            Urutan: {{ pkg.sort_order }}
-          </span>
-          <div class="flex items-center gap-2">
+        <!-- Card Footer Actions: Quick Transaction + Edit + Delete -->
+        <div class="p-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 mt-1 flex items-center justify-between gap-2">
+          <button
+            type="button"
+            @click="openQuickTransaction(pkg)"
+            class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-bold border border-emerald-200 dark:border-emerald-800/50 transition-colors shadow-xs"
+            title="Catat Pemasukan Paket Ini ke Laporan Keuangan"
+          >
+            <BanknotesIcon class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span>Catat Pemasukan</span>
+          </button>
+          <div class="flex items-center gap-1 shrink-0">
             <button
+              type="button"
               @click="openEdit(pkg)"
               class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition"
               title="Edit Paket Tour"
@@ -622,6 +734,7 @@ function getBadgeStyle(color: string) {
               <PencilSquareIcon class="w-4 h-4" />
             </button>
             <button
+              type="button"
               @click="handleDelete(pkg)"
               class="p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition"
               title="Hapus Paket"
@@ -1199,5 +1312,156 @@ function getBadgeStyle(color: string) {
         </div>
       </div>
     </div>
+
+    <!-- Modal Catat Pemasukan Paket Tour (Quick Log 1-Klik) -->
+    <Teleport to="body">
+      <div
+        v-if="showQuickTxModal"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto"
+      >
+        <div class="relative bg-white dark:bg-slate-800 rounded-2xl p-5 sm:p-6 w-full max-w-lg shadow-2xl border border-slate-200 dark:border-slate-700">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 mb-1.5">
+                <BanknotesIcon class="w-3.5 h-3.5" />
+                <span>Pencatatan Cepat Transaksi</span>
+              </div>
+              <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                Catat Pemasukan Paket Tour
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Otomatis menambah saldo kas/bank dan masuk ke Laporan Rental & Cashflow.
+              </p>
+            </div>
+            <button
+              @click="showQuickTxModal = false"
+              class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+            >
+              <XMarkIcon class="w-5 h-5" />
+            </button>
+          </div>
+
+          <!-- Banner Paket Terpilih -->
+          <div
+            v-if="selectedPackageForTx"
+            class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/80 mb-4 flex items-center justify-between"
+          >
+            <div>
+              <span class="text-[10px] uppercase font-bold text-slate-400 block">Paket Tour</span>
+              <span class="text-sm font-bold text-slate-900 dark:text-white">{{ selectedPackageForTx.title }}</span>
+            </div>
+            <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-lg">
+              {{ selectedPackageForTx.duration }}
+            </span>
+          </div>
+
+          <form @submit.prevent="submitQuickTransaction" class="space-y-3.5">
+            <!-- Armada -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                Alokasi Unit Armada <span class="text-rose-500">*</span>
+              </label>
+              <SelectInput
+                v-model="quickTxForm.vehicle_id"
+                :options="vehicleOptions"
+                placeholder="— Pilih Armada —"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Nominal -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Nominal Diterima (Rp) <span class="text-rose-500">*</span>
+                </label>
+                <CurrencyInput
+                  v-model="quickTxForm.amount"
+                  placeholder="1.000.000"
+                />
+                <span class="text-[10px] text-slate-400 block mt-0.5">Bisa disesuaikan jika DP / negosiasi.</span>
+              </div>
+
+              <!-- Tanggal -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Tanggal Pembayaran <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  v-model="quickTxForm.date"
+                  type="date"
+                  class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Rekening -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Rekening Penampung <span class="text-rose-500">*</span>
+                </label>
+                <SelectInput
+                  v-model="quickTxForm.account_id"
+                  :options="accountOptions"
+                  placeholder="— Pilih Rekening —"
+                />
+              </div>
+
+              <!-- Kategori -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Kategori Pemasukan <span class="text-rose-500">*</span>
+                </label>
+                <SelectInput
+                  v-model="quickTxForm.category_id"
+                  :options="rentalCategoryOptions"
+                  placeholder="— Pilih Kategori —"
+                />
+              </div>
+            </div>
+
+            <!-- Nama Tamu / Catatan -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                Nama Tamu / Rombongan Pemesan (Opsional)
+              </label>
+              <input
+                v-model="quickTxForm.guest_name"
+                type="text"
+                placeholder="cth: Bpk. Joko / Rombongan Kemenkes (15 Orang)"
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder-slate-400"
+              />
+            </div>
+
+            <div
+              v-if="quickTxError"
+              class="text-xs text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 rounded-xl px-3.5 py-2.5 border border-rose-200/60 dark:border-rose-800/40"
+            >
+              {{ quickTxError }}
+            </div>
+
+            <!-- Modal Action Buttons -->
+            <div class="flex gap-2.5 pt-2">
+              <button
+                type="button"
+                @click="showQuickTxModal = false"
+                class="flex-1 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-semibold transition-all"
+              >
+                Batal
+              </button>
+              <button
+                type="submit"
+                :disabled="quickTxSubmitting"
+                class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-bold transition-all shadow-sm flex items-center justify-center gap-2"
+              >
+                <ArrowPathIcon v-if="quickTxSubmitting" class="w-4 h-4 animate-spin" />
+                <span>{{ quickTxSubmitting ? 'Menyimpan...' : 'Simpan & Masukkan ke Laporan' }}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
