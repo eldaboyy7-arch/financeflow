@@ -41,6 +41,12 @@ const { formatCurrency } = useFormatCurrency()
 const searchQuery = ref('')
 const selectedStatus = ref<'all' | 'active' | 'inactive'>('all')
 
+const showSopBanner = ref(localStorage.getItem('ff_hide_sop_tour') !== 'true')
+function dismissSopBanner() {
+  showSopBanner.value = false
+  localStorage.setItem('ff_hide_sop_tour', 'true')
+}
+
 const activeCount = computed(() => store.packages.filter(p => p.is_active).length)
 const inactiveCount = computed(() => store.packages.filter(p => !p.is_active).length)
 
@@ -484,111 +490,125 @@ function getBadgeStyle(color: string) {
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="space-y-4 sm:space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <MapPinIcon class="w-7 h-7 text-primary-600 dark:text-primary-400" />
-          Kelola Paket Tour Bintan
+        <h1 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <MapPinIcon class="w-6 h-6 sm:w-7 sm:h-7 text-primary-600 dark:text-primary-400 shrink-0" />
+          <span>Kelola Paket Tour Bintan</span>
         </h1>
-        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5 sm:mt-1">
           Atur harga all-in, rute perjalanan, itinerary detail, dan ketersediaan paket tour untuk website rental.
         </p>
       </div>
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 w-full sm:w-auto">
         <button
           @click="store.fetchPackages()"
-          class="p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition border border-slate-200 dark:border-slate-700"
+          class="p-2 sm:p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xs shrink-0"
           title="Segarkan Data"
         >
           <ArrowPathIcon class="w-5 h-5" :class="{ 'animate-spin': store.loading }" />
         </button>
         <button
           @click="openCreate"
-          class="inline-flex items-center gap-2 px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl shadow-sm transition"
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 bg-primary-600 hover:bg-primary-700 active:scale-[0.98] text-white text-xs sm:text-sm font-semibold rounded-xl shadow-sm transition"
         >
-          <PlusIcon class="w-5 h-5" />
+          <PlusIcon class="w-4 h-4 sm:w-5 sm:h-5" />
           <span>Tambah Paket Tour</span>
         </button>
       </div>
     </div>
 
-    <!-- SOP Privasi Armada & Blur Plat Nomor Banner -->
-    <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 text-amber-900 dark:text-amber-200">
-      <ShieldCheckIcon class="w-6 h-6 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-      <div class="text-xs sm:text-sm leading-relaxed">
-        <span class="font-semibold text-amber-800 dark:text-amber-300">SOP Privasi Armada & Foto Publik:</span>
-        Pastikan setiap foto unit armada atau galeri yang diunggah telah disamarkan/diblur nomor plat polisinya, atau diambil dari sudut interior/sudut miring yang tidak mengekspos plat nomor secara terbuka demi privasi dan keamanan armada.
+    <!-- SOP Privasi Armada & Blur Plat Nomor Banner (Dismissible & Ringkas di HP) -->
+    <div
+      v-if="showSopBanner"
+      class="p-3 sm:p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start justify-between gap-2.5 text-amber-900 dark:text-amber-200 text-xs sm:text-sm"
+    >
+      <div class="flex items-start gap-2.5 sm:gap-3 leading-relaxed">
+        <ShieldCheckIcon class="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+        <div>
+          <span class="font-bold text-amber-800 dark:text-amber-300">SOP Privasi Armada:</span>
+          <span class="hidden sm:inline"> Pastikan setiap foto unit armada atau galeri yang diunggah telah disamarkan/diblur nomor plat polisinya, atau diambil dari sudut interior/sudut miring yang tidak mengekspos plat nomor secara terbuka demi privasi dan keamanan armada.</span>
+          <span class="sm:hidden"> Pastikan plat nomor pada foto unit/galeri telah disamarkan demi privasi armada.</span>
+        </div>
       </div>
+      <button
+        type="button"
+        @click="dismissSopBanner"
+        class="text-amber-700 hover:text-amber-900 dark:text-amber-400 dark:hover:text-amber-100 p-1 rounded-lg shrink-0 transition"
+        title="Tutup informasi"
+      >
+        <XMarkIcon class="w-4 h-4" />
+      </button>
     </div>
 
-    <!-- Statistik Ringkas -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div class="p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 flex items-center justify-center">
-          <MapPinIcon class="w-6 h-6" />
+    <!-- Statistik Ringkas (1 Baris 3-Kolom Rapi di Mobile) -->
+    <div class="grid grid-cols-3 gap-2 sm:gap-4">
+      <div class="p-2.5 sm:p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-4 text-center sm:text-left">
+        <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+          <MapPinIcon class="w-4 h-4 sm:w-6 sm:h-6" />
         </div>
-        <div>
-          <div class="text-xs text-slate-500 dark:text-slate-400">Total Paket Tour</div>
-          <div class="text-2xl font-bold text-slate-900 dark:text-white">{{ store.packages.length }}</div>
-        </div>
-      </div>
-
-      <div class="p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-          <CheckIcon class="w-6 h-6" />
-        </div>
-        <div>
-          <div class="text-xs text-slate-500 dark:text-slate-400">Paket Aktif di Website</div>
-          <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{{ activeCount }}</div>
+        <div class="min-w-0">
+          <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">Total Paket</div>
+          <div class="text-base sm:text-2xl font-bold text-slate-900 dark:text-white leading-tight">{{ store.packages.length }}</div>
         </div>
       </div>
 
-      <div class="p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center">
-          <ClockIcon class="w-6 h-6" />
+      <div class="p-2.5 sm:p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-4 text-center sm:text-left">
+        <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+          <CheckIcon class="w-4 h-4 sm:w-6 sm:h-6" />
         </div>
-        <div>
-          <div class="text-xs text-slate-500 dark:text-slate-400">Paket Nonaktif / Draft</div>
-          <div class="text-2xl font-bold text-slate-600 dark:text-slate-300">{{ inactiveCount }}</div>
+        <div class="min-w-0">
+          <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">Aktif di Web</div>
+          <div class="text-base sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 leading-tight">{{ activeCount }}</div>
+        </div>
+      </div>
+
+      <div class="p-2.5 sm:p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-4 text-center sm:text-left">
+        <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center shrink-0">
+          <ClockIcon class="w-4 h-4 sm:w-6 sm:h-6" />
+        </div>
+        <div class="min-w-0">
+          <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">Draft / Off</div>
+          <div class="text-base sm:text-2xl font-bold text-slate-600 dark:text-slate-300 leading-tight">{{ inactiveCount }}</div>
         </div>
       </div>
     </div>
 
     <!-- Filter & Search Bar -->
-    <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
+    <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-stretch sm:items-center sm:justify-between">
       <div class="relative w-full sm:w-80">
-        <MagnifyingGlassIcon class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        <MagnifyingGlassIcon class="w-4 h-4 sm:w-5 sm:h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
         <input
           v-model="searchQuery"
           type="text"
           placeholder="Cari judul, armada, atau rute..."
-          class="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white"
+          class="w-full pl-9 sm:pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white"
         />
       </div>
 
-      <div class="flex items-center gap-2 self-start sm:self-auto">
+      <div class="grid grid-cols-3 sm:flex items-center gap-1 sm:gap-2 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-full sm:w-auto">
         <button
           @click="selectedStatus = 'all'"
-          :class="selectedStatus === 'all' ? 'bg-primary-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'"
-          class="px-3 py-1.5 rounded-lg text-xs font-medium transition"
+          :class="selectedStatus === 'all' ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 font-bold shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700'"
+          class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs transition text-center"
         >
           Semua ({{ store.packages.length }})
         </button>
         <button
           @click="selectedStatus = 'active'"
-          :class="selectedStatus === 'active' ? 'bg-emerald-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'"
-          class="px-3 py-1.5 rounded-lg text-xs font-medium transition"
+          :class="selectedStatus === 'active' ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 font-bold shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700'"
+          class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs transition text-center"
         >
           Aktif ({{ activeCount }})
         </button>
         <button
           @click="selectedStatus = 'inactive'"
-          :class="selectedStatus === 'inactive' ? 'bg-slate-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'"
-          class="px-3 py-1.5 rounded-lg text-xs font-medium transition"
+          :class="selectedStatus === 'inactive' ? 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700'"
+          class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs transition text-center"
         >
-          Nonaktif ({{ inactiveCount }})
+          Draft ({{ inactiveCount }})
         </button>
       </div>
     </div>
@@ -618,7 +638,7 @@ function getBadgeStyle(color: string) {
     </div>
 
     <!-- Cards Grid -->
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
       <div
         v-for="pkg in filteredPackages"
         :key="pkg.id"
@@ -626,7 +646,7 @@ function getBadgeStyle(color: string) {
       >
         <div>
           <!-- Card Header / Image Preview -->
-          <div class="relative h-44 bg-slate-100 dark:bg-slate-900 overflow-hidden group">
+          <div class="relative h-40 sm:h-44 bg-slate-100 dark:bg-slate-900 overflow-hidden group">
             <img
               v-if="pkg.cover_photo_url"
               :src="pkg.cover_photo_url"
@@ -639,22 +659,22 @@ function getBadgeStyle(color: string) {
             </div>
 
             <!-- Badges -->
-            <div class="absolute top-3 left-3 flex flex-wrap gap-1.5">
+            <div class="absolute top-2.5 left-2.5 flex flex-wrap gap-1">
               <span
                 v-if="pkg.badge"
                 :class="getBadgeStyle(pkg.badge_color)"
-                class="px-2.5 py-1 rounded-full text-xs font-semibold border backdrop-blur-md"
+                class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold border backdrop-blur-md"
               >
                 {{ pkg.badge }}
               </span>
             </div>
 
             <!-- Active Status Switch -->
-            <div class="absolute top-3 right-3">
+            <div class="absolute top-2.5 right-2.5">
               <button
                 @click.stop="handleToggleStatus(pkg)"
-                :class="pkg.is_active ? 'bg-emerald-600 text-white' : 'bg-slate-900/80 text-slate-300'"
-                class="px-2.5 py-1 rounded-full text-xs font-medium border border-white/20 backdrop-blur-md shadow-sm transition flex items-center gap-1.5"
+                :class="pkg.is_active ? 'bg-emerald-600/95 text-white' : 'bg-slate-900/80 text-slate-300'"
+                class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border border-white/20 backdrop-blur-md shadow-xs transition flex items-center gap-1.5"
                 :title="pkg.is_active ? 'Klik untuk nonaktifkan' : 'Klik untuk aktifkan'"
               >
                 <span class="w-1.5 h-1.5 rounded-full" :class="pkg.is_active ? 'bg-white animate-pulse' : 'bg-slate-400'"></span>
@@ -663,18 +683,18 @@ function getBadgeStyle(color: string) {
             </div>
 
             <!-- Price Tag Overlay -->
-            <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between bg-slate-950/70 backdrop-blur-md px-3 py-1.5 rounded-xl text-white">
-              <span class="text-[11px] font-medium text-slate-300 uppercase tracking-wider">{{ pkg.price_label || 'HARGA MULAI' }}</span>
-              <span class="text-sm font-bold text-primary-300">
+            <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between bg-slate-950/75 backdrop-blur-md px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-white">
+              <span class="text-[10px] sm:text-[11px] font-medium text-slate-300 uppercase tracking-wider">{{ pkg.price_label || 'HARGA MULAI' }}</span>
+              <span class="text-xs sm:text-sm font-bold text-primary-300">
                 {{ pkg.price > 0 ? (pkg.formatted_price || formatCurrency(pkg.price)) : 'Gratis / Nego' }}
               </span>
             </div>
           </div>
 
           <!-- Card Body -->
-          <div class="p-4 space-y-3">
+          <div class="p-3.5 sm:p-4 space-y-2.5 sm:space-y-3">
             <div>
-              <h3 class="font-bold text-base text-slate-900 dark:text-white leading-snug">
+              <h3 class="font-bold text-sm sm:text-base text-slate-900 dark:text-white leading-snug">
                 {{ pkg.title }}
               </h3>
               <p v-if="pkg.subtitle" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
@@ -683,7 +703,7 @@ function getBadgeStyle(color: string) {
             </div>
 
             <!-- Specs line -->
-            <div class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-300 pt-1">
+            <div class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-300 pt-0.5">
               <span v-if="pkg.duration" class="flex items-center gap-1">
                 <ClockIcon class="w-3.5 h-3.5 text-slate-400" />
                 <span>{{ pkg.duration }}</span>
@@ -695,18 +715,18 @@ function getBadgeStyle(color: string) {
             </div>
 
             <!-- Route Summary -->
-            <div v-if="pkg.tour_route" class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-700/60">
-              <div class="text-[10px] uppercase font-semibold text-slate-400 mb-1 flex items-center gap-1">
+            <div v-if="pkg.tour_route" class="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-700/60">
+              <div class="text-[10px] uppercase font-semibold text-slate-400 mb-0.5 flex items-center gap-1">
                 <MapPinIcon class="w-3 h-3 text-primary-500" />
                 <span>Ringkasan Rute</span>
               </div>
-              <p class="text-xs text-slate-700 dark:text-slate-300 line-clamp-2 leading-relaxed">
+              <p class="text-[11px] sm:text-xs text-slate-700 dark:text-slate-300 line-clamp-2 leading-relaxed">
                 {{ pkg.tour_route }}
               </p>
             </div>
 
             <!-- Highlights count -->
-            <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-1">
+            <div class="flex items-center justify-between text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 pt-0.5">
               <span>{{ (pkg.itinerary || []).length }} Titik Jadwal</span>
               <span>{{ (pkg.facilities || []).length }} Fasilitas All-in</span>
             </div>
@@ -714,11 +734,11 @@ function getBadgeStyle(color: string) {
         </div>
 
         <!-- Card Footer Actions: Quick Transaction + Edit + Delete -->
-        <div class="p-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 mt-1 flex items-center justify-between gap-2">
+        <div class="p-3 sm:p-4 pt-2.5 sm:pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-2">
           <button
             type="button"
             @click="openQuickTransaction(pkg)"
-            class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-bold border border-emerald-200 dark:border-emerald-800/50 transition-colors shadow-xs"
+            class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 active:scale-[0.98] text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-bold border border-emerald-200 dark:border-emerald-800/50 transition shadow-xs"
             title="Catat Pemasukan Paket Ini ke Laporan Keuangan"
           >
             <BanknotesIcon class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
@@ -749,73 +769,73 @@ function getBadgeStyle(color: string) {
     <!-- Modal Form Tambah / Edit -->
     <div
       v-if="showModal"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto"
+      class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto"
     >
-      <div class="w-full max-w-3xl bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden my-8">
+      <div class="w-full max-w-3xl bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden my-auto max-h-[92vh] flex flex-col">
         <!-- Modal Header -->
-        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+        <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
           <div>
-            <h2 class="text-lg font-bold text-slate-900 dark:text-white">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
               {{ editingId ? 'Edit Paket Tour' : 'Tambah Paket Tour Baru' }}
             </h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Data yang disimpan akan langsung terhubung ke website rental publik dalam ≤90 detik.
             </p>
           </div>
           <button
             @click="showModal = false"
-            class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"
+            class="p-1.5 sm:p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"
           >
             <XMarkIcon class="w-5 h-5" />
           </button>
         </div>
 
         <!-- Tabs Bar -->
-        <div class="flex border-b border-slate-200 dark:border-slate-700 px-6 bg-slate-50 dark:bg-slate-800/60 overflow-x-auto">
+        <div class="flex border-b border-slate-200 dark:border-slate-700 px-3 sm:px-6 bg-slate-50 dark:bg-slate-800/60 overflow-x-auto scrollbar-none">
           <button
             @click="activeTab = 'basic'"
             :class="activeTab === 'basic' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
-            class="px-4 py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
+            class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
           >
             Info Dasar & Harga
           </button>
           <button
             @click="activeTab = 'route'"
             :class="activeTab === 'route' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
-            class="px-4 py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
+            class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
           >
             Rute Kartu & Fasilitas
           </button>
           <button
             @click="activeTab = 'itinerary'"
             :class="activeTab === 'itinerary' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
-            class="px-4 py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
+            class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
           >
-            Itinerary Titik Demi Titik ({{ form.itinerary.length }})
+            Itinerary Titik ({{ form.itinerary.length }})
           </button>
           <button
             @click="activeTab = 'inclusions'"
             :class="activeTab === 'inclusions' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
-            class="px-4 py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
+            class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
           >
             Termasuk & Tidak
           </button>
           <button
             @click="activeTab = 'media'"
             :class="activeTab === 'media' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
-            class="px-4 py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
+            class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
           >
             Foto & WhatsApp
           </button>
         </div>
 
         <!-- Modal Error Alert -->
-        <div v-if="modalError" class="mx-6 mt-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs">
+        <div v-if="modalError" class="mx-4 sm:mx-6 mt-3 sm:mt-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs">
           {{ modalError }}
         </div>
 
         <!-- Modal Body Content -->
-        <div class="p-6 max-h-[65vh] overflow-y-auto space-y-4">
+        <div class="p-4 sm:p-6 overflow-y-auto space-y-4 flex-1">
           <!-- TAB 1: BASIC INFO -->
           <div v-show="activeTab === 'basic'" class="space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1317,9 +1337,9 @@ function getBadgeStyle(color: string) {
     <Teleport to="body">
       <div
         v-if="showQuickTxModal"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto"
+        class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto"
       >
-        <div class="relative bg-white dark:bg-slate-800 rounded-2xl p-5 sm:p-6 w-full max-w-lg shadow-2xl border border-slate-200 dark:border-slate-700">
+        <div class="relative bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-6 w-full max-w-lg shadow-2xl border border-slate-200 dark:border-slate-700 max-h-[92vh] overflow-y-auto">
           <div class="flex items-start justify-between mb-4">
             <div>
               <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 mb-1.5">
