@@ -71,6 +71,7 @@ class Category extends Model
             // Pemasukan Rental
             ['name' => 'Sewa Lepas Kunci', 'type' => 'income', 'icon' => '🚗', 'color' => '#10B981', 'is_rental' => true, 'is_default' => true],
             ['name' => 'Sewa + Supir', 'type' => 'income', 'icon' => '👨‍✈️', 'color' => '#059669', 'is_rental' => true, 'is_default' => true],
+            ['name' => 'Paket Tour / Wisata', 'type' => 'income', 'icon' => '🏝️', 'color' => '#059669', 'is_rental' => true, 'is_default' => true],
             ['name' => 'Antar-Jemput / Drop Off', 'type' => 'income', 'icon' => '🛫', 'color' => '#0D9488', 'is_rental' => true, 'is_default' => true],
             ['name' => 'Denda / Biaya Overtime', 'type' => 'income', 'icon' => '⏱️', 'color' => '#D97706', 'is_rental' => true, 'is_default' => true],
             ['name' => 'Klaim Kerusakan / Ganti Rugi', 'type' => 'income', 'icon' => '🛡️', 'color' => '#2563EB', 'is_rental' => true, 'is_default' => true],

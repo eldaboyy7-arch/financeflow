@@ -822,7 +822,12 @@ onUnmounted(() => {
                   <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                   </svg>
-                  <span>Lepas kunci / dengan driver berpengalaman</span>
+                  <span v-if="previewVehicle.capacity >= 9 || previewVehicle.name.toLowerCase().includes('hiace')">
+                    Wajib dengan driver berpengalaman (Tidak lepas kunci)
+                  </span>
+                  <span v-else>
+                    Lepas kunci / dengan driver berpengalaman
+                  </span>
                 </div>
                 <div class="flex items-center gap-2">
                   <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

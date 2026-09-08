@@ -28,6 +28,10 @@ const faqs: FaqItem[] = [
     answer: 'Ya, tarif Paket Tour & Charter Toyota HiAce 15 Kursi sudah termasuk armada HiAce, supir profesional, dan bahan bakar minyak (BBM) sesuai rute yang disepakati.'
   },
   {
+    question: 'Apakah unit Toyota HiAce atau minibus banyak kursi bisa disewa lepas kunci?',
+    answer: 'Tidak. Khusus unit Toyota HiAce (Commuter & Premio) serta armada minibus/bus hanya disewakan lengkap dengan supir profesional dan BBM demi standar keselamatan, regulasi lisensi, serta kenyamanan rombongan Anda.'
+  },
+  {
     question: 'Bagaimana cara melakukan pemesanan?',
     answer: 'Pilih unit armada atau paket tour di website ini, lalu klik tombol WhatsApp untuk konfirmasi tanggal, ketersediaan unit, dan titik penjemputan bersama admin.'
   }

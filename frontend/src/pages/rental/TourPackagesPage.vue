@@ -141,11 +141,11 @@ function openQuickTransaction(pkg: TourPackage) {
     matchedVehicleId = found ? String(found.id) : String(vehiclesStore.vehicles[0].id)
   }
 
-  // 2. Kategori pemasukan default
+  // 2. Kategori pemasukan otomatis: Paket Tour / Wisata (All-in include supir, non-lepas kunci)
   const incomeCats = categories.value.filter((c: any) => c.type === 'income')
   const defaultCat = incomeCats.find((c: any) =>
-    c.name.toLowerCase().includes('sewa') || c.name.toLowerCase().includes('paket') || c.name.toLowerCase().includes('tour')
-  ) || incomeCats[0]
+    c.name.toLowerCase().includes('tour') || c.name.toLowerCase().includes('wisata')
+  ) || incomeCats.find((c: any) => c.name.toLowerCase().includes('supir')) || incomeCats[0]
 
   quickTxForm.value = {
     amount: Number(pkg.price) || 1000000,
@@ -1341,16 +1341,21 @@ function getBadgeStyle(color: string) {
             </button>
           </div>
 
-          <!-- Banner Paket Terpilih -->
+          <!-- Banner Paket Terpilih: Tegaskan Layanan All-in Non Lepas Kunci -->
           <div
             v-if="selectedPackageForTx"
-            class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/80 mb-4 flex items-center justify-between"
+            class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/80 mb-4 flex items-center justify-between"
           >
             <div>
-              <span class="text-[10px] uppercase font-bold text-slate-400 block">Paket Tour</span>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] uppercase font-bold text-slate-400">Paket Wisata All-In</span>
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300">
+                  Wajib Supir + BBM (Non Lepas Kunci)
+                </span>
+              </div>
               <span class="text-sm font-bold text-slate-900 dark:text-white">{{ selectedPackageForTx.title }}</span>
             </div>
-            <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-lg">
+            <span class="text-xs font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-1 rounded-lg">
               {{ selectedPackageForTx.duration }}
             </span>
           </div>
@@ -1399,7 +1404,7 @@ function getBadgeStyle(color: string) {
               <!-- Rekening -->
               <div>
                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Rekening Penampung <span class="text-rose-500">*</span>
+                  Rekening Penampung (Kas/Bank) <span class="text-rose-500">*</span>
                 </label>
                 <SelectInput
                   v-model="quickTxForm.account_id"
@@ -1408,30 +1413,18 @@ function getBadgeStyle(color: string) {
                 />
               </div>
 
-              <!-- Kategori -->
+              <!-- Nama Tamu / Catatan -->
               <div>
                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Kategori Pemasukan <span class="text-rose-500">*</span>
+                  Nama Tamu / Rombongan (Opsional)
                 </label>
-                <SelectInput
-                  v-model="quickTxForm.category_id"
-                  :options="rentalCategoryOptions"
-                  placeholder="— Pilih Kategori —"
+                <input
+                  v-model="quickTxForm.guest_name"
+                  type="text"
+                  placeholder="cth: Bpk. Joko (15 Orang)"
+                  class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder-slate-400"
                 />
               </div>
-            </div>
-
-            <!-- Nama Tamu / Catatan -->
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Nama Tamu / Rombongan Pemesan (Opsional)
-              </label>
-              <input
-                v-model="quickTxForm.guest_name"
-                type="text"
-                placeholder="cth: Bpk. Joko / Rombongan Kemenkes (15 Orang)"
-                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder-slate-400"
-              />
             </div>
 
             <div

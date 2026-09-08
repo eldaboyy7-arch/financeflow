@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useVehiclesStore } from '@/stores/vehicles'
 import { useUiStore } from '@/stores/ui'
 import { useFormatCurrency } from '@/composables/useFormatCurrency'
@@ -68,9 +68,34 @@ onMounted(async () => {
   fetchTx()
 })
 
-const filteredCategories = computed(() =>
-  categories.value.filter((c: any) => c.type === form.value.type)
+const selectedVehicle = computed(() =>
+  vehiclesStore.vehicles.find((v) => v.id === Number(form.value.vehicle_id))
 )
+
+const isLargeVehicle = computed(() => {
+  if (!selectedVehicle.value) return false
+  const v = selectedVehicle.value
+  return (v.capacity && v.capacity >= 9) || v.name.toLowerCase().includes('hiace') || v.name.toLowerCase().includes('bus')
+})
+
+const filteredCategories = computed(() => {
+  let list = categories.value.filter((c: any) => c.type === form.value.type)
+  // Mobil rombongan/HiAce wajib supir, sembunyikan opsi lepas kunci
+  if (isLargeVehicle.value && form.value.type === 'income') {
+    list = list.filter((c: any) => !c.name.toLowerCase().includes('lepas kunci'))
+  }
+  return list
+})
+
+watch(() => form.value.vehicle_id, () => {
+  if (isLargeVehicle.value && form.value.type === 'income') {
+    const currentCat = categories.value.find((c: any) => c.id === form.value.category_id)
+    if (currentCat && currentCat.name.toLowerCase().includes('lepas kunci')) {
+      const supirCat = categories.value.find((c: any) => c.name.toLowerCase().includes('supir'))
+      if (supirCat) form.value.category_id = supirCat.id
+    }
+  }
+})
 
 const vehicleOptions = computed<SelectOption[]>(() =>
   vehiclesStore.vehicles.map((v) => ({
@@ -113,7 +138,7 @@ function openModal(type: 'income' | 'expense') {
   form.value.date = new Date().toISOString().slice(0, 10)
   if (vehiclesStore.vehicles.length) form.value.vehicle_id = vehiclesStore.vehicles[0].id
   if (accounts.value.length) form.value.account_id = accounts.value[0].id
-  const cats = categories.value.filter((c: any) => c.type === type)
+  const cats = filteredCategories.value
   if (cats.length) form.value.category_id = cats[0].id
   modalError.value = ''
   showModal.value = true
@@ -196,7 +221,7 @@ async function submitTransaction() {
           <p class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors">
             + Sewa Masuk
           </p>
-          <p class="text-xs text-slate-400 mt-0.5">Lepas kunci, supir, drop-off</p>
+          <p class="text-xs text-slate-400 mt-0.5">Sewa harian, paket supir, drop-off</p>
         </div>
       </button>
 
