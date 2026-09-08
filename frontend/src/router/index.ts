@@ -95,6 +95,11 @@ const router = createRouter({
           component: () => import('@/pages/rental/VehiclesPage.vue'),
         },
         {
+          path: 'rental/paket-tour',
+          name: 'rental-tour-packages',
+          component: () => import('@/pages/rental/TourPackagesPage.vue'),
+        },
+        {
           path: 'rental/transaksi',
           name: 'rental-transaksi',
           component: () => import('@/pages/rental/RentalTransactionsPage.vue'),

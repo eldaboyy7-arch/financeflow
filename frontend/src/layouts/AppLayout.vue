@@ -33,6 +33,7 @@ import {
   ArrowRightIcon,
   TruckIcon,
   ClipboardDocumentListIcon,
+  MapPinIcon,
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
@@ -95,12 +96,13 @@ const generalNavItems = [
 ]
 
 const rentalNavItems = [
-  { name: 'rental-dashboard',  route: '/rental',          icon: Squares2X2Icon,            label: 'Ringkasan Rental' },
-  { name: 'rental-vehicles',   route: '/rental/armada',   icon: TruckIcon,                 label: 'Armada Mobil' },
-  { name: 'rental-transaksi',  route: '/rental/transaksi',icon: ArrowsRightLeftIcon,       label: 'Catat Transaksi' },
-  { name: 'rental-categories', route: '/rental/kategori', icon: TagIcon,                   label: 'Kategori Rental' },
-  { name: 'rental-laporan',    route: '/rental/laporan',  icon: ClipboardDocumentListIcon, label: 'Laporan Armada' },
-  { name: 'pengaturan',        route: '/pengaturan',      icon: Cog6ToothIcon,             label: 'Pengaturan' },
+  { name: 'rental-dashboard',     route: '/rental',            icon: Squares2X2Icon,            label: 'Ringkasan Rental' },
+  { name: 'rental-vehicles',      route: '/rental/armada',     icon: TruckIcon,                 label: 'Armada Mobil' },
+  { name: 'rental-tour-packages', route: '/rental/paket-tour', icon: MapPinIcon,                label: 'Paket Tour' },
+  { name: 'rental-transaksi',     route: '/rental/transaksi',  icon: ArrowsRightLeftIcon,       label: 'Catat Transaksi' },
+  { name: 'rental-categories',    route: '/rental/kategori',   icon: TagIcon,                   label: 'Kategori Rental' },
+  { name: 'rental-laporan',       route: '/rental/laporan',    icon: ClipboardDocumentListIcon, label: 'Laporan Armada' },
+  { name: 'pengaturan',           route: '/pengaturan',        icon: Cog6ToothIcon,             label: 'Pengaturan' },
 ]
 
 const navItems = computed(() =>

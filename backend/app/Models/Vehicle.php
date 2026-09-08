@@ -22,6 +22,7 @@ class Vehicle extends Model
         'color',
         'notes',
         'photo_path',
+        'gallery_photos',
         'video_url',
         'video_path',
         'transmission',
@@ -32,19 +33,58 @@ class Vehicle extends Model
     ];
 
     protected $casts = [
-        'daily_rate'  => 'decimal:2',
-        'capacity'    => 'integer',
-        'is_featured' => 'boolean',
+        'daily_rate'     => 'decimal:2',
+        'capacity'       => 'integer',
+        'is_featured'    => 'boolean',
+        'gallery_photos' => 'array',
     ];
 
     protected $appends = [
         'photo_url',
+        'gallery_photo_urls',
         'safe_video_embed_url',
     ];
 
     public function getPhotoUrlAttribute(): ?string
     {
         return app(\App\Services\SupabaseStorageService::class)->getPublicUrl($this->photo_path);
+    }
+
+    public function getGalleryPhotoUrlsAttribute(): array
+    {
+        if (empty($this->gallery_photos) || !is_array($this->gallery_photos)) {
+            return [];
+        }
+
+        $storage = app(\App\Services\SupabaseStorageService::class);
+        $result = [];
+
+        foreach ($this->gallery_photos as $item) {
+            if (is_array($item)) {
+                $path = $item['path'] ?? $item['url'] ?? '';
+                $label = $item['label'] ?? '';
+                $id = $item['id'] ?? '';
+            } else {
+                $path = (string) $item;
+                $label = 'Foto';
+                $id = '';
+            }
+
+            if (empty($path)) continue;
+
+            $url = (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '/'))
+                ? $path
+                : ($storage->getPublicUrl($path) ?? $path);
+
+            $result[] = [
+                'id'    => $id,
+                'label' => $label,
+                'path'  => $path,
+                'url'   => $url,
+            ];
+        }
+
+        return $result;
     }
 
     public function getSafeVideoEmbedUrlAttribute(): ?string
@@ -60,6 +100,11 @@ class Vehicle extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function tourPackages(): HasMany
+    {
+        return $this->hasMany(TourPackage::class);
     }
 
     public function transactions(): HasMany

@@ -245,6 +245,9 @@ class VehicleController extends Controller
             'capacity'     => 'nullable|integer|min:1|max:100',
             'fuel_type'    => 'nullable|in:bensin,diesel',
             'description'  => 'nullable|string|max:2000',
+            'gallery_photos' => 'nullable|array',
+            'gallery_photos.*' => 'nullable',
+            'is_featured'  => 'nullable|boolean',
         ]);
 
         // 1. Strict Tenant-Aware Photo Path Validation
@@ -328,6 +331,8 @@ class VehicleController extends Controller
             'notes'                => $vehicle->notes,
             'photo_path'           => $vehicle->photo_path,
             'photo_url'            => $vehicle->photo_url,
+            'gallery_photos'       => $vehicle->gallery_photos ?? [],
+            'gallery_photo_urls'   => $vehicle->gallery_photo_urls,
             'video_url'            => $vehicle->video_url,
             'video_path'           => $vehicle->video_path,
             'safe_video_embed_url' => $vehicle->safe_video_embed_url,
@@ -335,6 +340,7 @@ class VehicleController extends Controller
             'capacity'             => (int) ($vehicle->capacity ?? 7),
             'fuel_type'            => $vehicle->fuel_type ?? 'bensin',
             'description'          => $vehicle->description,
+            'is_featured'          => (bool) $vehicle->is_featured,
             'created_at'           => $vehicle->created_at,
             'summary' => [
                 'income'  => $income,

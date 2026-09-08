@@ -16,14 +16,17 @@ use App\Http\Controllers\Api\InsightController;
 use App\Http\Controllers\Api\AiAdvisorController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\PublicFleetController;
+use App\Http\Controllers\Api\TourPackageController;
+use App\Http\Controllers\Api\PublicTourPackageController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Public Fleet Catalog (Read-only, no auth, rate-limited)
+| Public Fleet & Tour Catalog (Read-only, no auth, rate-limited)
 |--------------------------------------------------------------------------
 */
 Route::get('/public/fleet', [PublicFleetController::class, 'index'])->middleware('throttle:60,1');
+Route::get('/public/tour-packages', [PublicTourPackageController::class, 'index'])->middleware('throttle:60,1');
 
 /*
 |--------------------------------------------------------------------------
@@ -104,4 +107,10 @@ Route::middleware(['auth:sanctum', 'throttle:api.general'])->group(function () {
     // Vehicles (Rental Mode)
     Route::get('/vehicles/report', [VehicleController::class, 'report']);
     Route::apiResource('vehicles', VehicleController::class);
+
+    // Tour Packages (Rental Mode)
+    Route::post('/tour-packages/upload-photo', [TourPackageController::class, 'uploadPhoto']);
+    Route::patch('/tour-packages/{tour_package}/toggle-status', [TourPackageController::class, 'toggleStatus']);
+    Route::apiResource('tour-packages', TourPackageController::class);
 });
+

@@ -7,4 +7,6 @@ export const siteConfig = {
   rentalAddress: (import.meta.env.VITE_RENTAL_ADDRESS as string) || '',
   rentalMapsUrl: (import.meta.env.VITE_RENTAL_MAPS_URL as string) || '',
   apiUrl: (import.meta.env.VITE_PUBLIC_FLEET_API_URL as string) || 'http://127.0.0.1:8000/api/public/fleet',
+  tourPackagesApiUrl: (import.meta.env.VITE_PUBLIC_TOUR_PACKAGES_API_URL as string) || 'http://127.0.0.1:8000/api/public/tour-packages',
 }
+

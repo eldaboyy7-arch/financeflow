@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
-import { tourPackages, type TourPackage } from '@/config/tourPackages'
+import { useTourPackages } from '@/composables/useTourPackages'
+import type { TourPackage } from '@/config/tourPackages'
 import { siteConfig } from '@/config/site'
 
-const packages = computed(() => tourPackages)
+const { packages, fetchTourPackages } = useTourPackages()
+
+onMounted(() => {
+  fetchTourPackages()
+})
 
 // Active gallery photo per package card
 const activePhotos = ref<Record<string, number>>({})

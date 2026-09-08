@@ -36,6 +36,7 @@ class PublicVehicleResource extends JsonResource
             'status_label'         => $statusLabel,
             'color'                => $this->color ?? '#3B82F6',
             'photo_url'            => $this->photo_url,
+            'gallery_photos'       => $this->gallery_photo_urls ?? [],
             'video_url'            => $this->video_url,
             'safe_video_embed_url' => $this->safe_video_embed_url,
             'description'          => $this->description,
