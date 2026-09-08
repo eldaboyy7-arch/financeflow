@@ -11,7 +11,9 @@ class TourPackageSeeder extends Seeder
 {
     public function run(): void
     {
-        $userId = User::where('email', 'tigaputrimulya03@gmail.com')->value('id') ?? User::first()?->id;
+        $userId = User::where('email', 'badus991@gmail.com')->value('id')
+            ?? User::where('email', 'tigaputrimulya03@gmail.com')->value('id')
+            ?? User::first()?->id;
 
         $hiaceCommuterVehicle = Vehicle::where('name', 'like', '%Commuter%')->first();
         $hiacePremioVehicle = Vehicle::where('name', 'like', '%Premio%')->first();
