@@ -72,7 +72,7 @@ onMounted(() => {
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h8m-8 4h8m-8 4h4m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z"/>
           </svg>
-          <span>Armada Khusus Toyota HiAce 15 Kursi</span>
+          <span>Armada Khusus HiAce (Commuter 15 Kursi &amp; Premio Luxury VIP)</span>
         </div>
 
         <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-3">
@@ -80,7 +80,7 @@ onMounted(() => {
         </h1>
 
         <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
-          Pilihan terbaik perjalanan wisata keliling Pulau Bintan untuk rombongan keluarga, instansi, atau sahabat. Seluruh armada Toyota HiAce berkapasitas <strong>15 Person</strong>, dilengkapi fasilitas <strong>Karaoke System</strong>, dan tarif sudah <strong>All-In (Sudah Termasuk Mobil + Supir + BBM)</strong>.
+          Pilihan terbaik perjalanan wisata keliling Pulau Bintan untuk rombongan keluarga, instansi, atau sahabat. Seluruh armada Toyota HiAce berkapasitas <strong>11 hingga 15 penumpang</strong>, dilengkapi fasilitas <strong>Karaoke System</strong>, dan tarif sudah <strong>All-In (Sudah Termasuk Mobil + Supir + BBM)</strong>.
         </p>
       </header>
 

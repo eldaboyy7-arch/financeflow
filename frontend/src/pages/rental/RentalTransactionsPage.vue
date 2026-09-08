@@ -41,6 +41,8 @@ const form = ref({
   vehicle_id: '' as string | number,
   amount: 0 as number,
   date: new Date().toISOString().slice(0, 10),
+  customer_name: '',
+  customer_phone: '',
   description: '',
   account_id: '' as string | number,
   category_id: '' as string | number,
@@ -134,6 +136,8 @@ async function fetchTx() {
 function openModal(type: 'income' | 'expense') {
   form.value.type = type
   form.value.amount = 0
+  form.value.customer_name = ''
+  form.value.customer_phone = ''
   form.value.description = ''
   form.value.date = new Date().toISOString().slice(0, 10)
   if (vehiclesStore.vehicles.length) form.value.vehicle_id = vehiclesStore.vehicles[0].id
@@ -152,12 +156,21 @@ async function submitTransaction() {
   submitting.value = true
   modalError.value = ''
   try {
+    let finalDesc = form.value.description.trim()
+    if (form.value.customer_name.trim()) {
+      const contact = form.value.customer_phone.trim() ? ` (${form.value.customer_phone.trim()})` : ''
+      const custPrefix = `${form.value.customer_name.trim()}${contact}`
+      finalDesc = finalDesc ? `${custPrefix} — ${finalDesc}` : custPrefix
+    } else if (!finalDesc) {
+      finalDesc = form.value.type === 'income' ? 'Sewa Mobil' : 'Biaya Operasional'
+    }
+
     await api.post('/transactions', {
       type: form.value.type,
       vehicle_id: form.value.vehicle_id || null,
       amount: parseFloat(String(form.value.amount)),
       date: form.value.date,
-      description: form.value.description || (form.value.type === 'income' ? 'Sewa Mobil' : 'Biaya Operasional'),
+      description: finalDesc,
       account_id: form.value.account_id,
       category_id: form.value.category_id,
     })
@@ -406,17 +419,44 @@ async function submitTransaction() {
               </div>
             </div>
 
+            <!-- Nama Penyewa & No. WhatsApp (Khusus Pemasukan Sewa) -->
+            <div v-if="form.type === 'income'" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
+                  Nama Penyewa / Tamu <span class="text-slate-400 font-normal">(opsional)</span>
+                </label>
+                <input
+                  v-model="form.customer_name"
+                  type="text"
+                  placeholder="cth. Bpk. Hendra"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-500 focus:bg-white dark:focus:bg-slate-800 transition-all"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
+                  No. WhatsApp Penyewa <span class="text-slate-400 font-normal">(opsional)</span>
+                </label>
+                <input
+                  v-model="form.customer_phone"
+                  type="tel"
+                  placeholder="cth. 08123456789"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-500 focus:bg-white dark:focus:bg-slate-800 transition-all"
+                />
+              </div>
+            </div>
+
             <!-- Catatan / Keterangan -->
             <div>
               <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
-                {{ form.type === 'income' ? 'Nama Penyewa / Keterangan' : 'Keterangan Pengeluaran' }}
+                {{ form.type === 'income' ? 'Catatan Tambahan (Durasi/Tujuan)' : 'Keterangan Pengeluaran' }}
                 <span class="text-slate-400 font-normal">(opsional)</span>
               </label>
               <input
                 v-model="form.description"
                 type="text"
                 class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-500 focus:bg-white dark:focus:bg-slate-800 transition-all"
-                :placeholder="form.type === 'income' ? 'cth. Sewa 2 hari Pak Budi ke luar kota' : 'cth. Bensin Pertamax 30 liter'"
+                :placeholder="form.type === 'income' ? 'cth. Sewa 2 hari ke Trikora / DP sewa' : 'cth. Bensin Pertamax 30 liter / Servis rutin'"
               />
             </div>
 

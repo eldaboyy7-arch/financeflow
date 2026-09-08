@@ -41,7 +41,7 @@ const getWhatsAppUrl = (text: string) => {
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span>Khusus Armada Toyota HiAce 15 Kursi</span>
+            <span>Khusus Armada HiAce (Commuter 15 Kursi &amp; Premio Luxury VIP)</span>
           </div>
           <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Paket Tour &amp; Wisata Bintan
@@ -85,10 +85,10 @@ const getWhatsAppUrl = (text: string) => {
               </span>
             </div>
 
-            <!-- Capacity & Include Pill -->
+            <!-- Capacity & Include Pill (Dinamis sesuai kapasitas unit) -->
             <div class="absolute bottom-3 left-3 z-10">
               <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-600 text-white shadow-sm">
-                Include Supir &amp; BBM &bull; 15 Person
+                Include Supir &amp; BBM &bull; {{ pkg.capacity || 'Kapasitas Rombongan' }}
               </span>
             </div>
 

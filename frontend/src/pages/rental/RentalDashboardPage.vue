@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useVehiclesStore } from '@/stores/vehicles'
 import { useFormatCurrency } from '@/composables/useFormatCurrency'
 import { useAuthStore } from '@/stores/auth'
+import { useTourPackagesStore } from '@/stores/tourPackages'
 import MoneySpinner from '@/components/MoneySpinner.vue'
 import {
   PlusIcon,
@@ -14,10 +15,13 @@ import {
   TruckIcon,
   WrenchScrewdriverIcon,
   CheckCircleIcon,
-  ClockIcon
+  ClockIcon,
+  MapPinIcon,
+  GlobeAltIcon,
 } from '@heroicons/vue/24/outline'
 
 const vehiclesStore = useVehiclesStore()
+const tourStore = useTourPackagesStore()
 const { formatCurrency } = useFormatCurrency()
 const authStore = useAuthStore()
 const router = useRouter()
@@ -30,6 +34,7 @@ const firstName = computed(() => authStore.user?.name?.split(' ')[0] || 'Owner')
 
 onMounted(() => {
   vehiclesStore.fetchVehicles(month.value, year.value)
+  tourStore.fetchPackages()
 })
 
 const totalIncome = computed(() => vehiclesStore.vehicles.reduce((s, v) => s + (v.summary?.income || 0), 0))
@@ -38,6 +43,7 @@ const totalProfit = computed(() => totalIncome.value - totalExpense.value)
 const availableCount = computed(() => vehiclesStore.vehicles.filter(v => v.status === 'available').length)
 const rentedCount = computed(() => vehiclesStore.vehicles.filter(v => v.status === 'rented').length)
 const maintenanceCount = computed(() => vehiclesStore.vehicles.filter(v => v.status === 'maintenance').length)
+const activeTourCount = computed(() => tourStore.packages.filter(p => p.is_active).length)
 
 function statusBadge(s: string) {
   if (s === 'available') return { label: 'Tersedia', class: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400' }
@@ -47,36 +53,36 @@ function statusBadge(s: string) {
 </script>
 
 <template>
-  <div class="space-y-5">
+  <div class="space-y-4 sm:space-y-5">
     <!-- Header: Clean App Standard Banner -->
-    <div class="card p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="card p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
-        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold mb-2">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold mb-2">
           <TruckIcon class="w-3.5 h-3.5 text-primary-600 dark:text-primary-400" />
-          Mode Rental Mobil
+          <span>Rental &amp; Paket Tour</span>
         </div>
         <h1 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
           Ringkasan Rental · {{ monthNames[month - 1] }} {{ year }}
         </h1>
         <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Pantau pendapatan sewa, biaya operasional, dan ketersediaan {{ vehiclesStore.vehicles.length }} armada mobil.
+          Pantau pendapatan sewa, biaya operasional {{ vehiclesStore.vehicles.length }} armada, dan performa paket wisata.
         </p>
       </div>
 
       <div class="flex items-center gap-2 w-full sm:w-auto">
         <button
           @click="router.push('/rental/transaksi')"
-          class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs sm:text-sm font-semibold shadow-sm transition-all"
+          class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs sm:text-sm font-semibold shadow-sm transition-all"
         >
           <PlusIcon class="w-4 h-4" />
-          Catat Transaksi
+          <span>Catat Transaksi</span>
         </button>
         <button
-          @click="router.push('/rental/armada')"
-          class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold transition-all"
+          @click="router.push('/rental/paket-tour')"
+          class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-primary-50 hover:bg-primary-100 dark:bg-primary-950/40 dark:hover:bg-primary-900/50 text-primary-700 dark:text-primary-300 text-xs sm:text-sm font-semibold transition-all border border-primary-200/60 dark:border-primary-800/40"
         >
-          <TruckIcon class="w-4 h-4" />
-          Armada
+          <MapPinIcon class="w-4 h-4 text-primary-600 dark:text-primary-400" />
+          <span>Paket Tour</span>
         </button>
       </div>
     </div>
@@ -189,6 +195,46 @@ function statusBadge(s: string) {
             </div>
             <p class="text-xl sm:text-2xl font-bold text-amber-700 dark:text-amber-400 tabular-nums">{{ maintenanceCount }}</p>
           </div>
+        </div>
+      </div>
+
+      <!-- Tour Packages Live Status Banner -->
+      <div class="card p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gradient-to-r from-blue-50/60 via-indigo-50/30 to-slate-50 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-800 border border-blue-100/80 dark:border-slate-700">
+        <div class="flex items-center gap-3.5">
+          <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-primary-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <MapPinIcon class="w-5 h-5 sm:w-6 sm:h-6" />
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white">Layanan Paket Tour Bintan</h3>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                {{ activeTourCount }} Paket Aktif di Web
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Tarif all-in (armada HiAce + driver + BBM). Pemasukan pemesanan tour langsung masuk ke Laporan Keuangan.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button
+            @click="router.push('/rental/paket-tour')"
+            class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-600 text-xs font-semibold shadow-xs transition"
+          >
+            <span>Kelola Paket Tour</span>
+            <ChevronRightIcon class="w-3.5 h-3.5" />
+          </button>
+          <a
+            href="http://localhost:5175/paket-tour-bintan"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-1 p-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold shadow-xs transition shrink-0"
+            title="Buka Halaman Paket Tour di Website Publik"
+          >
+            <GlobeAltIcon class="w-4 h-4" />
+          </a>
         </div>
       </div>
 
