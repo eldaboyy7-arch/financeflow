@@ -30,6 +30,9 @@ import {
   ListBulletIcon,
   InformationCircleIcon,
   BanknotesIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  CheckCircleIcon,
 } from '@heroicons/vue/24/outline'
 
 const store = useTourPackagesStore()
@@ -424,9 +427,14 @@ function removeGalleryPhoto(idx: number) {
 }
 
 async function handleToggleStatus(pkg: TourPackage) {
+  const willBeActive = !pkg.is_active
   try {
     await store.toggleStatus(pkg.id)
-    uiStore.showToast(`Paket "${pkg.title}" sekarang ${pkg.is_active ? 'Nonaktif' : 'Aktif'}!`)
+    uiStore.showToast(
+      willBeActive
+        ? `Paket "${pkg.title}" berhasil diaktifkan (sekarang tayang di website)!`
+        : `Paket "${pkg.title}" berhasil dinonaktifkan (disembunyikan dari website).`
+    )
   } catch (err: any) {
     uiStore.showToast(err.message || 'Gagal mengubah status paket.', 'error')
   }
@@ -642,11 +650,30 @@ function getBadgeStyle(color: string) {
       <div
         v-for="pkg in filteredPackages"
         :key="pkg.id"
-        class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col justify-between transition hover:border-primary-500/50"
+        class="bg-white dark:bg-slate-800 rounded-2xl border shadow-sm overflow-hidden flex flex-col justify-between transition hover:border-primary-500/50"
+        :class="!pkg.is_active ? 'opacity-90 border-amber-300/80 bg-amber-50/10 dark:bg-slate-800/80 dark:border-amber-500/40' : 'border-slate-200 dark:border-slate-700'"
       >
         <div>
           <!-- Card Header / Image Preview -->
           <div class="relative h-40 sm:h-44 bg-slate-100 dark:bg-slate-900 overflow-hidden group">
+            <!-- Nonaktif Banner Overlay -->
+            <div
+              v-if="!pkg.is_active"
+              class="absolute inset-x-0 top-0 bg-slate-950/90 text-amber-300 text-[10px] sm:text-xs font-bold py-1 px-3 flex items-center justify-between z-20 backdrop-blur-xs border-b border-amber-500/40 shadow-xs"
+            >
+              <span class="flex items-center gap-1.5">
+                <EyeSlashIcon class="w-3.5 h-3.5 text-amber-400" />
+                <span>Nonaktif — Disembunyikan dari Website</span>
+              </span>
+              <button
+                type="button"
+                @click.stop="handleToggleStatus(pkg)"
+                class="text-[10px] underline hover:text-white font-semibold text-amber-200"
+              >
+                Aktifkan
+              </button>
+            </div>
+
             <img
               v-if="pkg.cover_photo_url"
               :src="pkg.cover_photo_url"
@@ -659,7 +686,7 @@ function getBadgeStyle(color: string) {
             </div>
 
             <!-- Badges -->
-            <div class="absolute top-2.5 left-2.5 flex flex-wrap gap-1">
+            <div class="absolute left-2.5 flex flex-wrap gap-1" :class="!pkg.is_active ? 'top-8' : 'top-2.5'">
               <span
                 v-if="pkg.badge"
                 :class="getBadgeStyle(pkg.badge_color)"
@@ -670,15 +697,15 @@ function getBadgeStyle(color: string) {
             </div>
 
             <!-- Active Status Switch -->
-            <div class="absolute top-2.5 right-2.5">
+            <div class="absolute right-2.5 z-20" :class="!pkg.is_active ? 'top-8' : 'top-2.5'">
               <button
                 @click.stop="handleToggleStatus(pkg)"
-                :class="pkg.is_active ? 'bg-emerald-600/95 text-white' : 'bg-slate-900/80 text-slate-300'"
-                class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border border-white/20 backdrop-blur-md shadow-xs transition flex items-center gap-1.5"
-                :title="pkg.is_active ? 'Klik untuk nonaktifkan' : 'Klik untuk aktifkan'"
+                :class="pkg.is_active ? 'bg-emerald-600/95 text-white hover:bg-emerald-700' : 'bg-slate-900/90 text-amber-300 border border-amber-500/50 hover:bg-slate-800'"
+                class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold border border-white/20 backdrop-blur-md shadow-xs transition flex items-center gap-1.5"
+                :title="pkg.is_active ? 'Klik untuk menonaktifkan (sembunyikan dari website)' : 'Klik untuk mengaktifkan (tayang di website)'"
               >
-                <span class="w-1.5 h-1.5 rounded-full" :class="pkg.is_active ? 'bg-white animate-pulse' : 'bg-slate-400'"></span>
-                <span>{{ pkg.is_active ? 'Aktif di Web' : 'Nonaktif' }}</span>
+                <span class="w-2 h-2 rounded-full" :class="pkg.is_active ? 'bg-white animate-pulse' : 'bg-amber-400'"></span>
+                <span>{{ pkg.is_active ? 'Aktif di Web' : 'Nonaktif (Off)' }}</span>
               </button>
             </div>
 
@@ -733,7 +760,7 @@ function getBadgeStyle(color: string) {
           </div>
         </div>
 
-        <!-- Card Footer Actions: Quick Transaction + Edit + Delete -->
+        <!-- Card Footer Actions: Quick Transaction + Status Toggle + Edit + Delete -->
         <div class="p-3 sm:p-4 pt-2.5 sm:pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-2">
           <button
             type="button"
@@ -745,6 +772,17 @@ function getBadgeStyle(color: string) {
             <span>Catat Pemasukan</span>
           </button>
           <div class="flex items-center gap-1 shrink-0">
+            <!-- Dedicated Toggle Status Action Button -->
+            <button
+              type="button"
+              @click="handleToggleStatus(pkg)"
+              :class="pkg.is_active ? 'text-amber-600 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/40' : 'text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/40'"
+              class="p-2 rounded-lg transition"
+              :title="pkg.is_active ? 'Nonaktifkan paket ini (sembunyikan dari website rental)' : 'Aktifkan paket ini (tayang di website rental)'"
+            >
+              <EyeSlashIcon v-if="pkg.is_active" class="w-4 h-4" />
+              <CheckCircleIcon v-else class="w-4 h-4" />
+            </button>
             <button
               type="button"
               @click="openEdit(pkg)"
@@ -767,77 +805,132 @@ function getBadgeStyle(color: string) {
     </div>
 
     <!-- Modal Form Tambah / Edit -->
-    <div
-      v-if="showModal"
-      class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/60 backdrop-blur-sm overflow-y-auto"
-    >
-      <div class="w-full max-w-3xl bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden my-auto max-h-[92vh] flex flex-col">
-        <!-- Modal Header -->
-        <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
-          <div>
-            <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
-              {{ editingId ? 'Edit Paket Tour' : 'Tambah Paket Tour Baru' }}
-            </h2>
-            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Data yang disimpan akan langsung terhubung ke website rental publik dalam ≤90 detik.
-            </p>
+    <Teleport to="body">
+      <div
+        v-if="showModal"
+        class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/70 backdrop-blur-sm overflow-y-auto"
+      >
+        <div class="w-full max-w-3xl bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden my-auto max-h-[90vh] flex flex-col">
+          <!-- Modal Header (shrink-0) -->
+          <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between shrink-0 bg-white dark:bg-slate-800">
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                  {{ editingId ? 'Edit Paket Tour' : 'Tambah Paket Tour Baru' }}
+                </h2>
+                <span
+                  class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold"
+                  :class="form.is_active ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400' : 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400'"
+                >
+                  <span class="w-1.5 h-1.5 rounded-full" :class="form.is_active ? 'bg-emerald-500' : 'bg-amber-500'"></span>
+                  {{ form.is_active ? 'Aktif di Web' : 'Nonaktif (Draft)' }}
+                </span>
+              </div>
+              <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Data yang disimpan akan langsung terhubung ke website rental publik dalam ≤90 detik.
+              </p>
+            </div>
+            <button
+              @click="showModal = false"
+              class="p-1.5 sm:p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"
+            >
+              <XMarkIcon class="w-5 h-5" />
+            </button>
           </div>
-          <button
-            @click="showModal = false"
-            class="p-1.5 sm:p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"
-          >
-            <XMarkIcon class="w-5 h-5" />
-          </button>
-        </div>
 
-        <!-- Tabs Bar -->
-        <div class="flex border-b border-slate-200 dark:border-slate-700 px-3 sm:px-6 bg-slate-50 dark:bg-slate-800/60 overflow-x-auto scrollbar-none">
-          <button
-            @click="activeTab = 'basic'"
-            :class="activeTab === 'basic' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
-            class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
-          >
-            Info Dasar & Harga
-          </button>
-          <button
-            @click="activeTab = 'route'"
-            :class="activeTab === 'route' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
-            class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
-          >
-            Rute Kartu & Fasilitas
-          </button>
-          <button
-            @click="activeTab = 'itinerary'"
-            :class="activeTab === 'itinerary' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
-            class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
-          >
-            Itinerary Titik ({{ form.itinerary.length }})
-          </button>
-          <button
-            @click="activeTab = 'inclusions'"
-            :class="activeTab === 'inclusions' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
-            class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
-          >
-            Termasuk & Tidak
-          </button>
-          <button
-            @click="activeTab = 'media'"
-            :class="activeTab === 'media' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
-            class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
-          >
-            Foto & WhatsApp
-          </button>
-        </div>
+          <!-- Tabs Bar (shrink-0 & min-h-[44px]) -->
+          <div class="flex shrink-0 border-b border-slate-200 dark:border-slate-700 px-3 sm:px-6 bg-slate-50 dark:bg-slate-800/80 overflow-x-auto scrollbar-none min-h-[44px]">
+            <button
+              @click="activeTab = 'basic'"
+              :class="activeTab === 'basic' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
+              class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
+            >
+              Info Dasar & Harga
+            </button>
+            <button
+              @click="activeTab = 'route'"
+              :class="activeTab === 'route' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
+              class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
+            >
+              Rute Kartu & Fasilitas
+            </button>
+            <button
+              @click="activeTab = 'itinerary'"
+              :class="activeTab === 'itinerary' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
+              class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
+            >
+              Itinerary Titik ({{ form.itinerary.length }})
+            </button>
+            <button
+              @click="activeTab = 'inclusions'"
+              :class="activeTab === 'inclusions' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
+              class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
+            >
+              Termasuk & Tidak
+            </button>
+            <button
+              @click="activeTab = 'media'"
+              :class="activeTab === 'media' ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-semibold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'"
+              class="px-3 sm:px-4 py-2.5 sm:py-3 border-b-2 text-xs sm:text-sm whitespace-nowrap transition"
+            >
+              Foto & WhatsApp
+            </button>
+          </div>
 
-        <!-- Modal Error Alert -->
-        <div v-if="modalError" class="mx-4 sm:mx-6 mt-3 sm:mt-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs">
-          {{ modalError }}
-        </div>
+          <!-- Modal Error Alert (shrink-0) -->
+          <div v-if="modalError" class="mx-4 sm:mx-6 mt-3 sm:mt-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs shrink-0">
+            {{ modalError }}
+          </div>
 
-        <!-- Modal Body Content -->
-        <div class="p-4 sm:p-6 overflow-y-auto space-y-4 flex-1">
-          <!-- TAB 1: BASIC INFO -->
-          <div v-show="activeTab === 'basic'" class="space-y-4">
+          <!-- Modal Body Content (min-h-0 flex-1 overflow-y-auto) -->
+          <div class="p-4 sm:p-6 overflow-y-auto min-h-0 flex-1 space-y-4">
+            <!-- TAB 1: BASIC INFO -->
+            <div v-show="activeTab === 'basic'" class="space-y-4">
+              <!-- Prominent Publication Status Toggle Card at TOP of Tab 1 -->
+              <div
+                class="p-3.5 sm:p-4 rounded-xl border transition-all flex items-center justify-between gap-3"
+                :class="form.is_active ? 'bg-emerald-50/80 border-emerald-300 dark:bg-emerald-950/30 dark:border-emerald-800/60' : 'bg-amber-50/70 border-amber-300 dark:bg-slate-800/90 dark:border-slate-700'"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    :class="form.is_active ? 'bg-emerald-600 text-white shadow-xs' : 'bg-amber-500 text-white shadow-xs'"
+                  >
+                    <CheckCircleIcon v-if="form.is_active" class="w-5 h-5" />
+                    <EyeSlashIcon v-else class="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div class="text-xs sm:text-sm font-bold flex items-center gap-2" :class="form.is_active ? 'text-emerald-900 dark:text-emerald-200' : 'text-slate-900 dark:text-slate-100'">
+                      <span>Status Publikasi:</span>
+                      <span
+                        class="px-2 py-0.5 rounded-full text-[11px] font-bold"
+                        :class="form.is_active ? 'bg-emerald-200 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300' : 'bg-amber-200 text-amber-800 dark:bg-amber-950 dark:text-amber-300'"
+                      >
+                        {{ form.is_active ? 'AKTIF (Tampil di Website)' : 'NONAKTIF (Disembunyikan)' }}
+                      </span>
+                    </div>
+                    <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      {{ form.is_active ? 'Paket ini sedang tayang di website rental dan dapat dilihat & dipesan pelanggan lewat WhatsApp.' : 'Paket ini disembunyikan dari website rental publik. Data & foto tetap aman tersimpan untuk diaktifkan kembali.' }}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Toggle Switch button -->
+                <button
+                  type="button"
+                  @click="form.is_active = !form.is_active"
+                  role="switch"
+                  :aria-checked="form.is_active"
+                  :class="form.is_active ? 'bg-emerald-600' : 'bg-slate-400 dark:bg-slate-600'"
+                  class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+                  :title="form.is_active ? 'Klik untuk menonaktifkan paket ini' : 'Klik untuk mengaktifkan paket ini'"
+                >
+                  <span
+                    :class="form.is_active ? 'translate-x-5' : 'translate-x-0'"
+                    class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out"
+                  />
+                </button>
+              </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="sm:col-span-2">
                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
@@ -1311,27 +1404,42 @@ function getBadgeStyle(color: string) {
           </div>
         </div>
 
-        <!-- Modal Footer -->
-        <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 flex items-center justify-end gap-3">
+        <!-- Modal Footer (shrink-0) -->
+        <div class="px-4 py-3 sm:px-6 sm:py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
+          <!-- Quick Status Switch on Footer Left -->
           <button
             type="button"
-            @click="showModal = false"
-            class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl text-sm font-medium transition"
+            @click="form.is_active = !form.is_active"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition self-start sm:self-auto"
+            :class="form.is_active ? 'bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60' : 'bg-amber-50 text-amber-700 border-amber-300 hover:bg-amber-100 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60'"
+            :title="form.is_active ? 'Klik untuk menonaktifkan paket' : 'Klik untuk mengaktifkan paket'"
           >
-            Batal
+            <span class="w-2 h-2 rounded-full" :class="form.is_active ? 'bg-emerald-500' : 'bg-amber-500'"></span>
+            <span>Status: {{ form.is_active ? 'Aktif di Web' : 'Nonaktif (Draft)' }} &bull; Klik ubah</span>
           </button>
-          <button
-            type="button"
-            :disabled="submitting"
-            @click="submitPackage"
-            class="px-5 py-2 bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white rounded-xl text-sm font-medium shadow-sm transition flex items-center gap-2"
-          >
-            <ArrowPathIcon v-if="submitting" class="w-4 h-4 animate-spin" />
-            <span>{{ submitting ? 'Menyimpan...' : (editingId ? 'Simpan Perubahan' : 'Buat Paket Tour') }}</span>
-          </button>
+
+          <div class="flex items-center justify-end gap-2 w-full sm:w-auto">
+            <button
+              type="button"
+              @click="showModal = false"
+              class="flex-1 sm:flex-initial px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl text-xs sm:text-sm font-medium transition"
+            >
+              Batal
+            </button>
+            <button
+              type="button"
+              :disabled="submitting"
+              @click="submitPackage"
+              class="flex-1 sm:flex-initial px-5 py-2 bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white rounded-xl text-xs sm:text-sm font-semibold shadow-sm transition flex items-center justify-center gap-2"
+            >
+              <ArrowPathIcon v-if="submitting" class="w-4 h-4 animate-spin" />
+              <span>{{ submitting ? 'Menyimpan...' : (editingId ? 'Simpan Perubahan' : 'Buat Paket Tour') }}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
+  </Teleport>
 
     <!-- Modal Catat Pemasukan Paket Tour (Quick Log 1-Klik) -->
     <Teleport to="body">

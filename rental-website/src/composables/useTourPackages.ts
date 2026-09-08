@@ -157,23 +157,17 @@ export function useTourPackages() {
 
       const json = await response.json()
       const rawData = Array.isArray(json.data) ? json.data : (Array.isArray(json) ? json : [])
+      const normalized = rawData.map(normalizeApiPackage)
+      packages.value = normalized
 
-      if (rawData.length > 0) {
-        const normalized = rawData.map(normalizeApiPackage)
-        packages.value = normalized
-
-        // Simpan ke sessionStorage
-        if (typeof window !== 'undefined') {
-          try {
-            sessionStorage.setItem(CACHE_KEY_DATA, JSON.stringify(normalized))
-            sessionStorage.setItem(CACHE_KEY_TIME, String(Date.now()))
-          } catch (e) {
-            console.warn('Gagal menyimpan cache tour ke sessionStorage:', e)
-          }
+      // Simpan ke sessionStorage
+      if (typeof window !== 'undefined') {
+        try {
+          sessionStorage.setItem(CACHE_KEY_DATA, JSON.stringify(normalized))
+          sessionStorage.setItem(CACHE_KEY_TIME, String(Date.now()))
+        } catch (e) {
+          console.warn('Gagal menyimpan cache tour ke sessionStorage:', e)
         }
-      } else if (packages.value.length === 0) {
-        // Jika respons kosong dan belum ada data, gunakan fallback
-        packages.value = fallbackPackages
       }
     } catch (err: any) {
       console.warn('Gagal memuat paket tour dari backend, menggunakan data fallback lokal:', err)
