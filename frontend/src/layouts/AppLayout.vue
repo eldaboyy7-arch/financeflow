@@ -35,6 +35,8 @@ import {
   ClipboardDocumentListIcon,
   MapPinIcon,
   BriefcaseIcon,
+  GlobeAltIcon,
+  ArrowTopRightOnSquareIcon,
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
@@ -103,33 +105,22 @@ const rentalNavItems = [
   { name: 'rental-vehicles',      route: '/rental/armada',     icon: TruckIcon,                 label: 'Armada Mobil' },
   { name: 'rental-tour-packages', route: '/rental/paket-tour', icon: MapPinIcon,                label: 'Paket Tour' },
   { name: 'rental-transaksi',     route: '/rental/transaksi',  icon: ArrowsRightLeftIcon,       label: 'Catat Transaksi' },
+  { name: 'rekening',            route: '/rekening',           icon: BuildingLibraryIcon,       label: 'Kas & Rekening' },
   { name: 'rental-categories',    route: '/rental/kategori',   icon: TagIcon,                   label: 'Kategori Rental' },
   { name: 'rental-laporan',       route: '/rental/laporan',    icon: ClipboardDocumentListIcon, label: 'Laporan Armada' },
   { name: 'pengaturan',           route: '/pengaturan',        icon: Cog6ToothIcon,             label: 'Pengaturan' },
 ]
 
-const navItems = computed(() =>
-  modeStore.mode === 'rental' ? rentalNavItems : generalNavItems
-)
+const navItems = computed(() => rentalNavItems)
 
 // 5 item utama untuk bottom navigation di mobile ala Instagram
-const mobileNavItems = computed(() =>
-  modeStore.mode === 'rental'
-    ? [
-        { name: 'rental-dashboard',     route: '/rental',            icon: Squares2X2Icon,            label: 'Ringkasan' },
-        { name: 'rental-vehicles',      route: '/rental/armada',     icon: TruckIcon,                 label: 'Armada' },
-        { name: 'rental-tour-packages', route: '/rental/paket-tour', icon: MapPinIcon,                label: 'Paket Tour' },
-        { name: 'rental-transaksi',     route: '/rental/transaksi',  icon: ArrowsRightLeftIcon,       label: 'Transaksi' },
-        { name: 'rental-laporan',       route: '/rental/laporan',    icon: ClipboardDocumentListIcon, label: 'Laporan' },
-      ]
-    : [
-        { name: 'dashboard',            route: '/',                  icon: Squares2X2Icon,            label: 'Dasbor' },
-        { name: 'rental-tour-packages', route: '/rental/paket-tour', icon: MapPinIcon,                label: 'Paket Tour' },
-        { name: 'transaksi',           route: '/transaksi',          icon: ArrowsRightLeftIcon,       label: 'Transaksi' },
-        { name: 'laporan',             route: '/laporan',            icon: ChartBarIcon,              label: 'Laporan' },
-        { name: 'rekening',            route: '/rekening',           icon: BuildingLibraryIcon,       label: 'Rekening' },
-      ]
-)
+const mobileNavItems = computed(() => [
+  { name: 'rental-dashboard',     route: '/rental',            icon: Squares2X2Icon,            label: 'Ringkasan' },
+  { name: 'rental-vehicles',      route: '/rental/armada',     icon: TruckIcon,                 label: 'Armada' },
+  { name: 'rental-tour-packages', route: '/rental/paket-tour', icon: MapPinIcon,                label: 'Paket Tour' },
+  { name: 'rental-transaksi',     route: '/rental/transaksi',  icon: ArrowsRightLeftIcon,       label: 'Transaksi' },
+  { name: 'rental-laporan',       route: '/rental/laporan',    icon: ClipboardDocumentListIcon, label: 'Laporan' },
+])
 
 const guideSteps = [
   {
@@ -247,8 +238,16 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
 
       <!-- Navigation -->
       <nav class="flex-1 overflow-y-auto py-3 space-y-0.5">
-        <!-- Mode Switcher (only when sidebar expanded) -->
-        <ModeSwitcher v-if="uiStore.sidebarOpen" />
+        <!-- Business Badge (only when sidebar expanded) -->
+        <div v-if="uiStore.sidebarOpen" class="px-3 pb-3">
+          <div class="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-700/60 rounded-xl border border-slate-200/60 dark:border-slate-700">
+            <TruckIcon class="w-4 h-4 text-primary-600 dark:text-primary-400 shrink-0" />
+            <div class="min-w-0 flex-1">
+              <span class="text-xs font-bold text-slate-900 dark:text-white block leading-tight truncate">Rental &amp; Paket Tour</span>
+              <span class="text-[10px] text-slate-400 dark:text-slate-400 block leading-tight truncate">Sistem Keuangan</span>
+            </div>
+          </div>
+        </div>
 
         <RouterLink
           v-for="item in navItems"
@@ -320,37 +319,18 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
         <!-- Right: Actions -->
         <div class="flex items-center gap-1.5">
 
-          <!-- Interactive Mode Switcher in Header (Desktop & Tablet) -->
-          <div class="hidden sm:flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-xl mr-1.5">
-            <button
-              type="button"
-              @click="modeStore.setMode('rental'); router.push('/rental/paket-tour')"
-              :class="[
-                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all',
-                modeStore.mode === 'rental'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
-              ]"
-              title="Beralih ke Bisnis Rental & Manajemen Paket Tour"
-            >
-              <TruckIcon class="w-3.5 h-3.5" />
-              <span>Rental &amp; Paket Tour</span>
-            </button>
-            <button
-              type="button"
-              @click="modeStore.setMode('general'); router.push('/')"
-              :class="[
-                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all',
-                modeStore.mode === 'general'
-                  ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
-              ]"
-              title="Beralih ke Mode Finansial Umum"
-            >
-              <BriefcaseIcon class="w-3.5 h-3.5" />
-              <span>Keuangan Umum</span>
-            </button>
-          </div>
+          <!-- Shortcut Langsung ke Website Rental Publik -->
+          <a
+            href="http://localhost:5175/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 text-xs font-bold transition-all shadow-xs mr-1"
+            title="Buka Website Rental & Paket Tour Publik di Tab Baru"
+          >
+            <GlobeAltIcon class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+            <span>Website Rental</span>
+            <ArrowTopRightOnSquareIcon class="w-3 h-3 text-slate-400 shrink-0" />
+          </a>
 
           <!-- Tanya AI Button — hidden in rental mode -->
           <button
@@ -576,13 +556,24 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
 
           <!-- Navigation Links (All Menu Items) -->
           <nav class="flex-1 overflow-y-auto py-3 px-3 space-y-1">
-            <!-- Mode Switcher in Drawer -->
+            <!-- Shortcut ke Website Rental Publik di Mobile Drawer -->
             <div class="mb-3">
-              <ModeSwitcher />
+              <a
+                href="http://localhost:5175/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center justify-between px-3 py-2.5 bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 rounded-xl text-xs font-bold text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/50 transition-colors"
+              >
+                <div class="flex items-center gap-2">
+                  <GlobeAltIcon class="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  <span>Buka Website Rental</span>
+                </div>
+                <ArrowTopRightOnSquareIcon class="w-3.5 h-3.5 text-blue-500" />
+              </a>
             </div>
 
             <p class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 mb-1">
-              {{ modeStore.mode === 'rental' ? 'Menu Rental Mobil' : 'Menu Keuangan' }}
+              Menu Utama Rental &amp; Paket Tour
             </p>
 
             <RouterLink

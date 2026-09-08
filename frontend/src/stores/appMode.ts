@@ -4,21 +4,19 @@ import { ref } from 'vue'
 export type AppMode = 'general' | 'rental'
 
 export const useAppModeStore = defineStore('appMode', () => {
-  const mode = ref<AppMode>(
-    (localStorage.getItem('financeflow_mode') as AppMode) ?? 'general'
-  )
+  const mode = ref<AppMode>('rental')
 
-  function setMode(newMode: AppMode) {
+  function setMode(newMode: AppMode = 'rental') {
     mode.value = newMode
     localStorage.setItem('financeflow_mode', newMode)
   }
 
   function toggleMode() {
-    setMode(mode.value === 'general' ? 'rental' : 'general')
+    setMode('rental')
   }
 
-  const isRental  = () => mode.value === 'rental'
-  const isGeneral = () => mode.value === 'general'
+  const isRental  = () => true
+  const isGeneral = () => false
 
   return { mode, setMode, toggleMode, isRental, isGeneral }
 })

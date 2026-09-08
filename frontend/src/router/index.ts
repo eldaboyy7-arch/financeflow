@@ -42,7 +42,7 @@ const router = createRouter({
         {
           path: '',
           name: 'dashboard',
-          component: () => import('@/pages/DashboardPage.vue'),
+          redirect: '/rental',
         },
         {
           path: 'transaksi',
@@ -125,8 +125,8 @@ router.beforeEach(async (to) => {
   const authStore = useAuthStore()
   const modeStore = useAppModeStore()
 
-  // Otomatis sinkronkan mode rental jika route berada di /rental/...
-  if (to.path.startsWith('/rental') && modeStore.mode !== 'rental') {
+  // Kunci mode selalu pada rental bisnis
+  if (modeStore.mode !== 'rental') {
     modeStore.setMode('rental')
   }
 
@@ -140,7 +140,11 @@ router.beforeEach(async (to) => {
   }
 
   if (to.meta.guest && authStore.isAuthenticated) {
-    return { name: 'dashboard' }
+    return { name: 'rental-dashboard' }
+  }
+
+  if (to.path === '/' && authStore.isAuthenticated) {
+    return { name: 'rental-dashboard' }
   }
 })
 
