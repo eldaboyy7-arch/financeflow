@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useAppModeStore } from '@/stores/appMode'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -122,6 +123,12 @@ const router = createRouter({
 // Navigation guards
 router.beforeEach(async (to) => {
   const authStore = useAuthStore()
+  const modeStore = useAppModeStore()
+
+  // Otomatis sinkronkan mode rental jika route berada di /rental/...
+  if (to.path.startsWith('/rental') && modeStore.mode !== 'rental') {
+    modeStore.setMode('rental')
+  }
 
   // If token exists but no user, fetch user
   if (authStore.token && !authStore.user) {

@@ -34,6 +34,7 @@ import {
   TruckIcon,
   ClipboardDocumentListIcon,
   MapPinIcon,
+  BriefcaseIcon,
 } from '@heroicons/vue/24/outline'
 
 const authStore = useAuthStore()
@@ -84,15 +85,17 @@ function markGuideSeen() {
 }
 
 const generalNavItems = [
-  { name: 'dashboard',   route: '/',          icon: Squares2X2Icon,        label: 'Dasbor' },
-  { name: 'transaksi',  route: '/transaksi',  icon: ArrowsRightLeftIcon,   label: 'Transaksi' },
-  { name: 'anggaran',   route: '/anggaran',   icon: ChartPieIcon,          label: 'Anggaran' },
-  { name: 'impian',     route: '/impian',     icon: SparklesIcon,          label: 'Impian & Goals' },
-  { name: 'langganan',  route: '/langganan',  icon: ArrowPathIcon,         label: 'Tagihan Rutin' },
-  { name: 'rekening',   route: '/rekening',   icon: BuildingLibraryIcon,   label: 'Rekening' },
-  { name: 'kategori',   route: '/kategori',   icon: TagIcon,               label: 'Kategori' },
-  { name: 'laporan',    route: '/laporan',    icon: ChartBarIcon,          label: 'Laporan' },
-  { name: 'pengaturan', route: '/pengaturan', icon: Cog6ToothIcon,         label: 'Pengaturan' },
+  { name: 'dashboard',            route: '/',                  icon: Squares2X2Icon,        label: 'Dasbor' },
+  { name: 'transaksi',           route: '/transaksi',          icon: ArrowsRightLeftIcon,   label: 'Transaksi' },
+  { name: 'rental-tour-packages', route: '/rental/paket-tour', icon: MapPinIcon,            label: 'Paket Tour' },
+  { name: 'rental-vehicles',      route: '/rental/armada',     icon: TruckIcon,             label: 'Armada Mobil' },
+  { name: 'anggaran',            route: '/anggaran',           icon: ChartPieIcon,          label: 'Anggaran' },
+  { name: 'impian',              route: '/impian',             icon: SparklesIcon,          label: 'Impian & Goals' },
+  { name: 'langganan',           route: '/langganan',          icon: ArrowPathIcon,         label: 'Tagihan Rutin' },
+  { name: 'rekening',            route: '/rekening',           icon: BuildingLibraryIcon,   label: 'Rekening' },
+  { name: 'kategori',            route: '/kategori',           icon: TagIcon,               label: 'Kategori' },
+  { name: 'laporan',             route: '/laporan',            icon: ChartBarIcon,          label: 'Laporan' },
+  { name: 'pengaturan',          route: '/pengaturan',         icon: Cog6ToothIcon,         label: 'Pengaturan' },
 ]
 
 const rentalNavItems = [
@@ -113,18 +116,18 @@ const navItems = computed(() =>
 const mobileNavItems = computed(() =>
   modeStore.mode === 'rental'
     ? [
-        { name: 'rental-dashboard', route: '/rental',           icon: Squares2X2Icon,       label: 'Ringkasan' },
-        { name: 'rental-vehicles',  route: '/rental/armada',    icon: TruckIcon,            label: 'Armada' },
-        { name: 'rental-transaksi', route: '/rental/transaksi', icon: ArrowsRightLeftIcon,  label: 'Transaksi' },
-        { name: 'rental-laporan',   route: '/rental/laporan',   icon: ClipboardDocumentListIcon, label: 'Laporan' },
-        { name: 'pengaturan',       route: '/pengaturan',       icon: Cog6ToothIcon,        label: 'Pengaturan' },
+        { name: 'rental-dashboard',     route: '/rental',            icon: Squares2X2Icon,            label: 'Ringkasan' },
+        { name: 'rental-vehicles',      route: '/rental/armada',     icon: TruckIcon,                 label: 'Armada' },
+        { name: 'rental-tour-packages', route: '/rental/paket-tour', icon: MapPinIcon,                label: 'Paket Tour' },
+        { name: 'rental-transaksi',     route: '/rental/transaksi',  icon: ArrowsRightLeftIcon,       label: 'Transaksi' },
+        { name: 'rental-laporan',       route: '/rental/laporan',    icon: ClipboardDocumentListIcon, label: 'Laporan' },
       ]
     : [
-        { name: 'dashboard',   route: '/',          icon: Squares2X2Icon,      label: 'Dasbor' },
-        { name: 'transaksi',  route: '/transaksi',  icon: ArrowsRightLeftIcon, label: 'Transaksi' },
-        { name: 'anggaran',   route: '/anggaran',   icon: ChartPieIcon,        label: 'Anggaran' },
-        { name: 'laporan',    route: '/laporan',    icon: ChartBarIcon,        label: 'Laporan' },
-        { name: 'rekening',   route: '/rekening',   icon: BuildingLibraryIcon, label: 'Rekening' },
+        { name: 'dashboard',            route: '/',                  icon: Squares2X2Icon,            label: 'Dasbor' },
+        { name: 'rental-tour-packages', route: '/rental/paket-tour', icon: MapPinIcon,                label: 'Paket Tour' },
+        { name: 'transaksi',           route: '/transaksi',          icon: ArrowsRightLeftIcon,       label: 'Transaksi' },
+        { name: 'laporan',             route: '/laporan',            icon: ChartBarIcon,              label: 'Laporan' },
+        { name: 'rekening',            route: '/rekening',           icon: BuildingLibraryIcon,       label: 'Rekening' },
       ]
 )
 
@@ -317,13 +320,36 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
         <!-- Right: Actions -->
         <div class="flex items-center gap-1.5">
 
-          <!-- Rental Mode Badge (only in rental mode) -->
-          <div
-            v-if="modeStore.mode === 'rental'"
-            class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-sm"
-          >
-            <TruckIcon class="w-4 h-4 shrink-0" />
-            <span>Mode Rental</span>
+          <!-- Interactive Mode Switcher in Header (Desktop & Tablet) -->
+          <div class="hidden sm:flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-xl mr-1.5">
+            <button
+              type="button"
+              @click="modeStore.setMode('rental'); router.push('/rental/paket-tour')"
+              :class="[
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all',
+                modeStore.mode === 'rental'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              ]"
+              title="Beralih ke Bisnis Rental & Manajemen Paket Tour"
+            >
+              <TruckIcon class="w-3.5 h-3.5" />
+              <span>Rental &amp; Paket Tour</span>
+            </button>
+            <button
+              type="button"
+              @click="modeStore.setMode('general'); router.push('/')"
+              :class="[
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all',
+                modeStore.mode === 'general'
+                  ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-xs'
+                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              ]"
+              title="Beralih ke Mode Finansial Umum"
+            >
+              <BriefcaseIcon class="w-3.5 h-3.5" />
+              <span>Keuangan Umum</span>
+            </button>
           </div>
 
           <!-- Tanya AI Button — hidden in rental mode -->
