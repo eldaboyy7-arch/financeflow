@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useTourPackages } from '@/composables/useTourPackages'
 import type { TourPackage } from '@/config/tourPackages'
@@ -7,11 +7,87 @@ import { siteConfig } from '@/config/site'
 
 const { packages: tourPackages, fetchTourPackages } = useTourPackages()
 
-// Active photo index per package
+// Active photo index per package in card
 const activePhotoIndexes = ref<Record<string, number>>({})
 
 // Collapsible detail accordion state (per package id)
 const expandedDetails = ref<Record<string, boolean>>({})
+
+// Lightbox / Zoom Modal State
+const isLightboxOpen = ref(false)
+const lightboxPkg = ref<TourPackage | null>(null)
+const lightboxPhotoIdx = ref(0)
+const zoomLevel = ref(1)
+
+const currentLightboxPhotos = computed<string[]>(() => {
+  if (!lightboxPkg.value) return []
+  if (lightboxPkg.value.galleryPhotos && lightboxPkg.value.galleryPhotos.length > 0) {
+    return lightboxPkg.value.galleryPhotos
+  }
+  return [lightboxPkg.value.vehiclePhoto]
+})
+
+const openLightbox = (pkg: TourPackage, idx: number = 0) => {
+  lightboxPkg.value = pkg
+  lightboxPhotoIdx.value = idx
+  zoomLevel.value = 1
+  isLightboxOpen.value = true
+}
+
+const closeLightbox = () => {
+  isLightboxOpen.value = false
+  zoomLevel.value = 1
+}
+
+const nextLightboxPhoto = () => {
+  if (currentLightboxPhotos.value.length <= 1) return
+  lightboxPhotoIdx.value = (lightboxPhotoIdx.value + 1) % currentLightboxPhotos.value.length
+  zoomLevel.value = 1
+}
+
+const prevLightboxPhoto = () => {
+  if (currentLightboxPhotos.value.length <= 1) return
+  lightboxPhotoIdx.value = (lightboxPhotoIdx.value - 1 + currentLightboxPhotos.value.length) % currentLightboxPhotos.value.length
+  zoomLevel.value = 1
+}
+
+const zoomIn = () => {
+  if (zoomLevel.value < 3) {
+    zoomLevel.value = Number((zoomLevel.value + 0.5).toFixed(1))
+  }
+}
+
+const zoomOut = () => {
+  if (zoomLevel.value > 1) {
+    zoomLevel.value = Number((zoomLevel.value - 0.5).toFixed(1))
+  }
+}
+
+const resetZoom = () => {
+  zoomLevel.value = 1
+}
+
+const toggleZoom = () => {
+  zoomLevel.value = zoomLevel.value === 1 ? 2 : 1
+}
+
+const handleKeydown = (e: KeyboardEvent) => {
+  if (!isLightboxOpen.value) return
+  if (e.key === 'Escape') closeLightbox()
+  if (e.key === 'ArrowRight') nextLightboxPhoto()
+  if (e.key === 'ArrowLeft') prevLightboxPhoto()
+  if (e.key === '+' || e.key === '=') zoomIn()
+  if (e.key === '-') zoomOut()
+}
+
+watch(isLightboxOpen, (open) => {
+  if (typeof document === 'undefined') return
+  if (open) {
+    document.body.classList.add('overflow-hidden')
+  } else {
+    document.body.classList.remove('overflow-hidden')
+  }
+})
 
 const getActivePhoto = (pkg: TourPackage) => {
   if (!pkg.galleryPhotos || pkg.galleryPhotos.length === 0) return pkg.vehiclePhoto
@@ -47,6 +123,16 @@ onMounted(() => {
   document.title = 'Paket Tour Bintan HiAce (Commuter & Premio) - Include Supir & BBM | 3 Putri Mulya'
   window.scrollTo({ top: 0, behavior: 'smooth' })
   fetchTourPackages()
+  if (typeof window !== 'undefined') {
+    window.addEventListener('keydown', handleKeydown)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('keydown', handleKeydown)
+    document.body.classList.remove('overflow-hidden')
+  }
 })
 </script>
 
@@ -152,70 +238,123 @@ onMounted(() => {
         >
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
             
-            <!-- Left Side: Vehicle Visual & Dedicated Gallery Row -->
-            <div class="lg:col-span-5 bg-slate-950 flex flex-col justify-between">
-              <!-- Main Active Photo with controlled aspect ratio -->
-              <div class="relative aspect-[16/10] sm:aspect-[4/3] lg:aspect-[16/11] bg-slate-900 overflow-hidden group">
-                <img
-                  :src="getActivePhoto(pkg)"
-                  :alt="pkg.title"
-                  loading="lazy"
-                  decoding="async"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
+            <!-- Left Side: Horizontal Landscape Showcase & Unit Comfort Specs -->
+            <div class="lg:col-span-5 p-4 sm:p-5 lg:p-6 bg-slate-900 flex flex-col justify-between">
+              <div>
+                <!-- Main Active Photo in Adaptive Ratio (Clickable for High-Res Lightbox & Zoom) -->
+                <div
+                  @click="openLightbox(pkg, activePhotoIndexes[pkg.id] ?? 0)"
+                  class="relative w-full aspect-[4/3] sm:aspect-[16/10] rounded-2xl overflow-hidden bg-slate-950 flex items-center justify-center group shadow-md cursor-zoom-in"
+                  title="Klik untuk memperbesar & zoom foto unit"
+                >
+                  <!-- Main Vehicle Photo (Fills the frame boldly, unclipped details accessible in lightbox) -->
+                  <img
+                    :src="getActivePhoto(pkg)"
+                    :alt="pkg.title"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  />
 
-                <!-- Dark gradient on top/bottom of photo for badge clarity -->
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/40 pointer-events-none"></div>
+                  <!-- Subtle hover scrim -->
+                  <div class="absolute inset-0 bg-slate-950/10 group-hover:bg-slate-950/30 transition-colors pointer-events-none"></div>
 
-                <!-- Top Badges: Badge Type & Capacity -->
-                <div class="absolute top-2.5 left-2.5 right-2.5 z-10 flex items-center justify-between gap-2">
-                  <span
-                    v-if="pkg.badge"
-                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold shadow-xs text-white"
-                    :class="pkg.id === 'tour-hiace-premio' ? 'bg-indigo-600' : (pkg.id === 'tour-hiace-custom' ? 'bg-amber-600' : 'bg-blue-600')"
-                  >
-                    <svg v-if="pkg.id === 'tour-hiace-premio'" class="w-3 h-3 text-amber-300" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  <!-- Top Badges -->
+                  <div class="absolute top-2.5 left-2.5 right-2.5 z-20 flex items-center justify-between gap-2 pointer-events-none">
+                    <span
+                      v-if="pkg.badge"
+                      class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold shadow-md text-white backdrop-blur-md"
+                      :class="pkg.id === 'tour-hiace-premio' ? 'bg-indigo-600/90 border border-indigo-400/40' : (pkg.id === 'tour-hiace-custom' ? 'bg-amber-600/90 border border-amber-400/40' : 'bg-blue-600/90 border border-blue-400/40')"
+                    >
+                      <svg v-if="pkg.id === 'tour-hiace-premio'" class="w-3.5 h-3.5 text-amber-300" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                      <span>{{ pkg.badge }}</span>
+                    </span>
+
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-900/85 text-white backdrop-blur-md border border-white/15 shadow-md">
+                      <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                      </svg>
+                      <span>{{ pkg.capacity }}</span>
+                    </span>
+                  </div>
+
+                  <!-- Floating Action: Klik untuk Zoom -->
+                  <div class="absolute bottom-2.5 right-2.5 z-20 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold bg-black/75 hover:bg-blue-600 text-white backdrop-blur-md border border-white/20 shadow-md group-hover:scale-105 transition-all">
+                    <svg class="w-3.5 h-3.5 text-blue-300 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/>
                     </svg>
-                    <span>{{ pkg.badge }}</span>
-                  </span>
-
-                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-900/85 text-white backdrop-blur-xs border border-white/10 shadow-xs">
-                    <svg class="w-3 h-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                    <span>{{ pkg.capacity }}</span>
-                  </span>
+                    <span>Klik Perbesar</span>
+                  </div>
                 </div>
 
-                <!-- Bottom Photo Caption -->
-                <div class="absolute bottom-2.5 left-2.5 right-2.5 z-10 flex items-center justify-between text-[11px] text-slate-300">
-                  <span class="font-semibold text-white truncate drop-shadow-sm">{{ pkg.vehicle }}</span>
-                  <span class="text-[10px] text-slate-400 shrink-0 ml-1">Klik thumbnail untuk ganti</span>
+                <!-- Gallery Thumbnails Strip directly below the 16:9 photo -->
+                <div v-if="pkg.galleryPhotos && pkg.galleryPhotos.length > 1" class="mt-3">
+                  <div class="flex items-center justify-between text-xs text-slate-300 mb-1.5 px-0.5">
+                    <span class="font-medium text-[11px] text-slate-400">Pilih Sudut Pandang Foto:</span>
+                    <span class="text-[10px] text-slate-300 bg-white/10 px-2 py-0.5 rounded font-mono">
+                      {{ (activePhotoIndexes[pkg.id] ?? 0) + 1 }}/{{ pkg.galleryPhotos.length }} Foto
+                    </span>
+                  </div>
+                  <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+                    <button
+                      v-for="(img, idx) in pkg.galleryPhotos"
+                      :key="idx"
+                      @click="setActivePhoto(pkg.id, idx)"
+                      type="button"
+                      :class="(activePhotoIndexes[pkg.id] ?? 0) === idx ? 'ring-2 ring-blue-400 border-white scale-105 opacity-100 shadow-md' : 'border-transparent opacity-50 hover:opacity-90'"
+                      class="w-16 h-11 rounded-lg overflow-hidden shrink-0 border-2 transition-all active:scale-95 bg-slate-950"
+                      :title="'Lihat foto galeri ' + (idx + 1)"
+                    >
+                      <img :src="img" class="w-full h-full object-cover" />
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              <!-- Dedicated Thumbnail Switcher Strip -->
-              <div
-                v-if="pkg.galleryPhotos && pkg.galleryPhotos.length > 1"
-                class="p-2 sm:p-2.5 bg-slate-950 border-t border-slate-800 flex items-center gap-2 overflow-x-auto scrollbar-none"
-              >
-                <button
-                  v-for="(img, idx) in pkg.galleryPhotos"
-                  :key="idx"
-                  @click="setActivePhoto(pkg.id, idx)"
-                  type="button"
-                  :class="(activePhotoIndexes[pkg.id] ?? 0) === idx ? 'ring-2 ring-blue-500 scale-100 opacity-100' : 'opacity-60 hover:opacity-100'"
-                  class="w-14 h-10 sm:w-16 sm:h-11 rounded-lg overflow-hidden shrink-0 border border-slate-700 bg-slate-900 transition-all"
-                  :title="'Lihat foto galeri ' + (idx + 1)"
-                >
-                  <img :src="img" class="w-full h-full object-cover" />
-                </button>
+              <!-- Space below thumbnails: Keunggulan Armada & Jaminan Kenyamanan -->
+              <div class="mt-4 pt-3.5 border-t border-slate-800">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    <span>Standar Kenyamanan Unit</span>
+                  </span>
+                  <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                    Include Supir &amp; BBM
+                  </span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-1.5 text-[11px] text-slate-300">
+                  <div class="flex items-center gap-1.5 p-2 rounded-xl bg-white/5 border border-white/5">
+                    <span class="text-blue-400">🎵</span>
+                    <span class="truncate font-medium">Karaoke &amp; 2 Mic</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 p-2 rounded-xl bg-white/5 border border-white/5">
+                    <span class="text-blue-400">❄️</span>
+                    <span class="truncate font-medium">AC Triple Blower</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 p-2 rounded-xl bg-white/5 border border-white/5">
+                    <span class="text-blue-400">💺</span>
+                    <span class="truncate font-medium">15 Kursi Reclining</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 p-2 rounded-xl bg-white/5 border border-white/5">
+                    <span class="text-blue-400">✨</span>
+                    <span class="truncate font-medium">Kabin Bersih &amp; Wangi</span>
+                  </div>
+                </div>
+
+                <div class="mt-2.5 flex items-center justify-between text-[10px] text-slate-400">
+                  <span>Antar Jemput Fleksibel</span>
+                  <span>Driver Paham Wisata Bintan</span>
+                </div>
               </div>
             </div>
 
             <!-- Right Side: Clean Package Details & Structured Information -->
-            <div class="lg:col-span-7 p-4 sm:p-6 lg:p-7 flex flex-col justify-between">
+            <div class="lg:col-span-7 p-5 sm:p-7 flex flex-col justify-between">
               <div>
                 <!-- Subtitle & Package Title -->
                 <div class="mb-3">
@@ -230,7 +369,7 @@ onMounted(() => {
                 </div>
 
                 <!-- Price & Inclusion Highlight Box -->
-                <div class="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-blue-50/70 border border-blue-100/90 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div class="p-3.5 sm:p-4 rounded-2xl bg-blue-50/70 border border-blue-100/90 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
                       {{ pkg.priceLabel }}
@@ -244,7 +383,7 @@ onMounted(() => {
                   </div>
 
                   <div class="flex sm:flex-col items-center sm:items-end justify-between gap-1 text-right">
-                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 shadow-2xs">
                       <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                       </svg>
@@ -259,19 +398,19 @@ onMounted(() => {
                   {{ pkg.description }}
                 </p>
 
-                <!-- Key Highlights (Duration, Capacity, Karaoke) -->
-                <div class="grid grid-cols-3 gap-2 py-3 border-y border-slate-100 mb-4 text-center">
-                  <div class="p-1.5 rounded-lg bg-slate-50">
-                    <span class="text-[10px] text-slate-400 block font-medium">Durasi</span>
-                    <span class="text-xs font-bold text-slate-800 block truncate">8 – 10 Jam</span>
+                <!-- Key Highlights (Duration, Capacity, Facility) -->
+                <div class="grid grid-cols-3 gap-2.5 py-3 border-y border-slate-100 mb-4 text-center">
+                  <div class="p-2 rounded-xl bg-slate-50 border border-slate-100/80">
+                    <span class="text-[10px] text-slate-400 block font-semibold uppercase tracking-wider">Durasi</span>
+                    <span class="text-xs sm:text-sm font-black text-slate-800 block truncate mt-0.5">{{ pkg.duration || '8 – 10 Jam' }}</span>
                   </div>
-                  <div class="p-1.5 rounded-lg bg-slate-50">
-                    <span class="text-[10px] text-slate-400 block font-medium">Kapasitas</span>
-                    <span class="text-xs font-bold text-slate-800 block truncate">15 Kursi</span>
+                  <div class="p-2 rounded-xl bg-slate-50 border border-slate-100/80">
+                    <span class="text-[10px] text-slate-400 block font-semibold uppercase tracking-wider">Kapasitas</span>
+                    <span class="text-xs sm:text-sm font-black text-slate-800 block truncate mt-0.5">{{ pkg.capacity || '15 Kursi' }}</span>
                   </div>
-                  <div class="p-1.5 rounded-lg bg-slate-50">
-                    <span class="text-[10px] text-slate-400 block font-medium">Fasilitas</span>
-                    <span class="text-xs font-bold text-blue-700 block truncate">Karaoke TV</span>
+                  <div class="p-2 rounded-xl bg-blue-50/70 border border-blue-100/70">
+                    <span class="text-[10px] text-blue-500 block font-semibold uppercase tracking-wider">Fasilitas</span>
+                    <span class="text-xs sm:text-sm font-black text-blue-700 block truncate mt-0.5">{{ pkg.facilities?.[0] || 'Karaoke TV' }}</span>
                   </div>
                 </div>
 
@@ -559,5 +698,170 @@ onMounted(() => {
       </div>
 
     </div>
+
+    <!-- Fullscreen Lightbox / Zoom Modal -->
+    <Transition
+      enter-active-class="transition duration-300 ease-out"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition duration-200 ease-in"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isLightboxOpen && lightboxPkg"
+        class="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between select-none"
+        @click.self="closeLightbox"
+      >
+        <!-- Lightbox Top Bar -->
+        <div class="px-4 py-3 sm:px-6 sm:py-4 flex items-center justify-between border-b border-white/10 z-20 bg-slate-950/80 backdrop-blur-md">
+          <div class="flex items-center gap-3">
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-white leading-tight">
+                {{ lightboxPkg.title }}
+              </h3>
+              <p class="text-xs text-slate-400">
+                {{ lightboxPkg.vehicle }} &bull; Foto {{ lightboxPhotoIdx + 1 }} dari {{ currentLightboxPhotos.length }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Controls: Zoom Controls & Close Button -->
+          <div class="flex items-center gap-2">
+            <!-- Zoom Controls -->
+            <div class="flex items-center bg-white/10 rounded-xl p-0.5 border border-white/10">
+              <button
+                @click="zoomOut"
+                type="button"
+                :disabled="zoomLevel <= 1"
+                class="p-1.5 sm:p-2 text-slate-300 hover:text-white disabled:opacity-30 disabled:hover:text-slate-300 transition-colors rounded-lg"
+                title="Perkecil (-)"
+              >
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"/>
+                </svg>
+              </button>
+              <span class="text-xs font-mono font-bold text-slate-200 px-1 sm:px-2 min-w-[42px] text-center">
+                {{ Math.round(zoomLevel * 100) }}%
+              </span>
+              <button
+                @click="zoomIn"
+                type="button"
+                :disabled="zoomLevel >= 3"
+                class="p-1.5 sm:p-2 text-slate-300 hover:text-white disabled:opacity-30 disabled:hover:text-slate-300 transition-colors rounded-lg"
+                title="Perbesar (+)"
+              >
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Reset Zoom (if zoomed) -->
+            <button
+              v-if="zoomLevel > 1"
+              @click="resetZoom"
+              type="button"
+              class="px-2.5 py-1.5 text-xs font-semibold rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 transition-colors border border-white/10 hidden sm:inline-flex"
+            >
+              Reset
+            </button>
+
+            <!-- Close Button -->
+            <button
+              @click="closeLightbox"
+              type="button"
+              class="p-2 rounded-xl bg-white/10 hover:bg-red-500/80 text-white transition-colors border border-white/10 ml-1 sm:ml-2"
+              title="Tutup (Esc)"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Lightbox Stage: Photo Display with Click to Zoom -->
+        <div
+          class="relative flex-1 flex items-center justify-center p-2 sm:p-6 overflow-hidden select-none"
+          @click="toggleZoom"
+        >
+          <!-- Main Photo with Dynamic Transform Scale -->
+          <div
+            class="relative max-w-full max-h-full flex items-center justify-center transition-transform duration-200"
+            :style="{ transform: `scale(${zoomLevel})`, cursor: zoomLevel > 1 ? 'zoom-out' : 'zoom-in' }"
+          >
+            <img
+              :src="currentLightboxPhotos[lightboxPhotoIdx]"
+              :alt="lightboxPkg.title"
+              class="max-w-[92vw] max-h-[68vh] sm:max-h-[76vh] object-contain rounded-xl shadow-2xl transition-all"
+            />
+          </div>
+
+          <!-- Prev & Next Floating Navigation Buttons -->
+          <button
+            v-if="currentLightboxPhotos.length > 1"
+            @click.stop="prevLightboxPhoto"
+            type="button"
+            class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-slate-900/80 hover:bg-blue-600 text-white backdrop-blur-md border border-white/20 shadow-xl flex items-center justify-center transition-all z-30 active:scale-95"
+            title="Foto Sebelumnya"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+
+          <button
+            v-if="currentLightboxPhotos.length > 1"
+            @click.stop="nextLightboxPhoto"
+            type="button"
+            class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-slate-900/80 hover:bg-blue-600 text-white backdrop-blur-md border border-white/20 shadow-xl flex items-center justify-center transition-all z-30 active:scale-95"
+            title="Foto Berikutnya"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+
+          <!-- Hint Pill at Bottom of Stage -->
+          <div class="absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-none text-[11px] text-slate-400 bg-slate-950/60 backdrop-blur-xs px-3 py-1 rounded-full border border-white/10 hidden sm:block">
+            Klik foto untuk {{ zoomLevel > 1 ? 'memperkecil' : 'memperbesar (zoom)' }} &bull; Gunakan tombol panah keyboard &larr; &rarr;
+          </div>
+        </div>
+
+        <!-- Lightbox Bottom Bar: Thumbnails & Direct WhatsApp Booking -->
+        <div class="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-white/10 z-20 bg-slate-950/90 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-3">
+          <!-- Thumbnails Strip -->
+          <div class="flex items-center gap-2 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-none">
+            <button
+              v-for="(photo, idx) in currentLightboxPhotos"
+              :key="idx"
+              @click.stop="lightboxPhotoIdx = idx; resetZoom()"
+              type="button"
+              :class="lightboxPhotoIdx === idx ? 'ring-2 ring-blue-500 border-white scale-105 opacity-100' : 'opacity-50 hover:opacity-80 border-transparent'"
+              class="w-14 h-10 sm:w-16 sm:h-11 rounded-lg overflow-hidden border-2 transition-all shrink-0 bg-slate-900"
+            >
+              <img :src="photo" class="w-full h-full object-cover" />
+            </button>
+          </div>
+
+          <!-- Quick Booking CTA in Lightbox -->
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="text-xs text-slate-300 hidden md:inline">Tertarik dengan unit ini?</span>
+            <a
+              :href="getWhatsAppUrl(lightboxPkg.ctaWhatsappText)"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md active:scale-95"
+            >
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.044c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824z"/>
+              </svg>
+              <span>Pesan via WhatsApp</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>

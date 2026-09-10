@@ -1,65 +1,11 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { siteConfig } from '@/config/site'
+import { destinationsList } from '@/config/destinations'
 
-interface DestinationItem {
-  id: string
-  name: string
-  badge: string
-  description: string
-  ctaText: string
-  waText: string
-  image?: string
-  photoCredit: string
-  photoCreditFull: string
-}
-
-const destinations: DestinationItem[] = [
-  {
-    id: 'lagoi',
-    name: 'Kawasan Lagoi',
-    badge: 'Pantai & Resort',
-    description: 'Kawasan resort utara Bintan dengan pantai pasir putih, Lagoi Bay, dan Treasure Bay.',
-    ctaText: 'Tanya Rute Lagoi',
-    waText: 'Halo 3 Putri Mulya, saya ingin tanya sewa mobil atau paket tour untuk rute ke Kawasan Lagoi.',
-    image: '/images/destinations/lagoi.jpg',
-    photoCredit: 'Dok. Kemenparekraf',
-    photoCreditFull: 'Dokumentasi Resmi Kemenparekraf RI (Indonesia.travel)'
-  },
-  {
-    id: 'busung',
-    name: 'Gurun Pasir & Danau Biru',
-    badge: 'Spot Foto Ikonik',
-    description: 'Perbukitan pasir eksotis berpadu danau toska, spot foto ikonik rute Tanjung Uban.',
-    ctaText: 'Tanya Rute Danau Biru',
-    waText: 'Halo 3 Putri Mulya, saya ingin tanya kendaraan yang cocok untuk kunjungan ke Danau Biru & Gurun Pasir Busung.',
-    image: '/images/destinations/busung.jpg',
-    photoCredit: 'Dok. Dispar Kepri',
-    photoCreditFull: 'Dokumentasi Resmi Dinas Pariwisata Pemprov Kepulauan Riau'
-  },
-  {
-    id: 'trikora',
-    name: 'Pantai Trikora',
-    badge: 'Pesisir Alami',
-    description: 'Pesisir timur berpasir putih alami dengan susunan batu granit besar dan suasana tenang.',
-    ctaText: 'Tanya Rute Trikora',
-    waText: 'Halo 3 Putri Mulya, saya ingin sewa kendaraan untuk rute santai ke Pantai Trikora.',
-    image: '/images/destinations/trikora.jpg',
-    photoCredit: 'CC BY-SA 4.0',
-    photoCreditFull: 'Foto oleh Andrian Vernandes (Wikimedia Commons, Lisensi CC BY-SA 4.0)'
-  },
-  {
-    id: 'patung-seribu',
-    name: 'Vihara Patung Seribu',
-    badge: 'Religi & Budaya',
-    description: 'Kompleks vihara megah di perbukitan dengan ratusan patung arhat beraneka ekspresi.',
-    ctaText: 'Tanya Rute Patung Seribu',
-    waText: 'Halo 3 Putri Mulya, saya ingin tanya sewa mobil atau tur untuk ke Vihara Patung Seribu.',
-    image: '/images/destinations/patung-seribu.jpg',
-    photoCredit: 'Dok. Dispar Kepri',
-    photoCreditFull: 'Dokumentasi Resmi Dinas Pariwisata Pemprov Kepulauan Riau'
-  }
-]
+// 3 Destinasi Pilihan di Homepage agar tidak terlalu penuh
+const destinations = computed(() => destinationsList.filter(d => d.featured).slice(0, 3))
 
 const getWhatsAppUrl = (text: string) => {
   const phone = siteConfig.rentalPhone.replace(/\D/g, '')
@@ -68,31 +14,32 @@ const getWhatsAppUrl = (text: string) => {
 </script>
 
 <template>
-  <section id="inspirasi" class="py-14 sm:py-20 bg-slate-50 border-t border-slate-200 scroll-mt-16">
+  <section id="inspirasi" class="py-12 sm:py-20 bg-slate-50 border-t border-slate-200 scroll-mt-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <!-- Desktop: judul kiri + kartu kanan (2-kolom) -->
-      <!-- Mobile: judul di atas, 4 kartu horizontal scroll -->
-      <div class="lg:flex lg:gap-12 xl:gap-16">
+      <!-- Desktop: judul kiri + 3 kartu kanan -->
+      <!-- Mobile: judul di atas, 3 kartu horizontal swipe -->
+      <div class="lg:flex lg:gap-10 xl:gap-14 items-start">
 
         <!-- Kolom Judul (kiri di desktop, atas di mobile) -->
-        <div class="lg:w-72 xl:w-80 shrink-0 mb-8 lg:mb-0 lg:pt-2">
+        <div class="lg:w-72 xl:w-80 shrink-0 mb-6 lg:mb-0 lg:pt-1">
           <p class="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
             Inspirasi Perjalanan
           </p>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2.5">
             Destinasi Populer di Bintan
           </h2>
-          <p class="text-sm text-slate-600 leading-relaxed mb-6">
+          <p class="text-sm text-slate-600 leading-relaxed mb-5">
             Pilihan kawasan wisata favorit yang siap kami antar dengan unit rental atau paket tour.
           </p>
+
           <!-- Note (desktop only) -->
           <div class="hidden lg:block text-xs text-slate-500 space-y-2">
             <p class="flex items-start gap-2">
               <svg class="w-4 h-4 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
-              <span>Punya rencana custom keliling Bintan? Konsultasikan langsung bersama tim kami.</span>
+              <span>Punya rencana rute custom keliling Bintan? Konsultasikan langsung bersama tim kami.</span>
             </p>
             <div class="flex gap-3 pt-1">
               <RouterLink to="/armada" class="font-semibold text-blue-600 hover:underline text-xs">Lihat Semua Armada →</RouterLink>
@@ -101,18 +48,17 @@ const getWhatsAppUrl = (text: string) => {
           </div>
         </div>
 
-        <!-- Kolom Kartu -->
+        <!-- Kolom Kartu (3 Destinasi) -->
         <div class="flex-1 min-w-0">
-          <!-- Mobile: horizontal scroll -->
-          <!-- Desktop: 2x2 atau 4-col grid -->
-          <div class="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory
-                      lg:grid lg:grid-cols-2 xl:grid-cols-4 lg:gap-4 lg:overflow-visible lg:pb-0">
+          <!-- Mobile: horizontal swipeable snap | Desktop: 3-col grid -->
+          <div class="flex gap-3.5 overflow-x-auto pb-2 snap-x snap-mandatory no-scrollbar
+                      lg:grid lg:grid-cols-3 lg:gap-4 lg:overflow-visible lg:pb-0">
             <div
               v-for="dest in destinations"
               :key="dest.id"
-              class="snap-start shrink-0 w-[72vw] sm:w-[44vw] lg:w-auto
-                     bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col
-                     hover:border-slate-300 hover:shadow-md transition-all group"
+              class="snap-start shrink-0 w-[78vw] sm:w-[280px] lg:w-auto
+                     bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col
+                     hover:border-blue-300 hover:shadow-md transition-all group"
             >
               <!-- Image -->
               <div class="relative aspect-[4/3] overflow-hidden bg-slate-900">
@@ -124,13 +70,15 @@ const getWhatsAppUrl = (text: string) => {
                   loading="lazy"
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-slate-950/10 pointer-events-none"></div>
+                
                 <!-- Badge -->
                 <div class="absolute top-2 left-2 z-10">
                   <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-900/80 text-slate-100 border border-white/20 backdrop-blur-sm">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                    <span class="truncate max-w-[80px]">{{ dest.badge }}</span>
+                    <span class="truncate max-w-[130px]">{{ dest.badge }}</span>
                   </span>
                 </div>
+
                 <!-- Credit -->
                 <div class="absolute top-2 right-2 z-10">
                   <span
@@ -141,19 +89,21 @@ const getWhatsAppUrl = (text: string) => {
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <span class="truncate max-w-[68px]">{{ dest.photoCredit }}</span>
+                    <span class="truncate max-w-[80px]">{{ dest.photoCredit }}</span>
                   </span>
                 </div>
+
                 <!-- Title over image -->
-                <div class="absolute bottom-2 left-3 right-3 z-10">
+                <div class="absolute bottom-2.5 left-3 right-3 z-10">
                   <h3 class="text-sm font-bold text-white leading-tight drop-shadow-md group-hover:text-blue-200 transition-colors line-clamp-1">
                     {{ dest.name }}
                   </h3>
                 </div>
               </div>
+
               <!-- Body -->
-              <div class="p-3 flex-1 flex flex-col justify-between">
-                <p class="text-[11px] text-slate-600 leading-snug mb-3">
+              <div class="p-3.5 flex-1 flex flex-col justify-between">
+                <p class="text-xs text-slate-600 leading-relaxed mb-3 line-clamp-3">
                   {{ dest.description }}
                 </p>
                 <div class="pt-2 border-t border-slate-100">
@@ -163,7 +113,7 @@ const getWhatsAppUrl = (text: string) => {
                     rel="noopener noreferrer"
                     class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
                   >
-                    <span>Tanya Rute</span>
+                    <span>Tanya Rute Wisata</span>
                     <span aria-hidden="true">&rarr;</span>
                   </a>
                 </div>
@@ -171,23 +121,37 @@ const getWhatsAppUrl = (text: string) => {
             </div>
           </div>
 
-          <!-- Mobile note (below cards) -->
-          <div class="lg:hidden mt-5 text-xs text-slate-500 flex flex-col gap-2">
-            <p class="flex items-start gap-2">
-              <svg class="w-4 h-4 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          <!-- Mobile Swipe Hint (Hidden on Desktop) -->
+          <div class="flex lg:hidden items-center justify-between text-[11px] text-slate-500 mt-2.5 px-1">
+            <span class="inline-flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
-              <span>Punya rencana custom keliling Bintan? Konsultasikan langsung bersama tim kami.</span>
-            </p>
-            <div class="flex gap-3">
-              <RouterLink to="/armada" class="font-semibold text-blue-600 hover:underline">Lihat Semua Armada →</RouterLink>
-              <RouterLink to="/paket-tour-bintan" class="font-semibold text-blue-600 hover:underline">Paket HiAce →</RouterLink>
+              Geser untuk destinasi lainnya
+            </span>
+            <RouterLink to="/destinasi" class="font-bold text-blue-600">
+              Lihat Semua (15) &rarr;
+            </RouterLink>
+          </div>
+
+          <!-- Banner link to dedicated /destinasi page (Clean & Compact) -->
+          <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 sm:p-4 rounded-xl bg-white border border-slate-200">
+            <div class="text-left w-full sm:w-auto">
+              <div class="text-xs font-bold text-slate-800">Cari Referensi Wisata Lainnya?</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">Tersedia panduan Safari Lagoi, Gunung Bintan, Sleeping Buddha, Trikora, dll (15 Destinasi).</div>
             </div>
+            <RouterLink
+              to="/destinasi"
+              class="w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-xs transition-colors shrink-0"
+            >
+              <span>Buka Katalog Wisata (15 Tempat)</span>
+              <span aria-hidden="true">&rarr;</span>
+            </RouterLink>
           </div>
 
           <!-- Attribution -->
-          <p class="text-[10px] text-slate-400 mt-4">
-            * Foto destinasi: Kemenparekraf RI / Indonesia.travel, Dinas Pariwisata Pemprov Kepri, &amp; Wikimedia Commons CC BY-SA 4.0.
+          <p class="text-[10px] text-slate-400 mt-3">
+            * Data dan foto destinasi bersumber resmi dari Dinas Kebudayaan &amp; Pariwisata Kab. Bintan (bintantourism.com), Kemenparekraf RI, Dinas Pariwisata Kepri, dan Wikimedia Commons CC BY-SA.
           </p>
         </div>
 

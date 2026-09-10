@@ -23,6 +23,15 @@ const router = createRouter({
       redirect: '/paket-tour-bintan'
     },
     {
+      path: '/destinasi',
+      name: 'destinations',
+      component: () => import('@/views/DestinationsView.vue')
+    },
+    {
+      path: '/inspirasi',
+      redirect: '/destinasi'
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/'
     }
