@@ -18,7 +18,12 @@ class PublicFleetController extends Controller
     public function index(Request $request): AnonymousResourceCollection|JsonResponse
     {
         // Determine the rental business owner ID
-        $ownerId = (int) env('RENTAL_OWNER_ID', 0);
+        $ownerId = (int) env('RENTAL_OWNER_ID', config('app.rental_owner_id', 0));
+
+        if ($ownerId <= 0) {
+            // Auto-detect the owner who actually owns vehicles in the fleet
+            $ownerId = (int) Vehicle::whereNotNull('user_id')->value('user_id');
+        }
 
         if ($ownerId <= 0) {
             $ownerId = (int) User::orderBy('id')->value('id');
