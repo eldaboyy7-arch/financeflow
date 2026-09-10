@@ -24,15 +24,8 @@ class TourPackageController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $currentId = Auth::id();
         $packages = TourPackage::with('vehicle')
-            ->where(function ($q) use ($currentId) {
-                $q->where('user_id', $currentId)
-                  ->orWhereNull('user_id');
-                if (in_array($currentId, [3, 18])) {
-                    $q->orWhereIn('user_id', [3, 18]);
-                }
-            })
+            ->where('user_id', Auth::id())
             ->orderBy('sort_order', 'asc')
             ->orderBy('id', 'asc')
             ->get();
@@ -169,10 +162,10 @@ class TourPackageController extends Controller
 
     private function authorizePackage(TourPackage $tourPackage): void
     {
-        $currentId = Auth::id();
-        $isSharedAdmin = in_array($currentId, [3, 18]) && in_array($tourPackage->user_id, [3, 18, null]);
-        if ($tourPackage->user_id && $tourPackage->user_id !== $currentId && !$isSharedAdmin) {
-            abort(403, 'Akses ditolak: Anda tidak memiliki akses ke paket tour ini.');
-        }
+        abort_if(
+            $tourPackage->user_id && $tourPackage->user_id !== Auth::id(),
+            403,
+            'Akses ditolak: Anda tidak memiliki akses ke paket tour ini.'
+        );
     }
 }

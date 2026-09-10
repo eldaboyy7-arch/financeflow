@@ -9,6 +9,7 @@ import { useFormatCurrency } from '@/composables/useFormatCurrency'
 import MoneySpinner from '@/components/MoneySpinner.vue'
 import CurrencyInput from '@/components/CurrencyInput.vue'
 import SelectInput, { type SelectOption } from '@/components/SelectInput.vue'
+import DateInput from '@/components/DateInput.vue'
 import api from '@/api/axios'
 import {
   PlusIcon,
@@ -1519,11 +1520,9 @@ function getBadgeStyle(color: string) {
                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Tanggal Pembayaran <span class="text-rose-500">*</span>
                 </label>
-                <input
+                <DateInput
                   v-model="quickTxForm.date"
-                  type="date"
-                  class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  required
+                  placeholder="Pilih tanggal pembayaran"
                 />
               </div>
             </div>

@@ -6,6 +6,7 @@ import { useFormatCurrency } from '@/composables/useFormatCurrency'
 import MoneySpinner from '@/components/MoneySpinner.vue'
 import CurrencyInput from '@/components/CurrencyInput.vue'
 import SelectInput, { type SelectOption } from '@/components/SelectInput.vue'
+import DateInput from '@/components/DateInput.vue'
 import api from '@/api/axios'
 import {
   ArrowsRightLeftIcon,
@@ -399,11 +400,9 @@ async function submitTransaction() {
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
                   Tanggal <span class="text-rose-500">*</span>
                 </label>
-                <input
+                <DateInput
                   v-model="form.date"
-                  type="date"
-                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-500 focus:bg-white dark:focus:bg-slate-800 transition-all"
-                  required
+                  placeholder="Pilih tanggal transaksi"
                 />
               </div>
 

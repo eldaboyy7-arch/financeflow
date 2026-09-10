@@ -19,6 +19,7 @@ import {
   MapPinIcon,
   GlobeAltIcon,
 } from '@heroicons/vue/24/outline'
+import QuickVehicleIncomeModal from '@/components/rental/QuickVehicleIncomeModal.vue'
 
 const vehiclesStore = useVehiclesStore()
 const tourStore = useTourPackagesStore()
@@ -49,6 +50,18 @@ function statusBadge(s: string) {
   if (s === 'available') return { label: 'Tersedia', class: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400' }
   if (s === 'rented') return { label: 'Disewa', class: 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400' }
   return { label: 'Servis', class: 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400' }
+}
+
+const showQuickIncomeModal = ref(false)
+const selectedVehicleForIncome = ref<any>(null)
+
+function openQuickIncome(vehicle: any) {
+  selectedVehicleForIncome.value = vehicle
+  showQuickIncomeModal.value = true
+}
+
+function onRentalSaved() {
+  vehiclesStore.fetchVehicles(month.value, year.value)
 }
 </script>
 
@@ -294,15 +307,35 @@ function statusBadge(s: string) {
               </div>
             </div>
 
-            <div class="text-right shrink-0">
-              <p :class="['text-sm font-bold tabular-nums', (v.summary?.profit || 0) >= 0 ? 'text-slate-900 dark:text-white' : 'text-rose-500']">
-                {{ formatCurrency(v.summary?.profit || 0) }}
-              </p>
-              <p class="text-[10px] text-slate-400">Laba Bersih</p>
+            <div class="flex items-center gap-3 sm:gap-4 shrink-0">
+              <div class="text-right">
+                <p :class="['text-xs sm:text-sm font-bold tabular-nums', (v.summary?.profit || 0) >= 0 ? 'text-slate-900 dark:text-white' : 'text-rose-500']">
+                  {{ formatCurrency(v.summary?.profit || 0) }}
+                </p>
+                <p class="text-[10px] text-slate-400">Laba Bersih</p>
+              </div>
+
+              <!-- 1-Click Quick Sewa Button -->
+              <button
+                type="button"
+                @click="openQuickIncome(v)"
+                class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50 text-[11px] sm:text-xs font-bold transition-all active:scale-95 shadow-2xs shrink-0"
+                title="Catat Pemasukan Sewa Mobil Ini"
+              >
+                <BanknotesIcon class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <span>+ Sewa</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
     </template>
+
+    <!-- Quick Vehicle Income Modal -->
+    <QuickVehicleIncomeModal
+      v-model:show="showQuickIncomeModal"
+      :vehicle="selectedVehicleForIncome"
+      @saved="onRentalSaved"
+    />
   </div>
 </template>

@@ -19,13 +19,23 @@ import {
   CameraIcon,
   FilmIcon,
   ArrowPathIcon,
-  PhotoIcon
+  PhotoIcon,
+  BanknotesIcon
 } from '@heroicons/vue/24/outline'
+import QuickVehicleIncomeModal from '@/components/rental/QuickVehicleIncomeModal.vue'
 
 const store = useVehiclesStore()
 const uiStore = useUiStore()
 const authStore = useAuthStore()
 const { formatCurrency } = useFormatCurrency()
+
+const showQuickIncomeModal = ref(false)
+const selectedVehicleForIncome = ref<Vehicle | null>(null)
+
+function openQuickIncome(vehicle: Vehicle) {
+  selectedVehicleForIncome.value = vehicle
+  showQuickIncomeModal.value = true
+}
 
 const searchQuery = ref('')
 const selectedStatus = ref<'all' | 'available' | 'rented' | 'maintenance'>('all')
@@ -408,15 +418,28 @@ function statusBadge(s: string) {
               </div>
             </div>
 
-          <!-- Marketplace Daily Rate Price Tag -->
-          <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-700/60">
-            <div v-if="v.daily_rate > 0" class="flex items-baseline gap-0.5">
-              <span class="text-xs sm:text-sm font-black text-slate-900 dark:text-white tabular-nums">
-                {{ formatCurrency(v.daily_rate) }}
-              </span>
-              <span class="text-[9px] text-slate-400">/hari</span>
+          <!-- Marketplace Daily Rate Price Tag & Quick Income Button -->
+          <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-1.5">
+            <div>
+              <div v-if="v.daily_rate > 0" class="flex items-baseline gap-0.5">
+                <span class="text-xs sm:text-sm font-black text-slate-900 dark:text-white tabular-nums">
+                  {{ formatCurrency(v.daily_rate) }}
+                </span>
+                <span class="text-[9px] text-slate-400">/hari</span>
+              </div>
+              <span v-else class="text-[10px] text-slate-400 italic">Tarif belum diatur</span>
             </div>
-            <span v-else class="text-[10px] text-slate-400 italic">Tarif belum diatur</span>
+
+            <!-- 1-Klik Catat Pemasukan Sewa -->
+            <button
+              type="button"
+              @click.stop="openQuickIncome(v)"
+              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50 text-[10px] sm:text-xs font-bold transition-all shadow-2xs shrink-0 active:scale-95"
+              title="Catat Pemasukan Sewa Mobil Ini (Pilih Hari 1-Klik)"
+            >
+              <BanknotesIcon class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span>Sewa</span>
+            </button>
           </div>
         </div>
       </div>
@@ -665,5 +688,12 @@ function statusBadge(s: string) {
         </div>
       </div>
     </Teleport>
+
+    <!-- 1-Click Quick Vehicle Income Modal -->
+    <QuickVehicleIncomeModal
+      v-model:show="showQuickIncomeModal"
+      :vehicle="selectedVehicleForIncome"
+      @saved="store.fetchVehicles()"
+    />
   </div>
 </template>
