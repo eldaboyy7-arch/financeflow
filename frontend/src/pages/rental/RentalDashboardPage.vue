@@ -32,6 +32,7 @@ const month = ref(now.getMonth() + 1)
 const year = ref(now.getFullYear())
 const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']
 const firstName = computed(() => authStore.user?.name?.split(' ')[0] || 'Owner')
+const rentalWebsiteUrl = (import.meta.env.VITE_RENTAL_WEBSITE_URL as string) || (import.meta.env.DEV ? 'http://localhost:5175' : 'https://3putrimulya-rent.vercel.app')
 
 onMounted(() => {
   vehiclesStore.fetchVehicles(month.value, year.value)
@@ -240,7 +241,7 @@ function onRentalSaved() {
             <ChevronRightIcon class="w-3.5 h-3.5" />
           </button>
           <a
-            href="http://localhost:5175/paket-tour-bintan"
+            :href="`${rentalWebsiteUrl}/paket-tour-bintan`"
             target="_blank"
             rel="noopener noreferrer"
             class="inline-flex items-center justify-center gap-1 p-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold shadow-xs transition shrink-0"

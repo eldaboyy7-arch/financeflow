@@ -220,6 +220,8 @@ function isActive(item: { route: string }) {
 }
 
 const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase() ?? '?')
+
+const rentalWebsiteUrl = (import.meta.env.VITE_RENTAL_WEBSITE_URL as string) || (import.meta.env.DEV ? 'http://localhost:5175' : 'https://3putrimulya-rent.vercel.app')
 </script>
 
 <template>
@@ -321,7 +323,7 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
 
           <!-- Shortcut Langsung ke Website Rental Publik -->
           <a
-            href="http://localhost:5175/"
+            :href="rentalWebsiteUrl"
             target="_blank"
             rel="noopener noreferrer"
             class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 text-xs font-bold transition-all shadow-xs mr-1"
@@ -559,7 +561,7 @@ const userInitial = computed(() => authStore.user?.name?.charAt(0).toUpperCase()
             <!-- Shortcut ke Website Rental Publik di Mobile Drawer -->
             <div class="mb-3">
               <a
-                href="http://localhost:5175/"
+                :href="rentalWebsiteUrl"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="flex items-center justify-between px-3 py-2.5 bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 rounded-xl text-xs font-bold text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/50 transition-colors"

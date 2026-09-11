@@ -7,6 +7,7 @@ import { useUiStore } from '@/stores/ui'
 import type { RecurringItem } from '@/types/recurring'
 import CurrencyInput from '@/components/CurrencyInput.vue'
 import SelectInput from '@/components/SelectInput.vue'
+import DateInput from '@/components/DateInput.vue'
 import type { SelectOption } from '@/components/SelectInput.vue'
 import { XMarkIcon, ArrowPathIcon, CheckIcon } from '@heroicons/vue/24/outline'
 
@@ -196,7 +197,11 @@ async function handleSubmit() {
             </div>
             <div>
               <label class="label">Jatuh Tempo Pertama</label>
-              <input v-model="startDate" type="date" required class="input text-xs" />
+              <DateInput
+                v-model="startDate"
+                direction="up"
+                placeholder="Pilih tanggal"
+              />
             </div>
           </div>
 

@@ -13,9 +13,11 @@ const props = withDefaults(
     placeholder?: string
     minDate?: string
     maxDate?: string
+    direction?: 'auto' | 'up' | 'down'
   }>(),
   {
     placeholder: 'Pilih tanggal',
+    direction: 'auto',
   }
 )
 
@@ -24,8 +26,25 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(false)
+const openUp = ref(false)
 const containerRef = ref<HTMLElement | null>(null)
 const currentView = ref<'days' | 'months' | 'years'>('days')
+
+function toggleOpen() {
+  if (!isOpen.value) {
+    if (props.direction === 'up') {
+      openUp.value = true
+    } else if (props.direction === 'down') {
+      openUp.value = false
+    } else if (containerRef.value) {
+      const rect = containerRef.value.getBoundingClientRect()
+      const spaceBelow = window.innerHeight - rect.bottom
+      const spaceAbove = rect.top
+      openUp.value = spaceBelow < 340 && spaceAbove > spaceBelow
+    }
+  }
+  isOpen.value = !isOpen.value
+}
 
 // Months in Indonesian
 const MONTH_NAMES = [
@@ -220,9 +239,9 @@ onBeforeUnmount(() => {
   <div ref="containerRef" class="relative w-full">
     <!-- Input Trigger Field -->
     <div
-      @click="isOpen = !isOpen"
+      @click="toggleOpen"
       class="input pl-9 pr-8 cursor-pointer select-none text-xs sm:text-sm font-medium flex items-center justify-between transition-all"
-      :class="{ 'ring-2 ring-[#0066FF]/30 border-[#0066FF]': isOpen }"
+      :class="{ 'ring-2 ring-primary-500/30 border-primary-500': isOpen }"
     >
       <span v-if="modelValue" class="text-slate-900 dark:text-white truncate">
         {{ formatDisplay(modelValue) }}
@@ -259,7 +278,10 @@ onBeforeUnmount(() => {
     >
       <div
         v-if="isOpen"
-        class="absolute left-0 mt-2 z-50 w-[290px] sm:w-[310px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl shadow-slate-900/15 p-3.5 select-none backdrop-blur-xl"
+        :class="[
+          'absolute left-0 z-[70] w-[290px] sm:w-[310px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl shadow-slate-900/20 p-3.5 select-none backdrop-blur-xl',
+          openUp ? 'bottom-full mb-2' : 'top-full mt-2'
+        ]"
       >
         <!-- Header Controls -->
         <div class="flex items-center justify-between mb-3">

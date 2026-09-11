@@ -6,6 +6,7 @@ import { useUiStore } from '@/stores/ui'
 import type { Goal } from '@/types/goal'
 import CurrencyInput from '@/components/CurrencyInput.vue'
 import SelectInput from '@/components/SelectInput.vue'
+import DateInput from '@/components/DateInput.vue'
 import type { SelectOption } from '@/components/SelectInput.vue'
 import { XMarkIcon, SparklesIcon, CheckIcon } from '@heroicons/vue/24/outline'
 
@@ -174,10 +175,9 @@ async function handleSubmit() {
           <!-- Target Tanggal -->
           <div>
             <label class="label">Target Tanggal Tercapai (Opsional)</label>
-            <input
+            <DateInput
               v-model="targetDate"
-              type="date"
-              class="input"
+              placeholder="Pilih target tanggal tercapai"
             />
           </div>
 
