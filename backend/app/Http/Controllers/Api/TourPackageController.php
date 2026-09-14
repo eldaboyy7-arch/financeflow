@@ -44,6 +44,10 @@ class TourPackageController extends Controller
 
         if (empty($validated['slug'])) {
             $baseSlug = Str::slug($validated['title']);
+            // Fallback jika title berisi full simbol/emoji dan slugify menghasilkan string kosong
+            if (empty($baseSlug)) {
+                $baseSlug = 'package-' . time();
+            }
             $slug = $baseSlug;
             $counter = 1;
             while (TourPackage::where('slug', $slug)->exists()) {
@@ -87,6 +91,10 @@ class TourPackageController extends Controller
 
         if (empty($validated['slug']) && isset($validated['title']) && $validated['title'] !== $tourPackage->title) {
             $baseSlug = Str::slug($validated['title']);
+            // Fallback jika title berisi full simbol/emoji dan slugify menghasilkan string kosong
+            if (empty($baseSlug)) {
+                $baseSlug = 'package-' . time();
+            }
             $slug = $baseSlug;
             $counter = 1;
             while (TourPackage::where('slug', $slug)->where('id', '!=', $tourPackage->id)->exists()) {
