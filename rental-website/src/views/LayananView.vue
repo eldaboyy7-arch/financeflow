@@ -9,7 +9,7 @@ const waUrl = (text: string) => {
 
 const mainServices = [
   {
-    img: '/images/layanan-hero.jpg',
+    img: '/images/layanan-lepas-kunci.jpg',
     tag: 'Paling Fleksibel',
     tagColor: 'text-amber-400',
     title: 'Sewa Lepas Kunci',
@@ -35,7 +35,7 @@ const mainServices = [
   <div class="min-h-screen bg-white font-sans">
 
     <!-- ═══════════ HERO — RESPONSIVE (MOBILE & DESKTOP) ═══════════ -->
-    <section class="relative min-h-[100dvh] sm:h-screen sm:min-h-[560px] sm:max-h-[900px] flex flex-col justify-start sm:justify-end overflow-hidden pt-20 sm:pt-0">
+    <section class="relative h-screen min-h-[560px] max-h-[900px] flex items-end overflow-hidden">
       <picture class="absolute inset-0 w-full h-full">
         <source media="(max-width: 639px)" srcset="/images/layanan-hero-mobile.jpg" />
         <img
@@ -45,25 +45,24 @@ const mainServices = [
         />
       </picture>
 
-      <!-- Gradient overlays -->
-      <div class="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/40 to-slate-950/20 sm:hidden pointer-events-none"></div>
-      <div class="absolute inset-0 hidden sm:block bg-gradient-to-t from-slate-950 via-slate-950/45 to-slate-950/10 pointer-events-none"></div>
+      <!-- Gradient overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-slate-950/10 pointer-events-none"></div>
 
-      <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-6 sm:pb-32">
-        <p class="text-[11px] sm:text-xs font-bold uppercase tracking-[0.15em] text-amber-400 mb-2 sm:mb-3">
+      <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 sm:pb-32">
+        <p class="text-xs font-bold uppercase tracking-[0.15em] text-amber-400 mb-3">
           3 Putri Mulya · Bintan & Tanjung Pinang
         </p>
-        <h1 class="text-2xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight mb-2 sm:mb-3 max-w-xl drop-shadow-md">
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight mb-3 max-w-xl">
           Layanan untuk Setiap Perjalanan Anda
         </h1>
-        <p class="text-xs sm:text-base text-white/80 sm:text-white/55 mb-6 sm:mb-8 max-w-sm">
+        <p class="text-sm sm:text-base text-white/70 sm:text-white/55 mb-8 max-w-sm">
           Rental Mobil &nbsp;·&nbsp; Driver &nbsp;·&nbsp; Tour &nbsp;·&nbsp; Antar-Jemput
         </p>
-        <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+        <div class="flex flex-wrap items-center gap-3">
           <a
             :href="waUrl('Halo 3 Putri Mulya, saya ingin tanya informasi layanan yang tersedia.')"
             target="_blank" rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-xs sm:text-sm transition-all active:scale-95 shadow-lg shadow-emerald-600/30"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm transition-all active:scale-95"
           >
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
@@ -72,7 +71,7 @@ const mainServices = [
           </a>
           <RouterLink
             to="/armada"
-            class="inline-flex items-center gap-1.5 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full border border-white/40 bg-slate-950/20 backdrop-blur-xs text-white font-bold text-xs sm:text-sm hover:bg-white/10 transition-all"
+            class="inline-flex items-center gap-1.5 px-6 py-3 rounded-full border border-white/30 text-white font-bold text-sm hover:bg-white/10 transition-all"
           >
             Lihat Armada
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
