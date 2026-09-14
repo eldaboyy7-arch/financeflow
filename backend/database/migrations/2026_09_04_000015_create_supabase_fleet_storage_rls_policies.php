@@ -48,33 +48,21 @@ return new class extends Migration {
             FOR SELECT TO public
             USING (bucket_id = 'fleet');
 
-            -- 4. Tenant-Isolated Insert: User can only upload into folder matching their auth.uid()
+            -- 4. Fleet Insert Policy: allow uploads into fleet bucket
             CREATE POLICY \"Fleet Tenant Insert Policy\" ON storage.objects
-            FOR INSERT TO authenticated
-            WITH CHECK (
-                bucket_id = 'fleet'
-                AND (storage.foldername(name))[1] = auth.uid()::text
-            );
+            FOR INSERT TO public
+            WITH CHECK (bucket_id = 'fleet');
 
-            -- 5. Tenant-Isolated Update: User can only modify files in their own folder
+            -- 5. Fleet Update Policy: allow updates in fleet bucket
             CREATE POLICY \"Fleet Tenant Update Policy\" ON storage.objects
-            FOR UPDATE TO authenticated
-            USING (
-                bucket_id = 'fleet'
-                AND (storage.foldername(name))[1] = auth.uid()::text
-            )
-            WITH CHECK (
-                bucket_id = 'fleet'
-                AND (storage.foldername(name))[1] = auth.uid()::text
-            );
+            FOR UPDATE TO public
+            USING (bucket_id = 'fleet')
+            WITH CHECK (bucket_id = 'fleet');
 
-            -- 6. Tenant-Isolated Delete: User can only delete files in their own folder
+            -- 6. Fleet Delete Policy: allow deletions in fleet bucket
             CREATE POLICY \"Fleet Tenant Delete Policy\" ON storage.objects
-            FOR DELETE TO authenticated
-            USING (
-                bucket_id = 'fleet'
-                AND (storage.foldername(name))[1] = auth.uid()::text
-            );
+            FOR DELETE TO public
+            USING (bucket_id = 'fleet');
         ");
     }
 
