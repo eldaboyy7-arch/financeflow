@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import type { PublicVehicle } from '@/types/fleet'
 import QuickSearchWidget from '@/components/QuickSearchWidget.vue'
@@ -14,8 +14,8 @@ const emit = defineEmits<{
 
 <template>
   <section
-    class="relative min-h-screen min-h-[100dvh] flex flex-col justify-between bg-cover bg-no-repeat bg-[center_bottom] overflow-visible"
-    :style="{ backgroundImage: 'url(/images/hero-desktop.jpg)' }"
+    class="relative min-h-screen min-h-[100dvh] flex flex-col justify-between bg-cover bg-no-repeat overflow-visible"
+    :style="{ backgroundImage: 'url(/images/hero-desktop.jpg)', backgroundPosition: 'center 65%', backgroundSize: 'cover' }"
   >
     <!-- Spacer untuk Fixed Navbar di paling atas -->
     <div class="h-16 sm:h-20 shrink-0"></div>
