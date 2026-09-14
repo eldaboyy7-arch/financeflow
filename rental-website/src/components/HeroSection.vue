@@ -13,65 +13,61 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <section class="relative bg-slate-900 overflow-visible">
-    <!-- Hero Background with Scenic Tropical Backdrop & Gradient -->
-    <div
-      class="relative pt-24 sm:pt-28 md:pt-36 pb-20 sm:pb-28 md:pb-36 bg-cover bg-center overflow-hidden"
-      :style="{ backgroundImage: 'url(/images/hero-desktop.png)' }"
-    >
-      <!-- Premium Dark/Blue Gradient Overlay so text and cars pop with high contrast -->
-      <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-slate-900/40"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/40"></div>
+  <section
+    class="relative min-h-screen min-h-[100dvh] flex flex-col justify-between bg-cover bg-center bg-no-repeat overflow-visible"
+    :style="{ backgroundImage: 'url(/images/hero-desktop.png)' }"
+  >
+    <!-- Spacer untuk Fixed Navbar di paling atas -->
+    <div class="h-16 sm:h-20 shrink-0"></div>
 
-      <!-- Main Hero Content Container -->
-      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-2xl text-center lg:text-left mx-auto lg:mx-0 pt-2 sm:pt-4">
-          <!-- Eyebrow Gold Badge -->
-          <p class="inline-block text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-400 mb-3 bg-amber-400/10 px-3.5 py-1 rounded-full border border-amber-400/20 shadow-2xs">
-            RENTAL MOBIL &amp; TOUR BINTAN
-          </p>
+    <!-- Main Hero Content Container (Di tengah layar) -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full my-auto py-6 sm:py-8">
+      <div class="max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
+        <!-- Eyebrow Gold Badge -->
+        <p class="inline-block text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-300 mb-3 bg-slate-950/40 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-amber-400/40 shadow-md">
+          RENTAL MOBIL &amp; TOUR BINTAN
+        </p>
 
-          <!-- Headline -->
-          <h1 class="font-display text-3xl sm:text-5xl xl:text-6xl font-black text-white tracking-tight leading-[1.1] mb-4">
-            Jelajahi Bintan<br class="hidden sm:inline" />
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300">dengan Nyaman.</span>
-          </h1>
+        <!-- Headline -->
+        <h1 class="font-display text-3xl sm:text-5xl xl:text-6xl font-black text-white tracking-tight leading-[1.1] mb-4 drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]">
+          Jelajahi Bintan<br class="hidden sm:inline" />
+          <span>dengan Nyaman.</span>
+        </h1>
 
-          <!-- Subtitle -->
-          <p class="text-sm sm:text-base xl:text-lg text-slate-200 leading-relaxed mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0">
-            Rental mobil dan paket perjalanan di Bintan untuk kebutuhan pribadi, keluarga, maupun rombongan.
-          </p>
+        <!-- Subtitle -->
+        <p class="text-sm sm:text-base xl:text-lg text-white font-semibold leading-relaxed mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+          Rental mobil dan paket perjalanan di Bintan untuk kebutuhan pribadi, keluarga, maupun rombongan.
+        </p>
 
-          <!-- Action Buttons -->
-          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
-            <!-- Primary Gold Button (Lihat Armada) -->
-            <a
-              href="#armada"
-              class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/30 active:scale-95"
-            >
-              <span>Lihat Armada</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-              </svg>
-            </a>
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
+          <!-- Primary Gold Button (Lihat Armada) -->
+          <a
+            href="#armada"
+            class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-amber-500/30 transition-all hover:shadow-amber-500/40 active:scale-95 cursor-pointer"
+          >
+            <span>Lihat Armada</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </a>
 
-            <!-- Secondary Outline Button (Paket Tour) -->
-            <RouterLink
-              to="/paket-tour-bintan"
-              class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-xs font-bold text-xs sm:text-sm transition-all active:scale-95"
-            >
-              <span>Paket Tour</span>
-              <svg class="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-              </svg>
-            </RouterLink>
-          </div>
+          <!-- Secondary Outline Button (Paket Tour) -->
+          <RouterLink
+            to="/paket-tour-bintan"
+            class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-slate-950/45 hover:bg-slate-950/65 text-white border border-white/40 backdrop-blur-md font-bold text-xs sm:text-sm transition-all active:scale-95 shadow-lg"
+          >
+            <span>Paket Tour</span>
+            <svg class="w-4 h-4 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </RouterLink>
         </div>
       </div>
     </div>
 
-    <!-- Floating Quick Search Widget: positioned right overlapping bottom of hero -->
-    <div class="-mt-8 sm:-mt-10 md:-mt-12 relative z-20 pb-4">
+    <!-- Floating Quick Search Widget: tepat di bawah layar hero 1 layar penuh -->
+    <div class="relative z-20 pb-6 sm:pb-8 lg:pb-10 pt-4 shrink-0">
       <QuickSearchWidget @search="(p) => emit('search', p)" />
     </div>
   </section>
