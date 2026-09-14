@@ -7,13 +7,6 @@ const waUrl = (text: string) => {
   return `https://wa.me/${clean}?text=${encodeURIComponent(text)}`
 }
 
-const whyUs = [
-  { icon: '🚗', title: 'Armada Terawat', desc: 'Unit selalu bersih, ber-AC dingin, dan diperiksa sebelum perjalanan.' },
-  { icon: '👨‍✈️', title: 'Driver Berpengalaman', desc: 'Hafal seluruh sudut Bintan & Tanjung Pinang, ramah dan tepat waktu.' },
-  { icon: '💰', title: 'Harga Transparan', desc: 'Tidak ada biaya tersembunyi. Semua sudah jelas di awal sebelum booking.' },
-  { icon: '⚡', title: 'Respon Cepat', desc: 'Chat WhatsApp langsung dibalas — rata-rata dalam hitungan menit.' },
-]
-
 const mainServices = [
   {
     img: '/images/layanan-hero.jpg',
