@@ -13,10 +13,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <section
-    class="relative min-h-screen min-h-[100dvh] flex flex-col justify-between bg-cover bg-no-repeat overflow-visible"
-    :style="{ backgroundImage: 'url(/images/hero-desktop.jpg)', backgroundPosition: 'center 65%', backgroundSize: 'cover' }"
-  >
+  <section class="hero-bg relative min-h-screen min-h-[100dvh] flex flex-col justify-between overflow-visible">
     <!-- Spacer untuk Fixed Navbar di paling atas -->
     <div class="h-16 sm:h-20 shrink-0"></div>
 
@@ -73,3 +70,20 @@ const emit = defineEmits<{
   </section>
 </template>
 
+<style scoped>
+/* Mobile: portrait image, focus on cars */
+.hero-bg {
+  background-image: url('/images/hero-mobile.jpg');
+  background-size: cover;
+  background-position: center 60%;
+  background-repeat: no-repeat;
+}
+
+/* Desktop (sm: 640px+): landscape fleet lineup */
+@media (min-width: 640px) {
+  .hero-bg {
+    background-image: url('/images/hero-desktop.jpg');
+    background-position: center 65%;
+  }
+}
+</style>
