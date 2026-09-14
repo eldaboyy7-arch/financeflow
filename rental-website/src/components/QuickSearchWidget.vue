@@ -115,8 +115,19 @@ function isDateInRange(day: number) {
   return cur > s && cur < e
 }
 
+function isDayDisabled(day: number, targetField: 'startDate' | 'endDate'): boolean {
+  if (isPastDay(day)) return true
+  if (targetField === 'endDate' && startDate.value) {
+    const cur = new Date(calYear.value, calMonth.value, day)
+    const [sy, sm, sd] = startDate.value.split('-').map(Number)
+    const s = new Date(sy, sm - 1, sd)
+    return cur < s
+  }
+  return false
+}
+
 function handleDayClick(day: number, targetField: 'startDate' | 'endDate') {
-  if (isPastDay(day)) return
+  if (isDayDisabled(day, targetField)) return
 
   const mStr = String(calMonth.value + 1).padStart(2, '0')
   const dStr = String(day).padStart(2, '0')
@@ -124,21 +135,13 @@ function handleDayClick(day: number, targetField: 'startDate' | 'endDate') {
 
   if (targetField === 'startDate') {
     startDate.value = formatted
-    // Auto validate if endDate is before startDate
     if (endDate.value && endDate.value < formatted) {
       endDate.value = ''
     }
-    // Smoothly prompt to pick end date
-    activePopover.value = 'endDate'
+    activePopover.value = null
   } else {
-    // If selecting endDate before startDate, set startDate instead
-    if (startDate.value && formatted < startDate.value) {
-      startDate.value = formatted
-      endDate.value = ''
-    } else {
-      endDate.value = formatted
-      activePopover.value = null
-    }
+    endDate.value = formatted
+    activePopover.value = null
   }
 }
 
@@ -217,24 +220,24 @@ onUnmounted(() => {
       <div class="hidden sm:grid sm:grid-cols-12 items-center divide-x divide-slate-100">
         
         <!-- 1. Pilih Armada (Cols 3) -->
-        <div class="col-span-3 px-3.5 py-2 relative">
+        <div class="col-span-3 px-3 py-1 relative">
           <button
             type="button"
             @click.stop="togglePopover('vehicle')"
-            class="w-full text-left group cursor-pointer focus:outline-none"
+            class="w-full text-left group cursor-pointer p-1.5 rounded-xl hover:bg-slate-50 transition-colors focus:outline-none"
           >
-            <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5 group-hover:text-blue-600 transition-colors">
-              <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-              </svg>
-              Pilih Armada
-            </span>
-            <div class="flex items-center justify-between gap-1">
-              <span class="text-xs md:text-sm font-black text-slate-900 truncate">
-                {{ selectedVehicleLabel }}
-              </span>
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600 flex items-center justify-center shrink-0 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                </svg>
+              </div>
+              <div class="min-w-0 flex-1">
+                <span class="block text-xs font-bold text-slate-800 leading-tight">Pilih Armada</span>
+                <span class="block text-xs text-slate-500 font-medium truncate mt-0.5">{{ selectedVehicleLabel }}</span>
+              </div>
               <svg
-                class="w-3.5 h-3.5 text-slate-400 transition-transform shrink-0"
+                class="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-transform shrink-0"
                 :class="{ 'rotate-180 text-blue-600': activePopover === 'vehicle' }"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24"
               >
@@ -243,10 +246,10 @@ onUnmounted(() => {
             </div>
           </button>
 
-          <!-- Dropdown Popover: Pilih Armada -->
+          <!-- Dropdown Popover: Pilih Armada (Opens UPWARDS so never cut off by viewport) -->
           <div
             v-if="activePopover === 'vehicle'"
-            class="absolute left-0 top-full mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 z-50 animate-in fade-in zoom-in-95 duration-150"
+            class="absolute left-0 bottom-full mb-3 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 z-50 animate-in fade-in zoom-in-95 duration-150"
             @click.stop
           >
             <div class="space-y-1">
@@ -256,7 +259,7 @@ onUnmounted(() => {
                 type="button"
                 @click="selectVehicle(opt.value)"
                 class="w-full text-left px-3 py-2.5 rounded-xl flex items-center justify-between transition-colors cursor-pointer"
-                :class="vehicleType === opt.value ? 'bg-blue-50/80 text-blue-700 font-bold' : 'hover:bg-slate-50 text-slate-700'"
+                :class="vehicleType === opt.value ? 'bg-blue-50 text-blue-700 font-bold' : 'hover:bg-slate-50 text-slate-700'"
               >
                 <div>
                   <span class="block text-xs sm:text-sm font-bold leading-tight">{{ opt.label }}</span>
@@ -267,43 +270,40 @@ onUnmounted(() => {
                 </svg>
               </button>
             </div>
+            <!-- Caret indicator -->
+            <div class="absolute -bottom-1.5 left-8 w-3 h-3 bg-white border-b border-r border-slate-100 rotate-45"></div>
           </div>
         </div>
 
         <!-- 2. Tanggal Mulai (Cols 2) -->
-        <div class="col-span-2 px-3.5 py-2 relative">
+        <div class="col-span-2 px-3 py-1 relative">
           <button
             type="button"
             @click.stop="togglePopover('startDate')"
-            class="w-full text-left group cursor-pointer focus:outline-none"
+            class="w-full text-left group cursor-pointer p-1.5 rounded-xl hover:bg-slate-50 transition-colors focus:outline-none"
           >
-            <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5 group-hover:text-blue-600 transition-colors">
-              <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-              </svg>
-              Tgl Mulai
-            </span>
-            <div class="flex items-center justify-between gap-1">
-              <span
-                class="text-xs md:text-sm font-black truncate"
-                :class="startDate ? 'text-slate-900' : 'text-slate-400 font-medium'"
-              >
-                {{ formatDateDisplay(startDate) }}
-              </span>
-              <svg
-                class="w-3.5 h-3.5 text-slate-400 transition-transform shrink-0"
-                :class="{ 'rotate-180 text-blue-600': activePopover === 'startDate' }"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-              </svg>
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600 flex items-center justify-center shrink-0 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <div class="min-w-0 flex-1">
+                <span class="block text-xs font-bold text-slate-800 leading-tight">Tanggal Mulai</span>
+                <span
+                  class="block text-xs font-medium truncate mt-0.5"
+                  :class="startDate ? 'text-slate-800 font-semibold' : 'text-slate-400'"
+                >
+                  {{ formatDateDisplay(startDate) }}
+                </span>
+              </div>
             </div>
           </button>
 
-          <!-- Calendar Popover: Tgl Mulai -->
+          <!-- Calendar Popover: Tanggal Mulai (Opens UPWARDS so never cut off) -->
           <div
             v-if="activePopover === 'startDate'"
-            class="absolute left-0 top-full mt-3 w-80 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 animate-in fade-in zoom-in-95 duration-150"
+            class="absolute left-0 bottom-full mb-3 w-80 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 animate-in fade-in zoom-in-95 duration-150"
             @click.stop
           >
             <!-- Month Header -->
@@ -337,19 +337,17 @@ onUnmounted(() => {
 
             <!-- Calendar Days Grid -->
             <div class="grid grid-cols-7 gap-1">
-              <!-- Empty leading days -->
               <div v-for="blank in firstDayOffset" :key="'blank-' + blank" class="w-8 h-8"></div>
               
-              <!-- Days -->
               <button
                 v-for="day in daysInCalMonth"
                 :key="day"
                 type="button"
                 @click="handleDayClick(day, 'startDate')"
-                :disabled="isPastDay(day)"
+                :disabled="isDayDisabled(day, 'startDate')"
                 class="w-8 h-8 rounded-xl text-xs flex items-center justify-center transition-all cursor-pointer"
                 :class="[
-                  isPastDay(day)
+                  isDayDisabled(day, 'startDate')
                     ? 'text-slate-300 cursor-not-allowed'
                     : isDateSelected(day, startDate)
                       ? 'bg-blue-600 text-white font-black shadow-md shadow-blue-600/30'
@@ -376,43 +374,40 @@ onUnmounted(() => {
                 Hapus
               </button>
             </div>
+            <!-- Caret indicator -->
+            <div class="absolute -bottom-1.5 left-8 w-3 h-3 bg-white border-b border-r border-slate-100 rotate-45"></div>
           </div>
         </div>
 
         <!-- 3. Tanggal Selesai (Cols 2) -->
-        <div class="col-span-2 px-3.5 py-2 relative">
+        <div class="col-span-2 px-3 py-1 relative">
           <button
             type="button"
             @click.stop="togglePopover('endDate')"
-            class="w-full text-left group cursor-pointer focus:outline-none"
+            class="w-full text-left group cursor-pointer p-1.5 rounded-xl hover:bg-slate-50 transition-colors focus:outline-none"
           >
-            <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5 group-hover:text-blue-600 transition-colors">
-              <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-              </svg>
-              Tgl Selesai
-            </span>
-            <div class="flex items-center justify-between gap-1">
-              <span
-                class="text-xs md:text-sm font-black truncate"
-                :class="endDate ? 'text-slate-900' : 'text-slate-400 font-medium'"
-              >
-                {{ formatDateDisplay(endDate) }}
-              </span>
-              <svg
-                class="w-3.5 h-3.5 text-slate-400 transition-transform shrink-0"
-                :class="{ 'rotate-180 text-blue-600': activePopover === 'endDate' }"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-              </svg>
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600 flex items-center justify-center shrink-0 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <div class="min-w-0 flex-1">
+                <span class="block text-xs font-bold text-slate-800 leading-tight">Tanggal Selesai</span>
+                <span
+                  class="block text-xs font-medium truncate mt-0.5"
+                  :class="endDate ? 'text-slate-800 font-semibold' : 'text-slate-400'"
+                >
+                  {{ formatDateDisplay(endDate) }}
+                </span>
+              </div>
             </div>
           </button>
 
-          <!-- Calendar Popover: Tgl Selesai -->
+          <!-- Calendar Popover: Tanggal Selesai (Opens UPWARDS so never cut off) -->
           <div
             v-if="activePopover === 'endDate'"
-            class="absolute left-0 top-full mt-3 w-80 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 animate-in fade-in zoom-in-95 duration-150"
+            class="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 w-80 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 animate-in fade-in zoom-in-95 duration-150"
             @click.stop
           >
             <!-- Month Header -->
@@ -453,10 +448,10 @@ onUnmounted(() => {
                 :key="day"
                 type="button"
                 @click="handleDayClick(day, 'endDate')"
-                :disabled="isPastDay(day)"
+                :disabled="isDayDisabled(day, 'endDate')"
                 class="w-8 h-8 rounded-xl text-xs flex items-center justify-center transition-all cursor-pointer"
                 :class="[
-                  isPastDay(day)
+                  isDayDisabled(day, 'endDate')
                     ? 'text-slate-300 cursor-not-allowed'
                     : isDateSelected(day, endDate)
                       ? 'bg-blue-600 text-white font-black shadow-md shadow-blue-600/30'
@@ -483,28 +478,30 @@ onUnmounted(() => {
                 Hapus
               </button>
             </div>
+            <!-- Caret indicator -->
+            <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-b border-r border-slate-100 rotate-45"></div>
           </div>
         </div>
 
         <!-- 4. Jumlah Penumpang (Cols 2) -->
-        <div class="col-span-2 px-3.5 py-2 relative">
+        <div class="col-span-2 px-3 py-1 relative">
           <button
             type="button"
             @click.stop="togglePopover('passengers')"
-            class="w-full text-left group cursor-pointer focus:outline-none"
+            class="w-full text-left group cursor-pointer p-1.5 rounded-xl hover:bg-slate-50 transition-colors focus:outline-none"
           >
-            <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5 group-hover:text-blue-600 transition-colors">
-              <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-              </svg>
-              Penumpang
-            </span>
-            <div class="flex items-center justify-between gap-1">
-              <span class="text-xs md:text-sm font-black text-slate-900 truncate">
-                {{ selectedPassengersLabel }}
-              </span>
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600 flex items-center justify-center shrink-0 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+              </div>
+              <div class="min-w-0 flex-1">
+                <span class="block text-xs font-bold text-slate-800 leading-tight">Jumlah Penumpang</span>
+                <span class="block text-xs text-slate-500 font-medium truncate mt-0.5">{{ selectedPassengersLabel }}</span>
+              </div>
               <svg
-                class="w-3.5 h-3.5 text-slate-400 transition-transform shrink-0"
+                class="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-transform shrink-0"
                 :class="{ 'rotate-180 text-blue-600': activePopover === 'passengers' }"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24"
               >
@@ -513,10 +510,10 @@ onUnmounted(() => {
             </div>
           </button>
 
-          <!-- Dropdown Popover: Jumlah Penumpang -->
+          <!-- Dropdown Popover: Jumlah Penumpang (Opens UPWARDS, centered directly above Penumpang column) -->
           <div
             v-if="activePopover === 'passengers'"
-            class="absolute right-0 top-full mt-3 w-64 bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 z-50 animate-in fade-in zoom-in-95 duration-150"
+            class="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 w-60 bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 z-50 animate-in fade-in zoom-in-95 duration-150"
             @click.stop
           >
             <div class="space-y-1">
@@ -526,7 +523,7 @@ onUnmounted(() => {
                 type="button"
                 @click="selectPassengers(opt.value)"
                 class="w-full text-left px-3 py-2.5 rounded-xl flex items-center justify-between transition-colors cursor-pointer"
-                :class="passengers === opt.value ? 'bg-blue-50/80 text-blue-700 font-bold' : 'hover:bg-slate-50 text-slate-700'"
+                :class="passengers === opt.value ? 'bg-blue-50 text-blue-700 font-bold' : 'hover:bg-slate-50 text-slate-700'"
               >
                 <div>
                   <span class="block text-xs sm:text-sm font-bold leading-tight">{{ opt.label }}</span>
@@ -537,6 +534,8 @@ onUnmounted(() => {
                 </svg>
               </button>
             </div>
+            <!-- Caret indicator -->
+            <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-b border-r border-slate-100 rotate-45"></div>
           </div>
         </div>
 
@@ -652,9 +651,9 @@ onUnmounted(() => {
                 :key="day"
                 type="button"
                 @click="handleDayClick(day, 'startDate')"
-                :disabled="isPastDay(day)"
+                :disabled="isDayDisabled(day, 'startDate')"
                 class="w-7 h-7 rounded-lg text-xs flex items-center justify-center font-bold"
-                :class="isPastDay(day) ? 'text-slate-300' : isDateSelected(day, startDate) ? 'bg-blue-600 text-white' : 'text-slate-800 hover:bg-slate-100'"
+                :class="isDayDisabled(day, 'startDate') ? 'text-slate-300 cursor-not-allowed' : isDateSelected(day, startDate) ? 'bg-blue-600 text-white' : 'text-slate-800 hover:bg-slate-100'"
               >
                 {{ day }}
               </button>
@@ -710,9 +709,9 @@ onUnmounted(() => {
                 :key="day"
                 type="button"
                 @click="handleDayClick(day, 'endDate')"
-                :disabled="isPastDay(day)"
+                :disabled="isDayDisabled(day, 'endDate')"
                 class="w-7 h-7 rounded-lg text-xs flex items-center justify-center font-bold"
-                :class="isPastDay(day) ? 'text-slate-300' : isDateSelected(day, endDate) ? 'bg-blue-600 text-white' : 'text-slate-800 hover:bg-slate-100'"
+                :class="isDayDisabled(day, 'endDate') ? 'text-slate-300 cursor-not-allowed' : isDateSelected(day, endDate) ? 'bg-blue-600 text-white' : 'text-slate-800 hover:bg-slate-100'"
               >
                 {{ day }}
               </button>
