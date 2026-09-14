@@ -219,15 +219,63 @@ const mainServices = [
       </div>
     </section>
 
-    <!-- ═══════════ KENAPA KAMI ═══════════ -->
+    <!-- ══════════════ KENAPA KAMI ══════════════ -->
     <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pt-14 sm:pb-16">
       <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-8">Kenapa Memilih Kami?</p>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
-        <div v-for="w in whyUs" :key="w.title">
-          <div class="text-2xl mb-3">{{ w.icon }}</div>
-          <h3 class="text-sm font-black text-slate-900 mb-1.5">{{ w.title }}</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">{{ w.desc }}</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-5 sm:gap-6">
+
+        <!-- Armada Terawat -->
+        <div class="flex flex-col gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-black text-slate-900 mb-1">Armada Terawat</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">Unit selalu bersih, ber-AC dingin, dan diperiksa sebelum perjalanan.</p>
+          </div>
         </div>
+
+        <!-- Driver Berpengalaman -->
+        <div class="flex flex-col gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-black text-slate-900 mb-1">Driver Berpengalaman</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">Hafal seluruh sudut Bintan & Tanjung Pinang, ramah dan tepat waktu.</p>
+          </div>
+        </div>
+
+        <!-- Harga Transparan -->
+        <div class="flex flex-col gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-black text-slate-900 mb-1">Harga Transparan</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">Tidak ada biaya tersembunyi. Semua sudah jelas di awal sebelum booking.</p>
+          </div>
+        </div>
+
+        <!-- Respon Cepat -->
+        <div class="flex flex-col gap-3">
+          <div class="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-black text-slate-900 mb-1">Respon Cepat</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">Chat WhatsApp langsung dibalas — rata-rata dalam hitungan menit.</p>
+          </div>
+        </div>
+
       </div>
     </section>
 
