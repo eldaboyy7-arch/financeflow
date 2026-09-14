@@ -296,7 +296,7 @@ onUnmounted(() => {
                 <span class="font-bold text-[10px] sm:text-[11px] uppercase tracking-wider text-blue-600">
                   {{ getVehicleCategoryBracket(car.capacity).shortLabel }}
                 </span>
-                <span class="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:inline">
+                <span class="text-[10px] sm:text-[11px] text-slate-500 font-medium">
                   Tahun {{ car.model_year }}
                 </span>
               </div>
