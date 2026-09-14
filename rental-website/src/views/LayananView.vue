@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { siteConfig } from '@/config/site'
 
@@ -50,7 +50,7 @@ const mainServices = [
       />
       <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-slate-950/10"></div>
 
-      <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 sm:pb-20">
+      <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 sm:pb-32">
         <p class="text-xs font-bold uppercase tracking-[0.15em] text-amber-400 mb-3">
           3 Putri Mulya · Bintan & Tanjung Pinang
         </p>
