@@ -44,9 +44,8 @@ class Vehicle extends Model
 
                     $fillable = (new static)->getFillable();
                     $data = collect($vehicle->only($fillable))
-                        ->except(['user_id', 'plate_number'])
+                        ->except(['user_id', 'plate_number', 'is_featured']) // is_featured is intentionally excluded: each account manages their own homepage display independently
                         ->toArray();
-                    $data['is_featured'] = (bool) ($vehicle->is_featured ?? false);
 
                     if ($other) {
                         $other->update($data);
