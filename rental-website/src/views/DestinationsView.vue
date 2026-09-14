@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { destinationsList } from '@/config/destinations'
@@ -44,40 +44,40 @@ const waGeneralConsultUrl = computed(() => {
 <template>
   <div class="bg-slate-50 font-sans">
     <!-- Hero Header with Breathtaking Scenic Destination Photography -->
-    <section class="relative text-white pt-16 sm:pt-20 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-slate-950">
+    <section class="relative text-white pt-16 sm:pt-20 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-slate-950">
       <!-- Background Scenic Image -->
       <img
         src="/images/bintan-travel-hero.jpg"
         alt="Wisata Bahari dan Pesisir Pulau Bintan"
-        class="absolute inset-0 w-full h-full object-cover object-center scale-105 filter brightness-[0.85]"
+        class="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.55]"
       />
       <!-- Gradient Overlays for High Legibility & Premium Deep Atmosphere -->
-      <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-950/80 pointer-events-none"></div>
-      <div class="absolute inset-0 bg-blue-950/30 mix-blend-multiply pointer-events-none"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/40 to-slate-900/20 pointer-events-none"></div>
+      <div class="absolute inset-0 bg-blue-950/10 mix-blend-multiply pointer-events-none"></div>
 
       <div class="max-w-7xl mx-auto relative z-10 text-center">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-white/20 text-blue-300 text-xs font-semibold mb-5 backdrop-blur-md shadow-lg">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/25 text-white text-xs font-semibold mb-6 backdrop-blur-md">
           <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
           <span>Dokumentasi Resmi &amp; Pariwisata Bintan</span>
         </div>
 
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-4 drop-shadow-md">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4 leading-tight">
           Panduan &amp; Inspirasi Destinasi Wisata Bintan
         </h1>
 
-        <p class="max-w-2xl mx-auto text-sm sm:text-base text-slate-200 leading-relaxed mb-8 drop-shadow-sm">
+        <p class="max-w-xl mx-auto text-sm sm:text-base text-white/80 leading-relaxed mb-8">
           Eksplorasi pantai pasir putih, cagar sejarah Melayu, dan vihara megah berkelas dunia. Nikmati kebebasan rute dengan sewa mobil lepas kunci atau kenyamanan paket supir 3 Putri Mulya.
         </p>
 
         <!-- Quick Summary Stats -->
-        <div class="inline-flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 text-xs text-white">
-          <div class="px-3.5 py-1.5 rounded-xl bg-slate-900/80 border border-white/20 backdrop-blur-md flex items-center gap-2 shadow-sm">
+        <div class="inline-flex flex-wrap items-center justify-center gap-2 text-xs text-white">
+          <div class="px-4 py-1.5 rounded-full bg-white/10 border border-white/25 backdrop-blur-md flex items-center gap-2">
             <span class="text-blue-400 font-extrabold">{{ destinationsList.length }}</span> Destinasi Terdata
           </div>
-          <div class="px-3.5 py-1.5 rounded-xl bg-slate-900/80 border border-white/20 backdrop-blur-md flex items-center gap-2 shadow-sm">
+          <div class="px-4 py-1.5 rounded-full bg-white/10 border border-white/25 backdrop-blur-md flex items-center gap-2">
             <span class="text-emerald-400 font-extrabold">100%</span> Rute Bebas Fleksibel
           </div>
-          <div class="px-3.5 py-1.5 rounded-xl bg-slate-900/80 border border-white/20 backdrop-blur-md flex items-center gap-2 shadow-sm">
+          <div class="px-4 py-1.5 rounded-full bg-white/10 border border-white/25 backdrop-blur-md flex items-center gap-2">
             <span class="text-amber-400 font-extrabold">Lepas Kunci</span> / Driver All-In
           </div>
         </div>
