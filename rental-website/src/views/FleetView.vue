@@ -215,8 +215,8 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
           </button>
         </div>
 
-        <!-- Vehicles Grid (Etalase 2-Kolom di Mobile, 3-Kolom di Desktop) -->
-        <div v-else class="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-6">
+        <!-- Vehicles Grid (Etalase 2-Kolom di Mobile, 3-Kolom di Desktop, 4-Kolom di Wide) -->
+        <div v-else class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4">
           <article
             v-for="car in filteredVehicles"
             :key="car.id"
@@ -285,7 +285,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
             </div>
 
             <!-- Card Content -->
-            <div class="p-2.5 sm:p-5 flex-1 flex flex-col justify-between">
+            <div class="p-2.5 sm:p-3.5 flex-1 flex flex-col justify-between">
               <div>
                 <!-- Category Tag & Year -->
                 <div class="flex items-center justify-between text-[9px] sm:text-[11px] text-slate-500 mb-1 font-medium">
@@ -297,7 +297,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
 
                 <!-- Car Name -->
                 <h3
-                  class="text-xs sm:text-lg font-bold text-slate-900 leading-snug line-clamp-1 cursor-pointer hover:text-blue-600 transition-colors"
+                  class="text-xs sm:text-sm font-bold text-slate-900 leading-snug line-clamp-1 cursor-pointer hover:text-blue-600 transition-colors"
                   @click="openPhotoModal(car)"
                   :title="car.name"
                 >
@@ -305,9 +305,9 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                 </h3>
 
                 <!-- Specifications Chips -->
-                <div class="flex items-center flex-wrap gap-1 sm:gap-2 text-[10px] sm:text-xs text-slate-500 mt-1.5 sm:mt-2.5 pt-1.5 sm:pt-2 border-t border-slate-100">
+                <div class="flex items-center flex-wrap gap-1 sm:gap-1.5 text-[10px] sm:text-[11px] text-slate-500 mt-1.5 sm:mt-2 pt-1.5 sm:pt-2 border-t border-slate-100">
                   <span class="inline-flex items-center gap-1 font-medium">
-                    <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
                     <span>{{ car.capacity }} Kursi</span>
@@ -329,7 +329,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                 <!-- Cross-selling Banner for HiAce/Bus (Compact on mobile) -->
                 <div
                   v-if="isDriverMandatory(car.capacity)"
-                  class="mt-2 sm:mt-3 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl bg-blue-50/70 border border-blue-100 text-[10px] sm:text-[11px] text-blue-900 leading-tight"
+                  class="mt-2 p-1.5 sm:p-2 rounded-lg bg-blue-50/70 border border-blue-100 text-[10px] sm:text-[11px] text-blue-900 leading-tight"
                 >
                   <p class="font-medium hidden sm:block">
                     Butuh paket wisata keliling Bintan lengkap Supir + BBM + Karaoke?
@@ -344,16 +344,16 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
               </div>
 
               <!-- Price & Button Area -->
-              <div class="pt-2 sm:pt-3 mt-2 sm:mt-3 border-t border-slate-100 flex flex-col gap-1.5 sm:gap-2.5">
+              <div class="pt-2 mt-2 border-t border-slate-100 flex flex-col gap-1.5 sm:gap-2">
                 <!-- Price Row -->
                 <div class="flex flex-col">
                   <div class="flex items-baseline gap-1">
-                    <span class="text-xs sm:text-xl font-black text-slate-900 tracking-tight leading-none">
+                    <span class="text-xs sm:text-base font-black text-slate-900 tracking-tight leading-none">
                       {{ car.daily_rate_formatted }}
                     </span>
-                    <span class="text-[9px] sm:text-xs text-slate-500 font-normal leading-none">/hari</span>
+                    <span class="text-[9px] sm:text-[11px] text-slate-500 font-normal leading-none">/hari</span>
                   </div>
-                  <span v-if="isDriverMandatory(car.capacity)" class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5 sm:mt-1 font-medium line-clamp-1">
+                  <span v-if="isDriverMandatory(car.capacity)" class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5 font-medium line-clamp-1">
                     *Termasuk supir
                   </span>
                 </div>
@@ -364,9 +364,9 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                   :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName)"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="w-full h-8 sm:h-10 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] sm:text-xs font-bold whitespace-nowrap inline-flex items-center justify-center gap-1 sm:gap-1.5 transition-all shadow-xs hover:shadow-sm active:scale-95"
+                  class="w-full h-8 sm:h-9 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] sm:text-xs font-bold whitespace-nowrap inline-flex items-center justify-center gap-1 sm:gap-1.5 transition-all shadow-xs hover:shadow-sm active:scale-95"
                 >
-                  <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
                   </svg>
                   <span class="sm:hidden">Pesan</span>
@@ -376,7 +376,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                 <button
                   v-else-if="car.status === 'maintenance'"
                   disabled
-                  class="w-full h-8 sm:h-10 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-slate-100 text-slate-400 border border-slate-200 text-[10px] sm:text-xs font-semibold whitespace-nowrap inline-flex items-center justify-center cursor-not-allowed"
+                  class="w-full h-8 sm:h-9 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-slate-100 text-slate-400 border border-slate-200 text-[10px] sm:text-xs font-semibold whitespace-nowrap inline-flex items-center justify-center cursor-not-allowed"
                 >
                   <span>Perawatan</span>
                 </button>
@@ -386,7 +386,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                   :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName)"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="w-full h-8 sm:h-10 px-2 sm:px-3 rounded-lg sm:rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 text-[10px] sm:text-xs font-semibold whitespace-nowrap inline-flex items-center justify-center transition-colors"
+                  class="w-full h-8 sm:h-9 px-2 sm:px-3 rounded-lg sm:rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 text-[10px] sm:text-xs font-semibold whitespace-nowrap inline-flex items-center justify-center transition-colors"
                 >
                   <span class="sm:hidden">Jadwal Lain</span>
                   <span class="hidden sm:inline">Tanya Jadwal Lain</span>
