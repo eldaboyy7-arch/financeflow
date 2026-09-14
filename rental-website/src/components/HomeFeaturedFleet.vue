@@ -396,9 +396,9 @@ onUnmounted(() => {
               <div class="flex items-center justify-between mb-0 sm:mb-2.5">
                 <div>
                   <span class="text-[9px] sm:text-[11px] text-slate-400 font-medium block leading-none">Mulai dari</span>
-                  <div class="mt-0.5 flex items-baseline gap-0.5">
-                    <span class="font-display text-xs sm:text-lg font-black text-slate-900 tracking-tight">{{ car.daily_rate_formatted }}</span>
-                    <span class="text-[9px] sm:text-[11px] text-slate-500 font-normal">/hari</span>
+                  <div class="mt-0.5 flex items-baseline gap-0.5 sm:block">
+                    <span class="font-display text-xs sm:text-lg font-black text-slate-900 tracking-tight whitespace-nowrap">{{ car.daily_rate_formatted }}</span>
+                    <span class="text-[9px] sm:text-[11px] text-slate-500 font-normal whitespace-nowrap">/hari</span>
                   </div>
                 </div>
                 <button
