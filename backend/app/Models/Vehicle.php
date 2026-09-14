@@ -15,6 +15,18 @@ class Vehicle extends Model
 
     protected static function booted(): void
     {
+        static::saving(function (Vehicle $vehicle) {
+            if (is_null($vehicle->is_featured)) {
+                $vehicle->is_featured = false;
+            }
+            if (empty($vehicle->status)) {
+                $vehicle->status = 'available';
+            }
+            if (empty($vehicle->color)) {
+                $vehicle->color = '#3B82F6';
+            }
+        });
+
         static::saved(function (Vehicle $vehicle) {
             if (static::$isSyncing) return;
 
@@ -34,17 +46,17 @@ class Vehicle extends Model
                         'name'         => $vehicle->name,
                         'brand'        => $vehicle->brand,
                         'model_year'   => $vehicle->model_year,
-                        'status'       => $vehicle->status,
-                        'daily_rate'   => $vehicle->daily_rate,
-                        'color'        => $vehicle->color,
-                        'transmission' => $vehicle->transmission,
-                        'capacity'     => $vehicle->capacity,
-                        'fuel_type'    => $vehicle->fuel_type,
+                        'status'       => $vehicle->status ?? 'available',
+                        'daily_rate'   => $vehicle->daily_rate ?? 0,
+                        'color'        => $vehicle->color ?? '#3B82F6',
+                        'transmission' => $vehicle->transmission ?? 'matic',
+                        'capacity'     => $vehicle->capacity ?? 7,
+                        'fuel_type'    => $vehicle->fuel_type ?? 'bensin',
                         'description'  => $vehicle->description,
                         'photo_path'   => $vehicle->photo_path,
                         'gallery_photos' => $vehicle->gallery_photos,
                         'video_url'    => $vehicle->video_url,
-                        'is_featured'  => $vehicle->is_featured,
+                        'is_featured'  => (bool) ($vehicle->is_featured ?? false),
                         'notes'        => $vehicle->notes,
                     ];
 
@@ -104,6 +116,16 @@ class Vehicle extends Model
         'is_featured',
     ];
 
+    protected $attributes = [
+        'status'       => 'available',
+        'color'        => '#3B82F6',
+        'transmission' => 'matic',
+        'capacity'     => 7,
+        'fuel_type'    => 'bensin',
+        'daily_rate'   => 0,
+        'is_featured'  => false,
+    ];
+
     protected $casts = [
         'daily_rate'     => 'decimal:2',
         'capacity'       => 'integer',
@@ -116,6 +138,11 @@ class Vehicle extends Model
         'gallery_photo_urls',
         'safe_video_embed_url',
     ];
+
+    public function setIsFeaturedAttribute($value): void
+    {
+        $this->attributes['is_featured'] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+    }
 
     public function getPhotoUrlAttribute(): ?string
     {

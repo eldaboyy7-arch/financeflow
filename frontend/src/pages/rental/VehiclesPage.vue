@@ -110,6 +110,7 @@ const defaultForm = {
   photo_url: '',
   video_url: '',
   notes: '',
+  is_featured: false,
 }
 const form = ref({ ...defaultForm })
 const uploadingPhoto = ref(false)
@@ -142,6 +143,7 @@ function openEdit(v: Vehicle) {
     photo_url: v.photo_url ?? '',
     video_url: v.video_url ?? '',
     notes: v.notes ?? '',
+    is_featured: Boolean(v.is_featured),
   }
   modalError.value = ''
   showModal.value = true
@@ -659,6 +661,19 @@ function statusBadge(s: string) {
                 class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-500 focus:bg-white dark:focus:bg-slate-800 transition-all"
                 placeholder="cth. Servis ganti oli tiap 10.000 km, STNK perpanjang Mei..."
               ></textarea>
+            </div>
+
+            <!-- Tampilkan di Beranda (Featured) -->
+            <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+              <input
+                id="vehicle_is_featured"
+                v-model="form.is_featured"
+                type="checkbox"
+                class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-slate-300 dark:border-slate-600 cursor-pointer"
+              />
+              <label for="vehicle_is_featured" class="text-xs font-semibold text-slate-700 dark:text-slate-200 cursor-pointer select-none">
+                Tampilkan di Beranda Website <span class="text-slate-400 font-normal">(Armada Unggulan / Featured)</span>
+              </label>
             </div>
 
             <div v-if="modalError" class="text-xs text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 rounded-xl px-3.5 py-2.5 border border-rose-200/60 dark:border-rose-800/40">

@@ -38,9 +38,10 @@ class VehicleController extends Controller
 
         $vehicle = Vehicle::create([
             ...$validated,
-            'user_id' => Auth::id(),
-            'status'  => $validated['status'] ?? 'available',
-            'color'   => $validated['color'] ?? '#3B82F6',
+            'user_id'     => Auth::id(),
+            'status'      => $validated['status'] ?? 'available',
+            'color'       => $validated['color'] ?? '#3B82F6',
+            'is_featured' => filter_var($validated['is_featured'] ?? false, FILTER_VALIDATE_BOOLEAN),
         ]);
 
         return response()->json([
@@ -249,6 +250,12 @@ class VehicleController extends Controller
             'gallery_photos.*' => 'nullable',
             'is_featured'  => 'nullable|boolean',
         ]);
+
+        if (array_key_exists('is_featured', $validated)) {
+            $validated['is_featured'] = filter_var($validated['is_featured'], FILTER_VALIDATE_BOOLEAN);
+        } else {
+            $validated['is_featured'] = false;
+        }
 
         // 1. Strict Tenant-Aware Photo Path Validation
         if (!empty($validated['photo_path'])) {
