@@ -292,7 +292,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                   <span class="text-blue-600 font-bold uppercase tracking-wider line-clamp-1">
                     {{ getVehicleCategoryBracket(car.capacity).shortLabel }}
                   </span>
-                  <span class="text-slate-400 shrink-0 ml-1">’{{ String(car.model_year).slice(-2) }}</span>
+                  <span class="text-slate-400 shrink-0 ml-1">{{ car.model_year }}</span>
                 </div>
 
                 <!-- Car Name -->
