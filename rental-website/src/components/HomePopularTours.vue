@@ -9,27 +9,27 @@ onMounted(() => {
   fetchTourPackages()
 })
 
-// Fallback scenic photos — cycled by index so even unknown slugs always get a nice photo
+// Fallback scenic photos ï¿½ cycled by index so even unknown slugs always get a nice photo
 const scenicByIndex = [
-  '/images/destinations/lagoi.jpg',
-  '/images/destinations/trikora.jpg',
   '/images/destinations/treasure-bay.jpg',
+  '/images/destinations/trikora.jpg',
+  '/images/destinations/patung-seribu.jpg',
 ]
 
 // Explicit slug/id overrides (supports API slug, fallback id, numeric id)
 const scenicByKey: Record<string, string> = {
-  '1': '/images/destinations/lagoi.jpg',
+  '1': '/images/destinations/treasure-bay.jpg',
   '2': '/images/destinations/trikora.jpg',
-  '3': '/images/destinations/treasure-bay.jpg',
-  'tour-hiace-commuter': '/images/destinations/lagoi.jpg',
-  'tour-bintan-hiace-commuter': '/images/destinations/lagoi.jpg',
-  'hiace-commuter': '/images/destinations/lagoi.jpg',
+  '3': '/images/destinations/patung-seribu.jpg',
+  'tour-hiace-commuter': '/images/destinations/treasure-bay.jpg',
+  'tour-bintan-hiace-commuter': '/images/destinations/treasure-bay.jpg',
+  'hiace-commuter': '/images/destinations/treasure-bay.jpg',
   'tour-hiace-premio': '/images/destinations/trikora.jpg',
   'tour-bintan-hiace-premio': '/images/destinations/trikora.jpg',
   'hiace-premio': '/images/destinations/trikora.jpg',
-  'tour-hiace-custom': '/images/destinations/treasure-bay.jpg',
-  'charter-hiace-bintan-custom': '/images/destinations/treasure-bay.jpg',
-  'custom-charter': '/images/destinations/treasure-bay.jpg',
+  'tour-hiace-custom': '/images/destinations/patung-seribu.jpg',
+  'charter-hiace-bintan-custom': '/images/destinations/patung-seribu.jpg',
+  'custom-charter': '/images/destinations/patung-seribu.jpg',
 }
 
 function getScenicPhoto(pkg: { id: string; slug: string }, idx: number): string {

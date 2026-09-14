@@ -173,7 +173,7 @@ const mainServices = [
     <!-- ═══════════ PAKET TOUR — Full Width ═══════════ -->
     <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
       <div class="group relative rounded-2xl overflow-hidden bg-slate-900 flex items-end" style="min-height:260px;">
-        <img src="/images/destinations/lagoi.jpg" alt="Paket Tour Bintan"
+        <img src="/images/destinations/busung.jpg" alt="Paket Tour Bintan"
           class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
         />
         <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/55 to-slate-950/10"></div>
