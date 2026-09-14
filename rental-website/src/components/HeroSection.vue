@@ -25,124 +25,47 @@ const emit = defineEmits<{
 
       <!-- Main Hero Content Container -->
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
-          <!-- Left Column: Typography & CTAs (Cols 6 on Desktop) -->
-          <div class="lg:col-span-6 text-center lg:text-left pt-4 lg:pt-0">
-            <!-- Eyebrow Gold Badge -->
-            <p class="inline-block text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-400 mb-3 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
-              RENTAL MOBIL &amp; TOUR BINTAN
-            </p>
+        <div class="max-w-2xl text-center lg:text-left mx-auto lg:mx-0 pt-2 sm:pt-4">
+          <!-- Eyebrow Gold Badge -->
+          <p class="inline-block text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-400 mb-3 bg-amber-400/10 px-3.5 py-1 rounded-full border border-amber-400/20 shadow-2xs">
+            RENTAL MOBIL &amp; TOUR BINTAN
+          </p>
 
-            <!-- Headline -->
-            <h1 class="font-display text-3xl sm:text-5xl xl:text-6xl font-black text-white tracking-tight leading-[1.1] mb-4">
-              Jelajahi Bintan<br class="hidden sm:inline" />
-              <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300">dengan Nyaman.</span>
-            </h1>
+          <!-- Headline -->
+          <h1 class="font-display text-3xl sm:text-5xl xl:text-6xl font-black text-white tracking-tight leading-[1.1] mb-4">
+            Jelajahi Bintan<br class="hidden sm:inline" />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300">dengan Nyaman.</span>
+          </h1>
 
-            <!-- Subtitle -->
-            <p class="text-sm sm:text-base xl:text-lg text-slate-200 leading-relaxed mb-6 sm:mb-8 max-w-lg mx-auto lg:mx-0">
-              Rental mobil dan paket perjalanan di Bintan untuk kebutuhan pribadi, keluarga, maupun rombongan.
-            </p>
+          <!-- Subtitle -->
+          <p class="text-sm sm:text-base xl:text-lg text-slate-200 leading-relaxed mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0">
+            Rental mobil dan paket perjalanan di Bintan untuk kebutuhan pribadi, keluarga, maupun rombongan.
+          </p>
 
-            <!-- Action Buttons -->
-            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
-              <!-- Primary Gold Button (Lihat Armada) -->
-              <a
-                href="#armada"
-                class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/30 active:scale-95"
-              >
-                <span>Lihat Armada</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
-              </a>
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
+            <!-- Primary Gold Button (Lihat Armada) -->
+            <a
+              href="#armada"
+              class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/30 active:scale-95"
+            >
+              <span>Lihat Armada</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </a>
 
-              <!-- Secondary Outline Button (Paket Tour) -->
-              <RouterLink
-                to="/paket-tour-bintan"
-                class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-xs font-bold text-xs sm:text-sm transition-all active:scale-95"
-              >
-                <span>Paket Tour</span>
-                <svg class="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
-              </RouterLink>
-            </div>
+            <!-- Secondary Outline Button (Paket Tour) -->
+            <RouterLink
+              to="/paket-tour-bintan"
+              class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-xs font-bold text-xs sm:text-sm transition-all active:scale-95"
+            >
+              <span>Paket Tour</span>
+              <svg class="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </RouterLink>
           </div>
-
-          <!-- Right Column: Visual Fleet Showcase (Cols 6 on Desktop) -->
-          <div class="lg:col-span-6 relative mt-4 lg:mt-0">
-            <!-- 4-Car Showcase Grid/Cluster -->
-            <div class="grid grid-cols-2 gap-3 sm:gap-4 max-w-md mx-auto lg:max-w-none">
-              
-              <!-- 1. Yellow Agya (City Car) -->
-              <div class="group relative rounded-2xl overflow-hidden bg-slate-800/80 border border-slate-700/80 shadow-lg backdrop-blur-xs hover:border-amber-400/50 transition-all">
-                <img
-                  src="/images/fleet/agya-kuning-bp1496mm.jpg"
-                  alt="Toyota Agya TRD Sportivo"
-                  class="w-full aspect-[16/10] object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div class="p-2.5 bg-gradient-to-t from-slate-950 via-slate-900/90 to-transparent">
-                  <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-bold text-amber-400">City Car</span>
-                    <span class="text-[10px] text-white font-bold">Mulai 200rb</span>
-                  </div>
-                  <p class="text-xs font-bold text-white truncate">Toyota Agya TRD</p>
-                </div>
-              </div>
-
-              <!-- 2. Black Avanza (MPV) -->
-              <div class="group relative rounded-2xl overflow-hidden bg-slate-800/80 border border-slate-700/80 shadow-lg backdrop-blur-xs hover:border-blue-400/50 transition-all">
-                <img
-                  src="/images/fleet/avanza-hitam-bp1645fb.jpg"
-                  alt="Toyota All New Avanza"
-                  class="w-full aspect-[16/10] object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div class="p-2.5 bg-gradient-to-t from-slate-950 via-slate-900/90 to-transparent">
-                  <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-bold text-blue-400">MPV Keluarga</span>
-                    <span class="text-[10px] text-white font-bold">Mulai 300rb</span>
-                  </div>
-                  <p class="text-xs font-bold text-white truncate">All New Avanza</p>
-                </div>
-              </div>
-
-              <!-- 3. White Veloz (Luxury MPV) -->
-              <div class="group relative rounded-2xl overflow-hidden bg-slate-800/80 border border-slate-700/80 shadow-lg backdrop-blur-xs hover:border-slate-300/50 transition-all">
-                <img
-                  src="/images/fleet/veloz-putih-bp1815oq.jpg"
-                  alt="Toyota All New Veloz"
-                  class="w-full aspect-[16/10] object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div class="p-2.5 bg-gradient-to-t from-slate-950 via-slate-900/90 to-transparent">
-                  <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-bold text-slate-300">VIP Comfort</span>
-                    <span class="text-[10px] text-white font-bold">Mulai 350rb</span>
-                  </div>
-                  <p class="text-xs font-bold text-white truncate">All New Veloz</p>
-                </div>
-              </div>
-
-              <!-- 4. Gold HiAce Premio (Minibus Luxury) -->
-              <div class="group relative rounded-2xl overflow-hidden bg-slate-800/80 border border-slate-700/80 shadow-lg backdrop-blur-xs hover:border-amber-400/50 transition-all">
-                <img
-                  src="/images/fleet/hiace-premio-gold-bp7024bu.jpg"
-                  alt="Toyota HiAce Premio Luxury"
-                  class="w-full aspect-[16/10] object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div class="p-2.5 bg-gradient-to-t from-slate-950 via-slate-900/90 to-transparent">
-                  <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-bold text-amber-300">HiAce 14 Seat</span>
-                    <span class="text-[10px] text-white font-bold">Full Day Tour</span>
-                  </div>
-                  <p class="text-xs font-bold text-white truncate">HiAce Premio Luxury</p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
