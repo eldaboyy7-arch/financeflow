@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { siteConfig } from '@/config/site'
@@ -99,11 +99,11 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
         <!-- Desktop Navigation (hidden on mobile, visible on md+) -->
         <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-200">
           <RouterLink
-            to="/layanan"
-            :class="route.path === '/layanan' ? 'text-blue-400 font-bold' : ''"
+            to="/"
+            :class="route.path === '/' && !route.hash ? 'text-blue-400 font-bold' : ''"
             class="hover:text-white hover:drop-shadow transition-colors"
           >
-            Layanan
+            Home
           </RouterLink>
           <RouterLink
             to="/armada"
@@ -111,13 +111,6 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
             :class="route.path === '/armada' ? 'text-blue-400 font-bold' : ''"
           >
             Armada
-          </RouterLink>
-          <RouterLink
-            to="/paket-tour-bintan"
-            class="hover:text-white hover:drop-shadow transition-colors"
-            :class="route.path === '/paket-tour-bintan' ? 'text-blue-400 font-bold' : ''"
-          >
-            Paket Tour
           </RouterLink>
           <RouterLink
             to="/destinasi"
@@ -281,35 +274,7 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
               </span>
             </RouterLink>
 
-            <!-- 3. Paket Tour Bintan -->
-            <RouterLink
-              to="/paket-tour-bintan"
-              @click="closeMobileMenu"
-              class="group flex items-center justify-between p-3 rounded-xl transition-colors border"
-              :class="route.path === '/paket-tour-bintan'
-                ? 'bg-blue-50/80 border-blue-100 text-blue-900 font-semibold'
-                : 'border-transparent text-slate-700 hover:bg-slate-50 hover:text-slate-900'"
-            >
-              <div class="flex items-center gap-3">
-                <span
-                  class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors"
-                  :class="route.path === '/paket-tour-bintan' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-                  </svg>
-                </span>
-                <div>
-                  <div class="text-sm" :class="route.path === '/paket-tour-bintan' ? 'font-bold text-blue-900' : 'font-medium text-slate-800'">Paket Tour Bintan</div>
-                  <div class="text-[11px] text-slate-500">Wisata All-In HiAce + BBM + Supir</div>
-                </div>
-              </div>
-              <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
-                Populer
-              </span>
-            </RouterLink>
-
-            <!-- 4. Layanan & Cara Sewa -->
+            <!-- 3. Layanan & Cara Sewa -->
             <RouterLink
               to="/layanan"
               @click="closeMobileMenu"
