@@ -265,7 +265,7 @@ onUnmounted(() => {
         <article
           v-for="car in vehicles"
           :key="car.id"
-          class="snap-start shrink-0 w-[44vw] max-w-[180px] sm:w-[260px] lg:w-auto bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-lg transition-all duration-200 group"
+          class="snap-start shrink-0 w-[44vw] max-w-[180px] sm:max-w-none sm:w-[260px] lg:w-auto bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-lg transition-all duration-200 group"
         >
           <!-- Vehicle Photo Stage -->
           <div class="relative aspect-[16/10] bg-slate-100 overflow-hidden cursor-pointer select-none"
