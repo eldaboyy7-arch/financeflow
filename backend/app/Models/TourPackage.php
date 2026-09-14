@@ -14,6 +14,27 @@ class TourPackage extends Model
 
     protected static function booted(): void
     {
+        static::saving(function (TourPackage $package) {
+            if (empty($package->badge_color)) {
+                $package->badge_color = 'blue';
+            }
+            if (empty($package->price_label)) {
+                $package->price_label = 'HARGA MULAI';
+            }
+            if (empty($package->duration)) {
+                $package->duration = 'Full Day Tour (8 - 10 Jam)';
+            }
+            if (empty($package->capacity)) {
+                $package->capacity = '15 Person';
+            }
+            if (is_null($package->sort_order)) {
+                $package->sort_order = 0;
+            }
+            if (is_null($package->is_active)) {
+                $package->is_active = true;
+            }
+        });
+
         static::saved(function (TourPackage $package) {
             if (static::$isSyncing) return;
 
@@ -49,28 +70,17 @@ class TourPackage extends Model
                         }
                     }
 
-                    $data = [
-                        'title'             => $package->title,
-                        'subtitle'          => $package->subtitle,
-                        'badge'             => $package->badge,
-                        'badge_color'       => $package->badge_color,
-                        'price'             => $package->price,
-                        'price_label'       => $package->price_label,
-                        'duration'          => $package->duration,
-                        'capacity'          => $package->capacity,
-                        'vehicle_name'      => $package->vehicle_name,
-                        'description'       => $package->description,
-                        'tour_route'        => $package->tour_route,
-                        'cover_photo_path'  => $package->cover_photo_path,
-                        'gallery_photos'    => $package->gallery_photos,
-                        'facilities'        => $package->facilities,
-                        'itinerary'         => $package->itinerary,
-                        'included'          => $package->included,
-                        'excluded'          => $package->excluded,
-                        'cta_whatsapp_text' => $package->cta_whatsapp_text,
-                        'sort_order'        => $package->sort_order,
-                        'is_active'         => $package->is_active,
-                    ];
+                    $fillable = (new static)->getFillable();
+                    $data = collect($package->only($fillable))
+                        ->except(['user_id', 'slug', 'vehicle_id'])
+                        ->toArray();
+
+                    $data['badge_color'] = $data['badge_color'] ?: 'blue';
+                    $data['price_label'] = $data['price_label'] ?: 'HARGA MULAI';
+                    $data['duration']    = $data['duration'] ?: 'Full Day Tour (8 - 10 Jam)';
+                    $data['capacity']    = $data['capacity'] ?: '15 Person';
+                    $data['sort_order']  = $data['sort_order'] ?? 0;
+                    $data['is_active']   = (bool) ($data['is_active'] ?? true);
 
                     if ($targetVehicleId !== null) {
                         $data['vehicle_id'] = $targetVehicleId;
@@ -157,6 +167,15 @@ class TourPackage extends Model
         'cta_whatsapp_text',
         'sort_order',
         'is_active',
+    ];
+
+    protected $attributes = [
+        'badge_color' => 'blue',
+        'price_label' => 'HARGA MULAI',
+        'duration'    => 'Full Day Tour (8 - 10 Jam)',
+        'capacity'    => '15 Person',
+        'sort_order'  => 0,
+        'is_active'   => true,
     ];
 
     protected $casts = [

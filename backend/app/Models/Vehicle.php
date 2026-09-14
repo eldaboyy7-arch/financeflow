@@ -42,23 +42,11 @@ class Vehicle extends Model
                         ->where('plate_number', $vehicle->plate_number)
                         ->first();
 
-                    $data = [
-                        'name'         => $vehicle->name,
-                        'brand'        => $vehicle->brand,
-                        'model_year'   => $vehicle->model_year,
-                        'status'       => $vehicle->status ?? 'available',
-                        'daily_rate'   => $vehicle->daily_rate ?? 0,
-                        'color'        => $vehicle->color ?? '#3B82F6',
-                        'transmission' => $vehicle->transmission ?? 'matic',
-                        'capacity'     => $vehicle->capacity ?? 7,
-                        'fuel_type'    => $vehicle->fuel_type ?? 'bensin',
-                        'description'  => $vehicle->description,
-                        'photo_path'   => $vehicle->photo_path,
-                        'gallery_photos' => $vehicle->gallery_photos,
-                        'video_url'    => $vehicle->video_url,
-                        'is_featured'  => (bool) ($vehicle->is_featured ?? false),
-                        'notes'        => $vehicle->notes,
-                    ];
+                    $fillable = (new static)->getFillable();
+                    $data = collect($vehicle->only($fillable))
+                        ->except(['user_id', 'plate_number'])
+                        ->toArray();
+                    $data['is_featured'] = (bool) ($vehicle->is_featured ?? false);
 
                     if ($other) {
                         $other->update($data);
