@@ -475,12 +475,12 @@ onUnmounted(() => {
           </div>
 
           <!-- Main High-Res Photo Container (Seamless Studio Background) -->
-          <div class="relative w-full flex-1 h-32 sm:h-48 md:min-h-[340px] my-1 sm:my-3 flex items-center justify-center overflow-hidden">
+          <div class="relative w-full h-52 sm:h-64 md:h-auto md:min-h-[360px] my-1.5 sm:my-3 flex items-center justify-center overflow-hidden">
             <img
               v-if="activePreviewUrl"
               :src="activePreviewUrl"
               :alt="previewVehicle.name"
-              class="max-h-28 sm:max-h-44 md:max-h-full max-w-full w-auto h-auto object-contain transition-all duration-300 select-none"
+              class="max-h-48 sm:max-h-60 md:max-h-[350px] w-auto h-auto max-w-full object-contain scale-110 sm:scale-100 transition-all duration-300 select-none drop-shadow-sm"
             />
             <div v-else class="text-center text-slate-400">
               <svg class="w-10 h-10 sm:w-14 sm:h-14 mx-auto mb-1 text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
