@@ -46,7 +46,7 @@ class TourPackage extends Model
             static::$isSyncing = true;
             try {
                 if (!empty($package->slug)) {
-                    $baseSlug = preg_replace('/-admin$/', '', $package->slug);
+                    $baseSlug = preg_replace('/-admin(-\d+)?$/', '', $package->slug);
                     $targetSlug = ($targetUserId === 3) ? ($baseSlug . '-admin') : $baseSlug;
 
                     $other = static::where('user_id', $targetUserId)
