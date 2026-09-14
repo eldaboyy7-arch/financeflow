@@ -14,7 +14,7 @@ const emit = defineEmits<{
 
 <template>
   <section
-    class="relative min-h-screen min-h-[100dvh] flex flex-col justify-between bg-cover bg-center bg-no-repeat overflow-visible"
+    class="relative min-h-screen min-h-[100dvh] flex flex-col justify-between bg-cover bg-no-repeat bg-[center_bottom] overflow-visible"
     :style="{ backgroundImage: 'url(/images/hero-desktop.jpg)' }"
   >
     <!-- Spacer untuk Fixed Navbar di paling atas -->
