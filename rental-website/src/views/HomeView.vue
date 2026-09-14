@@ -2,10 +2,10 @@
 import { onMounted, computed } from 'vue'
 import { useFleet } from '@/composables/useFleet'
 import HeroSection from '@/components/HeroSection.vue'
-import TravelOptions from '@/components/TravelOptions.vue'
+import TrustPillarsBar from '@/components/TrustPillarsBar.vue'
 import HomeFeaturedFleet from '@/components/HomeFeaturedFleet.vue'
+import HomePopularTours from '@/components/HomePopularTours.vue'
 import TripInspirations from '@/components/TripInspirations.vue'
-import TrustGuarantees from '@/components/TrustGuarantees.vue'
 import LocationSection from '@/components/LocationSection.vue'
 import FaqSection from '@/components/FaqSection.vue'
 import FinalCtaSection from '@/components/FinalCtaSection.vue'
@@ -33,13 +33,13 @@ onMounted(() => {
 
 <template>
   <div>
-    <!-- 1. Hero Section -->
+    <!-- 1. Hero Section (Includes Floating Quick Search Widget) -->
     <HeroSection :featured-vehicle="featuredVehicle" />
 
-    <!-- 2. Pilih Cara Perjalanan (Rental Mobil Harian vs Paket Tour HiAce) -->
-    <TravelOptions />
+    <!-- 2. Trust Pillars Bar (4 Nilai Layanan: Armada Terawat, Driver, Harga Transparan, 24 Jam) -->
+    <TrustPillarsBar />
 
-    <!-- 3. Pilihan Armada Pilihan (Featured 3 Unit Live, Ringkas & Bersih) -->
+    <!-- 3. Pilihan Armada Pilihan (Featured 4 Unit Live, Clean Grid / Horizontal Mobile) -->
     <HomeFeaturedFleet
       :vehicles="featuredVehicles"
       :loading="featuredLoading"
@@ -48,11 +48,11 @@ onMounted(() => {
       @retry="fetchFeaturedVehicles(true)"
     />
 
-    <!-- 4. Inspirasi Perjalanan di Bintan (4 Destinasi) -->
-    <TripInspirations />
+    <!-- 4. Paket Tour Populer (3 Scenic Highlight Cards) -->
+    <HomePopularTours />
 
-    <!-- 5. Kenapa Memilih 3 Putri Mulya (4 Nilai Konkret) -->
-    <TrustGuarantees />
+    <!-- 5. Destinasi Favorit di Bintan (Inspirasi Perjalanan) -->
+    <TripInspirations />
 
     <!-- 6 & 7. Side-by-Side: Area Layanan & Titik Koordinasi + Pertanyaan Umum (FAQ) -->
     <section id="lokasi-faq" class="py-14 sm:py-20 bg-slate-50 border-t border-slate-200 scroll-mt-16">
@@ -66,7 +66,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <!-- 8. Final CTA (WhatsApp) -->
+    <!-- 8. Final CTA Banner (Dark Navy Banner + WhatsApp) -->
     <FinalCtaSection />
   </div>
 </template>

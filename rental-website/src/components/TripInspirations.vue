@@ -23,11 +23,11 @@ const getWhatsAppUrl = (text: string) => {
 
         <!-- Kolom Judul (kiri di desktop, atas di mobile) -->
         <div class="lg:w-72 xl:w-80 shrink-0 mb-6 lg:mb-0 lg:pt-1">
-          <p class="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
-            Inspirasi Perjalanan
+          <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-2">
+            DESTINASI FAVORIT
           </p>
           <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2.5">
-            Destinasi Populer di Bintan
+            Keindahan Bintan Menanti Anda
           </h2>
           <p class="text-sm text-slate-600 leading-relaxed mb-5">
             Pilihan kawasan wisata favorit yang siap kami antar dengan unit rental atau paket tour.

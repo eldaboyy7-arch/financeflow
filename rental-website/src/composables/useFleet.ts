@@ -151,7 +151,7 @@ export function useFleet() {
     featuredError.value = null
 
     try {
-      const url = `${siteConfig.apiUrl}?featured=true&limit=3`
+      const url = `${siteConfig.apiUrl}?featured=true&limit=4`
       const response = await fetch(url, {
         headers: {
           'Accept': 'application/json',

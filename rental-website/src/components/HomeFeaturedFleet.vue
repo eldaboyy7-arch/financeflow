@@ -113,14 +113,13 @@ onUnmounted(() => {
       <!-- Header Section: Tanpa Sidebar / Filter Kontrol (Full Width Travel Showcase) -->
       <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
         <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-3">
-            <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-            <span>Armada Pilihan Terpopuler</span>
-          </div>
+          <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-2">
+            PILIHAN ARMADA
+          </p>
           <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
-            Unit Favorit Perjalanan di Bintan
+            Armada Nyaman Untuk Perjalanan Anda
           </h2>
-          <p class="text-sm text-slate-500 mt-1.5 max-w-xl">
+          <p class="text-sm text-slate-500 mt-1 max-w-xl">
             Paling diminati untuk keliling santai, wisata keluarga, maupun dinas. Unit terawat, AC dingin, dan siap jalan.
           </p>
         </div>
@@ -140,12 +139,12 @@ onUnmounted(() => {
       <!-- Loading State -->
       <div
         v-if="loading && vehicles.length === 0"
-        class="flex gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:pb-0 scrollbar-none"
+        class="flex gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-4 lg:gap-4 xl:gap-5 lg:overflow-visible lg:pb-0 scrollbar-none"
       >
         <div
-          v-for="i in 3"
+          v-for="i in 4"
           :key="i"
-          class="snap-start shrink-0 w-[78vw] max-w-[310px] sm:w-[320px] lg:w-auto bg-white rounded-2xl border border-slate-200 overflow-hidden animate-pulse"
+          class="snap-start shrink-0 w-[78vw] max-w-[280px] sm:w-[260px] lg:w-auto bg-white rounded-2xl border border-slate-200 overflow-hidden animate-pulse"
         >
           <div class="aspect-[16/10] bg-slate-200"></div>
           <div class="p-4 sm:p-5 space-y-3">
@@ -172,15 +171,15 @@ onUnmounted(() => {
         </button>
       </div>
 
-      <!-- 3 Featured Vehicle Cards: Horizontal Scroll di Mobile (Mirip Inspirasi Destinasi) & Grid 3 Kolom di Desktop -->
+      <!-- 4 Featured Vehicle Cards: Horizontal Scroll di Mobile & Grid 4 Kolom di Desktop -->
       <div
         v-else
-        class="flex gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:pb-0 scrollbar-none"
+        class="flex gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-4 lg:gap-4 xl:gap-5 lg:overflow-visible lg:pb-0 scrollbar-none"
       >
         <article
           v-for="car in vehicles"
           :key="car.id"
-          class="snap-start shrink-0 w-[78vw] max-w-[310px] sm:w-[320px] lg:w-auto bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-lg transition-all duration-200 group"
+          class="snap-start shrink-0 w-[78vw] max-w-[280px] sm:w-[260px] lg:w-auto bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-lg transition-all duration-200 group"
         >
           <!-- Vehicle Photo Stage -->
           <div class="relative aspect-[16/10] bg-slate-100 overflow-hidden cursor-pointer select-none"
@@ -307,13 +306,25 @@ onUnmounted(() => {
             </div>
 
             <!-- Price & Booking CTA -->
-            <div class="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-100">
-              <div class="flex items-baseline justify-between mb-2 sm:mb-3">
-                <span class="text-[11px] sm:text-xs text-slate-400 font-medium">Mulai dari</span>
-                <div class="text-right">
-                  <span class="font-display text-base sm:text-lg font-black text-slate-900 tracking-tight">{{ car.daily_rate_formatted }}</span>
-                  <span class="text-[11px] sm:text-xs text-slate-500 font-normal"> /hari</span>
+            <div class="mt-4 sm:mt-5 pt-3 border-t border-slate-100">
+              <div class="flex items-baseline justify-between mb-2.5">
+                <div>
+                  <span class="text-[10px] sm:text-[11px] text-slate-400 font-medium block leading-none">Mulai dari</span>
+                  <div class="mt-0.5">
+                    <span class="font-display text-base sm:text-lg font-black text-slate-900 tracking-tight">{{ car.daily_rate_formatted }}</span>
+                    <span class="text-[10px] sm:text-[11px] text-slate-500 font-normal"> /hari</span>
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  @click="openPhotoModal(car, activeCardAngles[car.id] ?? 0)"
+                  class="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors group/link cursor-pointer"
+                >
+                  <span>Lihat Detail</span>
+                  <svg class="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </button>
               </div>
 
               <!-- Action Button -->

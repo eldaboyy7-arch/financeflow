@@ -12,122 +12,51 @@ const waUrl = computed(() => getWaUrl(siteConfig.rentalPhone))
 </script>
 
 <template>
-  <section id="kontak" class="py-12 sm:py-20 bg-slate-50 border-t border-slate-200 scroll-mt-16">
+  <section id="kontak" class="py-10 sm:py-14 bg-slate-950 text-white scroll-mt-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <!-- Main Card: Editorial Travel Banner yang Natural & Bersih -->
-      <div class="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+      <!-- Modern Navy Banner matching ChatGPT Mockup -->
+      <div class="relative rounded-2xl sm:rounded-3xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-800 p-6 sm:p-8 lg:p-10 shadow-xl overflow-hidden">
+        
+        <!-- Subtle background decorative glow -->
+        <div class="absolute -right-20 -top-20 w-72 h-72 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -bottom-20 w-72 h-72 rounded-full bg-blue-500/10 blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
           
-          <!-- Left Column: Konten & WhatsApp CTA (7 Cols) -->
-          <div class="lg:col-span-7 order-2 lg:order-1 p-6 sm:p-10 lg:p-12 xl:p-14 flex flex-col justify-between z-10">
-            <div>
-              <!-- Kategori Label -->
-              <p class="text-xs font-bold uppercase tracking-widest text-emerald-600 mb-2">
-                Konsultasi &amp; Pemesanan Cepat
-              </p>
-
-              <!-- Main Heading -->
-              <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-3 sm:mb-4">
-                Sudah Memiliki Rencana Perjalanan?
-              </h2>
-
-              <!-- Description -->
-              <p class="text-sm sm:text-base text-slate-600 leading-relaxed mb-6 sm:mb-8">
-                Ceritakan kebutuhan transportasi Anda di Pulau Bintan. Tim kami siap memberikan rekomendasi unit yang paling nyaman, urutan rute wisata yang efisien, dan penawaran harga terbaik untuk rombongan Anda.
-              </p>
-
-              <!-- Keunggulan Layanan: Alami & Bersih (Non-Template AI) -->
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 sm:mb-8">
-                <div class="flex items-start gap-3">
-                  <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 class="text-xs sm:text-sm font-bold text-slate-900">Rute Fleksibel</h3>
-                    <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Bebas tentukan tujuan atau ikuti saran supir lokal.</p>
-                  </div>
-                </div>
-
-                <div class="flex items-start gap-3">
-                  <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 class="text-xs sm:text-sm font-bold text-slate-900">Harga Transparan</h3>
-                    <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Tarif pasti disepakati awal tanpa biaya siluman.</p>
-                  </div>
-                </div>
-
-                <div class="flex items-start gap-3">
-                  <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 class="text-xs sm:text-sm font-bold text-slate-900">Respon Cepat</h3>
-                    <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">Admin standby via WhatsApp untuk cek ketersediaan.</p>
-                  </div>
-                </div>
-              </div>
+          <!-- Left: Headphone Icon + Title + Subtitle -->
+          <div class="flex items-center gap-4 sm:gap-5 text-center md:text-left flex-col md:flex-row">
+            <!-- Icon Circle -->
+            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center shrink-0 text-amber-400">
+              <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
             </div>
 
-            <!-- Action Bar: Tombol WhatsApp -->
-            <div class="pt-5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center gap-4">
-              <a
-                :href="waUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center justify-center gap-3 px-6 sm:px-7 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition-all shadow-sm active:scale-95 group shrink-0"
-              >
-                <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                  <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
-                  </svg>
-                </div>
-                <div class="text-left">
-                  <span class="block text-[10px] uppercase tracking-wider text-emerald-100 font-semibold leading-tight">Hubungi via WhatsApp</span>
-                  <span class="font-extrabold text-white text-base tracking-wide leading-none mt-0.5 block">0813-7237-1120</span>
-                </div>
-                <svg class="w-4 h-4 text-emerald-200 group-hover:translate-x-1 transition-transform ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
-              </a>
-
-              <div class="flex items-center gap-2 text-xs text-slate-500">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-                <span>Siap melayani sewa lepas kunci &amp; paket tour seluruh Bintan</span>
-              </div>
+            <!-- Texts -->
+            <div>
+              <h2 class="font-display text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight leading-snug">
+                Siap menjelajahi Bintan bersama kami?
+              </h2>
+              <p class="text-xs sm:text-sm lg:text-base text-slate-300 mt-1 max-w-xl">
+                Hubungi kami sekarang untuk mendapatkan penawaran terbaik!
+              </p>
             </div>
           </div>
 
-          <!-- Right Column: Foto Pesisir Bintan Dibuat Transparan Sedikit & Menyatu Halus (Non-AI Template) -->
-          <div class="lg:col-span-5 order-1 lg:order-2 relative min-h-[220px] sm:min-h-[260px] lg:min-h-full bg-slate-50 overflow-hidden">
-            <!-- Foto dengan transparansi halus -->
-            <img
-              src="/images/bintan-roadtrip-consultation.jpg"
-              alt="Perjalanan Wisata Pesisir Pulau Bintan bersama 3 Putri Mulya"
-              class="w-full h-full object-cover object-center opacity-80 hover:opacity-90 transition-opacity duration-300"
-              loading="lazy"
-            />
-            
-            <!-- Gradient Blend Kiri (Desktop) agar menyatu lembut dengan background putih kartu -->
-            <div class="hidden lg:block absolute inset-y-0 left-0 w-28 bg-gradient-to-r from-white via-white/50 to-transparent pointer-events-none"></div>
-
-            <!-- Gradient Blend Bawah (Mobile) -->
-            <div class="lg:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
-
-            <!-- Keterangan Lokasi Sederhana & Organik -->
-            <div class="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 z-10">
-              <span class="text-[11px] font-medium text-slate-600 bg-white/75 backdrop-blur-xs px-2.5 py-1 rounded-md border border-slate-200/50 shadow-2xs">
-                Rute Pesisir Pantai Bintan
-              </span>
-            </div>
+          <!-- Right: Green WhatsApp CTA Button -->
+          <div class="shrink-0 w-full md:w-auto">
+            <a
+              :href="waUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-full md:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-emerald-600/30 transition-all hover:shadow-emerald-600/40 active:scale-95"
+            >
+              <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
+              </svg>
+              <span>Chat WhatsApp Sekarang</span>
+            </a>
           </div>
 
         </div>
