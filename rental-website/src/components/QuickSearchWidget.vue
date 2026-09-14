@@ -192,6 +192,57 @@ function handleSearch() {
   }, 50)
 }
 
+// Mobile Bottom Sheet state
+const mobileSheet = ref<'vehicle' | 'startDate' | 'endDate' | 'passengers' | null>(null)
+
+const mobileSheetTitle = computed(() => {
+  switch (mobileSheet.value) {
+    case 'vehicle': return 'Pilih Jenis Armada'
+    case 'startDate': return 'Pilih Tanggal Mulai'
+    case 'endDate': return 'Pilih Tanggal Selesai'
+    case 'passengers': return 'Jumlah Penumpang'
+    default: return ''
+  }
+})
+
+function openMobileSheet(sheet: 'vehicle' | 'startDate' | 'endDate' | 'passengers') {
+  mobileSheet.value = sheet
+  if (sheet === 'startDate' && startDate.value) {
+    const [y, m] = startDate.value.split('-').map(Number)
+    calYear.value = y
+    calMonth.value = m - 1
+  } else if (sheet === 'endDate' && (endDate.value || startDate.value)) {
+    const refDate = endDate.value || startDate.value
+    const [y, m] = refDate.split('-').map(Number)
+    calYear.value = y
+    calMonth.value = m - 1
+  }
+  if (typeof document !== 'undefined') {
+    document.body.classList.add('overflow-hidden')
+  }
+}
+
+function closeMobileSheet() {
+  mobileSheet.value = null
+  if (typeof document !== 'undefined') {
+    document.body.classList.remove('overflow-hidden')
+  }
+}
+
+function handleMobileDayClick(day: number) {
+  const targetField = mobileSheet.value as 'startDate' | 'endDate'
+  handleDayClick(day, targetField)
+  closeMobileSheet()
+}
+
+function clearMobileDate() {
+  if (mobileSheet.value === 'startDate') {
+    startDate.value = ''
+  } else if (mobileSheet.value === 'endDate') {
+    endDate.value = ''
+  }
+}
+
 function handleClickOutside(e: MouseEvent) {
   if (widgetContainerRef.value && !widgetContainerRef.value.contains(e.target as Node)) {
     activePopover.value = null
@@ -207,6 +258,9 @@ onMounted(() => {
 onUnmounted(() => {
   if (typeof window !== 'undefined') {
     window.removeEventListener('click', handleClickOutside)
+  }
+  if (typeof document !== 'undefined') {
+    document.body.classList.remove('overflow-hidden')
   }
 })
 </script>
@@ -554,222 +608,109 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- MOBILE VIEW (< sm): Clean custom cards with expandable popovers -->
-      <div class="sm:hidden space-y-2.5 p-1">
-        
-        <!-- Field 1: Pilih Armada (Mobile) -->
-        <div class="rounded-xl border border-slate-200/80 bg-slate-50/50 overflow-hidden">
+      <!-- MOBILE VIEW (< sm): Unified Travel Card with Native Bottom Sheet Popups (Matching ChatGPT Mockup) -->
+      <div class="sm:hidden">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 divide-y divide-slate-100 overflow-hidden">
+          
+          <!-- 1. Row: Pilih Armada -->
           <button
             type="button"
-            @click="togglePopover('vehicle')"
-            class="w-full p-3 flex items-center justify-between text-left cursor-pointer"
+            @click="openMobileSheet('vehicle')"
+            class="w-full px-3.5 py-3 flex items-center justify-between text-left hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer"
           >
-            <div class="flex items-center gap-2.5 min-w-0 flex-1">
-              <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 leading-none mb-1">Pilih Armada</span>
-                <span class="block text-xs font-black text-slate-900 truncate">{{ selectedVehicleLabel }}</span>
+                <span class="block text-xs font-bold text-slate-800 leading-tight">Pilih Armada</span>
+                <span class="block text-xs text-slate-500 font-medium truncate mt-0.5">{{ selectedVehicleLabel }}</span>
               </div>
             </div>
-            <svg
-              class="w-4 h-4 text-slate-400 transition-transform shrink-0"
-              :class="{ 'rotate-180 text-blue-600': activePopover === 'vehicle' }"
-              fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            <svg class="w-4 h-4 text-slate-400 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
             </svg>
           </button>
 
-          <!-- Mobile Expanded List: Armada -->
-          <div v-if="activePopover === 'vehicle'" class="p-2 pt-0 border-t border-slate-200/60 bg-white space-y-1">
-            <button
-              v-for="opt in vehicleOptions"
-              :key="opt.value"
-              type="button"
-              @click="selectVehicle(opt.value)"
-              class="w-full text-left p-2.5 rounded-lg flex items-center justify-between transition-colors"
-              :class="vehicleType === opt.value ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-700 hover:bg-slate-50'"
-            >
-              <div>
-                <span class="block text-xs font-bold">{{ opt.label }}</span>
-                <span class="block text-[10px] text-slate-400">{{ opt.sub }}</span>
-              </div>
-              <svg v-if="vehicleType === opt.value" class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Field 2: Tanggal Mulai (Mobile) -->
-        <div class="rounded-xl border border-slate-200/80 bg-slate-50/50 overflow-hidden">
+          <!-- 2. Row: Tanggal Mulai -->
           <button
             type="button"
-            @click="togglePopover('startDate')"
-            class="w-full p-3 flex items-center justify-between text-left cursor-pointer"
+            @click="openMobileSheet('startDate')"
+            class="w-full px-3.5 py-3 flex items-center justify-between text-left hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer"
           >
-            <div class="flex items-center gap-2.5 min-w-0 flex-1">
-              <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 leading-none mb-1">Tanggal Mulai</span>
-                <span class="block text-xs font-black text-slate-900 truncate">{{ formatDateDisplay(startDate) }}</span>
+                <span class="block text-xs font-bold text-slate-800 leading-tight">Tanggal Mulai</span>
+                <span class="block text-xs font-medium truncate mt-0.5" :class="startDate ? 'text-slate-800 font-semibold' : 'text-slate-400'">
+                  {{ formatDateDisplay(startDate) }}
+                </span>
               </div>
             </div>
-            <svg
-              class="w-4 h-4 text-slate-400 transition-transform shrink-0"
-              :class="{ 'rotate-180 text-blue-600': activePopover === 'startDate' }"
-              fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            <svg class="w-4 h-4 text-slate-400 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
             </svg>
           </button>
 
-          <!-- Mobile Calendar: Mulai -->
-          <div v-if="activePopover === 'startDate'" class="p-3 border-t border-slate-200/60 bg-white">
-            <div class="flex items-center justify-between mb-2">
-              <button type="button" @click="prevMonth" :disabled="!canPrevMonth" class="p-1 rounded-lg hover:bg-slate-100 disabled:opacity-30">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-              </button>
-              <span class="text-xs font-bold text-slate-900">{{ monthNames[calMonth] }} {{ calYear }}</span>
-              <button type="button" @click="nextMonth" class="p-1 rounded-lg hover:bg-slate-100">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-              </button>
-            </div>
-            <div class="grid grid-cols-7 gap-1 text-center mb-1 text-[10px] font-bold text-slate-400">
-              <span v-for="d in dayHeaders" :key="d">{{ d }}</span>
-            </div>
-            <div class="grid grid-cols-7 gap-1">
-              <div v-for="blank in firstDayOffset" :key="'blank-m-' + blank" class="w-7 h-7"></div>
-              <button
-                v-for="day in daysInCalMonth"
-                :key="day"
-                type="button"
-                @click="handleDayClick(day, 'startDate')"
-                :disabled="isDayDisabled(day, 'startDate')"
-                class="w-7 h-7 rounded-lg text-xs flex items-center justify-center font-bold"
-                :class="isDayDisabled(day, 'startDate') ? 'text-slate-300 cursor-not-allowed' : isDateSelected(day, startDate) ? 'bg-blue-600 text-white' : 'text-slate-800 hover:bg-slate-100'"
-              >
-                {{ day }}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Field 3: Tanggal Selesai (Mobile) -->
-        <div class="rounded-xl border border-slate-200/80 bg-slate-50/50 overflow-hidden">
+          <!-- 3. Row: Tanggal Selesai -->
           <button
             type="button"
-            @click="togglePopover('endDate')"
-            class="w-full p-3 flex items-center justify-between text-left cursor-pointer"
+            @click="openMobileSheet('endDate')"
+            class="w-full px-3.5 py-3 flex items-center justify-between text-left hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer"
           >
-            <div class="flex items-center gap-2.5 min-w-0 flex-1">
-              <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 leading-none mb-1">Tanggal Selesai</span>
-                <span class="block text-xs font-black text-slate-900 truncate">{{ formatDateDisplay(endDate) }}</span>
+                <span class="block text-xs font-bold text-slate-800 leading-tight">Tanggal Selesai</span>
+                <span class="block text-xs font-medium truncate mt-0.5" :class="endDate ? 'text-slate-800 font-semibold' : 'text-slate-400'">
+                  {{ formatDateDisplay(endDate) }}
+                </span>
               </div>
             </div>
-            <svg
-              class="w-4 h-4 text-slate-400 transition-transform shrink-0"
-              :class="{ 'rotate-180 text-blue-600': activePopover === 'endDate' }"
-              fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            <svg class="w-4 h-4 text-slate-400 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
             </svg>
           </button>
 
-          <!-- Mobile Calendar: Selesai -->
-          <div v-if="activePopover === 'endDate'" class="p-3 border-t border-slate-200/60 bg-white">
-            <div class="flex items-center justify-between mb-2">
-              <button type="button" @click="prevMonth" :disabled="!canPrevMonth" class="p-1 rounded-lg hover:bg-slate-100 disabled:opacity-30">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-              </button>
-              <span class="text-xs font-bold text-slate-900">{{ monthNames[calMonth] }} {{ calYear }}</span>
-              <button type="button" @click="nextMonth" class="p-1 rounded-lg hover:bg-slate-100">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-              </button>
-            </div>
-            <div class="grid grid-cols-7 gap-1 text-center mb-1 text-[10px] font-bold text-slate-400">
-              <span v-for="d in dayHeaders" :key="d">{{ d }}</span>
-            </div>
-            <div class="grid grid-cols-7 gap-1">
-              <div v-for="blank in firstDayOffset" :key="'blank-e-' + blank" class="w-7 h-7"></div>
-              <button
-                v-for="day in daysInCalMonth"
-                :key="day"
-                type="button"
-                @click="handleDayClick(day, 'endDate')"
-                :disabled="isDayDisabled(day, 'endDate')"
-                class="w-7 h-7 rounded-lg text-xs flex items-center justify-center font-bold"
-                :class="isDayDisabled(day, 'endDate') ? 'text-slate-300 cursor-not-allowed' : isDateSelected(day, endDate) ? 'bg-blue-600 text-white' : 'text-slate-800 hover:bg-slate-100'"
-              >
-                {{ day }}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Field 4: Jumlah Penumpang (Mobile) -->
-        <div class="rounded-xl border border-slate-200/80 bg-slate-50/50 overflow-hidden">
+          <!-- 4. Row: Jumlah Penumpang -->
           <button
             type="button"
-            @click="togglePopover('passengers')"
-            class="w-full p-3 flex items-center justify-between text-left cursor-pointer"
+            @click="openMobileSheet('passengers')"
+            class="w-full px-3.5 py-3 flex items-center justify-between text-left hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer"
           >
-            <div class="flex items-center gap-2.5 min-w-0 flex-1">
-              <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 leading-none mb-1">Jumlah Penumpang</span>
-                <span class="block text-xs font-black text-slate-900 truncate">{{ selectedPassengersLabel }}</span>
+                <span class="block text-xs font-bold text-slate-800 leading-tight">Jumlah Penumpang</span>
+                <span class="block text-xs text-slate-500 font-medium truncate mt-0.5">{{ selectedPassengersLabel }}</span>
               </div>
             </div>
-            <svg
-              class="w-4 h-4 text-slate-400 transition-transform shrink-0"
-              :class="{ 'rotate-180 text-blue-600': activePopover === 'passengers' }"
-              fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            <svg class="w-4 h-4 text-slate-400 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
             </svg>
           </button>
 
-          <!-- Mobile Expanded List: Penumpang -->
-          <div v-if="activePopover === 'passengers'" class="p-2 pt-0 border-t border-slate-200/60 bg-white space-y-1">
-            <button
-              v-for="opt in passengerOptions"
-              :key="opt.value"
-              type="button"
-              @click="selectPassengers(opt.value)"
-              class="w-full text-left p-2.5 rounded-lg flex items-center justify-between transition-colors"
-              :class="passengers === opt.value ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-700 hover:bg-slate-50'"
-            >
-              <div>
-                <span class="block text-xs font-bold">{{ opt.label }}</span>
-                <span class="block text-[10px] text-slate-400">{{ opt.sub }}</span>
-              </div>
-              <svg v-if="passengers === opt.value" class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-            </button>
-          </div>
         </div>
 
         <!-- Mobile Submit Button -->
         <button
           @click="handleSearch"
           type="button"
-          class="w-full py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-slate-900/20 transition-all active:scale-95 cursor-pointer mt-1"
+          class="w-full py-3.5 mt-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-slate-900/20 active:scale-98 transition-all cursor-pointer"
         >
           <span>Cari Armada</span>
           <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -777,6 +718,169 @@ onUnmounted(() => {
           </svg>
         </button>
       </div>
+
+      <!-- MOBILE BOTTOM SHEET MODAL (Fixed Overlay) -->
+      <Teleport to="body">
+        <!-- Backdrop -->
+        <Transition
+          enter-active-class="transition-opacity duration-200 ease-out"
+          enter-from-class="opacity-0"
+          enter-to-class="opacity-100"
+          leave-active-class="transition-opacity duration-150 ease-in"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+        >
+          <div
+            v-if="mobileSheet"
+            class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-[60] sm:hidden"
+            @click="closeMobileSheet"
+          ></div>
+        </Transition>
+
+        <!-- Sheet Container Slide Up -->
+        <Transition
+          enter-active-class="transition-transform duration-250 ease-out"
+          enter-from-class="translate-y-full"
+          enter-to-class="translate-y-0"
+          leave-active-class="transition-transform duration-200 ease-in"
+          leave-from-class="translate-y-0"
+          leave-to-class="translate-y-full"
+        >
+          <div
+            v-if="mobileSheet"
+            class="fixed inset-x-0 bottom-0 z-[70] bg-white rounded-t-3xl shadow-2xl p-5 border-t border-slate-100 max-h-[85vh] overflow-y-auto sm:hidden"
+          >
+            <!-- Drag Handle -->
+            <div class="w-12 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
+
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+              <h3 class="text-base font-black text-slate-900">
+                {{ mobileSheetTitle }}
+              </h3>
+              <button
+                type="button"
+                @click="closeMobileSheet"
+                class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+
+            <!-- Content: Vehicle Options -->
+            <div v-if="mobileSheet === 'vehicle'" class="space-y-2">
+              <button
+                v-for="opt in vehicleOptions"
+                :key="opt.value"
+                type="button"
+                @click="selectVehicle(opt.value); closeMobileSheet()"
+                class="w-full text-left p-3.5 rounded-2xl flex items-center justify-between transition-colors border"
+                :class="vehicleType === opt.value ? 'bg-blue-50/80 border-blue-200 text-blue-900 font-bold' : 'border-slate-100 hover:bg-slate-50 text-slate-800'"
+              >
+                <div>
+                  <span class="block text-sm font-bold">{{ opt.label }}</span>
+                  <span class="block text-xs text-slate-400 font-normal mt-0.5">{{ opt.sub }}</span>
+                </div>
+                <svg v-if="vehicleType === opt.value" class="w-5 h-5 text-blue-600 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Content: Calendar (StartDate or EndDate) -->
+            <div v-else-if="mobileSheet === 'startDate' || mobileSheet === 'endDate'" class="space-y-3">
+              <div class="flex items-center justify-between px-1">
+                <button
+                  type="button"
+                  @click="prevMonth"
+                  :disabled="!canPrevMonth"
+                  class="w-9 h-9 rounded-xl border border-slate-200 hover:bg-slate-50 disabled:opacity-30 flex items-center justify-center text-slate-700"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <span class="text-sm font-black text-slate-900">{{ monthNames[calMonth] }} {{ calYear }}</span>
+                <button
+                  type="button"
+                  @click="nextMonth"
+                  class="w-9 h-9 rounded-xl border border-slate-200 hover:bg-slate-50 flex items-center justify-center text-slate-700"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+
+              <!-- Day Headers -->
+              <div class="grid grid-cols-7 gap-1 text-center font-bold text-xs text-slate-400 mb-1">
+                <span v-for="d in dayHeaders" :key="d">{{ d }}</span>
+              </div>
+
+              <!-- Days Grid -->
+              <div class="grid grid-cols-7 gap-1.5">
+                <div v-for="blank in firstDayOffset" :key="'blank-ms-' + blank" class="h-10"></div>
+                <button
+                  v-for="day in daysInCalMonth"
+                  :key="day"
+                  type="button"
+                  @click="handleMobileDayClick(day)"
+                  :disabled="isDayDisabled(day, mobileSheet as 'startDate' | 'endDate')"
+                  class="h-10 rounded-xl text-sm font-bold flex items-center justify-center transition-all cursor-pointer"
+                  :class="[
+                    isDayDisabled(day, mobileSheet as 'startDate' | 'endDate')
+                      ? 'text-slate-300 cursor-not-allowed'
+                      : isDateSelected(day, mobileSheet === 'startDate' ? startDate : endDate)
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30 font-black'
+                        : isDateInRange(day)
+                          ? 'bg-blue-50 text-blue-700'
+                          : isTodayDay(day)
+                            ? 'border-2 border-blue-500 text-blue-600'
+                            : 'text-slate-800 hover:bg-slate-100 active:bg-blue-100'
+                  ]"
+                >
+                  {{ day }}
+                </button>
+              </div>
+
+              <!-- Mobile Calendar Actions -->
+              <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <button
+                  type="button"
+                  @click="clearMobileDate(); closeMobileSheet()"
+                  class="text-xs font-bold text-red-500 hover:underline p-2"
+                >
+                  Reset Tanggal
+                </button>
+                <button
+                  type="button"
+                  @click="closeMobileSheet()"
+                  class="px-5 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs shadow-md"
+                >
+                  Selesai
+                </button>
+              </div>
+            </div>
+
+            <!-- Content: Passenger Options -->
+            <div v-else-if="mobileSheet === 'passengers'" class="space-y-2">
+              <button
+                v-for="opt in passengerOptions"
+                :key="opt.value"
+                type="button"
+                @click="selectPassengers(opt.value); closeMobileSheet()"
+                class="w-full text-left p-3.5 rounded-2xl flex items-center justify-between transition-colors border"
+                :class="passengers === opt.value ? 'bg-blue-50/80 border-blue-200 text-blue-900 font-bold' : 'border-slate-100 hover:bg-slate-50 text-slate-800'"
+              >
+                <div>
+                  <span class="block text-sm font-bold">{{ opt.label }}</span>
+                  <span class="block text-xs text-slate-400 font-normal mt-0.5">{{ opt.sub }}</span>
+                </div>
+                <svg v-if="passengers === opt.value" class="w-5 h-5 text-blue-600 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                </svg>
+              </button>
+            </div>
+
+          </div>
+        </Transition>
+      </Teleport>
 
     </div>
   </div>

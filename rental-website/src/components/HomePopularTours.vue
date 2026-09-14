@@ -33,26 +33,27 @@ const tourBadges: Record<string, string> = {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <!-- Section Header -->
-      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 sm:mb-10">
+      <div class="flex items-end justify-between gap-3 mb-6 sm:mb-10">
         <div>
-          <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-2">
+          <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-1.5 sm:mb-2">
             PAKET TOUR
           </p>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
+          <h2 class="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
             Paket Tour Populer
           </h2>
-          <p class="text-sm text-slate-500 mt-1 max-w-xl">
+          <p class="hidden sm:block text-sm text-slate-500 mt-1 max-w-xl">
             Pilih paket tour terbaik untuk menjelajahi keindahan Bintan bersama kami.
           </p>
         </div>
 
         <RouterLink
           to="/paket-tour-bintan"
-          class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors shrink-0 group"
+          class="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors shrink-0 group py-1"
         >
-          <span>Lihat Semua Paket Tour</span>
-          <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          <span class="sm:hidden">Lihat Semua</span>
+          <span class="hidden sm:inline">Lihat Semua Paket Tour</span>
+          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
           </svg>
         </RouterLink>
       </div>

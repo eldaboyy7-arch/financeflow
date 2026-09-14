@@ -137,27 +137,28 @@ onUnmounted(() => {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Header Section: Tanpa Sidebar / Filter Kontrol (Full Width Travel Showcase) -->
-      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+      <div class="flex items-end justify-between gap-3 mb-6 sm:mb-10">
         <div>
-          <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-2">
+          <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-1.5 sm:mb-2">
             PILIHAN ARMADA
           </p>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
-            Armada Nyaman Untuk Perjalanan Anda
+          <h2 class="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
+            Armada Nyaman Untuk Anda
           </h2>
-          <p class="text-sm text-slate-500 mt-1 max-w-xl">
+          <p class="hidden sm:block text-sm text-slate-500 mt-1 max-w-xl">
             Paling diminati untuk keliling santai, wisata keluarga, maupun dinas. Unit terawat, AC dingin, dan siap jalan.
           </p>
         </div>
 
-        <!-- Link Desktop ke Etalase Penuh -->
+        <!-- Link ke Etalase Penuh (Visible on mobile & desktop) -->
         <RouterLink
           to="/armada"
-          class="hidden sm:inline-flex items-center gap-1.5 text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors shrink-0 group"
+          class="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors shrink-0 group py-1"
         >
-          <span>Lihat Semua Armada ({{ totalFleetCount > 0 ? `${totalFleetCount} Unit` : 'Lengkap' }})</span>
-          <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          <span class="sm:hidden">Lihat Semua</span>
+          <span class="hidden sm:inline">Lihat Semua Armada ({{ totalFleetCount > 0 ? `${totalFleetCount} Unit` : 'Lengkap' }})</span>
+          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
           </svg>
         </RouterLink>
       </div>
