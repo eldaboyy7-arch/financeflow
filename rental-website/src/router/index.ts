@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+﻿import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -21,7 +21,12 @@ const router = createRouter({
     {
       path: '/paket-tour',
       redirect: '/paket-tour-bintan'
+    },    {
+      path: '/layanan',
+      name: 'services',
+      component: () => import('@/views/LayananView.vue')
     },
+
     {
       path: '/destinasi',
       name: 'destinations',
@@ -48,3 +53,4 @@ const router = createRouter({
 })
 
 export default router
+

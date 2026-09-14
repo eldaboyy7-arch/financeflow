@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { siteConfig } from '@/config/site'
@@ -99,7 +99,8 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
         <!-- Desktop Navigation (hidden on mobile, visible on md+) -->
         <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-200">
           <RouterLink
-            to="/#cara-perjalanan"
+            to="/layanan"
+            :class="route.path === '/layanan' ? 'text-blue-400 font-bold' : ''"
             class="hover:text-white hover:drop-shadow transition-colors"
           >
             Layanan
@@ -310,7 +311,7 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
 
             <!-- 4. Layanan & Cara Sewa -->
             <RouterLink
-              to="/#cara-perjalanan"
+              to="/layanan"
               @click="closeMobileMenu"
               class="group flex items-center justify-between p-3 rounded-xl border border-transparent text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
             >
