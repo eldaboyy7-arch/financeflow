@@ -1,4 +1,4 @@
-<script setup lang="ts">
+ï»¿<script setup lang="ts">
 import { computed } from 'vue'
 import { siteConfig } from '@/config/site'
 
@@ -12,7 +12,7 @@ const waUrl = computed(() => getWaUrl(siteConfig.rentalPhone))
 </script>
 
 <template>
-  <section id="kontak" class="py-12 sm:py-16 bg-slate-950 text-white scroll-mt-16">
+  <section id="kontak" class="py-12 sm:py-16 bg-slate-50 scroll-mt-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- MOBILE: Full-bleed background card -->
@@ -45,7 +45,7 @@ const waUrl = computed(() => getWaUrl(siteConfig.rentalPhone))
             Hubungi kami via WhatsApp untuk rekomendasi armada, custom rute wisata, dan harga spesial rombongan!
           </p>
 
-          <!-- 3 Service Highlights — horizontal pills -->
+          <!-- 3 Service Highlights ï¿½ horizontal pills -->
           <div class="flex flex-wrap gap-2 mb-7">
             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 border border-white/15 text-white">
               <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -87,53 +87,53 @@ const waUrl = computed(() => getWaUrl(siteConfig.rentalPhone))
       </div>
 
       <!-- DESKTOP: Side-by-side layout -->
-      <div class="hidden lg:block relative rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl overflow-hidden group">
+      <div class="hidden lg:block relative rounded-3xl bg-white border border-slate-200 shadow-xl overflow-hidden group">
         <div class="grid grid-cols-12 items-stretch">
 
           <!-- Left Content Area (7 Cols) -->
           <div class="col-span-7 p-12 xl:p-14 flex flex-col justify-between relative z-10">
             <div>
               <!-- Eyebrow Gold Badge -->
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-amber-400/15 text-amber-300 border border-amber-400/30 mb-4 shadow-2xs">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200 mb-4">
                 <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
                 <span>KONSULTASI &amp; PEMESANAN CEPAT</span>
               </div>
 
               <!-- Main Heading -->
-              <h2 class="font-display text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight mb-4">
+              <h2 class="font-display text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight mb-4">
                 Siap Menjelajahi Bintan Bersama Kami?
               </h2>
 
               <!-- Subtitle -->
-              <p class="text-base text-slate-300 leading-relaxed mb-8 max-w-xl">
+              <p class="text-base text-slate-600 leading-relaxed mb-8 max-w-xl">
                 Hubungi kami sekarang via WhatsApp untuk rekomendasi armada terbaik, custom rute wisata keliling pulau, dan penawaran harga spesial rombongan!
               </p>
 
               <!-- 3 Service Highlights -->
               <div class="grid grid-cols-3 gap-3 mb-8">
-                <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white/5 border border-white/10">
+                <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                   <div class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                   </div>
-                  <span class="text-xs font-bold text-slate-200">Lepas Kunci &amp; Supir</span>
+                  <span class="text-xs font-bold text-slate-700">Lepas Kunci &amp; Supir</span>
                 </div>
-                <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white/5 border border-white/10">
+                <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                   <div class="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                   </div>
-                  <span class="text-xs font-bold text-slate-200">Antar Bandara &amp; Ferry</span>
+                  <span class="text-xs font-bold text-slate-700">Antar Bandara &amp; Ferry</span>
                 </div>
-                <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white/5 border border-white/10">
+                <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                   <div class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                   </div>
-                  <span class="text-xs font-bold text-slate-200">Unit Bersih &amp; Prima</span>
+                  <span class="text-xs font-bold text-slate-700">Unit Bersih &amp; Prima</span>
                 </div>
               </div>
             </div>
 
             <!-- WhatsApp Action Row -->
-            <div class="flex flex-row items-center gap-4 pt-4 border-t border-slate-800/80">
+            <div class="flex flex-row items-center gap-4 pt-4 border-t border-slate-200">
               <a
                 :href="waUrl"
                 target="_blank"
@@ -151,7 +151,7 @@ const waUrl = computed(() => getWaUrl(siteConfig.rentalPhone))
                 </svg>
               </a>
 
-              <div class="flex items-center gap-2 text-xs text-slate-400">
+              <div class="flex items-center gap-2 text-xs text-slate-500">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
                 <span>Respon Cepat via 0813-7237-1120</span>
               </div>
@@ -159,7 +159,7 @@ const waUrl = computed(() => getWaUrl(siteConfig.rentalPhone))
           </div>
 
           <!-- Right Image Area (5 Cols) -->
-          <div class="col-span-5 relative overflow-hidden bg-slate-950">
+          <div class="col-span-5 relative overflow-hidden bg-slate-100">
             <img
               src="/images/bintan-roadtrip-consultation.jpg"
               alt="Wisata Perjalanan Pesisir Pulau Bintan"
@@ -167,10 +167,10 @@ const waUrl = computed(() => getWaUrl(siteConfig.rentalPhone))
               loading="lazy"
             />
             <!-- Left gradient blend -->
-            <div class="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-slate-900 to-transparent pointer-events-none"></div>
+            <div class="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
             <!-- Image Badge -->
             <div class="absolute bottom-4 right-4 z-10">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold bg-slate-950/80 text-white border border-white/20 backdrop-blur-md shadow-md">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold bg-white/90 text-slate-900 border border-slate-200/80 backdrop-blur-md shadow-md">
                 <span class="w-2 h-2 rounded-full bg-amber-400"></span>
                 <span>Rute Wisata &amp; Rental Bintan</span>
               </span>
@@ -183,3 +183,4 @@ const waUrl = computed(() => getWaUrl(siteConfig.rentalPhone))
     </div>
   </section>
 </template>
+
