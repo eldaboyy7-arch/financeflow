@@ -504,29 +504,29 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
       <div
         class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden w-full max-w-4xl lg:max-w-5xl xl:max-w-6xl border border-slate-200 shadow-2xl text-slate-900 flex flex-col md:flex-row md:max-h-[88vh] max-h-[94vh] animate-in fade-in zoom-in-95 duration-200"
       >
-        <!-- 1. LEFT COLUMN: Media Showcase Stage (Clean Light Theme) -->
-        <div class="md:w-7/12 lg:w-3/5 bg-slate-50/80 flex flex-col justify-between relative overflow-hidden p-4 sm:p-5 select-none border-b md:border-b-0 md:border-r border-slate-100 shrink-0">
+        <!-- 1. LEFT COLUMN: Media Showcase Stage (Seamless Studio Grey) -->
+        <div class="md:w-7/12 lg:w-3/5 bg-[#EDEEF2] flex flex-col justify-between relative overflow-hidden p-4 sm:p-5 lg:p-6 select-none border-b md:border-b-0 md:border-r border-slate-200/80 shrink-0">
 
           <!-- Top Stage Bar -->
           <div class="relative z-10 flex items-center justify-between gap-2">
             <div>
               <span
                 v-if="previewVehicle.status === 'available'"
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white text-emerald-700 border border-emerald-200/80 shadow-2xs"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/90 backdrop-blur-md text-emerald-700 border border-slate-200/60 shadow-xs"
               >
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span>Tersedia Siap Jalan</span>
               </span>
               <span
                 v-else-if="previewVehicle.status === 'maintenance'"
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white text-amber-700 border border-amber-200/80 shadow-2xs"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/90 backdrop-blur-md text-amber-700 border border-slate-200/60 shadow-xs"
               >
                 <span class="w-2 h-2 rounded-full bg-amber-500"></span>
                 <span>Perawatan</span>
               </span>
               <span
                 v-else-if="previewVehicle.status === 'rented'"
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white text-blue-700 border border-blue-200/80 shadow-2xs"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/90 backdrop-blur-md text-blue-700 border border-slate-200/60 shadow-xs"
               >
                 <span class="w-2 h-2 rounded-full bg-blue-500"></span>
                 <span>Sedang Disewa</span>
@@ -539,7 +539,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                 :href="activePreviewUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="w-8 h-8 rounded-full bg-white hover:bg-slate-100 text-slate-500 hover:text-slate-800 border border-slate-200 flex items-center justify-center transition-colors shadow-2xs"
+                class="w-8 h-8 rounded-full bg-white/90 hover:bg-white text-slate-500 hover:text-slate-800 border border-slate-200/80 flex items-center justify-center transition-colors shadow-xs"
                 title="Buka foto resolusi penuh"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -549,7 +549,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
 
               <button
                 @click="closePhotoModal"
-                class="md:hidden w-8 h-8 rounded-full bg-white hover:bg-slate-100 text-slate-500 hover:text-slate-800 border border-slate-200 flex items-center justify-center transition-colors shadow-2xs"
+                class="md:hidden w-8 h-8 rounded-full bg-white/90 hover:bg-white text-slate-500 hover:text-slate-800 border border-slate-200/80 flex items-center justify-center transition-colors shadow-xs"
                 type="button"
                 title="Tutup dialog"
               >
@@ -560,21 +560,21 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
             </div>
           </div>
 
-          <!-- Photo Stage Center -->
-          <div class="relative w-full flex-1 min-h-[220px] sm:min-h-[280px] md:min-h-[340px] my-3 flex items-center justify-center overflow-hidden rounded-2xl bg-white border border-slate-200/60 p-2 sm:p-3 shadow-2xs">
+          <!-- Photo Stage Center (Seamless Studio Background) -->
+          <div class="relative w-full flex-1 min-h-[220px] sm:min-h-[280px] md:min-h-[360px] my-2 sm:my-4 flex items-center justify-center overflow-hidden">
             <div class="relative w-full h-full flex items-center justify-center group">
               <img
                 v-if="activePreviewUrl"
                 :src="activePreviewUrl"
                 :alt="previewVehicle.name"
-                class="max-h-full max-w-full w-auto h-auto object-contain rounded-xl transition-all duration-300"
+                class="max-h-full max-w-full w-auto h-auto object-contain transition-all duration-300 select-none"
               />
 
               <button
                 v-if="previewAngles.length > 1"
                 @click="prevModalAngle"
                 type="button"
-                class="absolute left-1 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/95 hover:bg-white text-slate-700 hover:text-slate-900 border border-slate-200 shadow-md flex items-center justify-center transition-all active:scale-95"
+                class="absolute left-1 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-slate-900 border border-slate-200/80 shadow-md flex items-center justify-center transition-all active:scale-95"
                 title="Sudut sebelumnya"
               >
                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
@@ -583,7 +583,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                 v-if="previewAngles.length > 1"
                 @click="nextModalAngle"
                 type="button"
-                class="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/95 hover:bg-white text-slate-700 hover:text-slate-900 border border-slate-200 shadow-md flex items-center justify-center transition-all active:scale-95"
+                class="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-slate-900 border border-slate-200/80 shadow-md flex items-center justify-center transition-all active:scale-95"
                 title="Sudut berikutnya"
               >
                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -592,7 +592,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
           </div>
 
           <!-- Bottom Gallery Navigation -->
-          <div class="relative z-10 pt-2 border-t border-slate-200/80 flex flex-col items-center gap-1.5">
+          <div class="relative z-10 pt-2.5 border-t border-slate-300/60 flex flex-col items-center gap-1.5">
             <div v-if="previewAngles.length > 1" class="flex items-center justify-center gap-2 flex-wrap">
               <button
                 v-for="(angle, idx) in previewAngles"
@@ -600,14 +600,14 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                 @click="previewAngleIdx = idx"
                 type="button"
                 :class="previewAngleIdx === idx
-                  ? 'border-blue-600 bg-blue-50 text-blue-700 font-bold shadow-2xs'
-                  : 'border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:border-slate-300'"
-                class="px-3 py-1 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-all"
+                  ? 'border-blue-600 bg-white text-blue-700 font-bold shadow-xs ring-1 ring-blue-600/30'
+                  : 'border-slate-300/80 bg-white/70 text-slate-600 hover:bg-white hover:text-slate-900'"
+                class="px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-all"
               >
                 <span>{{ angle.label }}</span>
               </button>
             </div>
-            <div class="text-[11px] text-slate-400 font-medium text-center">
+            <div class="text-[11px] text-slate-500 font-medium text-center">
               <span v-if="previewAngles.length > 1">Pilih sudut untuk melihat foto dari sisi lain</span>
               <span v-else>Foto asli armada kami &bull; Unit terawat siap jalan</span>
             </div>

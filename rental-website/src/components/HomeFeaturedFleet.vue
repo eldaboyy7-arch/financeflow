@@ -503,26 +503,26 @@ onUnmounted(() => {
       <div
         class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden w-full max-w-4xl lg:max-w-5xl xl:max-w-6xl border border-slate-200 shadow-2xl text-slate-900 flex flex-col md:flex-row md:max-h-[88vh] max-h-[94vh] animate-in fade-in zoom-in-95 duration-200"
       >
-        <!-- Modal Left Column: Media Stage (Clean Light Theme) -->
-        <div class="md:w-7/12 lg:w-3/5 bg-slate-50/80 flex flex-col justify-between relative overflow-hidden p-4 sm:p-5 select-none border-b md:border-b-0 md:border-r border-slate-100 shrink-0">
+        <!-- Modal Left Column: Media Stage (Seamless Studio Grey) -->
+        <div class="md:w-7/12 lg:w-3/5 bg-[#EDEEF2] flex flex-col justify-between relative overflow-hidden p-4 sm:p-5 lg:p-6 select-none border-b md:border-b-0 md:border-r border-slate-200/80 shrink-0">
           <div class="relative z-10 flex items-center justify-between gap-2">
             <span
               v-if="previewVehicle.status === 'available'"
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white text-emerald-700 border border-emerald-200/80 shadow-2xs"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/90 backdrop-blur-md text-emerald-700 border border-slate-200/60 shadow-xs"
             >
               <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <span>Tersedia Siap Jalan</span>
             </span>
             <span
               v-else-if="previewVehicle.status === 'maintenance'"
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white text-amber-700 border border-amber-200/80 shadow-2xs"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/90 backdrop-blur-md text-amber-700 border border-slate-200/60 shadow-xs"
             >
               <span class="w-2 h-2 rounded-full bg-amber-500"></span>
               <span>Perawatan</span>
             </span>
             <span
               v-else
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white text-slate-600 border border-slate-200 shadow-2xs"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/90 backdrop-blur-md text-slate-600 border border-slate-200/60 shadow-xs"
             >
               <span>{{ previewVehicle.status_label || 'Tidak Tersedia' }}</span>
             </span>
@@ -530,30 +530,30 @@ onUnmounted(() => {
             <button
               @click="closePhotoModal"
               type="button"
-              class="md:hidden w-8 h-8 rounded-full bg-white hover:bg-slate-100 text-slate-500 hover:text-slate-900 border border-slate-200 flex items-center justify-center transition-colors shadow-2xs"
+              class="md:hidden w-8 h-8 rounded-full bg-white/90 hover:bg-white text-slate-500 hover:text-slate-900 border border-slate-200/80 flex items-center justify-center transition-colors shadow-xs"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
           </div>
 
-          <!-- Main High-Res Photo Container -->
-          <div class="relative w-full flex-1 min-h-[220px] sm:min-h-[280px] md:min-h-[340px] my-3 flex items-center justify-center overflow-hidden rounded-2xl bg-white border border-slate-200/60 p-2 sm:p-3 shadow-2xs">
+          <!-- Main High-Res Photo Container (Seamless Studio Background) -->
+          <div class="relative w-full flex-1 min-h-[220px] sm:min-h-[280px] md:min-h-[360px] my-2 sm:my-4 flex items-center justify-center overflow-hidden">
             <img
               v-if="activePreviewUrl"
               :src="activePreviewUrl"
               :alt="previewVehicle.name"
-              class="max-h-full max-w-full w-auto h-auto object-contain rounded-xl transition-all duration-300"
+              class="max-h-full max-w-full w-auto h-auto object-contain transition-all duration-300 select-none"
             />
             <div v-else class="text-center text-slate-400">
-              <svg class="w-14 h-14 mx-auto mb-2 text-slate-300" fill="currentColor" viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
-              <p class="text-xs text-slate-400">Foto unit tidak tersedia</p>
+              <svg class="w-14 h-14 mx-auto mb-2 text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+              <p class="text-xs text-slate-500">Foto unit tidak tersedia</p>
             </div>
 
             <!-- Left & Right Arrow Buttons -->
             <button
               v-if="previewAngles.length > 1"
               @click="prevModalAngle"
-              class="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/95 hover:bg-white text-slate-700 hover:text-slate-900 border border-slate-200 shadow-md flex items-center justify-center transition-all active:scale-95"
+              class="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-slate-900 border border-slate-200/80 shadow-md flex items-center justify-center transition-all active:scale-95"
               title="Sudut foto sebelumnya"
             >
               <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
@@ -561,7 +561,7 @@ onUnmounted(() => {
             <button
               v-if="previewAngles.length > 1"
               @click="nextModalAngle"
-              class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/95 hover:bg-white text-slate-700 hover:text-slate-900 border border-slate-200 shadow-md flex items-center justify-center transition-all active:scale-95"
+              class="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-slate-900 border border-slate-200/80 shadow-md flex items-center justify-center transition-all active:scale-95"
               title="Sudut foto berikutnya"
             >
               <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -569,7 +569,7 @@ onUnmounted(() => {
           </div>
 
           <!-- Bottom Angle Thumbnails -->
-          <div v-if="previewAngles.length > 1" class="relative z-10 flex items-center justify-center gap-2 pt-2 border-t border-slate-200/80">
+          <div v-if="previewAngles.length > 1" class="relative z-10 flex items-center justify-center gap-2 pt-2.5 border-t border-slate-300/60">
             <button
               v-for="(angle, idx) in previewAngles"
               :key="angle.id"
@@ -577,12 +577,12 @@ onUnmounted(() => {
               type="button"
               :class="[
                 previewAngleIdx === idx
-                  ? 'border-blue-600 bg-blue-50 text-blue-700 font-bold shadow-2xs'
-                  : 'border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:border-slate-300',
+                  ? 'border-blue-600 bg-white text-blue-700 font-bold shadow-xs ring-1 ring-blue-600/30'
+                  : 'border-slate-300/80 bg-white/70 text-slate-600 hover:bg-white hover:text-slate-900',
                 'px-3 py-1.5 rounded-lg border text-xs transition-all flex items-center gap-1.5'
               ]"
             >
-              <span class="w-1.5 h-1.5 rounded-full" :class="previewAngleIdx === idx ? 'bg-blue-600' : 'bg-slate-300'"></span>
+              <span class="w-1.5 h-1.5 rounded-full" :class="previewAngleIdx === idx ? 'bg-blue-600' : 'bg-slate-400'"></span>
               <span>{{ angle.label }}</span>
             </button>
           </div>
