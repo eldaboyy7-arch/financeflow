@@ -25,9 +25,29 @@ class TourPackage extends Model
             static::$isSyncing = true;
             try {
                 if (!empty($package->slug)) {
+                    $baseSlug = preg_replace('/-admin$/', '', $package->slug);
+                    $targetSlug = ($targetUserId === 3) ? ($baseSlug . '-admin') : $baseSlug;
+
                     $other = static::where('user_id', $targetUserId)
-                        ->where('slug', $package->slug)
+                        ->where(function ($q) use ($package, $targetSlug, $baseSlug) {
+                            $q->where('slug', $targetSlug)
+                              ->orWhere('slug', $baseSlug)
+                              ->orWhere('slug', $package->slug)
+                              ->orWhere('title', $package->title);
+                        })
                         ->first();
+
+                    // Resolve vehicle_id for target user if package has vehicle
+                    $targetVehicleId = null;
+                    if ($package->vehicle_id) {
+                        $vehicle = $package->vehicle ?: Vehicle::find($package->vehicle_id);
+                        if ($vehicle && !empty($vehicle->plate_number)) {
+                            $targetVehicle = Vehicle::where('user_id', $targetUserId)
+                                ->where('plate_number', $vehicle->plate_number)
+                                ->first();
+                            $targetVehicleId = $targetVehicle?->id;
+                        }
+                    }
 
                     $data = [
                         'title'             => $package->title,
@@ -52,12 +72,26 @@ class TourPackage extends Model
                         'is_active'         => $package->is_active,
                     ];
 
+                    if ($targetVehicleId !== null) {
+                        $data['vehicle_id'] = $targetVehicleId;
+                    } elseif ($package->vehicle_id === null) {
+                        $data['vehicle_id'] = null;
+                    }
+
                     if ($other) {
+                        // Do not overwrite $other->slug to avoid unique constraint collisions
                         $other->update($data);
                     } else {
+                        // Generate a unique slug for target user
+                        $newSlug = $targetSlug;
+                        $counter = 1;
+                        while (static::where('slug', $newSlug)->exists()) {
+                            $newSlug = $targetSlug . '-' . $counter++;
+                        }
+
                         static::create(array_merge($data, [
                             'user_id' => $targetUserId,
-                            'slug'    => $package->slug,
+                            'slug'    => $newSlug,
                         ]));
                     }
                 }
@@ -77,9 +111,21 @@ class TourPackage extends Model
             static::$isSyncing = true;
             try {
                 if (!empty($package->slug)) {
-                    static::where('user_id', $targetUserId)
-                        ->where('slug', $package->slug)
-                        ->delete();
+                    $baseSlug = preg_replace('/-admin$/', '', $package->slug);
+                    $targetSlug = ($targetUserId === 3) ? ($baseSlug . '-admin') : $baseSlug;
+
+                    $other = static::where('user_id', $targetUserId)
+                        ->where(function ($q) use ($package, $targetSlug, $baseSlug) {
+                            $q->where('slug', $targetSlug)
+                              ->orWhere('slug', $baseSlug)
+                              ->orWhere('slug', $package->slug)
+                              ->orWhere('title', $package->title);
+                        })
+                        ->first();
+
+                    if ($other) {
+                        $other->delete();
+                    }
                 }
             } finally {
                 static::$isSyncing = false;
