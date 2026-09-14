@@ -417,9 +417,10 @@ function statusBadge(s: string) {
                 </span>
               </div>
             </div>
+          </div>
 
           <!-- Marketplace Daily Rate Price Tag & Quick Income Button -->
-          <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-1.5">
+          <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-700/60 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5">
             <div>
               <div v-if="v.daily_rate > 0" class="flex items-baseline gap-0.5">
                 <span class="text-xs sm:text-sm font-black text-slate-900 dark:text-white tabular-nums">
@@ -434,14 +435,13 @@ function statusBadge(s: string) {
             <button
               type="button"
               @click.stop="openQuickIncome(v)"
-              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50 text-[10px] sm:text-xs font-bold transition-all shadow-2xs shrink-0 active:scale-95"
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50 text-[11px] sm:text-xs font-bold transition-all shadow-2xs shrink-0 active:scale-95"
               title="Catat Pemasukan Sewa Mobil Ini (Pilih Hari 1-Klik)"
             >
-              <BanknotesIcon class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <BanknotesIcon class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <span>Sewa</span>
             </button>
           </div>
-        </div>
       </div>
     </div>
   </div>
