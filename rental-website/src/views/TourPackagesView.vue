@@ -229,23 +229,21 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- Detailed Tour Packages List -->
-      <div class="space-y-5 sm:space-y-6 mb-12 sm:mb-16">
+      <div class="space-y-4 mb-12 sm:mb-16">
         <article
           v-for="pkg in tourPackages"
           :key="pkg.id"
           :id="pkg.slug"
           class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-md transition-all duration-300"
         >
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
+          <!-- ── COMPACT DEFAULT VIEW ─────────────────────────────── -->
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-0">
 
-            <!-- Left Side: Photo + Gallery -->
-            <div class="lg:col-span-5 p-4 sm:p-5 bg-slate-50 border-b lg:border-b-0 lg:border-r border-slate-100 flex flex-col gap-3">
-
-              <!-- Main Photo -->
+            <!-- Photo (left, fixed height) -->
+            <div class="sm:col-span-4 relative">
               <div
                 @click="openLightbox(pkg, activePhotoIndexes[pkg.id] ?? 0)"
-                class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 flex items-center justify-center group cursor-zoom-in"
-                title="Klik untuk memperbesar foto unit"
+                class="relative w-full aspect-[4/3] sm:aspect-auto sm:h-full min-h-[180px] bg-slate-100 overflow-hidden cursor-zoom-in group"
               >
                 <img
                   :src="getActivePhoto(pkg)"
@@ -254,251 +252,190 @@ onBeforeUnmount(() => {
                   decoding="async"
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-
-                <!-- Badges -->
-                <div class="absolute top-2.5 left-2.5 right-2.5 z-10 flex items-center justify-between gap-2 pointer-events-none">
+                <!-- Badge -->
+                <div class="absolute top-2.5 left-2.5 flex flex-col gap-1 pointer-events-none">
                   <span
                     v-if="pkg.badge"
-                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold shadow text-white backdrop-blur-md"
-                    :class="pkg.id === 'tour-hiace-premio' ? 'bg-indigo-600/90' : (pkg.id === 'tour-hiace-custom' ? 'bg-amber-600/90' : 'bg-blue-600/90')"
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold text-white shadow"
+                    :class="pkg.id === 'tour-hiace-premio' ? 'bg-indigo-600' : 'bg-blue-600'"
                   >
-                    <svg v-if="pkg.id === 'tour-hiace-premio'" class="w-3 h-3 text-amber-300" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <span>{{ pkg.badge }}</span>
-                  </span>
-                  <span class="ml-auto inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold bg-black/50 text-white backdrop-blur-md">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                    <span>{{ pkg.capacity }}</span>
+                    {{ pkg.badge }}
                   </span>
                 </div>
-
-                <!-- Zoom hint -->
-                <div class="absolute bottom-2 right-2 z-10 inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold bg-black/50 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/>
-                  </svg>
-                  <span>Perbesar</span>
-                </div>
-              </div>
-
-              <!-- Gallery Thumbnails -->
-              <div v-if="pkg.galleryPhotos && pkg.galleryPhotos.length > 1">
-                <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
-                  <span>Pilih Sudut Pandang Foto:</span>
-                  <span class="font-mono text-[10px]">{{ (activePhotoIndexes[pkg.id] ?? 0) + 1 }}/{{ pkg.galleryPhotos.length }} Foto</span>
-                </div>
-                <div class="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
-                  <button
-                    v-for="(img, idx) in pkg.galleryPhotos"
-                    :key="idx"
-                    @click="setActivePhoto(pkg.id, idx)"
-                    type="button"
-                    :class="(activePhotoIndexes[pkg.id] ?? 0) === idx ? 'ring-2 ring-blue-500 opacity-100' : 'opacity-50 hover:opacity-80'"
-                    class="w-14 h-10 rounded-lg overflow-hidden shrink-0 border border-slate-200 transition-all bg-slate-100"
-                  >
-                    <img :src="img" class="w-full h-full object-cover" />
-                  </button>
-                </div>
-              </div>
-
-              <!-- Comfort Specs -->
-              <div class="pt-3 border-t border-slate-200">
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-[11px] font-bold text-slate-600">Standar Kenyamanan Unit</span>
-                  <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
-                    Include Supir &amp; BBM
+                <div class="absolute bottom-2 right-2 pointer-events-none">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-black/50 text-white">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    {{ pkg.capacity }}
                   </span>
-                </div>
-                <div class="grid grid-cols-2 gap-1.5 text-[11px] text-slate-600">
-                  <div class="flex items-center gap-1.5 p-2 rounded-lg bg-white border border-slate-100">
-                    <span>🎵</span>
-                    <span class="truncate">Karaoke &amp; 2 Mic</span>
-                  </div>
-                  <div class="flex items-center gap-1.5 p-2 rounded-lg bg-white border border-slate-100">
-                    <span>❄️</span>
-                    <span class="truncate">AC Triple Blower</span>
-                  </div>
-                  <div class="flex items-center gap-1.5 p-2 rounded-lg bg-white border border-slate-100">
-                    <span>💺</span>
-                    <span class="truncate">15 Kursi Reclining</span>
-                  </div>
-                  <div class="flex items-center gap-1.5 p-2 rounded-lg bg-white border border-slate-100">
-                    <span>✨</span>
-                    <span class="truncate">Kabin Bersih &amp; Wangi</span>
-                  </div>
-                </div>
-                <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400">
-                  <span>Antar Jemput Fleksibel</span>
-                  <span>Driver Paham Wisata Bintan</span>
                 </div>
               </div>
             </div>
 
-            <!-- Right Side: Package Details -->
-            <div class="lg:col-span-7 p-4 sm:p-6 flex flex-col justify-between">
+            <!-- Info (right) -->
+            <div class="sm:col-span-8 p-4 sm:p-5 flex flex-col justify-between gap-3">
+              <!-- Title -->
               <div>
-                <!-- Title -->
-                <div class="mb-3">
-                  <div class="flex items-center gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                    <span class="text-blue-600 font-extrabold">{{ pkg.vehicle }}</span>
-                    <span>&bull;</span>
-                    <span>{{ pkg.duration }}</span>
-                  </div>
-                  <h2 class="text-lg sm:text-xl font-black text-slate-900 leading-snug">
-                    {{ pkg.title }}
-                  </h2>
-                </div>
+                <p class="text-[11px] font-bold text-blue-600 uppercase tracking-wider mb-0.5">
+                  {{ pkg.vehicle }} &bull; {{ pkg.duration }}
+                </p>
+                <h2 class="text-base sm:text-lg font-black text-slate-900 leading-snug">{{ pkg.title }}</h2>
+              </div>
 
-                <!-- Price Box -->
-                <div class="p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                  <div>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{{ pkg.priceLabel }}</span>
-                    <div class="flex items-baseline gap-1 mt-0.5">
-                      <span class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-none">{{ pkg.price }}</span>
-                      <span class="text-xs text-slate-500 font-medium">/hari</span>
-                    </div>
-                  </div>
-                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                    </svg>
-                    Include Supir &amp; BBM
-                  </span>
-                </div>
-
-                <!-- Description -->
-                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">{{ pkg.description }}</p>
-
-                <!-- Key Stats -->
-                <div class="grid grid-cols-3 gap-2 mb-4">
-                  <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-center">
-                    <span class="text-[9px] text-slate-400 block font-semibold uppercase tracking-wider">Durasi</span>
-                    <span class="text-xs font-black text-slate-800 block mt-0.5 truncate">{{ pkg.duration || '8 – 10 Jam' }}</span>
-                  </div>
-                  <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-center">
-                    <span class="text-[9px] text-slate-400 block font-semibold uppercase tracking-wider">Kapasitas</span>
-                    <span class="text-xs font-black text-slate-800 block mt-0.5 truncate">{{ pkg.capacity || '15 Kursi' }}</span>
-                  </div>
-                  <div class="p-2.5 rounded-xl bg-blue-50 border border-blue-100 text-center">
-                    <span class="text-[9px] text-blue-500 block font-semibold uppercase tracking-wider">Fasilitas</span>
-                    <span class="text-xs font-black text-blue-700 block mt-0.5 truncate">{{ pkg.facilities?.[0] || 'Karaoke TV' }}</span>
+              <!-- Price row -->
+              <div class="flex items-center gap-3 flex-wrap">
+                <div>
+                  <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">{{ pkg.priceLabel }}</span>
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-xl font-black text-slate-900 tracking-tight">{{ pkg.price }}</span>
+                    <span class="text-xs text-slate-500">/hari</span>
                   </div>
                 </div>
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                  Include Supir &amp; BBM
+                </span>
+              </div>
 
-                <!-- Route -->
-                <div class="mb-4">
-                  <span class="text-[11px] font-bold text-slate-700 flex items-center gap-1.5 mb-2">
-                    <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-                    </svg>
-                    Rute Wisata yang Dikunjungi:
-                  </span>
-                  <div class="flex flex-wrap items-center gap-1.5">
-                    <template v-for="(stop, sIdx) in getRouteStops(pkg.tourRoute)" :key="sIdx">
-                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-[11px] font-semibold text-slate-700">
-                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
-                        {{ stop }}
-                      </span>
-                      <svg v-if="sIdx < getRouteStops(pkg.tourRoute).length - 1" class="w-2.5 h-2.5 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                      </svg>
-                    </template>
-                  </div>
+              <!-- 3 Key stats -->
+              <div class="grid grid-cols-3 gap-2">
+                <div class="p-2 rounded-lg bg-slate-50 border border-slate-100 text-center">
+                  <span class="text-[9px] text-slate-400 block font-semibold uppercase tracking-wider">Durasi</span>
+                  <span class="text-[11px] font-black text-slate-800 block mt-0.5 truncate">{{ pkg.duration || '8–10 Jam' }}</span>
                 </div>
-
-                <!-- Accordion -->
-                <div class="border-t border-slate-100 pt-3">
-                  <button
-                    @click="toggleDetails(pkg.id)"
-                    type="button"
-                    class="w-full flex items-center justify-between py-2 px-3 rounded-lg hover:bg-slate-50 text-slate-700 text-xs font-bold transition-colors"
-                  >
-                    <span class="inline-flex items-center gap-1.5">
-                      <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
-                      </svg>
-                      {{ isExpanded(pkg.id) ? 'Sembunyikan Rincian' : 'Lihat Itinerary &amp; Fasilitas Lengkap' }}
-                    </span>
-                    <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="isExpanded(pkg.id) ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                    </svg>
-                  </button>
-
-                  <div v-show="isExpanded(pkg.id)" class="mt-3 space-y-3">
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                      <span class="text-xs font-bold text-slate-800 block mb-2">Fasilitas Kendaraan &amp; Hiburan:</span>
-                      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-slate-600">
-                        <li v-for="(fac, fIdx) in pkg.facilities" :key="fIdx" class="flex items-start gap-1.5">
-                          <svg class="w-3.5 h-3.5 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                          </svg>
-                          {{ fac }}
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                      <span class="text-xs font-bold text-slate-800 block mb-2">Rencana Perjalanan (Itinerary):</span>
-                      <ol class="space-y-1.5 text-xs text-slate-600">
-                        <li v-for="(item, iIdx) in pkg.itinerary" :key="iIdx" class="flex items-start gap-2">
-                          <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
-                            {{ String(iIdx + 1).padStart(2, '0') }}
-                          </span>
-                          <span class="leading-relaxed">{{ item }}</span>
-                        </li>
-                      </ol>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-100">
-                        <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider block mb-1.5">Termasuk dalam Paket:</span>
-                        <ul class="space-y-1 text-xs text-slate-600">
-                          <li v-for="(inc, incIdx) in pkg.included" :key="incIdx" class="flex items-start gap-1.5">
-                            <svg class="w-3 h-3 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            {{ inc }}
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="p-3 rounded-xl bg-slate-100 border border-slate-200">
-                        <span class="text-[11px] font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Tidak Termasuk:</span>
-                        <ul class="space-y-1 text-xs text-slate-500">
-                          <li v-for="(exc, excIdx) in pkg.excluded" :key="excIdx" class="flex items-start gap-1.5">
-                            <span class="text-slate-400 font-bold shrink-0">&bull;</span>
-                            {{ exc }}
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
+                <div class="p-2 rounded-lg bg-slate-50 border border-slate-100 text-center">
+                  <span class="text-[9px] text-slate-400 block font-semibold uppercase tracking-wider">Kapasitas</span>
+                  <span class="text-[11px] font-black text-slate-800 block mt-0.5 truncate">{{ pkg.capacity || '15 Kursi' }}</span>
+                </div>
+                <div class="p-2 rounded-lg bg-blue-50 border border-blue-100 text-center">
+                  <span class="text-[9px] text-blue-500 block font-semibold uppercase tracking-wider">Fasilitas</span>
+                  <span class="text-[11px] font-black text-blue-700 block mt-0.5 truncate">{{ pkg.facilities?.[0] || 'Karaoke' }}</span>
                 </div>
               </div>
 
-              <!-- Footer CTA -->
-              <div class="pt-4 mt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <span class="text-[10px] text-slate-400 block font-medium">Titik Penjemputan:</span>
-                  <span class="text-xs font-semibold text-slate-700">Pelabuhan / Bandara / Hotel Bintan</span>
-                </div>
+              <!-- Actions row -->
+              <div class="flex items-center gap-2 flex-wrap">
                 <a
                   :href="getWhatsAppUrl(pkg.ctaWhatsappText)"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-xs transition-all active:scale-95 shrink-0"
+                  class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-xs transition-all active:scale-95 shrink-0"
                 >
                   <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
                   </svg>
-                  <span>Pesan via WhatsApp</span>
+                  Pesan via WhatsApp
                 </a>
+                <button
+                  @click="toggleDetails(pkg.id)"
+                  type="button"
+                  class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors"
+                >
+                  {{ isExpanded(pkg.id) ? 'Sembunyikan' : 'Lihat Detail' }}
+                  <svg class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200" :class="isExpanded(pkg.id) ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── EXPANDED DETAIL (accordion) ──────────────────────── -->
+          <div v-show="isExpanded(pkg.id)" class="border-t border-slate-100 p-4 sm:p-5 space-y-4">
+
+            <!-- Description -->
+            <p class="text-sm text-slate-600 leading-relaxed">{{ pkg.description }}</p>
+
+            <!-- Route -->
+            <div>
+              <span class="text-[11px] font-bold text-slate-700 flex items-center gap-1.5 mb-2">
+                <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                </svg>
+                Rute Wisata yang Dikunjungi:
+              </span>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <template v-for="(stop, sIdx) in getRouteStops(pkg.tourRoute)" :key="sIdx">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-[11px] font-semibold text-slate-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>{{ stop }}
+                  </span>
+                  <svg v-if="sIdx < getRouteStops(pkg.tourRoute).length - 1" class="w-2.5 h-2.5 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </template>
               </div>
             </div>
 
+            <!-- Gallery thumbnails (inside detail) -->
+            <div v-if="pkg.galleryPhotos && pkg.galleryPhotos.length > 1">
+              <span class="text-[11px] font-bold text-slate-600 block mb-2">Galeri Foto Unit:</span>
+              <div class="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
+                <button
+                  v-for="(img, idx) in pkg.galleryPhotos"
+                  :key="idx"
+                  @click="setActivePhoto(pkg.id, idx)"
+                  type="button"
+                  :class="(activePhotoIndexes[pkg.id] ?? 0) === idx ? 'ring-2 ring-blue-500 opacity-100' : 'opacity-50 hover:opacity-80'"
+                  class="w-16 h-11 rounded-lg overflow-hidden shrink-0 border border-slate-200 transition-all bg-slate-100"
+                >
+                  <img :src="img" class="w-full h-full object-cover" />
+                </button>
+              </div>
+            </div>
+
+            <!-- Comfort specs + facilities + itinerary in 2 cols on desktop -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Facilities -->
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                <span class="text-xs font-bold text-slate-800 block mb-2">Fasilitas Kendaraan:</span>
+                <ul class="grid grid-cols-1 gap-1.5 text-xs text-slate-600">
+                  <li v-for="(fac, fIdx) in pkg.facilities" :key="fIdx" class="flex items-start gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    {{ fac }}
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Included / Excluded -->
+              <div class="space-y-2.5">
+                <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-100">
+                  <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider block mb-1.5">Termasuk:</span>
+                  <ul class="space-y-1 text-xs text-slate-600">
+                    <li v-for="(inc, incIdx) in pkg.included" :key="incIdx" class="flex items-start gap-1.5">
+                      <svg class="w-3 h-3 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                      {{ inc }}
+                    </li>
+                  </ul>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-100 border border-slate-200">
+                  <span class="text-[11px] font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Tidak Termasuk:</span>
+                  <ul class="space-y-1 text-xs text-slate-500">
+                    <li v-for="(exc, excIdx) in pkg.excluded" :key="excIdx" class="flex items-start gap-1.5">
+                      <span class="text-slate-400 font-bold shrink-0">&bull;</span>{{ exc }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Itinerary -->
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <span class="text-xs font-bold text-slate-800 block mb-2">Rencana Perjalanan (Itinerary):</span>
+              <ol class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-slate-600">
+                <li v-for="(item, iIdx) in pkg.itinerary" :key="iIdx" class="flex items-start gap-2">
+                  <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
+                    {{ String(iIdx + 1).padStart(2, '0') }}
+                  </span>
+                  <span class="leading-relaxed">{{ item }}</span>
+                </li>
+              </ol>
+            </div>
+
+            <!-- Titik jemput footer -->
+            <p class="text-[11px] text-slate-400">
+              <span class="font-semibold text-slate-600">Titik Penjemputan:</span> Pelabuhan / Bandara / Hotel Bintan
+            </p>
           </div>
+
         </article>
       </div>
 
