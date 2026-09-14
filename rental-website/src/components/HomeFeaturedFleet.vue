@@ -364,7 +364,7 @@ onUnmounted(() => {
               </div>
 
               <!-- Vehicle Name -->
-              <h3 class="font-display text-base sm:text-lg font-extrabold text-slate-900 tracking-tight leading-snug line-clamp-1 group-hover:text-blue-600 transition-colors">
+              <h3 class="font-display text-xs sm:text-lg font-extrabold text-slate-900 tracking-tight leading-snug line-clamp-2 sm:line-clamp-1 group-hover:text-blue-600 transition-colors">
                 {{ car.name }}
               </h3>
 
@@ -392,19 +392,19 @@ onUnmounted(() => {
             </div>
 
             <!-- Price & Booking CTA -->
-            <div class="mt-4 sm:mt-5 pt-3 border-t border-slate-100">
-              <div class="flex items-baseline justify-between mb-2.5">
+            <div class="mt-2 sm:mt-5 pt-2 sm:pt-3 border-t border-slate-100">
+              <div class="flex items-center justify-between mb-0 sm:mb-2.5">
                 <div>
-                  <span class="text-[10px] sm:text-[11px] text-slate-400 font-medium block leading-none">Mulai dari</span>
-                  <div class="mt-0.5">
-                    <span class="font-display text-base sm:text-lg font-black text-slate-900 tracking-tight">{{ car.daily_rate_formatted }}</span>
-                    <span class="text-[10px] sm:text-[11px] text-slate-500 font-normal"> /hari</span>
+                  <span class="text-[9px] sm:text-[11px] text-slate-400 font-medium block leading-none">Mulai dari</span>
+                  <div class="mt-0.5 flex items-baseline gap-0.5">
+                    <span class="font-display text-xs sm:text-lg font-black text-slate-900 tracking-tight">{{ car.daily_rate_formatted }}</span>
+                    <span class="text-[9px] sm:text-[11px] text-slate-500 font-normal">/hari</span>
                   </div>
                 </div>
                 <button
                   type="button"
                   @click="openPhotoModal(car, activeCardAngles[car.id] ?? 0)"
-                  class="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors group/link cursor-pointer"
+                  class="hidden sm:inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors group/link cursor-pointer"
                 >
                   <span>Lihat Detail</span>
                   <svg class="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
