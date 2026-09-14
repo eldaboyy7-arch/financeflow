@@ -5,6 +5,7 @@ import { siteConfig } from '@/config/site'
 import { generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
 
 const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, siteConfig.rentalName))
+const waUrl2 = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhoneSecondary, siteConfig.rentalName))
 const currentYear = new Date().getFullYear()
 </script>
 
@@ -47,7 +48,7 @@ const currentYear = new Date().getFullYear()
         <div>
           <h4 class="text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-3">Navigasi</h4>
           <ul class="space-y-2 text-xs">
-            <li><a href="/#cara-perjalanan" class="hover:text-blue-600 transition-colors">Pilihan Layanan</a></li>
+            <li><RouterLink to="/layanan" class="hover:text-blue-600 transition-colors">Pilihan Layanan</RouterLink></li>
             <li><RouterLink to="/armada" class="hover:text-blue-600 transition-colors">Pilihan Armada</RouterLink></li>
             <li><RouterLink to="/paket-tour-bintan" class="hover:text-blue-600 transition-colors">Paket Tour HiAce</RouterLink></li>
             <li><RouterLink to="/destinasi" class="hover:text-blue-600 transition-colors">Inspirasi Destinasi</RouterLink></li>
@@ -59,9 +60,9 @@ const currentYear = new Date().getFullYear()
         <div>
           <h4 class="text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-3">Layanan</h4>
           <ul class="space-y-2 text-xs">
-            <li><a href="/#cara-perjalanan" class="hover:text-blue-600 transition-colors">Rental Mobil Harian</a></li>
-            <li><a href="/#cara-perjalanan" class="hover:text-blue-600 transition-colors">Sewa Lepas Kunci (Self-Drive)</a></li>
-            <li><a href="/#cara-perjalanan" class="hover:text-blue-600 transition-colors">Sewa dengan Driver</a></li>
+            <li><RouterLink to="/layanan" class="hover:text-blue-600 transition-colors">Rental Mobil Harian</RouterLink></li>
+            <li><RouterLink to="/layanan" class="hover:text-blue-600 transition-colors">Sewa Lepas Kunci (Self-Drive)</RouterLink></li>
+            <li><RouterLink to="/layanan" class="hover:text-blue-600 transition-colors">Sewa dengan Driver</RouterLink></li>
             <li><RouterLink to="/paket-tour-bintan" class="hover:text-blue-600 transition-colors">Paket Tour HiAce 15 Kursi</RouterLink></li>
             <li><RouterLink to="/paket-tour-bintan" class="hover:text-blue-600 transition-colors">Charter &amp; Rombongan</RouterLink></li>
           </ul>
@@ -83,6 +84,18 @@ const currentYear = new Date().getFullYear()
                 <span class="text-[10px] text-slate-500">(Admin 1)</span>
               </a>
             </li>
+            <li>
+              <a
+                :href="waUrl2"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 text-slate-700 hover:text-emerald-600 transition-colors group"
+              >
+                <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0 group-hover:scale-125 transition-transform"></span>
+                <span class="font-bold text-slate-900">0852-6326-7909</span>
+                <span class="text-[10px] text-slate-500">(Admin 2)</span>
+              </a>
+            </li>
             <li class="flex items-center gap-2 text-slate-600">
               <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -98,6 +111,7 @@ const currentYear = new Date().getFullYear()
             </li>
           </ul>
         </div>
+
 
       </div>
 
