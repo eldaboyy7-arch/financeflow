@@ -32,14 +32,16 @@ function handleSearch() {
     vehicleType: vehicleType.value,
     startDate: startDate.value,
     endDate: endDate.value,
-    passengers: passengers.value
+    passengers: Number(passengers.value)
   })
 
-  // Scroll smoothly to armada catalog
-  const armadaEl = document.getElementById('armada')
-  if (armadaEl) {
-    armadaEl.scrollIntoView({ behavior: 'smooth' })
-  }
+  // Scroll smoothly to armada catalog after Vue state updates DOM
+  setTimeout(() => {
+    const armadaEl = document.getElementById('armada')
+    if (armadaEl) {
+      armadaEl.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, 50)
 }
 </script>
 

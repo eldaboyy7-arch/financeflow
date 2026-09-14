@@ -7,21 +7,47 @@ import { generateVehicleWhatsAppUrl } from '@/utils/whatsapp'
 import { getVehicleAngles, type VehiclePhotoAngle } from '@/utils/vehiclePhotos'
 import { getVehicleCategoryBracket } from '@/config/fleetCategories'
 
-withDefaults(
+import type { BookingFilterParams } from '@/utils/whatsapp'
+
+const props = withDefaults(
   defineProps<{
     vehicles: PublicVehicle[]
     loading: boolean
     error: string | null
     totalFleetCount?: number
+    activeFilter?: BookingFilterParams | null
   }>(),
   {
-    totalFleetCount: 0
+    totalFleetCount: 0,
+    activeFilter: null
   }
 )
 
 const emit = defineEmits<{
   (e: 'retry'): void
+  (e: 'resetFilter'): void
 }>()
+
+const filterSummaryText = computed(() => {
+  if (!props.activeFilter) return ''
+  const parts: string[] = []
+  if (props.activeFilter.vehicleType && props.activeFilter.vehicleType !== 'all') {
+    if (props.activeFilter.vehicleType === 'city-car') parts.push('City Car')
+    else if (props.activeFilter.vehicleType === 'mpv') parts.push('MPV Keluarga')
+    else if (props.activeFilter.vehicleType === 'hiace') parts.push('HiAce Minibus')
+  }
+  if (props.activeFilter.startDate) {
+    if (props.activeFilter.endDate) {
+      parts.push(`${props.activeFilter.startDate} s/d ${props.activeFilter.endDate}`)
+    } else {
+      parts.push(`Mulai ${props.activeFilter.startDate}`)
+    }
+  }
+  if (props.activeFilter.passengers) {
+    parts.push(`${props.activeFilter.passengers} Penumpang`)
+  }
+  return parts.join(' • ') || 'Kriteria Terpilih'
+})
 
 // Active photo angle per vehicle card in the grid
 const activeCardAngles = ref<Record<number, number>>({})
@@ -136,6 +162,42 @@ onUnmounted(() => {
         </RouterLink>
       </div>
 
+      <!-- Active Search Filter Banner -->
+      <div
+        v-if="activeFilter"
+        class="mb-8 p-4 rounded-2xl bg-blue-50/90 border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs"
+      >
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-xs sm:text-sm font-bold text-slate-900">Hasil Pencarian:</span>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-600 text-white shadow-2xs">
+                {{ filterSummaryText }}
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-0.5">
+              Ditemukan {{ vehicles.length }} unit armada yang cocok dengan kebutuhan perjalanan Anda.
+            </p>
+          </div>
+        </div>
+
+        <button
+          @click="emit('resetFilter')"
+          type="button"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-red-600 border border-slate-200 text-xs font-bold transition-all shadow-2xs shrink-0 cursor-pointer self-start sm:self-auto"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <span>Reset Pencarian</span>
+        </button>
+      </div>
+
       <!-- Loading State -->
       <div
         v-if="loading && vehicles.length === 0"
@@ -168,6 +230,29 @@ onUnmounted(() => {
           class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors"
         >
           Coba Muat Ulang
+        </button>
+      </div>
+
+      <!-- Empty Filter State -->
+      <div
+        v-else-if="vehicles.length === 0"
+        class="rounded-2xl bg-white border border-slate-200 p-8 sm:p-12 text-center my-6 shadow-xs"
+      >
+        <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 class="font-bold text-slate-900 text-base mb-1">Tidak ada armada yang sesuai</h3>
+        <p class="text-xs text-slate-500 mb-4 max-w-md mx-auto">
+          Belum ada unit armada yang cocok dengan kombinasi filter Anda. Silakan coba tipe armada atau kapasitas lain.
+        </p>
+        <button
+          @click="emit('resetFilter')"
+          type="button"
+          class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs transition-all cursor-pointer"
+        >
+          Tampilkan Semua Armada
         </button>
       </div>
 
@@ -330,7 +415,7 @@ onUnmounted(() => {
               <!-- Action Button -->
               <a
                 v-if="car.status === 'available'"
-                :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName)"
+                :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName, activeFilter)"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="w-full h-9 sm:h-11 px-3 sm:px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-xs hover:shadow-emerald-600/25 transition-all active:scale-98"
@@ -566,7 +651,7 @@ onUnmounted(() => {
 
             <a
               v-if="previewVehicle.status === 'available'"
-              :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName)"
+              :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName, activeFilter)"
               target="_blank"
               rel="noopener noreferrer"
               class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-emerald-600/30 transition-all active:scale-98"
