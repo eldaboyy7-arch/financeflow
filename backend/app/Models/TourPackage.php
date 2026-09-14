@@ -10,6 +10,83 @@ class TourPackage extends Model
 {
     use HasFactory;
 
+    protected static bool $isSyncing = false;
+
+    protected static function booted(): void
+    {
+        static::saved(function (TourPackage $package) {
+            if (static::$isSyncing) return;
+
+            $sharedUserIds = [3, 18];
+            if (!in_array($package->user_id, $sharedUserIds, true)) return;
+
+            $targetUserId = ($package->user_id === 3) ? 18 : 3;
+
+            static::$isSyncing = true;
+            try {
+                if (!empty($package->slug)) {
+                    $other = static::where('user_id', $targetUserId)
+                        ->where('slug', $package->slug)
+                        ->first();
+
+                    $data = [
+                        'title'             => $package->title,
+                        'subtitle'          => $package->subtitle,
+                        'badge'             => $package->badge,
+                        'badge_color'       => $package->badge_color,
+                        'price'             => $package->price,
+                        'price_label'       => $package->price_label,
+                        'duration'          => $package->duration,
+                        'capacity'          => $package->capacity,
+                        'vehicle_name'      => $package->vehicle_name,
+                        'description'       => $package->description,
+                        'tour_route'        => $package->tour_route,
+                        'cover_photo_path'  => $package->cover_photo_path,
+                        'gallery_photos'    => $package->gallery_photos,
+                        'facilities'        => $package->facilities,
+                        'itinerary'         => $package->itinerary,
+                        'included'          => $package->included,
+                        'excluded'          => $package->excluded,
+                        'cta_whatsapp_text' => $package->cta_whatsapp_text,
+                        'sort_order'        => $package->sort_order,
+                        'is_active'         => $package->is_active,
+                    ];
+
+                    if ($other) {
+                        $other->update($data);
+                    } else {
+                        static::create(array_merge($data, [
+                            'user_id' => $targetUserId,
+                            'slug'    => $package->slug,
+                        ]));
+                    }
+                }
+            } finally {
+                static::$isSyncing = false;
+            }
+        });
+
+        static::deleted(function (TourPackage $package) {
+            if (static::$isSyncing) return;
+
+            $sharedUserIds = [3, 18];
+            if (!in_array($package->user_id, $sharedUserIds, true)) return;
+
+            $targetUserId = ($package->user_id === 3) ? 18 : 3;
+
+            static::$isSyncing = true;
+            try {
+                if (!empty($package->slug)) {
+                    static::where('user_id', $targetUserId)
+                        ->where('slug', $package->slug)
+                        ->delete();
+                }
+            } finally {
+                static::$isSyncing = false;
+            }
+        });
+    }
+
     protected $fillable = [
         'user_id',
         'vehicle_id',

@@ -11,6 +11,78 @@ class Vehicle extends Model
 {
     use HasFactory;
 
+    protected static bool $isSyncing = false;
+
+    protected static function booted(): void
+    {
+        static::saved(function (Vehicle $vehicle) {
+            if (static::$isSyncing) return;
+
+            $sharedUserIds = [3, 18];
+            if (!in_array($vehicle->user_id, $sharedUserIds, true)) return;
+
+            $targetUserId = ($vehicle->user_id === 3) ? 18 : 3;
+
+            static::$isSyncing = true;
+            try {
+                if (!empty($vehicle->plate_number)) {
+                    $other = static::where('user_id', $targetUserId)
+                        ->where('plate_number', $vehicle->plate_number)
+                        ->first();
+
+                    $data = [
+                        'name'         => $vehicle->name,
+                        'brand'        => $vehicle->brand,
+                        'model_year'   => $vehicle->model_year,
+                        'status'       => $vehicle->status,
+                        'daily_rate'   => $vehicle->daily_rate,
+                        'color'        => $vehicle->color,
+                        'transmission' => $vehicle->transmission,
+                        'capacity'     => $vehicle->capacity,
+                        'fuel_type'    => $vehicle->fuel_type,
+                        'description'  => $vehicle->description,
+                        'photo_path'   => $vehicle->photo_path,
+                        'gallery_photos' => $vehicle->gallery_photos,
+                        'video_url'    => $vehicle->video_url,
+                        'is_featured'  => $vehicle->is_featured,
+                        'notes'        => $vehicle->notes,
+                    ];
+
+                    if ($other) {
+                        $other->update($data);
+                    } else {
+                        static::create(array_merge($data, [
+                            'user_id'      => $targetUserId,
+                            'plate_number' => $vehicle->plate_number,
+                        ]));
+                    }
+                }
+            } finally {
+                static::$isSyncing = false;
+            }
+        });
+
+        static::deleted(function (Vehicle $vehicle) {
+            if (static::$isSyncing) return;
+
+            $sharedUserIds = [3, 18];
+            if (!in_array($vehicle->user_id, $sharedUserIds, true)) return;
+
+            $targetUserId = ($vehicle->user_id === 3) ? 18 : 3;
+
+            static::$isSyncing = true;
+            try {
+                if (!empty($vehicle->plate_number)) {
+                    static::where('user_id', $targetUserId)
+                        ->where('plate_number', $vehicle->plate_number)
+                        ->delete();
+                }
+            } finally {
+                static::$isSyncing = false;
+            }
+        });
+    }
+
     protected $fillable = [
         'user_id',
         'name',
