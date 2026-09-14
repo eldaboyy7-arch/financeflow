@@ -45,65 +45,67 @@ class TourPackage extends Model
 
             static::$isSyncing = true;
             try {
-                if (!empty($package->slug)) {
-                    $baseSlug = preg_replace('/-admin(-\d+)?$/', '', $package->slug);
+                // Resolve vehicle_id for target user if package has vehicle
+                $targetVehicleId = null;
+                if ($package->vehicle_id) {
+                    $vehicle = $package->vehicle ?: Vehicle::find($package->vehicle_id);
+                    if ($vehicle && !empty($vehicle->plate_number)) {
+                        $targetVehicle = Vehicle::where('user_id', $targetUserId)
+                            ->where('plate_number', $vehicle->plate_number)
+                            ->first();
+                        $targetVehicleId = $targetVehicle?->id;
+                    }
+                }
+
+                $fillable = (new static)->getFillable();
+                $data = collect($package->only($fillable))
+                    ->except(['user_id', 'slug', 'vehicle_id', 'twin_id'])
+                    ->toArray();
+
+                $data['badge_color'] = $data['badge_color'] ?: 'blue';
+                $data['price_label'] = $data['price_label'] ?: 'HARGA MULAI';
+                $data['duration']    = $data['duration'] ?: 'Full Day Tour (8 - 10 Jam)';
+                $data['capacity']    = $data['capacity'] ?: '15 Person';
+                $data['sort_order']  = $data['sort_order'] ?? 0;
+                $data['is_active']   = (bool) ($data['is_active'] ?? true);
+
+                if ($targetVehicleId !== null) {
+                    $data['vehicle_id'] = $targetVehicleId;
+                } elseif ($package->vehicle_id === null) {
+                    $data['vehicle_id'] = null;
+                }
+
+                // PRIMARY: find twin by stable twin_id reference
+                $other = $package->twin_id
+                    ? static::where('id', $package->twin_id)->where('user_id', $targetUserId)->first()
+                    : null;
+
+                if ($other) {
+                    // Twin found by explicit ID — guaranteed correct, no slug ambiguity
+                    $other->update($data);
+                } else {
+                    // No twin yet — generate a unique slug and create one.
+                    // Slug for User 18 is always the clean base (no -admin suffix).
+                    // Slug for User 3 always carries -admin suffix.
+                    $baseSlug = !empty($package->slug)
+                        ? preg_replace('/-admin(-\d+)?$/', '', $package->slug)
+                        : ('package-' . $package->id);
+
                     $targetSlug = ($targetUserId === 3) ? ($baseSlug . '-admin') : $baseSlug;
-
-                    $other = static::where('user_id', $targetUserId)
-                        ->where(function ($q) use ($package, $targetSlug, $baseSlug) {
-                            $q->where('slug', $targetSlug)
-                              ->orWhere('slug', $baseSlug)
-                              ->orWhere('slug', $package->slug)
-                              ->orWhere('title', $package->title);
-                        })
-                        ->first();
-
-                    // Resolve vehicle_id for target user if package has vehicle
-                    $targetVehicleId = null;
-                    if ($package->vehicle_id) {
-                        $vehicle = $package->vehicle ?: Vehicle::find($package->vehicle_id);
-                        if ($vehicle && !empty($vehicle->plate_number)) {
-                            $targetVehicle = Vehicle::where('user_id', $targetUserId)
-                                ->where('plate_number', $vehicle->plate_number)
-                                ->first();
-                            $targetVehicleId = $targetVehicle?->id;
-                        }
+                    $newSlug    = $targetSlug;
+                    $counter    = 1;
+                    while (static::where('slug', $newSlug)->exists()) {
+                        $newSlug = $targetSlug . '-' . $counter++;
                     }
 
-                    $fillable = (new static)->getFillable();
-                    $data = collect($package->only($fillable))
-                        ->except(['user_id', 'slug', 'vehicle_id'])
-                        ->toArray();
+                    $twin = static::create(array_merge($data, [
+                        'user_id'  => $targetUserId,
+                        'slug'     => $newSlug,
+                        'twin_id'  => $package->id, // twin knows its origin
+                    ]));
 
-                    $data['badge_color'] = $data['badge_color'] ?: 'blue';
-                    $data['price_label'] = $data['price_label'] ?: 'HARGA MULAI';
-                    $data['duration']    = $data['duration'] ?: 'Full Day Tour (8 - 10 Jam)';
-                    $data['capacity']    = $data['capacity'] ?: '15 Person';
-                    $data['sort_order']  = $data['sort_order'] ?? 0;
-                    $data['is_active']   = (bool) ($data['is_active'] ?? true);
-
-                    if ($targetVehicleId !== null) {
-                        $data['vehicle_id'] = $targetVehicleId;
-                    } elseif ($package->vehicle_id === null) {
-                        $data['vehicle_id'] = null;
-                    }
-
-                    if ($other) {
-                        // Do not overwrite $other->slug to avoid unique constraint collisions
-                        $other->update($data);
-                    } else {
-                        // Generate a unique slug for target user
-                        $newSlug = $targetSlug;
-                        $counter = 1;
-                        while (static::where('slug', $newSlug)->exists()) {
-                            $newSlug = $targetSlug . '-' . $counter++;
-                        }
-
-                        static::create(array_merge($data, [
-                            'user_id' => $targetUserId,
-                            'slug'    => $newSlug,
-                        ]));
-                    }
+                    // Write back: record this package's twin_id so future saves find it directly
+                    static::where('id', $package->id)->update(['twin_id' => $twin->id]);
                 }
             } finally {
                 static::$isSyncing = false;
@@ -120,22 +122,13 @@ class TourPackage extends Model
 
             static::$isSyncing = true;
             try {
-                if (!empty($package->slug)) {
-                    $baseSlug = preg_replace('/-admin$/', '', $package->slug);
-                    $targetSlug = ($targetUserId === 3) ? ($baseSlug . '-admin') : $baseSlug;
+                // Use twin_id as the stable reference — same principle as the saved hook
+                $other = $package->twin_id
+                    ? static::where('id', $package->twin_id)->where('user_id', $targetUserId)->first()
+                    : null;
 
-                    $other = static::where('user_id', $targetUserId)
-                        ->where(function ($q) use ($package, $targetSlug, $baseSlug) {
-                            $q->where('slug', $targetSlug)
-                              ->orWhere('slug', $baseSlug)
-                              ->orWhere('slug', $package->slug)
-                              ->orWhere('title', $package->title);
-                        })
-                        ->first();
-
-                    if ($other) {
-                        $other->delete();
-                    }
+                if ($other) {
+                    $other->delete();
                 }
             } finally {
                 static::$isSyncing = false;
@@ -145,6 +138,7 @@ class TourPackage extends Model
 
     protected $fillable = [
         'user_id',
+        'twin_id',
         'vehicle_id',
         'title',
         'slug',
