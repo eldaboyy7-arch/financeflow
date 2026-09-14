@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const emit = defineEmits<{
@@ -788,7 +788,7 @@ onUnmounted(() => {
             </div>
 
             <!-- Content: Calendar (StartDate or EndDate) -->
-            <div v-else-if="mobileSheet === 'startDate' || mobileSheet === 'endDate'" class="space-y-3">
+            <div v-else-if="mobileSheet === 'startDate' || mobileSheet === 'endDate'" class="space-y-4">
               <div class="flex items-center justify-between px-1">
                 <button
                   type="button"
@@ -798,7 +798,7 @@ onUnmounted(() => {
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
                 </button>
-                <span class="text-sm font-black text-slate-900">{{ monthNames[calMonth] }} {{ calYear }}</span>
+                <span class="text-base font-black text-slate-900">{{ monthNames[calMonth] }} {{ calYear }}</span>
                 <button
                   type="button"
                   @click="nextMonth"
@@ -809,13 +809,13 @@ onUnmounted(() => {
               </div>
 
               <!-- Day Headers -->
-              <div class="grid grid-cols-7 gap-1 text-center font-bold text-xs text-slate-400 mb-1">
+              <div class="grid grid-cols-7 text-center text-[11px] font-semibold text-slate-400 mb-0.5 tracking-wide">
                 <span v-for="d in dayHeaders" :key="d">{{ d }}</span>
               </div>
 
               <!-- Days Grid -->
-              <div class="grid grid-cols-7 gap-1.5">
-                <div v-for="blank in firstDayOffset" :key="'blank-ms-' + blank" class="h-10"></div>
+              <div class="grid grid-cols-7 gap-1">
+                <div v-for="blank in firstDayOffset" :key="'blank-ms-' + blank" class="h-9"></div>
                 <button
                   v-for="day in daysInCalMonth"
                   :key="day"
@@ -851,7 +851,7 @@ onUnmounted(() => {
                 <button
                   type="button"
                   @click="closeMobileSheet()"
-                  class="px-5 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs shadow-md"
+                  class="px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-md shadow-blue-600/30 transition-colors"
                 >
                   Selesai
                 </button>
@@ -885,3 +885,4 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
+

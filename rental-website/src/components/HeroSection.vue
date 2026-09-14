@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import type { PublicVehicle } from '@/types/fleet'
 import QuickSearchWidget from '@/components/QuickSearchWidget.vue'
@@ -31,7 +31,7 @@ const emit = defineEmits<{
         <!-- Headline -->
         <h1 class="font-display text-2xl sm:text-5xl xl:text-6xl font-black text-white tracking-tight leading-[1.15] mb-2 sm:mb-4 drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]">
           Jelajahi Bintan<br class="hidden sm:inline" />
-          <span>dengan Nyaman.</span>
+          <span> dengan Nyaman.</span>
         </h1>
 
         <!-- Subtitle -->
@@ -72,3 +72,4 @@ const emit = defineEmits<{
     </div>
   </section>
 </template>
+
