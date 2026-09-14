@@ -265,7 +265,7 @@ onUnmounted(() => {
         <article
           v-for="car in vehicles"
           :key="car.id"
-          class="snap-start shrink-0 w-[78vw] max-w-[280px] sm:w-[260px] lg:w-auto bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-lg transition-all duration-200 group"
+          class="snap-start shrink-0 w-[44vw] max-w-[180px] sm:w-[260px] lg:w-auto bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-lg transition-all duration-200 group"
         >
           <!-- Vehicle Photo Stage -->
           <div class="relative aspect-[16/10] bg-slate-100 overflow-hidden cursor-pointer select-none"
@@ -351,14 +351,14 @@ onUnmounted(() => {
           </div>
 
           <!-- Card Content Body -->
-          <div class="p-4 sm:p-5 flex flex-col justify-between flex-1">
+          <div class="p-2.5 sm:p-5 flex flex-col justify-between flex-1">
             <div>
               <!-- Category & Year Sub-tag -->
               <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
                 <span class="font-bold text-[10px] sm:text-[11px] uppercase tracking-wider text-blue-600">
                   {{ getVehicleCategoryBracket(car.capacity).shortLabel }}
                 </span>
-                <span class="text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                <span class="text-[10px] sm:text-[11px] text-slate-500 font-medium hidden sm:inline">
                   Tahun {{ car.model_year }}
                 </span>
               </div>
@@ -369,7 +369,7 @@ onUnmounted(() => {
               </h3>
 
               <!-- Specification Badges -->
-              <div class="mt-2.5 sm:mt-3 flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-600">
+              <div class="mt-2.5 sm:mt-3 hidden sm:flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-600">
                 <span class="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md bg-slate-100 font-medium">
                   <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -419,7 +419,7 @@ onUnmounted(() => {
                 :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName, activeFilter)"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="w-full h-9 sm:h-11 px-3 sm:px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-xs hover:shadow-emerald-600/25 transition-all active:scale-98"
+                class="hidden sm:inline-flex w-full h-9 sm:h-11 px-3 sm:px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold items-center justify-center gap-1.5 shadow-xs hover:shadow-emerald-600/25 transition-all active:scale-98"
               >
                 <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
@@ -430,7 +430,7 @@ onUnmounted(() => {
               <button
                 v-else-if="car.status === 'maintenance'"
                 disabled
-                class="w-full h-9 sm:h-11 px-3 sm:px-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold inline-flex items-center justify-center gap-1.5 cursor-not-allowed select-none"
+                class="hidden sm:inline-flex w-full h-9 sm:h-11 px-3 sm:px-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold items-center justify-center gap-1.5 cursor-not-allowed select-none"
               >
                 <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                 <span>Perawatan</span>
@@ -439,7 +439,7 @@ onUnmounted(() => {
               <button
                 v-else
                 disabled
-                class="w-full h-9 sm:h-11 px-3 sm:px-4 rounded-xl bg-slate-100 text-slate-400 text-xs font-medium inline-flex items-center justify-center cursor-not-allowed"
+                class="hidden sm:inline-flex w-full h-9 sm:h-11 px-3 sm:px-4 rounded-xl bg-slate-100 text-slate-400 text-xs font-medium items-center justify-center cursor-not-allowed"
               >
                 <span>{{ car.status_label || 'Tidak Tersedia' }}</span>
               </button>
