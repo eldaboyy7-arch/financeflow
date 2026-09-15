@@ -21,3 +21,49 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ==========================================================================
+   SCROLL REVEAL ANIMATIONS (Smooth 60fps Hardware Accelerated)
+   ========================================================================== */
+.reveal-init {
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-duration: 0.65s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-fade-up {
+  transform: translateY(28px);
+}
+
+.reveal-fade-down {
+  transform: translateY(-28px);
+}
+
+.reveal-fade-left {
+  transform: translateX(30px);
+}
+
+.reveal-fade-right {
+  transform: translateX(-30px);
+}
+
+.reveal-zoom-in {
+  transform: scale(0.93);
+}
+
+.reveal-active {
+  opacity: 1 !important;
+  transform: translate(0, 0) scale(1) !important;
+}
+
+/* Reduced motion preference for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-init {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+

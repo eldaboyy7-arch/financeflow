@@ -97,7 +97,7 @@ onUnmounted(() => {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Header Section: Tanpa Sidebar / Filter Kontrol (Full Width Travel Showcase) -->
-      <div class="flex items-end justify-between gap-3 mb-6 sm:mb-10">
+      <div v-reveal:fade-up class="flex items-end justify-between gap-3 mb-6 sm:mb-10">
         <div>
           <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-1.5 sm:mb-2">
             PILIHAN ARMADA
@@ -223,8 +223,9 @@ onUnmounted(() => {
         class="flex gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-4 lg:gap-4 xl:gap-5 lg:overflow-visible lg:pb-0 scrollbar-none"
       >
         <article
-          v-for="car in vehicles"
+          v-for="(car, idx) in vehicles"
           :key="car.id"
+          v-reveal:fade-up="(idx % 4) * 90"
           class="snap-start shrink-0 w-[44vw] max-w-[180px] sm:max-w-none sm:w-[260px] lg:w-auto bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-lg transition-all duration-200 group"
         >
           <!-- Vehicle Photo Stage -->

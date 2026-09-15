@@ -115,13 +115,19 @@ onMounted(() => {
       <span id="faq" class="sr-only"></span>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch">
-          <LocationSection />
-          <FaqSection />
+          <div v-reveal:fade-right>
+            <LocationSection />
+          </div>
+          <div v-reveal:fade-left>
+            <FaqSection />
+          </div>
         </div>
       </div>
     </section>
 
     <!-- 8. Final CTA Banner (Dark Navy Banner + WhatsApp) -->
-    <FinalCtaSection />
+    <div v-reveal:zoom-in>
+      <FinalCtaSection />
+    </div>
   </div>
 </template>

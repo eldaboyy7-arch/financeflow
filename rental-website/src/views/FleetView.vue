@@ -218,8 +218,9 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
         <!-- Vehicles Grid (Etalase 2-Kolom di Mobile, 3-Kolom di Desktop, 4-Kolom di Wide) -->
         <div v-else class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4">
           <article
-            v-for="car in filteredVehicles"
+            v-for="(car, idx) in filteredVehicles"
             :key="car.id"
+            v-reveal:fade-up="(idx % 4) * 75"
             class="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-md transition-all group"
           >
             <!-- Vehicle Photo Container -->

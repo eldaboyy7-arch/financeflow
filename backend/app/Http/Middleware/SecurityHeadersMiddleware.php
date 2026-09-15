@@ -37,8 +37,9 @@ class SecurityHeadersMiddleware
 
         // 4. Permissions-Policy: Allow camera on self and frontend origin (for Smart Receipt Scanner) while disabling unused device APIs
         $cameraOrigins = ['self'];
-        if ($frontendUrl) {
-            $parsedOrigin = parse_url($frontendUrl, PHP_URL_SCHEME) . '://' . parse_url($frontendUrl, PHP_URL_HOST) . (parse_url($frontendUrl, PHP_URL_PORT) ? ':' . parse_url($frontendUrl, PHP_URL_PORT) : '');
+        $frontendList = array_values(array_filter(array_map('trim', explode(',', $frontendUrl))));
+        foreach ($frontendList as $fUrl) {
+            $parsedOrigin = parse_url($fUrl, PHP_URL_SCHEME) . '://' . parse_url($fUrl, PHP_URL_HOST) . (parse_url($fUrl, PHP_URL_PORT) ? ':' . parse_url($fUrl, PHP_URL_PORT) : '');
             if ($parsedOrigin && $parsedOrigin !== '://') {
                 $cameraOrigins[] = '"' . $parsedOrigin . '"';
             }
@@ -48,8 +49,8 @@ class SecurityHeadersMiddleware
 
         // 5. Content-Security-Policy (Environment-Aware Least-Privilege Policy)
         $connectOrigins = ["'self'"];
-        if ($frontendUrl) {
-            $connectOrigins[] = $frontendUrl;
+        foreach ($frontendList as $fUrl) {
+            $connectOrigins[] = rtrim($fUrl, '/');
         }
         if ($appUrl) {
             $connectOrigins[] = $appUrl;

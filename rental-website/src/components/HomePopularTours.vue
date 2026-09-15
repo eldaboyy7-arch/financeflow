@@ -65,7 +65,7 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Section Header -->
-      <div class="flex items-end justify-between gap-3 mb-6 sm:mb-10">
+      <div v-reveal:fade-up class="flex items-end justify-between gap-3 mb-6 sm:mb-10">
         <div>
           <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-1.5 sm:mb-2">
             PAKET TOUR
@@ -157,6 +157,7 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
         <RouterLink
           v-for="(pkg, idx) in tourPackages.slice(0, 3)"
           :key="pkg.id || idx"
+          v-reveal:fade-up="idx * 120"
           to="/paket-tour-bintan"
           class="group relative rounded-3xl overflow-hidden aspect-[16/10] bg-slate-900 shadow-md hover:shadow-xl transition-all duration-300 block"
         >

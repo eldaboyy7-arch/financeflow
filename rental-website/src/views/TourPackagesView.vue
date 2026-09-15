@@ -231,9 +231,10 @@ onBeforeUnmount(() => {
       <!-- Detailed Tour Packages List -->
       <div class="space-y-4 mb-12 sm:mb-16">
         <article
-          v-for="pkg in tourPackages"
+          v-for="(pkg, idx) in tourPackages"
           :key="pkg.id"
           :id="pkg.slug"
+          v-reveal:fade-up="idx * 120"
           class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-md transition-all duration-300"
         >
           <!-- ── COMPACT DEFAULT VIEW ─────────────────────────────── -->

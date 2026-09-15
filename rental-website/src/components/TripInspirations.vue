@@ -22,7 +22,7 @@ const getWhatsAppUrl = (text: string) => {
       <div class="lg:flex lg:gap-10 xl:gap-14 items-start">
 
         <!-- Kolom Judul (kiri di desktop, atas di mobile) -->
-        <div class="lg:w-72 xl:w-80 shrink-0 mb-6 lg:mb-0 lg:pt-1">
+        <div v-reveal:fade-right class="lg:w-72 xl:w-80 shrink-0 mb-6 lg:mb-0 lg:pt-1">
           <p class="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-2">
             DESTINASI FAVORIT
           </p>
@@ -54,8 +54,9 @@ const getWhatsAppUrl = (text: string) => {
           <div class="flex gap-3.5 overflow-x-auto pb-2 snap-x snap-mandatory no-scrollbar
                       lg:grid lg:grid-cols-3 lg:gap-4 lg:overflow-visible lg:pb-0">
             <div
-              v-for="dest in destinations"
+              v-for="(dest, idx) in destinations"
               :key="dest.id"
+              v-reveal:fade-up="idx * 100"
               class="snap-start shrink-0 w-[78vw] sm:w-[280px] lg:w-auto
                      bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col
                      hover:border-blue-300 hover:shadow-md transition-all group"

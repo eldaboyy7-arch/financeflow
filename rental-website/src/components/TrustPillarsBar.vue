@@ -38,6 +38,7 @@ const pillars = [
         <div
           v-for="(p, idx) in pillars"
           :key="idx"
+          v-reveal:fade-up="idx * 80"
           class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-1.5 sm:gap-3.5 p-1.5 sm:p-3 rounded-2xl transition-all hover:bg-slate-50"
         >
           <!-- Icon Circle / Frame matching mockup -->
