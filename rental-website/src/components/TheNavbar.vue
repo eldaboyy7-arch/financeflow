@@ -106,6 +106,13 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
             Home
           </RouterLink>
           <RouterLink
+            to="/layanan"
+            class="hover:text-white hover:drop-shadow transition-colors"
+            :class="route.path === '/layanan' ? 'text-blue-400 font-bold' : ''"
+          >
+            Layanan
+          </RouterLink>
+          <RouterLink
             to="/armada"
             class="hover:text-white hover:drop-shadow transition-colors"
             :class="route.path === '/armada' ? 'text-blue-400 font-bold' : ''"
