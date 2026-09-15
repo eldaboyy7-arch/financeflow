@@ -23,8 +23,42 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(
         Kami melayani berbagai area utama di Pulau Bintan dan Tanjungpinang. Antar-jemput dapat disesuaikan kebutuhan Anda.
       </p>
 
-      <!-- List of locations with map pin -->
-      <div class="space-y-3.5 text-xs sm:text-sm text-slate-700">
+      <!-- Card Kantor & Garasi Utama -->
+      <div class="mb-4 p-4 rounded-xl bg-amber-50 border border-amber-200/80">
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+              <strong class="text-slate-900 text-sm font-bold">Kantor &amp; Garasi Utama</strong>
+              <span class="inline-flex items-center text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-300/60">Pusat Armada</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed mb-2.5">
+              {{ siteConfig.rentalAddress }}
+            </p>
+            <a
+              :href="siteConfig.rentalMapsUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 hover:border-blue-400 text-slate-900 text-xs font-bold transition-all shadow-2xs group"
+            >
+              <svg class="w-3.5 h-3.5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+              <span>Buka Petunjuk Arah (Google Maps)</span>
+              <svg class="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- List of operational areas with map pin -->
+      <div class="space-y-3 text-xs sm:text-sm text-slate-700">
         <div class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
           <div class="w-6 h-6 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
