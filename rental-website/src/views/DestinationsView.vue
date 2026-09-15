@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { destinationsList } from '@/config/destinations'
@@ -55,7 +55,7 @@ const waGeneralConsultUrl = computed(() => {
       <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/40 to-slate-900/20 pointer-events-none"></div>
       <div class="absolute inset-0 bg-blue-950/10 mix-blend-multiply pointer-events-none"></div>
 
-      <div class="max-w-7xl mx-auto relative z-10 text-center">
+      <div v-reveal:fade-up class="max-w-7xl mx-auto relative z-10 text-center">
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/25 text-white text-xs font-semibold mb-6 backdrop-blur-md">
           <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
           <span>Dokumentasi Resmi &amp; Pariwisata Bintan</span>
@@ -87,7 +87,7 @@ const waGeneralConsultUrl = computed(() => {
     <!-- Main Content Section: Filter Bar & Cards -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <!-- Search & Category Filters -->
-      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm mb-8 space-y-4">
+      <div v-reveal:fade-up="80" class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm mb-8 space-y-4">
         <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
           <!-- Search Bar -->
           <div class="relative flex-1">
@@ -130,8 +130,9 @@ const waGeneralConsultUrl = computed(() => {
       <!-- Destinations Grid -->
       <div v-if="filteredDestinations.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <article
-          v-for="dest in filteredDestinations"
+          v-for="(dest, idx) in filteredDestinations"
           :key="dest.id"
+          v-reveal:fade-up="(idx % 3) * 90"
           class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col group"
         >
           <!-- Destination Photo Header -->
@@ -262,7 +263,7 @@ const waGeneralConsultUrl = computed(() => {
       </div>
 
       <!-- Bottom Banner: Custom Itinerary & Consultation -->
-      <section class="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950 text-white border border-slate-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+      <section v-reveal:zoom-in class="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950 text-white border border-slate-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="space-y-2 text-center md:text-left">
           <span class="inline-block text-[11px] font-bold uppercase tracking-wider text-blue-400">Konsultasi Rute Wisata</span>
           <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight">Ingin Rute Kustom atau Keliling Banyak Tempat?</h3>

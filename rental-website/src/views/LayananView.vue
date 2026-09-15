@@ -48,7 +48,7 @@ const mainServices = [
       <!-- Gradient overlay -->
       <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-slate-950/10 pointer-events-none"></div>
 
-      <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 sm:pb-32">
+      <div v-reveal:fade-up class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 sm:pb-32">
         <p class="text-xs font-bold uppercase tracking-[0.15em] text-amber-400 mb-3">
           3 Putri Mulya · Bintan & Tanjung Pinang
         </p>
@@ -90,15 +90,16 @@ const mainServices = [
     </section>
 
     <!-- ═══════════ 2 LAYANAN UTAMA ═══════════ -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-5">
+    <section v-reveal:fade-up class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-5">
       <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-5">Layanan Utama</p>
 
       <!-- MOBILE: Horizontal scroll -->
       <div class="sm:hidden -mx-4 px-4">
         <div class="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory" style="scrollbar-width:none;">
           <div
-            v-for="svc in mainServices"
+            v-for="(svc, idx) in mainServices"
             :key="svc.title"
+            v-reveal:fade-up="idx * 90"
             class="group relative flex-none snap-start rounded-2xl overflow-hidden bg-slate-900 flex flex-col justify-end"
             style="width:80vw;max-width:320px;height:360px;"
           >
@@ -138,8 +139,9 @@ const mainServices = [
       <!-- DESKTOP: 2-col grid -->
       <div class="hidden sm:grid grid-cols-2 gap-5">
         <div
-          v-for="svc in mainServices"
+          v-for="(svc, idx) in mainServices"
           :key="svc.title"
+          v-reveal:fade-up="idx * 90"
           class="group relative rounded-2xl overflow-hidden bg-slate-900 flex flex-col justify-end"
           style="min-height:380px;"
         >
@@ -170,7 +172,7 @@ const mainServices = [
     </section>
 
     <!-- ═══════════ PAKET TOUR — Full Width ═══════════ -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+    <section v-reveal:zoom-in class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
       <div class="group relative rounded-2xl overflow-hidden bg-slate-900 flex items-end" style="min-height:260px;">
         <img src="/images/destinations/busung.jpg" alt="Paket Tour Bintan"
           class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
@@ -195,7 +197,7 @@ const mainServices = [
     </section>
 
     <!-- ═══════════ ANTAR JEMPUT ═══════════ -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+    <section v-reveal:fade-up class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-200 rounded-2xl px-6 py-6">
         <div>
           <span class="text-[10px] font-bold uppercase tracking-widest text-violet-500 block mb-1.5">Tepat Waktu</span>
@@ -218,12 +220,12 @@ const mainServices = [
     </section>
 
     <!-- ══════════════ KENAPA KAMI ══════════════ -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pt-14 sm:pb-16">
+    <section v-reveal:fade-up class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pt-14 sm:pb-16">
       <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-8">Kenapa Memilih Kami?</p>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-5 sm:gap-6">
 
         <!-- Armada Terawat -->
-        <div class="flex flex-col gap-3">
+        <div v-reveal:fade-up="0" class="flex flex-col gap-3">
           <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
             <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -236,7 +238,7 @@ const mainServices = [
         </div>
 
         <!-- Driver Berpengalaman -->
-        <div class="flex flex-col gap-3">
+        <div v-reveal:fade-up="80" class="flex flex-col gap-3">
           <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
             <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -249,7 +251,7 @@ const mainServices = [
         </div>
 
         <!-- Harga Transparan -->
-        <div class="flex flex-col gap-3">
+        <div v-reveal:fade-up="160" class="flex flex-col gap-3">
           <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
             <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/>
@@ -262,7 +264,7 @@ const mainServices = [
         </div>
 
         <!-- Respon Cepat -->
-        <div class="flex flex-col gap-3">
+        <div v-reveal:fade-up="240" class="flex flex-col gap-3">
           <div class="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center shrink-0">
             <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
@@ -278,7 +280,7 @@ const mainServices = [
     </section>
 
     <!-- ═══════════ BOTTOM CTA ═══════════ -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+    <section v-reveal:zoom-in class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
       <div class="bg-slate-900 rounded-2xl px-7 sm:px-10 py-9 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
         <div>
           <p class="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-1.5">Butuh Saran?</p>

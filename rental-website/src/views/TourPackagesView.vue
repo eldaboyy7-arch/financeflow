@@ -153,7 +153,7 @@ onBeforeUnmount(() => {
       </nav>
 
       <!-- Page Header -->
-      <header class="max-w-3xl mb-6 sm:mb-10">
+      <header v-reveal:fade-up class="max-w-3xl mb-6 sm:mb-10">
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-semibold mb-3">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h8m-8 4h8m-8 4h4m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z"/>
@@ -171,7 +171,7 @@ onBeforeUnmount(() => {
       </header>
 
       <!-- Compact Value Proposition Strip -->
-      <div class="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 p-3 sm:p-4 mb-8 sm:mb-12 shadow-xs">
+      <div v-reveal:fade-up="60" class="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 p-3 sm:p-4 mb-8 sm:mb-12 shadow-xs">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
           <!-- Pillar 1 -->
           <div class="flex items-center gap-2.5 p-2 sm:p-2.5 rounded-lg bg-slate-50 border border-slate-100">
@@ -234,7 +234,7 @@ onBeforeUnmount(() => {
           v-for="(pkg, idx) in tourPackages"
           :key="pkg.id"
           :id="pkg.slug"
-          v-reveal:fade-up="idx * 120"
+          v-reveal:fade-up="idx * 90"
           class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-md transition-all duration-300"
         >
           <!-- ── COMPACT DEFAULT VIEW ─────────────────────────────── -->
@@ -442,7 +442,7 @@ onBeforeUnmount(() => {
 
 
       <!-- 5. Quick Comparison Table: HiAce Commuter vs HiAce Premio -->
-      <section class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 p-5 sm:p-8 mb-12 shadow-xs">
+      <section v-reveal:fade-up class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 p-5 sm:p-8 mb-12 shadow-xs">
         <div class="max-w-2xl mb-6">
           <span class="text-xs font-bold text-blue-600 uppercase tracking-wider block mb-1">Panduan Memilih</span>
           <h3 class="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
@@ -503,7 +503,7 @@ onBeforeUnmount(() => {
       </section>
 
       <!-- 6. Three-Step Booking Flow -->
-      <section class="mb-12">
+      <section v-reveal:fade-up class="mb-12">
         <div class="text-center max-w-xl mx-auto mb-8">
           <span class="text-xs font-bold text-blue-600 uppercase tracking-wider block mb-1">Kemudahan Layanan</span>
           <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
@@ -548,7 +548,7 @@ onBeforeUnmount(() => {
       </section>
 
       <!-- 7. Consultation & Custom Route Banner -->
-      <div class="bg-slate-900 rounded-2xl sm:rounded-3xl p-6 sm:p-10 text-white text-center max-w-3xl mx-auto shadow-md">
+      <div v-reveal:zoom-in class="bg-slate-900 rounded-2xl sm:rounded-3xl p-6 sm:p-10 text-white text-center max-w-3xl mx-auto shadow-md">
         <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-medium mb-3">
           <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>

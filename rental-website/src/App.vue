@@ -9,9 +9,13 @@ import TheFooter from '@/components/TheFooter.vue'
     <!-- Navbar (Sticky persistent WhatsApp access) -->
     <TheNavbar />
 
-    <!-- Routed Page Content -->
+    <!-- Routed Page Content with smooth transition -->
     <main class="flex-1">
-      <RouterView />
+      <RouterView v-slot="{ Component }">
+        <transition name="page-fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </RouterView>
     </main>
 
     <!-- Footer -->

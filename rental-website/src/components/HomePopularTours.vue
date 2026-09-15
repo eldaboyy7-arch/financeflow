@@ -96,6 +96,7 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
           <RouterLink
             v-for="(pkg, idx) in tourPackages.slice(0, 3)"
             :key="pkg.id || idx"
+            v-reveal:fade-up="idx * 80"
             to="/paket-tour-bintan"
             class="group relative rounded-2xl overflow-hidden bg-slate-900 shadow-md flex-none snap-start block"
             style="width:72vw;max-width:280px;aspect-ratio:3/4;"

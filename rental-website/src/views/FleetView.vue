@@ -110,7 +110,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
       </nav>
 
       <!-- Page Header -->
-      <header class="max-w-3xl mb-4 sm:mb-8">
+      <header v-reveal:fade-up class="max-w-3xl mb-4 sm:mb-8">
         <div class="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[11px] sm:text-xs font-semibold mb-2 sm:mb-3">
           <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
@@ -128,7 +128,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
       </header>
 
       <!-- 1. Category Filter Tabs (Single Source of Truth: FLEET_BRACKETS) -->
-      <div class="mb-6 overflow-x-auto pb-1">
+      <div v-reveal:fade-up="60" class="mb-6 overflow-x-auto pb-1">
         <div class="flex items-center gap-2 min-w-max">
           <button
             @click="categoryFilter = 'all'"
@@ -164,7 +164,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
       </div>
 
       <!-- 2. Search & Secondary Transmission Filter Bar -->
-      <div class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 p-3 sm:p-5 mb-5 sm:mb-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3.5">
+      <div v-reveal:fade-up="100" class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 p-3 sm:p-5 mb-5 sm:mb-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3.5">
         <!-- Search Box -->
         <div class="relative w-full sm:w-80">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -468,7 +468,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
       </div>
 
       <!-- 4. Bottom Cross-Selling Charter & Tour Banner -->
-      <div class="mt-12 sm:mt-16 bg-gradient-to-br from-blue-900 via-slate-900 to-indigo-950 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+      <div v-reveal:zoom-in class="mt-12 sm:mt-16 bg-gradient-to-br from-blue-900 via-slate-900 to-indigo-950 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
         <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="relative z-10 max-w-2xl">

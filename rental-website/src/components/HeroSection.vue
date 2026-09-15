@@ -19,7 +19,7 @@ const emit = defineEmits<{
 
     <!-- Main Hero Content Container (Di tengah layar) -->
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full my-auto py-3 sm:py-8">
-      <div class="max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
+      <div v-reveal:fade-up class="max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
         <!-- Eyebrow Gold Badge -->
         <p class="inline-block text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-300 mb-2 sm:mb-3 bg-slate-950/40 backdrop-blur-xs px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full border border-amber-400/40 shadow-md">
           RENTAL MOBIL &amp; TOUR BINTAN
@@ -64,7 +64,7 @@ const emit = defineEmits<{
     </div>
 
     <!-- Floating Quick Search Widget: tepat di bawah layar hero 1 layar penuh -->
-    <div class="relative z-20 pb-4 sm:pb-8 lg:pb-10 pt-2 sm:pt-4 shrink-0">
+    <div v-reveal:fade-up="100" class="relative z-20 pb-4 sm:pb-8 lg:pb-10 pt-2 sm:pt-4 shrink-0">
       <QuickSearchWidget @search="(p) => emit('search', p)" />
     </div>
   </section>
