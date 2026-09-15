@@ -19,20 +19,19 @@ const emit = defineEmits<{
 
     <!-- Main Hero Content Container (Mobile: di tengah, Desktop: di langit atas mobil) -->
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full my-auto sm:my-0 sm:mt-1 lg:mt-2 sm:mb-auto py-3 sm:py-4">
-      <div v-reveal:fade-up class="max-w-3xl text-center mx-auto">
+      <div v-reveal:fade-up class="max-w-4xl xl:max-w-5xl text-center mx-auto">
         <!-- Eyebrow Gold Badge -->
         <p class="inline-block text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-300 mb-2 sm:mb-3 bg-slate-950/40 backdrop-blur-xs px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full border border-amber-400/40 shadow-md">
           RENTAL MOBIL &amp; TOUR BINTAN
         </p>
 
-        <!-- Headline -->
-        <h1 class="font-display text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15] mb-2 sm:mb-3 drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]">
-          Jelajahi Bintan<br class="hidden sm:inline" />
-          <span> dengan Nyaman.</span>
+        <!-- Headline (1 baris di desktop & lebih besar) -->
+        <h1 class="font-display text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white tracking-tight leading-tight mb-2 sm:mb-3 sm:whitespace-nowrap drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]">
+          Jelajahi Bintan dengan Nyaman.
         </h1>
 
         <!-- Subtitle -->
-        <p class="text-xs sm:text-sm lg:text-base text-white/95 font-medium leading-relaxed mb-4 sm:mb-5 max-w-xl mx-auto drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+        <p class="text-xs sm:text-sm lg:text-base xl:text-lg text-white/95 font-medium leading-relaxed mb-4 sm:mb-6 max-w-2xl mx-auto drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
           Rental mobil dan paket perjalanan di Bintan untuk kebutuhan pribadi, keluarga, maupun rombongan.
         </p>
 
