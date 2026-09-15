@@ -90,6 +90,7 @@ class Vehicle extends Model
         'model_year',
         'status',
         'daily_rate',
+        'daily_rate_driver',
         'color',
         'notes',
         'photo_path',
@@ -114,10 +115,11 @@ class Vehicle extends Model
     ];
 
     protected $casts = [
-        'daily_rate'     => 'decimal:2',
-        'capacity'       => 'integer',
-        'is_featured'    => 'boolean',
-        'gallery_photos' => 'array',
+        'daily_rate'        => 'decimal:2',
+        'daily_rate_driver' => 'decimal:2',
+        'capacity'          => 'integer',
+        'is_featured'       => 'boolean',
+        'gallery_photos'    => 'array',
     ];
 
     protected $appends = [

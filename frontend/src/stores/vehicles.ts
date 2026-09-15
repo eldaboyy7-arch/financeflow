@@ -18,6 +18,7 @@ export interface Vehicle {
   model_year: string | null
   status: 'available' | 'rented' | 'maintenance'
   daily_rate: number
+  daily_rate_driver?: number | null
   color: string
   notes: string | null
   photo_path: string | null

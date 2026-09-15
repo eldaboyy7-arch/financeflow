@@ -5,7 +5,7 @@ import { useFleet } from '@/composables/useFleet'
 import { FLEET_BRACKETS, getVehicleCategoryBracket, isDriverMandatory, TOUR_PACKAGE_ROUTE } from '@/config/fleetCategories'
 import { siteConfig } from '@/config/site'
 import { generateVehicleWhatsAppUrl, generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
-import type { PublicVehicle } from '@/types/fleet'
+import type { PublicVehicle, RentalServiceType } from '@/types/fleet'
 
 const {
   filteredVehicles,
@@ -17,6 +17,37 @@ const {
   stats,
   fetchVehicles
 } = useFleet()
+
+// Dual Pricing state per vehicle: carId -> 'self_drive' | 'with_driver'
+const selectedServices = ref<Record<number, RentalServiceType>>({})
+
+function getSelectedService(car: PublicVehicle): RentalServiceType {
+  if (selectedServices.value[car.id]) {
+    return selectedServices.value[car.id]
+  }
+  if (isDriverMandatory(car.capacity) || (car.daily_rate <= 0 && !!car.daily_rate_driver)) {
+    return 'with_driver'
+  }
+  return 'self_drive'
+}
+
+function setService(carId: number, service: RentalServiceType) {
+  selectedServices.value[carId] = service
+}
+
+function getActiveDailyRateFormatted(car: PublicVehicle): string {
+  const s = getSelectedService(car)
+  if (s === 'with_driver' && car.daily_rate_driver_formatted) {
+    return car.daily_rate_driver_formatted
+  }
+  return car.daily_rate_formatted
+}
+
+function hasDualPricing(car: PublicVehicle): boolean {
+  return !isDriverMandatory(car.capacity) &&
+         car.daily_rate > 0 &&
+         Boolean(car.daily_rate_driver && car.daily_rate_driver > 0)
+}
 
 // Modal Photo & Detail Preview state
 const previewVehicle = ref<PublicVehicle | null>(null)
@@ -346,23 +377,51 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
 
               <!-- Price & Button Area -->
               <div class="pt-2 mt-2 border-t border-slate-100 flex flex-col gap-1.5 sm:gap-2">
+                <!-- Dual Pricing Switcher or Service Badge -->
+                <div v-if="hasDualPricing(car)" class="flex items-center p-0.5 rounded-lg bg-slate-100/90 border border-slate-200/80 text-[10px] sm:text-[11px]">
+                  <button
+                    type="button"
+                    @click.stop="setService(car.id, 'self_drive')"
+                    :class="getSelectedService(car) === 'self_drive' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'text-slate-500 hover:text-slate-800 font-medium'"
+                    class="flex-1 py-1 px-1 rounded-md text-center transition-all cursor-pointer flex items-center justify-center gap-1"
+                  >
+                    <span>🔑</span>
+                    <span class="truncate">Lepas Kunci</span>
+                  </button>
+                  <button
+                    type="button"
+                    @click.stop="setService(car.id, 'with_driver')"
+                    :class="getSelectedService(car) === 'with_driver' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'text-slate-500 hover:text-slate-800 font-medium'"
+                    class="flex-1 py-1 px-1 rounded-md text-center transition-all cursor-pointer flex items-center justify-center gap-1"
+                  >
+                    <span>👨‍✈️</span>
+                    <span class="truncate">+ Supir</span>
+                  </button>
+                </div>
+                <div v-else-if="isDriverMandatory(car.capacity)" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-100 text-indigo-700 text-[10px] font-bold self-start">
+                  <span>👨‍✈️ Wajib + Supir</span>
+                </div>
+                <div v-else class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium self-start">
+                  <span>🔑 Lepas Kunci</span>
+                </div>
+
                 <!-- Price Row -->
                 <div class="flex flex-col">
-                  <div class="flex items-baseline gap-1">
-                    <span class="text-xs sm:text-base font-black text-slate-900 tracking-tight leading-none">
-                      {{ car.daily_rate_formatted }}
+                  <span class="text-[9px] sm:text-[10px] text-slate-400 font-medium leading-none">
+                    {{ getSelectedService(car) === 'with_driver' ? 'Tarif + Supir' : 'Tarif Lepas Kunci' }}
+                  </span>
+                  <div class="flex items-baseline gap-1 mt-0.5">
+                    <span class="text-xs sm:text-base font-black text-slate-900 tracking-tight leading-none transition-all duration-200">
+                      {{ getActiveDailyRateFormatted(car) }}
                     </span>
                     <span class="text-[9px] sm:text-[11px] text-slate-500 font-normal leading-none">/hari</span>
                   </div>
-                  <span v-if="isDriverMandatory(car.capacity)" class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5 font-medium line-clamp-1">
-                    *Termasuk supir
-                  </span>
                 </div>
 
                 <!-- Action Button -->
                 <a
                   v-if="car.status === 'available'"
-                  :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName)"
+                  :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName, null, getSelectedService(car))"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="w-full h-8 sm:h-9 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] sm:text-xs font-bold whitespace-nowrap inline-flex items-center justify-center gap-1 sm:gap-1.5 transition-all shadow-xs hover:shadow-sm active:scale-95"
@@ -384,7 +443,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
 
                 <a
                   v-else-if="car.status === 'rented'"
-                  :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName)"
+                  :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName, null, getSelectedService(car))"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="w-full h-8 sm:h-9 px-2 sm:px-3 rounded-lg sm:rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 text-[10px] sm:text-xs font-semibold whitespace-nowrap inline-flex items-center justify-center transition-colors"
@@ -608,21 +667,47 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
           </div>
 
           <!-- Bottom Action Bar -->
-          <div class="p-3 sm:p-5 bg-white border-t border-slate-100 flex items-center justify-between gap-3 shrink-0">
-            <div>
-              <span class="text-[9px] sm:text-[11px] text-slate-400 block font-medium uppercase tracking-wider leading-none">Tarif Sewa</span>
-              <div class="mt-0.5">
-                <span class="text-base sm:text-2xl font-black text-slate-900 tracking-tight leading-tight">{{ previewVehicle.daily_rate_formatted }}</span>
-                <span class="text-[10px] sm:text-xs font-normal text-slate-500">/hari</span>
+          <div class="p-3 sm:p-5 bg-white border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shrink-0">
+            <div class="flex flex-col gap-1.5">
+              <!-- Dual pricing toggle in modal -->
+              <div v-if="hasDualPricing(previewVehicle)" class="flex items-center p-0.5 rounded-lg bg-slate-100 border border-slate-200 text-xs self-start">
+                <button
+                  type="button"
+                  @click="setService(previewVehicle.id, 'self_drive')"
+                  :class="getSelectedService(previewVehicle) === 'self_drive' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'text-slate-500 hover:text-slate-800 font-medium'"
+                  class="px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1"
+                >
+                  <span>🔑 Lepas Kunci</span>
+                </button>
+                <button
+                  type="button"
+                  @click="setService(previewVehicle.id, 'with_driver')"
+                  :class="getSelectedService(previewVehicle) === 'with_driver' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'text-slate-500 hover:text-slate-800 font-medium'"
+                  class="px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1"
+                >
+                  <span>👨‍✈️ + Supir</span>
+                </button>
+              </div>
+
+              <div>
+                <span class="text-[9px] sm:text-[11px] text-slate-400 block font-medium uppercase tracking-wider leading-none">
+                  {{ getSelectedService(previewVehicle) === 'with_driver' ? 'Tarif + Supir' : 'Tarif Lepas Kunci' }}
+                </span>
+                <div class="mt-0.5">
+                  <span class="text-base sm:text-2xl font-black text-slate-900 tracking-tight leading-tight transition-all duration-200">
+                    {{ getActiveDailyRateFormatted(previewVehicle) }}
+                  </span>
+                  <span class="text-[10px] sm:text-xs font-normal text-slate-500">/hari</span>
+                </div>
               </div>
             </div>
 
             <a
               v-if="previewVehicle.status === 'available'"
-              :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName)"
+              :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName, null, getSelectedService(previewVehicle))"
               target="_blank"
               rel="noopener noreferrer"
-              class="py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm hover:shadow-emerald-600/30 transition-all active:scale-95"
+              class="w-full sm:w-auto py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm hover:shadow-emerald-600/30 transition-all active:scale-95"
             >
               <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
               <span>Booking WhatsApp</span>

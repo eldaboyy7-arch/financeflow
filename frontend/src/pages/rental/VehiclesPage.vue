@@ -101,6 +101,7 @@ const defaultForm = {
   model_year: '',
   status: 'available' as 'available' | 'rented' | 'maintenance',
   daily_rate: 0 as number,
+  daily_rate_driver: 0 as number,
   color: '#2563EB',
   transmission: 'matic' as 'matic' | 'manual',
   capacity: 7,
@@ -134,6 +135,7 @@ function openEdit(v: Vehicle) {
     model_year: v.model_year ?? '',
     status: v.status,
     daily_rate: Number(v.daily_rate) || 0,
+    daily_rate_driver: Number(v.daily_rate_driver) || 0,
     color: v.color || '#2563EB',
     transmission: v.transmission || 'matic',
     capacity: Number(v.capacity) || 7,
@@ -185,11 +187,17 @@ async function submitVehicle() {
   submitting.value = true
   modalError.value = ''
   try {
+    const payload = {
+      ...form.value,
+      daily_rate_driver: form.value.daily_rate_driver && Number(form.value.daily_rate_driver) > 0
+        ? Number(form.value.daily_rate_driver)
+        : null
+    }
     if (editingId.value) {
-      await store.updateVehicle(editingId.value, form.value)
+      await store.updateVehicle(editingId.value, payload)
       uiStore.showToast('Data armada berhasil diperbarui!')
     } else {
-      await store.createVehicle(form.value)
+      await store.createVehicle(payload)
       uiStore.showToast('Unit mobil baru berhasil ditambahkan!')
     }
     showModal.value = false
@@ -423,14 +431,20 @@ function statusBadge(s: string) {
 
           <!-- Marketplace Daily Rate Price Tag & Quick Income Button -->
           <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-700/60 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5">
-            <div>
-              <div v-if="v.daily_rate > 0" class="flex items-baseline gap-0.5">
+            <div class="space-y-0.5">
+              <div v-if="v.daily_rate > 0" class="flex items-baseline gap-1">
                 <span class="text-xs sm:text-sm font-black text-slate-900 dark:text-white tabular-nums">
                   {{ formatCurrency(v.daily_rate) }}
                 </span>
-                <span class="text-[9px] text-slate-400">/hari</span>
+                <span class="text-[9px] text-slate-400">/hr (Lepas Kunci)</span>
               </div>
-              <span v-else class="text-[10px] text-slate-400 italic">Tarif belum diatur</span>
+              <div v-if="v.daily_rate_driver && Number(v.daily_rate_driver) > 0" class="flex items-baseline gap-1">
+                <span class="text-[11px] sm:text-xs font-bold text-blue-600 dark:text-blue-400 tabular-nums">
+                  {{ formatCurrency(v.daily_rate_driver) }}
+                </span>
+                <span class="text-[9px] text-slate-400">/hr (+ Supir)</span>
+              </div>
+              <span v-if="(!v.daily_rate || v.daily_rate <= 0) && (!v.daily_rate_driver || Number(v.daily_rate_driver) <= 0)" class="text-[10px] text-slate-400 italic">Tarif belum diatur</span>
             </div>
 
             <!-- 1-Klik Catat Pemasukan Sewa -->
@@ -502,24 +516,49 @@ function statusBadge(s: string) {
               </div>
             </div>
 
-            <!-- Status & Tarif Sewa -->
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Status Armada</label>
-                <SelectInput
-                  v-model="form.status"
-                  :options="statusOptions"
-                  placeholder="Pilih Status..."
-                />
+            <!-- Status Armada -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Status Armada</label>
+              <SelectInput
+                v-model="form.status"
+                :options="statusOptions"
+                placeholder="Pilih Status..."
+              />
+            </div>
+
+            <!-- Opsi Tarif: Lepas Kunci & Dengan Supir -->
+            <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-900 dark:text-white">Opsi Paket & Tarif Sewa</span>
+                <span class="text-[10px] text-slate-400">Harga per 24 Jam</span>
               </div>
 
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Tarif Sewa / Hari (Rp)</label>
-                <CurrencyInput
-                  v-model="form.daily_rate"
-                  placeholder="cth. 350.000"
-                  class="w-full"
-                />
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Tarif Lepas Kunci -->
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    🔑 Tarif Lepas Kunci (Rp)
+                  </label>
+                  <CurrencyInput
+                    v-model="form.daily_rate"
+                    placeholder="cth. 350.000"
+                    class="w-full"
+                  />
+                  <p class="text-[9px] text-slate-400 mt-1">Kosongkan jika wajib supir (cth. HiAce)</p>
+                </div>
+
+                <!-- Tarif Dengan Supir -->
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    👨‍✈️ Tarif + Supir (Rp)
+                  </label>
+                  <CurrencyInput
+                    v-model="form.daily_rate_driver"
+                    placeholder="cth. 550.000"
+                    class="w-full"
+                  />
+                  <p class="text-[9px] text-slate-400 mt-1">Opsional, jika melayani include driver</p>
+                </div>
               </div>
             </div>
 

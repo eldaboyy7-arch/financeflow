@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
-import type { PublicVehicle } from '@/types/fleet'
+import type { PublicVehicle, RentalServiceType } from '@/types/fleet'
 import { siteConfig } from '@/config/site'
 import { generateVehicleWhatsAppUrl } from '@/utils/whatsapp'
-import { getVehicleCategoryBracket } from '@/config/fleetCategories'
+import { getVehicleCategoryBracket, isDriverMandatory } from '@/config/fleetCategories'
 
 import type { BookingFilterParams } from '@/utils/whatsapp'
 
@@ -47,6 +47,37 @@ const filterSummaryText = computed(() => {
   }
   return parts.join(' • ') || 'Kriteria Terpilih'
 })
+
+// Dual Pricing state per vehicle: carId -> 'self_drive' | 'with_driver'
+const selectedServices = ref<Record<number, RentalServiceType>>({})
+
+function getSelectedService(car: PublicVehicle): RentalServiceType {
+  if (selectedServices.value[car.id]) {
+    return selectedServices.value[car.id]
+  }
+  if (isDriverMandatory(car.capacity) || (car.daily_rate <= 0 && !!car.daily_rate_driver)) {
+    return 'with_driver'
+  }
+  return 'self_drive'
+}
+
+function setService(carId: number, service: RentalServiceType) {
+  selectedServices.value[carId] = service
+}
+
+function getActiveDailyRateFormatted(car: PublicVehicle): string {
+  const s = getSelectedService(car)
+  if (s === 'with_driver' && car.daily_rate_driver_formatted) {
+    return car.daily_rate_driver_formatted
+  }
+  return car.daily_rate_formatted
+}
+
+function hasDualPricing(car: PublicVehicle): boolean {
+  return !isDriverMandatory(car.capacity) &&
+         car.daily_rate > 0 &&
+         Boolean(car.daily_rate_driver && car.daily_rate_driver > 0)
+}
 
 // Modal Photo & Detail Preview state
 const previewVehicle = ref<PublicVehicle | null>(null)
@@ -330,13 +361,58 @@ onUnmounted(() => {
               </div>
             </div>
 
-            <!-- Price & Booking CTA -->
-            <div class="mt-2 sm:mt-5 pt-2 sm:pt-3 border-t border-slate-100">
+            <!-- Dual Pricing Switcher or Service Badge -->
+            <div class="mt-2 sm:mt-4 pt-2 border-t border-slate-100">
+              <!-- Jika unit support Lepas Kunci dan + Supir -->
+              <div
+                v-if="hasDualPricing(car)"
+                class="flex items-center p-0.5 rounded-lg bg-slate-100/90 border border-slate-200/80 mb-2 text-[10px] sm:text-[11px]"
+              >
+                <button
+                  type="button"
+                  @click.stop="setService(car.id, 'self_drive')"
+                  :class="getSelectedService(car) === 'self_drive' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'text-slate-500 hover:text-slate-800 font-medium'"
+                  class="flex-1 py-1 px-1 rounded-md text-center transition-all cursor-pointer flex items-center justify-center gap-1"
+                >
+                  <span>🔑</span>
+                  <span>Lepas Kunci</span>
+                </button>
+                <button
+                  type="button"
+                  @click.stop="setService(car.id, 'with_driver')"
+                  :class="getSelectedService(car) === 'with_driver' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'text-slate-500 hover:text-slate-800 font-medium'"
+                  class="flex-1 py-1 px-1 rounded-md text-center transition-all cursor-pointer flex items-center justify-center gap-1"
+                >
+                  <span>👨‍✈️</span>
+                  <span>+ Supir</span>
+                </button>
+              </div>
+
+              <!-- Jika unit wajib supir (cth: HiAce & Bus) -->
+              <div
+                v-else-if="isDriverMandatory(car.capacity)"
+                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-50 border border-indigo-100 text-indigo-700 text-[10px] font-bold mb-2"
+              >
+                <span>👨‍✈️ Wajib + Supir</span>
+              </div>
+
+              <!-- Jika hanya lepas kunci -->
+              <div
+                v-else
+                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-medium mb-2"
+              >
+                <span>🔑 Lepas Kunci</span>
+              </div>
+
               <div class="flex items-center justify-between mb-0 sm:mb-2.5">
                 <div>
-                  <span class="text-[9px] sm:text-[11px] text-slate-400 font-medium block leading-none">Mulai dari</span>
+                  <span class="text-[9px] sm:text-[11px] text-slate-400 font-medium block leading-none">
+                    {{ getSelectedService(car) === 'with_driver' ? 'Tarif + Supir' : 'Tarif Lepas Kunci' }}
+                  </span>
                   <div class="mt-0.5 flex items-baseline gap-0.5 sm:block">
-                    <span class="font-display text-xs sm:text-lg font-black text-slate-900 tracking-tight whitespace-nowrap">{{ car.daily_rate_formatted }}</span>
+                    <span class="font-display text-xs sm:text-lg font-black text-slate-900 tracking-tight whitespace-nowrap transition-all duration-200">
+                      {{ getActiveDailyRateFormatted(car) }}
+                    </span>
                     <span class="text-[9px] sm:text-[11px] text-slate-500 font-normal whitespace-nowrap">/hari</span>
                   </div>
                 </div>
@@ -355,7 +431,7 @@ onUnmounted(() => {
               <!-- Action Button -->
               <a
                 v-if="car.status === 'available'"
-                :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName, activeFilter)"
+                :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName, activeFilter, getSelectedService(car))"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="hidden sm:inline-flex w-full h-9 sm:h-11 px-3 sm:px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold items-center justify-center gap-1.5 shadow-xs hover:shadow-emerald-600/25 transition-all active:scale-98"
@@ -565,21 +641,47 @@ onUnmounted(() => {
           </div>
 
           <!-- Bottom Sticky Pricing & WhatsApp CTA -->
-          <div class="p-3 sm:p-5 bg-white border-t border-slate-100 shrink-0 flex items-center justify-between gap-3">
-            <div>
-              <span class="text-[9px] sm:text-[11px] text-slate-400 block font-medium uppercase tracking-wider leading-none">Tarif Sewa</span>
-              <div class="mt-0.5">
-                <span class="text-base sm:text-2xl font-black text-slate-900 tracking-tight leading-tight">{{ previewVehicle.daily_rate_formatted }}</span>
-                <span class="text-[10px] sm:text-xs text-slate-500 font-normal"> /hari</span>
+          <div class="p-3 sm:p-5 bg-white border-t border-slate-100 shrink-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div class="flex flex-col gap-1.5">
+              <!-- Dual pricing toggle in modal -->
+              <div v-if="hasDualPricing(previewVehicle)" class="flex items-center p-0.5 rounded-lg bg-slate-100 border border-slate-200 text-xs self-start">
+                <button
+                  type="button"
+                  @click="setService(previewVehicle.id, 'self_drive')"
+                  :class="getSelectedService(previewVehicle) === 'self_drive' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'text-slate-500 hover:text-slate-800 font-medium'"
+                  class="px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1"
+                >
+                  <span>🔑 Lepas Kunci</span>
+                </button>
+                <button
+                  type="button"
+                  @click="setService(previewVehicle.id, 'with_driver')"
+                  :class="getSelectedService(previewVehicle) === 'with_driver' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'text-slate-500 hover:text-slate-800 font-medium'"
+                  class="px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1"
+                >
+                  <span>👨‍✈️ + Supir</span>
+                </button>
+              </div>
+
+              <div>
+                <span class="text-[9px] sm:text-[11px] text-slate-400 block font-medium uppercase tracking-wider leading-none">
+                  {{ getSelectedService(previewVehicle) === 'with_driver' ? 'Tarif + Supir' : 'Tarif Lepas Kunci' }}
+                </span>
+                <div class="mt-0.5">
+                  <span class="text-base sm:text-2xl font-black text-slate-900 tracking-tight leading-tight transition-all duration-200">
+                    {{ getActiveDailyRateFormatted(previewVehicle) }}
+                  </span>
+                  <span class="text-[10px] sm:text-xs text-slate-500 font-normal"> /hari</span>
+                </div>
               </div>
             </div>
 
             <a
               v-if="previewVehicle.status === 'available'"
-              :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName, activeFilter)"
+              :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName, activeFilter, getSelectedService(previewVehicle))"
               target="_blank"
               rel="noopener noreferrer"
-              class="py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm hover:shadow-emerald-600/30 transition-all active:scale-95"
+              class="w-full sm:w-auto py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm hover:shadow-emerald-600/30 transition-all active:scale-95"
             >
               <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
               <span>Booking WhatsApp</span>

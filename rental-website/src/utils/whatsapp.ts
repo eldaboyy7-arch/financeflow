@@ -1,4 +1,4 @@
-import type { PublicVehicle } from '@/types/fleet'
+import type { PublicVehicle, RentalServiceType } from '@/types/fleet'
 
 export function cleanPhoneNumber(phone: string): string {
   // Menghapus karakter selain angka
@@ -16,10 +16,17 @@ export function generateVehicleWhatsAppUrl(
   vehicle: PublicVehicle,
   phone: string,
   rentalName: string,
-  bookingInfo?: BookingFilterParams | null
+  bookingInfo?: BookingFilterParams | null,
+  serviceType?: RentalServiceType
 ): string {
   const cleanPhone = cleanPhoneNumber(phone)
   if (!cleanPhone) return '#'
+
+  const isWithDriver = serviceType === 'with_driver' || (serviceType !== 'self_drive' && (vehicle.capacity >= 9 || (vehicle.daily_rate <= 0 && !!vehicle.daily_rate_driver)))
+  const serviceLabel = isWithDriver ? 'Dengan Supir' : 'Lepas Kunci'
+  const rateFormatted = isWithDriver && vehicle.daily_rate_driver_formatted
+    ? vehicle.daily_rate_driver_formatted
+    : vehicle.daily_rate_formatted
 
   let customBookingInfo = ''
   if (bookingInfo) {
@@ -41,15 +48,16 @@ export function generateVehicleWhatsAppUrl(
   if (vehicle.status === 'available') {
     text = `Halo ${rentalName}, saya ingin menanyakan ketersediaan armada:
 • Unit: ${vehicle.name} (${vehicle.model_year})
+• Paket: Sewa ${serviceLabel}
 • Transmisi: ${vehicle.transmission_label} (${vehicle.capacity} Kursi)
-• Tarif: ${vehicle.daily_rate_formatted} / hari${customBookingInfo}
+• Estimasi Tarif: ${rateFormatted} / hari${customBookingInfo}
 
 Apakah unit ini tersedia untuk jadwal tersebut? Terima kasih.`
   } else if (vehicle.status === 'rented') {
-    text = `Halo ${rentalName}, saya melihat di website unit ${vehicle.name} (${vehicle.model_year}) saat ini sedang disewa.
+    text = `Halo ${rentalName}, saya melihat di website unit ${vehicle.name} (${vehicle.model_year}) [Paket ${serviceLabel}] saat ini sedang disewa.
 ${customBookingInfo ? customBookingInfo + '\n\n' : ''}Apakah saya bisa booking unit ini untuk jadwal tanggal berikutnya? Terima kasih.`
   } else {
-    text = `Halo ${rentalName}, saya tertarik dengan armada ${vehicle.name} (${vehicle.model_year}).
+    text = `Halo ${rentalName}, saya tertarik dengan armada ${vehicle.name} (${vehicle.model_year}) [Paket ${serviceLabel}].
 ${customBookingInfo ? customBookingInfo + '\n\n' : ''}Apakah ada unit sejenis yang sedang siap pakai? Terima kasih.`
   }
 

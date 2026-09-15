@@ -10,6 +10,9 @@ export interface PublicVehicle {
   fuel_type_label: string;
   daily_rate: number;
   daily_rate_formatted: string;
+  daily_rate_driver?: number | null;
+  daily_rate_driver_formatted?: string | null;
+  has_driver_option?: boolean;
   status: 'available' | 'rented' | 'maintenance';
   status_label: string;
   color?: string;
@@ -19,5 +22,7 @@ export interface PublicVehicle {
   description: string | null;
   is_featured?: boolean;
 }
+
+export type RentalServiceType = 'self_drive' | 'with_driver';
 
 export type TransmissionFilter = 'all' | 'matic' | 'manual';
