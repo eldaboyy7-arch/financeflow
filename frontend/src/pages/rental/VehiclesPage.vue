@@ -537,7 +537,7 @@ function statusBadge(s: string) {
                 <!-- Tarif Lepas Kunci -->
                 <div>
                   <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    🔑 Tarif Lepas Kunci (Rp)
+                    Tarif Lepas Kunci (Rp)
                   </label>
                   <CurrencyInput
                     v-model="form.daily_rate"
@@ -550,7 +550,7 @@ function statusBadge(s: string) {
                 <!-- Tarif Dengan Supir -->
                 <div>
                   <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    👨‍✈️ Tarif + Supir (Rp)
+                    Tarif Dengan Supir (Rp)
                   </label>
                   <CurrencyInput
                     v-model="form.daily_rate_driver"
