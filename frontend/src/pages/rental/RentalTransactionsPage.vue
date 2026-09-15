@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
 import { useVehiclesStore } from '@/stores/vehicles'
+import { useAccountsStore } from '@/stores/accounts'
 import { useUiStore } from '@/stores/ui'
 import { useFormatCurrency } from '@/composables/useFormatCurrency'
 import MoneySpinner from '@/components/MoneySpinner.vue'
@@ -15,9 +16,12 @@ import {
   XMarkIcon,
   ArrowUpRightIcon,
   ArrowDownRightIcon,
+  PencilSquareIcon,
+  TrashIcon,
 } from '@heroicons/vue/24/outline'
 
 const vehiclesStore = useVehiclesStore()
+const accountsStore = useAccountsStore()
 const uiStore = useUiStore()
 const { formatCurrency } = useFormatCurrency()
 
@@ -34,6 +38,7 @@ function formatDate(dateStr: string) {
 
 // ── Modal State ──────────────────────────────────────────────
 const showModal = ref(false)
+const editingId = ref<number | null>(null)
 const submitting = ref(false)
 const modalError = ref('')
 
@@ -135,6 +140,7 @@ async function fetchTx() {
 }
 
 function openModal(type: 'income' | 'expense') {
+  editingId.value = null
   form.value.type = type
   form.value.amount = 0
   form.value.customer_name = ''
@@ -149,6 +155,40 @@ function openModal(type: 'income' | 'expense') {
   showModal.value = true
 }
 
+function closeModal() {
+  showModal.value = false
+  editingId.value = null
+  modalError.value = ''
+}
+
+function openEdit(tx: any) {
+  editingId.value = tx.id
+  form.value.type = tx.type
+  form.value.amount = Number(tx.amount) || 0
+  form.value.date = tx.date ? (typeof tx.date === 'string' ? tx.date.slice(0, 10) : tx.date) : new Date().toISOString().slice(0, 10)
+  form.value.vehicle_id = tx.vehicle_id || tx.vehicle?.id || ''
+  form.value.account_id = tx.account?.id || tx.account_id || ''
+  form.value.category_id = tx.category?.id || tx.category_id || ''
+  form.value.customer_name = ''
+  form.value.customer_phone = ''
+  form.value.description = tx.description || ''
+  modalError.value = ''
+  showModal.value = true
+}
+
+async function deleteTransaction(id: number) {
+  if (!confirm('Yakin ingin menghapus transaksi rental ini? Saldo rekening akan otomatis disesuaikan kembali.')) return
+  try {
+    await api.delete(`/transactions/${id}`)
+    uiStore.showToast('Transaksi rental berhasil dihapus!', 'info')
+    vehiclesStore.fetchVehicles()
+    accountsStore.fetchAccounts(true)
+    fetchTx()
+  } catch (e: any) {
+    uiStore.showToast(e?.response?.data?.message ?? 'Gagal menghapus transaksi.', 'error')
+  }
+}
+
 async function submitTransaction() {
   if (!form.value.amount || !form.value.vehicle_id || !form.value.account_id || !form.value.category_id) {
     modalError.value = 'Mohon lengkapi semua kolom yang bertanda *.'
@@ -158,15 +198,19 @@ async function submitTransaction() {
   modalError.value = ''
   try {
     let finalDesc = form.value.description.trim()
-    if (form.value.customer_name.trim()) {
-      const contact = form.value.customer_phone.trim() ? ` (${form.value.customer_phone.trim()})` : ''
-      const custPrefix = `${form.value.customer_name.trim()}${contact}`
-      finalDesc = finalDesc ? `${custPrefix} — ${finalDesc}` : custPrefix
+    if (!editingId.value) {
+      if (form.value.customer_name.trim()) {
+        const contact = form.value.customer_phone.trim() ? ` (${form.value.customer_phone.trim()})` : ''
+        const custPrefix = `${form.value.customer_name.trim()}${contact}`
+        finalDesc = finalDesc ? `${custPrefix} — ${finalDesc}` : custPrefix
+      } else if (!finalDesc) {
+        finalDesc = form.value.type === 'income' ? 'Sewa Mobil' : 'Biaya Operasional'
+      }
     } else if (!finalDesc) {
       finalDesc = form.value.type === 'income' ? 'Sewa Mobil' : 'Biaya Operasional'
     }
 
-    await api.post('/transactions', {
+    const payload = {
       type: form.value.type,
       vehicle_id: form.value.vehicle_id || null,
       amount: parseFloat(String(form.value.amount)),
@@ -174,10 +218,19 @@ async function submitTransaction() {
       description: finalDesc,
       account_id: form.value.account_id,
       category_id: form.value.category_id,
-    })
-    uiStore.showToast('Transaksi rental berhasil dicatat!')
+    }
+
+    if (editingId.value) {
+      await api.put(`/transactions/${editingId.value}`, payload)
+      uiStore.showToast('Transaksi rental berhasil diperbarui!')
+    } else {
+      await api.post('/transactions', payload)
+      uiStore.showToast('Transaksi rental berhasil dicatat!')
+    }
     showModal.value = false
+    editingId.value = null
     vehiclesStore.fetchVehicles()
+    accountsStore.fetchAccounts(true)
     fetchTx()
   } catch (e: any) {
     const data = e?.response?.data
@@ -296,7 +349,7 @@ async function submitTransaction() {
         <div
           v-for="tx in transactions"
           :key="tx.id"
-          class="flex items-center gap-3.5 px-5 py-3.5 hover:bg-slate-50/70 dark:hover:bg-slate-700/30 transition-colors"
+          class="flex items-center gap-3.5 px-5 py-3.5 hover:bg-slate-50/70 dark:hover:bg-slate-700/30 transition-colors group"
         >
           <div
             :class="[
@@ -336,6 +389,26 @@ async function submitTransaction() {
             </p>
             <span class="text-[11px] text-slate-400 block mt-0.5">{{ tx.account?.name || 'Kas' }}</span>
           </div>
+
+          <!-- Action Buttons (Edit & Hapus) -->
+          <div class="flex items-center gap-0.5 shrink-0 ml-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+            <button
+              type="button"
+              @click.stop="openEdit(tx)"
+              class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/60 transition-colors"
+              title="Edit Transaksi"
+            >
+              <PencilSquareIcon class="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              @click.stop="deleteTransaction(tx.id)"
+              class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-colors"
+              title="Hapus Transaksi"
+            >
+              <TrashIcon class="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -343,16 +416,16 @@ async function submitTransaction() {
     <!-- Modal Form: Clean Neutral Styling (No Purple!) -->
     <Teleport to="body">
       <div v-if="showModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="showModal = false"></div>
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="closeModal"></div>
         <div class="relative bg-white dark:bg-[#182234] rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 w-full max-w-md shadow-2xl border border-slate-200/80 dark:border-slate-700 max-h-[92vh] overflow-y-auto">
           <!-- Drag bar for mobile -->
           <div class="w-10 h-1 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-3 sm:hidden"></div>
 
           <div class="flex items-center justify-between mb-5">
             <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
-              {{ form.type === 'income' ? 'Catat Sewa Masuk (+)' : 'Catat Biaya Operasional (−)' }}
+              {{ editingId ? (form.type === 'income' ? 'Edit Sewa Masuk (+)' : 'Edit Biaya Operasional (−)') : (form.type === 'income' ? 'Catat Sewa Masuk (+)' : 'Catat Biaya Operasional (−)') }}
             </h3>
-            <button @click="showModal = false" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <button @click="closeModal" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <XMarkIcon class="w-5 h-5" />
             </button>
           </div>
@@ -418,8 +491,8 @@ async function submitTransaction() {
               </div>
             </div>
 
-            <!-- Nama Penyewa & No. WhatsApp (Khusus Pemasukan Sewa) -->
-            <div v-if="form.type === 'income'" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Nama Penyewa & No. WhatsApp (Khusus Catat Baru Pemasukan Sewa) -->
+            <div v-if="form.type === 'income' && !editingId" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
                   Nama Penyewa / Tamu <span class="text-slate-400 font-normal">(opsional)</span>
@@ -448,7 +521,7 @@ async function submitTransaction() {
             <!-- Catatan / Keterangan -->
             <div>
               <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
-                {{ form.type === 'income' ? 'Catatan Tambahan (Durasi/Tujuan)' : 'Keterangan Pengeluaran' }}
+                {{ form.type === 'income' ? 'Catatan / Keterangan Sewa' : 'Keterangan Pengeluaran' }}
                 <span class="text-slate-400 font-normal">(opsional)</span>
               </label>
               <input
@@ -467,7 +540,7 @@ async function submitTransaction() {
             <div class="flex gap-2.5 pt-2">
               <button
                 type="button"
-                @click="showModal = false"
+                @click="closeModal"
                 class="flex-1 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-semibold transition-all"
               >
                 Batal
@@ -477,7 +550,7 @@ async function submitTransaction() {
                 :disabled="submitting"
                 class="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-sm font-semibold transition-all shadow-sm disabled:opacity-60"
               >
-                {{ submitting ? 'Menyimpan...' : 'Simpan Transaksi' }}
+                {{ submitting ? 'Menyimpan...' : (editingId ? 'Simpan Perubahan' : 'Simpan Transaksi') }}
               </button>
             </div>
           </form>
