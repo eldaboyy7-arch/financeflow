@@ -20,8 +20,8 @@ const emit = defineEmits<{
     <!-- Main Hero Content Container (Mobile: di tengah, Desktop: di langit atas mobil) -->
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full my-auto sm:my-0 sm:mt-1 lg:mt-2 sm:mb-auto py-3 sm:py-4">
       <div v-reveal:fade-up class="max-w-4xl xl:max-w-5xl text-center mx-auto">
-        <!-- Eyebrow Gold Badge -->
-        <p class="inline-block text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-300 mb-2 sm:mb-3 bg-slate-950/40 backdrop-blur-xs px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full border border-amber-400/40 shadow-md">
+        <!-- Eyebrow Tagline (Tanpa kapsul border agar terlihat natural & elegan) -->
+        <p class="text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-amber-400 mb-2 sm:mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
           RENTAL MOBIL &amp; TOUR BINTAN
         </p>
 
