@@ -51,33 +51,33 @@ onUnmounted(() => {
     <button
       @click.stop="toggleDropdown"
       type="button"
-      class="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-100 hover:text-white border border-slate-700/70 hover:border-slate-600 transition-all shadow-xs active:scale-95 text-xs font-semibold focus:outline-none"
+      class="inline-flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-800 text-slate-100 hover:text-white border border-slate-700/80 hover:border-slate-600 transition-all shadow-xs active:scale-95 text-xs sm:text-sm font-semibold focus:outline-none"
       :aria-expanded="isOpen"
       aria-label="Pilih Mata Uang / Currency"
     >
-      <!-- Circular Flag Avatar -->
-      <span class="w-5 h-5 rounded-full overflow-hidden shrink-0 shadow-xs border border-white/20 flex items-center justify-center">
+      <!-- Circular Flag Avatar in Navbar Button -->
+      <span class="w-6 h-6 rounded-full overflow-hidden shrink-0 shadow-xs border border-white/20 flex items-center justify-center">
         <!-- Indonesia Flag -->
         <svg v-if="currentCurrency === 'IDR'" viewBox="0 0 512 512" class="w-full h-full">
-          <circle cx="256" cy="256" r="256" fill="#f0f0f0" />
+          <circle cx="256" cy="256" r="256" fill="#f8fafc" />
           <path d="M0 256C0 114.6 114.6 0 256 0s256 114.6 256 256H0z" fill="#e11d48" />
         </svg>
 
-        <!-- Singapore Flag (Bulan Sabit Tebal + 5 Bintang Putih Jelas) -->
+        <!-- Singapore Flag (Bulan Sabit Besar + 5 Bintang Putih Jelas) -->
         <svg v-else-if="currentCurrency === 'SGD'" viewBox="0 0 512 512" class="w-full h-full">
           <circle cx="256" cy="256" r="256" fill="#ffffff" />
           <path d="M0 256C0 114.6 114.6 0 256 0s256 114.6 256 256H0z" fill="#ef4444" />
-          <!-- Bulan Sabit Putih Tebal -->
-          <path d="M95 40 A 88 88 0 1 0 95 216 A 72 72 0 1 1 95 40 Z" fill="#ffffff" />
-          <!-- 5 Bintang Putih Singapura -->
-          <polygon points="195,65 198,75 208,75 200,81 203,91 195,85 187,91 190,81 182,75 192,75" fill="#ffffff" />
-          <polygon points="235,95 238,105 248,105 240,111 243,121 235,115 227,121 230,111 222,105 232,105" fill="#ffffff" />
-          <polygon points="220,145 223,155 233,155 225,161 228,171 220,165 212,171 215,161 207,155 217,155" fill="#ffffff" />
-          <polygon points="170,145 173,155 183,155 175,161 178,171 170,165 162,171 165,161 157,155 167,155" fill="#ffffff" />
-          <polygon points="155,95 158,105 168,105 160,111 163,121 155,115 147,121 150,111 142,105 152,105" fill="#ffffff" />
+          <!-- Bulan Sabit Putih Besar & Tebal -->
+          <path d="M90 30 A 95 95 0 1 0 90 226 A 76 76 0 1 1 90 30 Z" fill="#ffffff" />
+          <!-- 5 Bintang Putih Singapura (Lebih Besar & Jelas) -->
+          <polygon points="200,48 204,60 216,60 207,67 210,79 200,72 190,79 193,67 184,60 196,60" fill="#ffffff" />
+          <polygon points="245,82 249,94 261,94 252,101 255,113 245,106 235,113 238,101 229,94 241,94" fill="#ffffff" />
+          <polygon points="230,138 234,150 246,150 237,157 240,169 230,162 220,169 223,157 214,150 226,150" fill="#ffffff" />
+          <polygon points="170,138 174,150 186,150 177,157 180,169 170,162 160,169 163,157 154,150 166,150" fill="#ffffff" />
+          <polygon points="155,82 159,94 171,94 162,101 165,113 155,106 145,113 148,101 139,94 151,94" fill="#ffffff" />
         </svg>
 
-        <!-- Malaysia Flag (Stripes Merah Putih + Canton Biru + Bulan Bintang Kuning) -->
+        <!-- Malaysia Flag -->
         <svg v-else-if="currentCurrency === 'MYR'" viewBox="0 0 512 512" class="w-full h-full">
           <circle cx="256" cy="256" r="256" fill="#ffffff" />
           <path d="M0 36h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0z" fill="#dc2626" />
@@ -113,44 +113,47 @@ onUnmounted(() => {
     >
       <div
         v-if="isOpen"
-        class="absolute right-0 mt-2 w-52 sm:w-56 rounded-2xl bg-slate-900/95 backdrop-blur-md border border-slate-700/80 shadow-2xl p-1.5 z-50 text-slate-200"
+        class="absolute right-0 mt-2 w-64 sm:w-72 rounded-2xl bg-slate-900/98 backdrop-blur-md border border-slate-700/90 shadow-2xl p-2 z-50 text-slate-200"
         role="menu"
       >
-        <div class="px-3 py-1.5 border-b border-slate-800 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-          Pilih Mata Uang / Currency
+        <div class="px-3 py-2 border-b border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+          <span>Pilih Mata Uang / Currency</span>
+          <span class="text-[10px] text-blue-400 font-normal lowercase">3 opsi</span>
         </div>
 
-        <div class="py-1 space-y-0.5">
+        <div class="py-1.5 space-y-1">
           <button
             v-for="curr in CURRENCIES"
             :key="curr.code"
             @click="handleSelect(curr.code)"
             type="button"
-            class="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold transition-colors"
+            class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all"
             :class="currentCurrency === curr.code
-              ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30 font-bold'
-              : 'hover:bg-slate-800/80 text-slate-300 hover:text-white'"
+              ? 'bg-blue-600/25 text-white border border-blue-500/40 shadow-xs'
+              : 'hover:bg-slate-800/90 text-slate-300 hover:text-white border border-transparent'"
             role="menuitem"
           >
-            <div class="flex items-center gap-2.5">
-              <!-- Flag Circle in dropdown -->
-              <span class="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-white/20 flex items-center justify-center">
+            <div class="flex items-center gap-3">
+              <!-- Flag Circle in dropdown: 36px (w-9 h-9) agar detail bendera terlihat besar & jelas -->
+              <span class="w-9 h-9 rounded-full overflow-hidden shrink-0 border border-white/25 shadow-sm flex items-center justify-center bg-slate-800">
                 <!-- Indonesia -->
                 <svg v-if="curr.code === 'IDR'" viewBox="0 0 512 512" class="w-full h-full">
-                  <circle cx="256" cy="256" r="256" fill="#f0f0f0" />
+                  <circle cx="256" cy="256" r="256" fill="#f8fafc" />
                   <path d="M0 256C0 114.6 114.6 0 256 0s256 114.6 256 256H0z" fill="#e11d48" />
                 </svg>
-                <!-- Singapore Flag (Bulan Sabit Tebal + 5 Bintang Putih Jelas) -->
+
+                <!-- Singapore Flag (Bulan Sabit Besar + 5 Bintang Putih Jelas) -->
                 <svg v-else-if="curr.code === 'SGD'" viewBox="0 0 512 512" class="w-full h-full">
                   <circle cx="256" cy="256" r="256" fill="#ffffff" />
                   <path d="M0 256C0 114.6 114.6 0 256 0s256 114.6 256 256H0z" fill="#ef4444" />
-                  <path d="M95 40 A 88 88 0 1 0 95 216 A 72 72 0 1 1 95 40 Z" fill="#ffffff" />
-                  <polygon points="195,65 198,75 208,75 200,81 203,91 195,85 187,91 190,81 182,75 192,75" fill="#ffffff" />
-                  <polygon points="235,95 238,105 248,105 240,111 243,121 235,115 227,121 230,111 222,105 232,105" fill="#ffffff" />
-                  <polygon points="220,145 223,155 233,155 225,161 228,171 220,165 212,171 215,161 207,155 217,155" fill="#ffffff" />
-                  <polygon points="170,145 173,155 183,155 175,161 178,171 170,165 162,171 165,161 157,155 167,155" fill="#ffffff" />
-                  <polygon points="155,95 158,105 168,105 160,111 163,121 155,115 147,121 150,111 142,105 152,105" fill="#ffffff" />
+                  <path d="M90 30 A 95 95 0 1 0 90 226 A 76 76 0 1 1 90 30 Z" fill="#ffffff" />
+                  <polygon points="200,48 204,60 216,60 207,67 210,79 200,72 190,79 193,67 184,60 196,60" fill="#ffffff" />
+                  <polygon points="245,82 249,94 261,94 252,101 255,113 245,106 235,113 238,101 229,94 241,94" fill="#ffffff" />
+                  <polygon points="230,138 234,150 246,150 237,157 240,169 230,162 220,169 223,157 214,150 226,150" fill="#ffffff" />
+                  <polygon points="170,138 174,150 186,150 177,157 180,169 170,162 160,169 163,157 154,150 166,150" fill="#ffffff" />
+                  <polygon points="155,82 159,94 171,94 162,101 165,113 155,106 145,113 148,101 139,94 151,94" fill="#ffffff" />
                 </svg>
+
                 <!-- Malaysia Flag -->
                 <svg v-else-if="curr.code === 'MYR'" viewBox="0 0 512 512" class="w-full h-full">
                   <circle cx="256" cy="256" r="256" fill="#ffffff" />
@@ -162,15 +165,18 @@ onUnmounted(() => {
               </span>
 
               <div class="text-left">
-                <span class="block leading-tight">{{ curr.code }}</span>
-                <span class="block text-[10px] text-slate-400 font-normal leading-tight">{{ curr.label }}</span>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-sm font-bold text-white leading-tight">{{ curr.code }}</span>
+                  <span class="text-xs text-slate-400 font-semibold">({{ curr.symbol }})</span>
+                </div>
+                <span class="block text-xs text-slate-400 font-normal leading-tight mt-0.5">{{ curr.label }}</span>
               </div>
             </div>
 
             <!-- Active Checkmark -->
             <svg
               v-if="currentCurrency === curr.code"
-              class="w-4 h-4 text-blue-400 shrink-0"
+              class="w-5 h-5 text-blue-400 shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -180,8 +186,8 @@ onUnmounted(() => {
           </button>
         </div>
 
-        <div class="px-2.5 py-1.5 border-t border-slate-800 text-[10px] text-slate-400 leading-tight">
-          💡 Estimasi kurs untuk turis. Transaksi resmi mengacu pada IDR.
+        <div class="px-3 py-2 border-t border-slate-800 text-[11px] text-slate-400 leading-relaxed">
+          💡 Estimasi kurs untuk turis. Transaksi resmi mengacu pada Rupiah (IDR).
         </div>
       </div>
     </transition>
