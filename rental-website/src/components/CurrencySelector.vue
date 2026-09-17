@@ -51,7 +51,7 @@ onUnmounted(() => {
     <button
       @click.stop="toggleDropdown"
       type="button"
-      class="inline-flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-800 text-slate-100 hover:text-white border border-slate-700/80 hover:border-slate-600 transition-all shadow-xs active:scale-95 text-xs sm:text-sm font-semibold focus:outline-none"
+      class="inline-flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 hover:text-white border border-slate-700 hover:border-slate-600 transition-all shadow-md active:scale-95 text-xs sm:text-sm font-semibold focus:outline-none"
       :aria-expanded="isOpen"
       aria-label="Pilih Mata Uang / Currency"
     >
@@ -113,7 +113,7 @@ onUnmounted(() => {
     >
       <div
         v-if="isOpen"
-        class="absolute right-0 mt-2 w-64 sm:w-72 rounded-2xl bg-slate-900/98 backdrop-blur-md border border-slate-700/90 shadow-2xl p-2 z-50 text-slate-200"
+        class="absolute right-0 mt-2 w-64 sm:w-72 rounded-2xl bg-slate-900 border border-slate-700 shadow-2xl p-2 z-50 text-slate-200"
         role="menu"
       >
         <div class="px-3 py-2 border-b border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
