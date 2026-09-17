@@ -75,14 +75,11 @@ const mainServices = computed(() => isEnglish.value ? [
 
     <!-- ═══════════ HERO — RESPONSIVE (MOBILE & DESKTOP) ═══════════ -->
     <section class="relative h-screen min-h-[560px] max-h-[900px] flex items-end overflow-hidden">
-      <picture class="absolute inset-0 w-full h-full">
-        <source media="(max-width: 639px)" srcset="/images/layanan-hero-mobile.jpg" />
-        <img
-          src="/images/layanan-hero.jpg"
-          alt="Layanan Rental Mobil Bintan"
-          class="w-full h-full object-cover object-center"
-        />
-      </picture>
+      <img
+        src="/images/layanan-hero-mobile.jpg"
+        alt="Layanan Rental Mobil Bintan"
+        class="absolute inset-0 w-full h-full object-cover object-center sm:object-[center_42%]"
+      />
 
       <!-- Gradient overlay -->
       <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-slate-950/10 pointer-events-none"></div>
