@@ -1,0 +1,6 @@
+# robots.txt for 3 Putri Mulya Rental Mobil & Tour Bintan
+User-agent: *
+Allow: /
+
+# Sitemap Index
+Sitemap: https://www.3putrimulya.com/sitemap.xml
