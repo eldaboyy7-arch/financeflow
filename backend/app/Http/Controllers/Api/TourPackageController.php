@@ -11,6 +11,7 @@ use App\Services\SupabaseStorageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class TourPackageController extends Controller
@@ -62,6 +63,9 @@ class TourPackageController extends Controller
 
         $package = TourPackage::create($validated);
 
+        // Invalidate public tour packages cache
+        Cache::put('public_tour_version', time(), now()->addDays(30));
+
         return response()->json([
             'message' => 'Paket tour berhasil ditambahkan.',
             'data'    => new TourPackageResource($package),
@@ -105,6 +109,9 @@ class TourPackageController extends Controller
 
         $tourPackage->update($validated);
 
+        // Invalidate public tour packages cache
+        Cache::put('public_tour_version', time(), now()->addDays(30));
+
         return response()->json([
             'message' => 'Paket tour berhasil diperbarui.',
             'data'    => new TourPackageResource($tourPackage->fresh()),
@@ -120,6 +127,9 @@ class TourPackageController extends Controller
 
         $tourPackage->delete();
 
+        // Invalidate public tour packages cache
+        Cache::put('public_tour_version', time(), now()->addDays(30));
+
         return response()->json([
             'message' => 'Paket tour berhasil dihapus.',
         ]);
@@ -134,6 +144,9 @@ class TourPackageController extends Controller
 
         $tourPackage->is_active = !$tourPackage->is_active;
         $tourPackage->save();
+
+        // Invalidate public tour packages cache
+        Cache::put('public_tour_version', time(), now()->addDays(30));
 
         return response()->json([
             'message' => 'Status paket tour berhasil diubah.',

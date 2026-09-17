@@ -9,45 +9,55 @@ use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PublicTourPackageController extends Controller
 {
     /**
-     * Get all active tour packages for public rental website.
+     * Get all active tour packages for public rental website (cached in memory & Cloudflare CDN).
      * Filtered by rental business owner so packages are never duplicated.
      */
     public function index(Request $request): JsonResponse
     {
-        // Determine the rental business owner ID
-        $ownerId = (int) env('RENTAL_OWNER_ID', config('app.rental_owner_id', 0));
+        $version = (int) Cache::get('public_tour_version', 1);
+        $cacheKey = "public_tour_v{$version}_" . md5(json_encode($request->all()));
 
-        if ($ownerId <= 0) {
-            // Auto-detect owner from existing tour packages (prioritizing the client)
-            $ownerId = (int) TourPackage::where('user_id', 18)->value('user_id')
-                ?: (int) TourPackage::whereNotNull('user_id')->value('user_id');
-        }
+        $cachedData = Cache::remember($cacheKey, 1800, function () {
+            // Determine the rental business owner ID
+            $ownerId = (int) env('RENTAL_OWNER_ID', config('app.rental_owner_id', 0));
 
-        if ($ownerId <= 0) {
-            $ownerId = (int) Vehicle::whereNotNull('user_id')->value('user_id');
-        }
+            if ($ownerId <= 0) {
+                // Auto-detect owner from existing tour packages (prioritizing the client)
+                $ownerId = (int) TourPackage::where('user_id', 18)->value('user_id')
+                    ?: (int) TourPackage::whereNotNull('user_id')->value('user_id');
+            }
 
-        if ($ownerId <= 0) {
-            $ownerId = (int) User::orderBy('id')->value('id');
-        }
+            if ($ownerId <= 0) {
+                $ownerId = (int) Vehicle::whereNotNull('user_id')->value('user_id');
+            }
 
-        $query = TourPackage::where('is_active', true);
+            if ($ownerId <= 0) {
+                $ownerId = (int) User::orderBy('id')->value('id');
+            }
 
-        if ($ownerId > 0) {
-            $query->where('user_id', $ownerId);
-        }
+            $query = TourPackage::where('is_active', true);
 
-        $packages = $query
-            ->orderBy('sort_order', 'asc')
-            ->orderBy('id', 'asc')
-            ->get();
+            if ($ownerId > 0) {
+                $query->where('user_id', $ownerId);
+            }
 
-        return response()->json([
-            'data' => PublicTourPackageResource::collection($packages),
-        ]);
+            $packages = $query
+                ->orderBy('sort_order', 'asc')
+                ->orderBy('id', 'asc')
+                ->get();
+
+            return [
+                'data' => PublicTourPackageResource::collection($packages)->resolve(),
+            ];
+        });
+
+        // Instruct browser and Cloudflare CDN to cache response (max-age 5m, CDN s-maxage 30m)
+        return response()->json($cachedData)
+            ->header('Cache-Control', 'public, max-age=300, s-maxage=1800');
     }
 }

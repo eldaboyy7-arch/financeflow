@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class VehicleController extends Controller
@@ -43,6 +44,9 @@ class VehicleController extends Controller
             'color'       => $validated['color'] ?? '#3B82F6',
             'is_featured' => filter_var($validated['is_featured'] ?? false, FILTER_VALIDATE_BOOLEAN),
         ]);
+
+        // Invalidate public fleet cache
+        Cache::put('public_fleet_version', time(), now()->addDays(30));
 
         return response()->json([
             'message' => 'Kendaraan berhasil ditambahkan.',
@@ -97,6 +101,9 @@ class VehicleController extends Controller
             app(\App\Services\SupabaseStorageService::class)->deleteFile('fleet', $oldPhotoPath);
         }
 
+        // Invalidate public fleet cache
+        Cache::put('public_fleet_version', time(), now()->addDays(30));
+
         return response()->json([
             'message' => 'Kendaraan berhasil diperbarui.',
             'data'    => $this->formatVehicle($vehicle->fresh(), now()->month, now()->year),
@@ -120,6 +127,9 @@ class VehicleController extends Controller
         if (!empty($photoPath)) {
             app(\App\Services\SupabaseStorageService::class)->deleteFile('fleet', $photoPath);
         }
+
+        // Invalidate public fleet cache
+        Cache::put('public_fleet_version', time(), now()->addDays(30));
 
         return response()->json(['message' => 'Kendaraan berhasil dihapus.']);
     }
