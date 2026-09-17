@@ -63,26 +63,27 @@ onUnmounted(() => {
           <path d="M0 256C0 114.6 114.6 0 256 0s256 114.6 256 256H0z" fill="#e11d48" />
         </svg>
 
-        <!-- Singapore Flag -->
+        <!-- Singapore Flag (Bulan Sabit Tebal + 5 Bintang Putih Jelas) -->
         <svg v-else-if="currentCurrency === 'SGD'" viewBox="0 0 512 512" class="w-full h-full">
-          <circle cx="256" cy="256" r="256" fill="#f0f0f0" />
+          <circle cx="256" cy="256" r="256" fill="#ffffff" />
           <path d="M0 256C0 114.6 114.6 0 256 0s256 114.6 256 256H0z" fill="#ef4444" />
-          <!-- Stylized Crescent & Stars in top left quadrant -->
-          <path d="M120 70 A60 60 0 1 0 210 170 A55 55 0 1 1 120 70 Z" fill="#ffffff" />
-          <polygon points="190,95 194,105 205,105 196,112 199,122 190,116 181,122 184,112 175,105 186,105" fill="#ffffff" />
+          <!-- Bulan Sabit Putih Tebal -->
+          <path d="M95 40 A 88 88 0 1 0 95 216 A 72 72 0 1 1 95 40 Z" fill="#ffffff" />
+          <!-- 5 Bintang Putih Singapura -->
+          <polygon points="195,65 198,75 208,75 200,81 203,91 195,85 187,91 190,81 182,75 192,75" fill="#ffffff" />
+          <polygon points="235,95 238,105 248,105 240,111 243,121 235,115 227,121 230,111 222,105 232,105" fill="#ffffff" />
+          <polygon points="220,145 223,155 233,155 225,161 228,171 220,165 212,171 215,161 207,155 217,155" fill="#ffffff" />
+          <polygon points="170,145 173,155 183,155 175,161 178,171 170,165 162,171 165,161 157,155 167,155" fill="#ffffff" />
+          <polygon points="155,95 158,105 168,105 160,111 163,121 155,115 147,121 150,111 142,105 152,105" fill="#ffffff" />
         </svg>
 
-        <!-- Malaysia Flag -->
+        <!-- Malaysia Flag (Stripes Merah Putih + Canton Biru + Bulan Bintang Kuning) -->
         <svg v-else-if="currentCurrency === 'MYR'" viewBox="0 0 512 512" class="w-full h-full">
-          <circle cx="256" cy="256" r="256" fill="#f0f0f0" />
-          <!-- Red stripes -->
-          <path d="M0 36h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0z" fill="#dc2626" />
-          <!-- Blue canton -->
+          <circle cx="256" cy="256" r="256" fill="#ffffff" />
+          <path d="M0 36h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0z" fill="#dc2626" />
           <path d="M0 256C0 114.6 114.6 0 256 0v256H0z" fill="#1e3a8a" />
-          <!-- Yellow Crescent & 14-pointed Star -->
-          <circle cx="120" cy="128" r="58" fill="#facc15" />
-          <circle cx="140" cy="128" r="48" fill="#1e3a8a" />
-          <circle cx="180" cy="128" r="24" fill="#facc15" />
+          <path d="M75 55 A 72 72 0 1 0 75 201 A 60 60 0 1 1 75 55 Z" fill="#facc15" />
+          <polygon points="180,95 186,115 206,108 195,125 214,133 194,141 205,158 185,151 179,171 173,151 153,158 164,141 144,133 163,125 152,108 172,115" fill="#facc15" />
         </svg>
       </span>
 
@@ -139,21 +140,24 @@ onUnmounted(() => {
                   <circle cx="256" cy="256" r="256" fill="#f0f0f0" />
                   <path d="M0 256C0 114.6 114.6 0 256 0s256 114.6 256 256H0z" fill="#e11d48" />
                 </svg>
-                <!-- Singapore -->
+                <!-- Singapore Flag (Bulan Sabit Tebal + 5 Bintang Putih Jelas) -->
                 <svg v-else-if="curr.code === 'SGD'" viewBox="0 0 512 512" class="w-full h-full">
-                  <circle cx="256" cy="256" r="256" fill="#f0f0f0" />
+                  <circle cx="256" cy="256" r="256" fill="#ffffff" />
                   <path d="M0 256C0 114.6 114.6 0 256 0s256 114.6 256 256H0z" fill="#ef4444" />
-                  <path d="M120 70 A60 60 0 1 0 210 170 A55 55 0 1 1 120 70 Z" fill="#ffffff" />
-                  <polygon points="190,95 194,105 205,105 196,112 199,122 190,116 181,122 184,112 175,105 186,105" fill="#ffffff" />
+                  <path d="M95 40 A 88 88 0 1 0 95 216 A 72 72 0 1 1 95 40 Z" fill="#ffffff" />
+                  <polygon points="195,65 198,75 208,75 200,81 203,91 195,85 187,91 190,81 182,75 192,75" fill="#ffffff" />
+                  <polygon points="235,95 238,105 248,105 240,111 243,121 235,115 227,121 230,111 222,105 232,105" fill="#ffffff" />
+                  <polygon points="220,145 223,155 233,155 225,161 228,171 220,165 212,171 215,161 207,155 217,155" fill="#ffffff" />
+                  <polygon points="170,145 173,155 183,155 175,161 178,171 170,165 162,171 165,161 157,155 167,155" fill="#ffffff" />
+                  <polygon points="155,95 158,105 168,105 160,111 163,121 155,115 147,121 150,111 142,105 152,105" fill="#ffffff" />
                 </svg>
-                <!-- Malaysia -->
+                <!-- Malaysia Flag -->
                 <svg v-else-if="curr.code === 'MYR'" viewBox="0 0 512 512" class="w-full h-full">
-                  <circle cx="256" cy="256" r="256" fill="#f0f0f0" />
-                  <path d="M0 36h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0z" fill="#dc2626" />
+                  <circle cx="256" cy="256" r="256" fill="#ffffff" />
+                  <path d="M0 36h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0zm0 72h512v36H0z" fill="#dc2626" />
                   <path d="M0 256C0 114.6 114.6 0 256 0v256H0z" fill="#1e3a8a" />
-                  <circle cx="120" cy="128" r="58" fill="#facc15" />
-                  <circle cx="140" cy="128" r="48" fill="#1e3a8a" />
-                  <circle cx="180" cy="128" r="24" fill="#facc15" />
+                  <path d="M75 55 A 72 72 0 1 0 75 201 A 60 60 0 1 1 75 55 Z" fill="#facc15" />
+                  <polygon points="180,95 186,115 206,108 195,125 214,133 194,141 205,158 185,151 179,171 173,151 153,158 164,141 144,133 163,125 152,108 172,115" fill="#facc15" />
                 </svg>
               </span>
 
