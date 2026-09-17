@@ -132,13 +132,13 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
           </RouterLink>
         </nav>
 
-        <!-- Right Side Cluster: Language Selector + Currency Selector + WhatsApp CTA + Mobile Hamburger Button -->
-        <div class="flex items-center gap-1.5 sm:gap-2.5">
-          <!-- Language Toggle (EN | ID) -->
-          <LanguageSelector />
-
-          <!-- Multi-Currency Selector Dropdown -->
-          <CurrencySelector />
+        <!-- Right Side Cluster: Desktop Language & Currency + WhatsApp CTA + Mobile Hamburger Button -->
+        <div class="flex items-center gap-2 sm:gap-2.5">
+          <!-- Desktop Language Toggle & Multi-Currency (Hidden on mobile, visible on md+) -->
+          <div class="hidden md:flex items-center gap-2">
+            <LanguageSelector />
+            <CurrencySelector />
+          </div>
 
           <!-- WhatsApp CTA Button (Desktop only: md:inline-flex, hidden on mobile so header is spacious) -->
           <a
@@ -351,6 +351,20 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
               </svg>
             </RouterLink>
           </nav>
+
+          <!-- Mobile Drawer: Language & Currency Setting Row -->
+          <div class="pt-2 border-t border-slate-100">
+            <div class="p-3 bg-slate-50 border border-slate-200/80 rounded-xl flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-slate-800 block">{{ isEnglish ? 'Language & Currency' : 'Bahasa & Mata Uang' }}</span>
+                <span class="text-[10px] text-slate-500 block">{{ isEnglish ? 'Change language & price rates' : 'Atur bahasa dan kurs harga' }}</span>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <LanguageSelector />
+                <CurrencySelector />
+              </div>
+            </div>
+          </div>
 
           <!-- Contact & Quick Info Box inside Drawer (Clean Light Corporate) -->
           <div class="pt-2 border-t border-slate-100">
