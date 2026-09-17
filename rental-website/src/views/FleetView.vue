@@ -5,6 +5,7 @@ import { useFleet } from '@/composables/useFleet'
 import { FLEET_BRACKETS, getVehicleCategoryBracket, isDriverMandatory, TOUR_PACKAGE_ROUTE } from '@/config/fleetCategories'
 import { siteConfig } from '@/config/site'
 import { generateVehicleWhatsAppUrl, generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
+import { useCurrency } from '@/composables/useCurrency'
 import type { PublicVehicle, RentalServiceType } from '@/types/fleet'
 
 const {
@@ -17,6 +18,8 @@ const {
   stats,
   fetchVehicles
 } = useFleet()
+
+const { convertPrice } = useCurrency()
 
 // Dual Pricing state per vehicle: carId -> 'self_drive' | 'with_driver'
 const selectedServices = ref<Record<number, RentalServiceType>>({})
@@ -35,12 +38,13 @@ function setService(carId: number, service: RentalServiceType) {
   selectedServices.value[carId] = service
 }
 
-function getActiveDailyRateFormatted(car: PublicVehicle): string {
+function getActiveDailyRatePrice(car: PublicVehicle | null) {
+  if (!car) return convertPrice(0)
   const s = getSelectedService(car)
-  if (s === 'with_driver' && car.daily_rate_driver_formatted) {
-    return car.daily_rate_driver_formatted
-  }
-  return car.daily_rate_formatted
+  const amount = (s === 'with_driver' && car.daily_rate_driver && car.daily_rate_driver > 0)
+    ? car.daily_rate_driver
+    : car.daily_rate
+  return convertPrice(amount)
 }
 
 function hasDualPricing(car: PublicVehicle): boolean {
@@ -422,16 +426,19 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                   </span>
                   <div class="flex items-baseline gap-1 mt-0.5">
                     <span class="text-xs sm:text-base font-black text-slate-900 tracking-tight leading-none transition-all duration-200">
-                      {{ getActiveDailyRateFormatted(car) }}
+                      {{ getActiveDailyRatePrice(car).formatted }}
                     </span>
                     <span class="text-[9px] sm:text-[11px] text-slate-500 font-normal leading-none">/hari</span>
                   </div>
+                  <span v-if="getActiveDailyRatePrice(car).isConverted" class="text-[9px] text-slate-400 font-normal leading-none mt-0.5">
+                    ({{ getActiveDailyRatePrice(car).originalFormatted }})
+                  </span>
                 </div>
 
                 <!-- Action Button -->
                 <a
                   v-if="car.status === 'available'"
-                  :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName, null, getSelectedService(car))"
+                  :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName, null, getSelectedService(car), getActiveDailyRatePrice(car))"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="w-full h-8 sm:h-9 px-2 sm:px-3 rounded-lg sm:rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] sm:text-xs font-bold whitespace-nowrap inline-flex items-center justify-center gap-1 sm:gap-1.5 transition-all shadow-xs hover:shadow-sm active:scale-95"
@@ -711,16 +718,19 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
                 </span>
                 <div class="mt-0.5">
                   <span class="text-base sm:text-2xl font-black text-slate-900 tracking-tight leading-tight transition-all duration-200">
-                    {{ getActiveDailyRateFormatted(previewVehicle) }}
+                    {{ getActiveDailyRatePrice(previewVehicle).formatted }}
                   </span>
                   <span class="text-[10px] sm:text-xs font-normal text-slate-500">/hari</span>
+                  <div v-if="getActiveDailyRatePrice(previewVehicle).isConverted" class="text-[11px] text-slate-400 font-normal mt-0.5">
+                    ({{ getActiveDailyRatePrice(previewVehicle).originalFormatted }})
+                  </div>
                 </div>
               </div>
             </div>
 
             <a
               v-if="previewVehicle.status === 'available'"
-              :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName, null, getSelectedService(previewVehicle))"
+              :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName, null, getSelectedService(previewVehicle), getActiveDailyRatePrice(previewVehicle))"
               target="_blank"
               rel="noopener noreferrer"
               class="w-full sm:w-auto py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm hover:shadow-emerald-600/30 transition-all active:scale-95"

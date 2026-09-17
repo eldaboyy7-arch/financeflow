@@ -5,6 +5,9 @@ import type { PublicVehicle, RentalServiceType } from '@/types/fleet'
 import { siteConfig } from '@/config/site'
 import { generateVehicleWhatsAppUrl } from '@/utils/whatsapp'
 import { getVehicleCategoryBracket, isDriverMandatory } from '@/config/fleetCategories'
+import { useCurrency } from '@/composables/useCurrency'
+
+const { convertPrice } = useCurrency()
 
 import type { BookingFilterParams } from '@/utils/whatsapp'
 
@@ -65,12 +68,13 @@ function setService(carId: number, service: RentalServiceType) {
   selectedServices.value[carId] = service
 }
 
-function getActiveDailyRateFormatted(car: PublicVehicle): string {
+function getActiveDailyRatePrice(car: PublicVehicle | null) {
+  if (!car) return convertPrice(0)
   const s = getSelectedService(car)
-  if (s === 'with_driver' && car.daily_rate_driver_formatted) {
-    return car.daily_rate_driver_formatted
-  }
-  return car.daily_rate_formatted
+  const amount = (s === 'with_driver' && car.daily_rate_driver && car.daily_rate_driver > 0)
+    ? car.daily_rate_driver
+    : car.daily_rate
+  return convertPrice(amount)
 }
 
 function hasDualPricing(car: PublicVehicle): boolean {
@@ -421,10 +425,13 @@ onUnmounted(() => {
                   </span>
                   <div class="mt-0.5 flex items-baseline gap-0.5 sm:block">
                     <span class="font-display text-xs sm:text-lg font-black text-slate-900 tracking-tight whitespace-nowrap transition-all duration-200">
-                      {{ getActiveDailyRateFormatted(car) }}
+                      {{ getActiveDailyRatePrice(car).formatted }}
                     </span>
                     <span class="text-[9px] sm:text-[11px] text-slate-500 font-normal whitespace-nowrap">/hari</span>
                   </div>
+                  <span v-if="getActiveDailyRatePrice(car).isConverted" class="text-[9px] sm:text-[10px] text-slate-400 font-normal block mt-0.5">
+                    ({{ getActiveDailyRatePrice(car).originalFormatted }})
+                  </span>
                 </div>
                 <button
                   type="button"
@@ -441,7 +448,7 @@ onUnmounted(() => {
               <!-- Action Button -->
               <a
                 v-if="car.status === 'available'"
-                :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName, activeFilter, getSelectedService(car))"
+                :href="generateVehicleWhatsAppUrl(car, siteConfig.rentalPhone, siteConfig.rentalName, activeFilter, getSelectedService(car), getActiveDailyRatePrice(car))"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="hidden sm:inline-flex w-full h-9 sm:h-11 px-3 sm:px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold items-center justify-center gap-1.5 shadow-xs hover:shadow-emerald-600/25 transition-all active:scale-98"
@@ -685,16 +692,19 @@ onUnmounted(() => {
                 </span>
                 <div class="mt-0.5">
                   <span class="text-base sm:text-2xl font-black text-slate-900 tracking-tight leading-tight transition-all duration-200">
-                    {{ getActiveDailyRateFormatted(previewVehicle) }}
+                    {{ getActiveDailyRatePrice(previewVehicle).formatted }}
                   </span>
                   <span class="text-[10px] sm:text-xs text-slate-500 font-normal"> /hari</span>
+                  <div v-if="getActiveDailyRatePrice(previewVehicle).isConverted" class="text-[11px] text-slate-400 font-normal mt-0.5">
+                    ({{ getActiveDailyRatePrice(previewVehicle).originalFormatted }})
+                  </div>
                 </div>
               </div>
             </div>
 
             <a
               v-if="previewVehicle.status === 'available'"
-              :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName, activeFilter, getSelectedService(previewVehicle))"
+              :href="generateVehicleWhatsAppUrl(previewVehicle, siteConfig.rentalPhone, siteConfig.rentalName, activeFilter, getSelectedService(previewVehicle), getActiveDailyRatePrice(previewVehicle))"
               target="_blank"
               rel="noopener noreferrer"
               class="w-full sm:w-auto py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm hover:shadow-emerald-600/30 transition-all active:scale-95"

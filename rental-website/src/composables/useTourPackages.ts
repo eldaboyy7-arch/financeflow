@@ -50,6 +50,7 @@ function normalizeApiPackage(item: any): TourPackage {
     description: item.description || '',
     duration: item.duration || 'Full Day Tour (8 - 10 Jam)',
     price: formattedPrice,
+    rawPrice: priceNum,
     priceLabel: item.price_label || (priceNum > 0 ? 'HARGA MULAI' : 'KONSULTASI GRATIS'),
     vehicle: item.vehicle_name || 'Toyota HiAce',
     capacity: item.capacity || '15 Person',

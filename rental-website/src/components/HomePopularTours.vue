@@ -2,8 +2,17 @@
 import { onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useTourPackages } from '@/composables/useTourPackages'
+import { useCurrency } from '@/composables/useCurrency'
 
 const { packages: tourPackages, fetchTourPackages } = useTourPackages()
+const { convertPrice } = useCurrency()
+
+function formatTourCardPrice(pkg: any): string {
+  const raw = pkg.rawPrice || (pkg.slug?.includes('commuter') ? 1400000 : pkg.slug?.includes('premio') ? 1500000 : 0)
+  if (!raw || raw <= 0) return 'Konsultasi Gratis'
+  const converted = convertPrice(raw)
+  return `Mulai ${converted.formatted}`
+}
 
 onMounted(() => {
   fetchTourPackages()
@@ -126,7 +135,7 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
               </h3>
               <div class="flex items-center justify-between gap-2">
                 <span class="text-[11px] text-slate-300 font-medium leading-tight">
-                  {{ pkg.price && pkg.price !== '0' && pkg.price !== 'Rp 0' ? `Mulai ${pkg.price}` : 'Konsultasi Gratis' }}
+                  {{ formatTourCardPrice(pkg) }}
                 </span>
                 <span class="text-[11px] font-bold text-amber-400 inline-flex items-center gap-0.5 shrink-0">
                   Detail
@@ -187,7 +196,7 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
             </h3>
             <div class="flex items-center justify-between">
               <span class="text-xs text-slate-300 font-medium">
-                {{ pkg.price && pkg.price !== '0' && pkg.price !== 'Rp 0' ? `Mulai dari ${pkg.price}` : 'Konsultasi Gratis' }}
+                {{ formatTourCardPrice(pkg) }}
               </span>
               <span class="text-xs font-bold text-amber-400 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                 Detail

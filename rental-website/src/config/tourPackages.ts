@@ -7,6 +7,7 @@ export interface TourPackage {
   description: string
   duration: string
   price: string
+  rawPrice?: number
   priceLabel: string
   vehicle: string
   capacity: string
@@ -37,6 +38,7 @@ export const tourPackages: TourPackage[] = [
     description: 'Paket tour keliling destinasi favorit Pulau Bintan menggunakan armada Toyota HiAce Commuter 15 kursi yang nyaman, bersih, dan dilengkapi fasilitas hiburan karaoke sepanjang perjalanan.',
     duration: 'Full Day Tour (8 - 10 Jam)',
     price: 'Rp 1.400.000',
+    rawPrice: 1400000,
     priceLabel: 'HARGA MULAI',
     vehicle: 'Toyota HiAce Commuter (15 Kursi)',
     capacity: '15 Person',
@@ -86,6 +88,7 @@ export const tourPackages: TourPackage[] = [
     description: 'Pengalaman wisata premium berkelas dengan Toyota HiAce Premio (BP 7024 BU). Interior mewah bergaya VIP dengan ambient lighting modern, Smart TV plafon, double wireless microphone untuk karaoke, kursi kulit empuk, dan lantai kayu elegan.',
     duration: 'Full Day Tour (8 - 10 Jam)',
     price: 'Rp 1.500.000',
+    rawPrice: 1500000,
     priceLabel: 'HARGA MULAI',
     vehicle: 'Toyota HiAce Premio Luxury (BP 7024 BU)',
     capacity: '11 - 14 Person',
@@ -137,6 +140,7 @@ export const tourPackages: TourPackage[] = [
     description: 'Ingin mengunjungi destinasi tertentu di luar rute reguler (seperti Pantai Trikora, Barelang, ziarah, atau agenda kedinasan instansi)? Kami siap melayani rute khusus sesuai kebutuhan agenda Anda.',
     duration: 'Fleksibel (Harian / Multi-Hari)',
     price: 'Mulai Rp 1.400.000',
+    rawPrice: 1400000,
     priceLabel: 'TARIF NEGO FLEKSIBEL',
     vehicle: 'Pilihan HiAce Commuter / HiAce Premio',
     capacity: 'Hingga 15 Person',

@@ -4,8 +4,10 @@ import { RouterLink } from 'vue-router'
 import { useTourPackages } from '@/composables/useTourPackages'
 import type { TourPackage } from '@/config/tourPackages'
 import { siteConfig } from '@/config/site'
+import { useCurrency } from '@/composables/useCurrency'
 
 const { packages: tourPackages, fetchTourPackages } = useTourPackages()
+const { currentCurrency, convertPrice } = useCurrency()
 
 // Dynamic package data for comparison table (automatically synced with API / Admin)
 const commuterPkg = computed(() =>
@@ -15,10 +17,21 @@ const premioPkg = computed(() =>
   tourPackages.value.find(p => p.slug?.includes('premio') || p.title?.toLowerCase().includes('premio'))
 )
 
-const commuterPrice = computed(() => commuterPkg.value?.price || 'Rp 1.400.000')
-const premioPrice = computed(() => premioPkg.value?.price || 'Rp 1.500.000')
+const commuterPrice = computed(() => {
+  const raw = commuterPkg.value?.rawPrice || 1400000
+  return convertPrice(raw).formatted
+})
+const premioPrice = computed(() => {
+  const raw = premioPkg.value?.rawPrice || 1500000
+  return convertPrice(raw).formatted
+})
 const commuterCapacity = computed(() => commuterPkg.value?.capacity || '15 Kursi Penumpang')
 const premioCapacity = computed(() => premioPkg.value?.capacity || '11 - 14 Kursi Penumpang')
+
+const getPackagePrice = (pkg: TourPackage) => {
+  const raw = pkg.rawPrice || (pkg.slug?.includes('commuter') ? 1400000 : pkg.slug?.includes('premio') ? 1500000 : 0)
+  return convertPrice(raw)
+}
 
 // Active photo index per package in card
 const activePhotoIndexes = ref<Record<string, number>>({})
@@ -129,6 +142,16 @@ const getRouteStops = (routeStr: string): string[] => {
 
 const getWhatsAppUrl = (text: string) => {
   const phone = siteConfig.rentalPhone.replace(/\D/g, '')
+  return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
+}
+
+const getTourWhatsAppUrl = (pkg: TourPackage) => {
+  const phone = siteConfig.rentalPhone.replace(/\D/g, '')
+  const priceInfo = getPackagePrice(pkg)
+  let text = pkg.ctaWhatsappText
+  if (priceInfo.isConverted && priceInfo.amount > 0) {
+    text += ` (Est. ${priceInfo.formatted})`
+  }
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
 }
 
@@ -300,9 +323,12 @@ onBeforeUnmount(() => {
                 <div>
                   <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">{{ pkg.priceLabel }}</span>
                   <div class="flex items-baseline gap-1">
-                    <span class="text-xl font-black text-slate-900 tracking-tight">{{ pkg.price }}</span>
-                    <span class="text-xs text-slate-500">/hari</span>
+                    <span class="text-xl font-black text-slate-900 tracking-tight">{{ getPackagePrice(pkg).formatted }}</span>
+                    <span v-if="getPackagePrice(pkg).amount > 0" class="text-xs text-slate-500">/hari</span>
                   </div>
+                  <span v-if="getPackagePrice(pkg).isConverted && getPackagePrice(pkg).amount > 0" class="text-[10px] text-slate-400 font-medium block -mt-0.5">
+                    ({{ getPackagePrice(pkg).originalFormatted }})
+                  </span>
                 </div>
                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -329,7 +355,7 @@ onBeforeUnmount(() => {
               <!-- Actions row -->
               <div class="flex items-center gap-2 flex-wrap">
                 <a
-                  :href="getWhatsAppUrl(pkg.ctaWhatsappText)"
+                  :href="getTourWhatsAppUrl(pkg)"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-xs transition-all active:scale-95 shrink-0"
@@ -482,8 +508,18 @@ onBeforeUnmount(() => {
             <tbody class="divide-y divide-slate-100">
               <tr>
                 <td class="py-3 px-3 sm:px-4 font-medium text-slate-600">Tarif Sewa (All-In)</td>
-                <td class="py-3 px-3 sm:px-4 font-black text-slate-900 bg-slate-50/40">{{ commuterPrice }} /hari</td>
-                <td class="py-3 px-3 sm:px-4 font-black text-indigo-700 bg-indigo-50/30">{{ premioPrice }} /hari</td>
+                <td class="py-3 px-3 sm:px-4 font-black text-slate-900 bg-slate-50/40">
+                  <span>{{ commuterPrice }} /hari</span>
+                  <span v-if="currentCurrency !== 'IDR'" class="block text-[10px] text-slate-400 font-normal mt-0.5">
+                    (Rp 1.400.000)
+                  </span>
+                </td>
+                <td class="py-3 px-3 sm:px-4 font-black text-indigo-700 bg-indigo-50/30">
+                  <span>{{ premioPrice }} /hari</span>
+                  <span v-if="currentCurrency !== 'IDR'" class="block text-[10px] text-slate-400 font-normal mt-0.5">
+                    (Rp 1.500.000)
+                  </span>
+                </td>
               </tr>
               <tr>
                 <td class="py-3 px-3 sm:px-4 font-medium text-slate-600">Kapasitas Tempat Duduk</td>

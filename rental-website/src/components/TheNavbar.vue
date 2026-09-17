@@ -3,6 +3,10 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { siteConfig } from '@/config/site'
 import { generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
+import CurrencySelector from '@/components/CurrencySelector.vue'
+import { useCurrency } from '@/composables/useCurrency'
+
+const { currentCurrency, setCurrency } = useCurrency()
 
 const route = useRoute()
 const isHeroPage = computed(() => ['/', '/layanan', '/destinasi'].includes(route.path))
@@ -134,8 +138,11 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
           </RouterLink>
         </nav>
 
-        <!-- Right Side Cluster: WhatsApp CTA + Mobile Hamburger Button -->
-        <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Right Side Cluster: Currency Selector + WhatsApp CTA + Mobile Hamburger Button -->
+        <div class="flex items-center gap-1.5 sm:gap-2.5">
+          <!-- Multi-Currency Selector Dropdown -->
+          <CurrencySelector />
+
           <!-- WhatsApp CTA Button -->
           <a
             :href="waUrl"
@@ -221,6 +228,28 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
               Layanan Siap 24 Jam
             </span>
+          </div>
+
+          <!-- Currency Quick Switcher in Mobile Drawer -->
+          <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-bold text-slate-800">Mata Uang</span>
+              <span class="text-[10px] text-slate-400">/ Currency</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button
+                v-for="c in (['IDR', 'SGD', 'MYR'] as const)"
+                :key="c"
+                @click="setCurrency(c)"
+                type="button"
+                class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all"
+                :class="currentCurrency === c
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'"
+              >
+                {{ c }}
+              </button>
+            </div>
           </div>
 
           <!-- Primary Navigation Links (Clean, Professional, Non-Dark) -->

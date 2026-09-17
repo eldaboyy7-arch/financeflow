@@ -17,16 +17,21 @@ export function generateVehicleWhatsAppUrl(
   phone: string,
   rentalName: string,
   bookingInfo?: BookingFilterParams | null,
-  serviceType?: RentalServiceType
+  serviceType?: RentalServiceType,
+  currencyInfo?: { formatted: string; isConverted: boolean } | null
 ): string {
   const cleanPhone = cleanPhoneNumber(phone)
   if (!cleanPhone) return '#'
 
   const isWithDriver = serviceType === 'with_driver' || (serviceType !== 'self_drive' && (vehicle.capacity >= 9 || (vehicle.daily_rate <= 0 && !!vehicle.daily_rate_driver)))
   const serviceLabel = isWithDriver ? 'Dengan Supir' : 'Lepas Kunci'
-  const rateFormatted = isWithDriver && vehicle.daily_rate_driver_formatted
+  let rateFormatted = isWithDriver && vehicle.daily_rate_driver_formatted
     ? vehicle.daily_rate_driver_formatted
     : vehicle.daily_rate_formatted
+
+  if (currencyInfo?.isConverted) {
+    rateFormatted = `${rateFormatted} (est. ${currencyInfo.formatted})`
+  }
 
   let customBookingInfo = ''
   if (bookingInfo) {
