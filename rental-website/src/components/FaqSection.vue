@@ -12,60 +12,68 @@ interface FaqItem {
 const faqs = computed<FaqItem[]>(() => isEnglish.value ? [
   {
     question: 'What are the requirements for self-drive car rental?',
-    answer: "Renters are required to present a valid driver's license (international driving permit or domestic license), passport or national identity card, and refundable security deposit verified upon reservation."
+    answer: "Renters must present a valid driver's license (domestic license or International Driving Permit), original identity card or passport, and standard identity verification processed quickly upon reservation."
   },
   {
-    question: 'Are chauffeur (with driver) services available?',
-    answer: 'Yes, we offer full-day car rentals complete with professional, polite chauffeurs who know every scenic shortcut and destination in Bintan Island.'
+    question: 'Can the car be delivered or picked up at Ferry Terminals or Airport?',
+    answer: 'Yes, absolutely! We provide direct vehicle handover and pickup services at Sri Bintan Pura Ferry Terminal (Tanjung Pinang), Bandar Bentan Telani (BBT Lagoi), Tanjung Uban Ferry Port, RHF Airport, as well as hotels and resorts across Bintan Island.'
   },
   {
-    question: 'What is the minimum rental duration?',
-    answer: 'Minimum rental duration is 1 day (24 hours for self-drive, or full-day up to 12 hours for chauffeur-driven packages).'
+    question: 'What is the minimum rental duration and how are hours calculated?',
+    answer: 'Minimum rental duration is 1 day. Self-drive rentals are calculated on a full 24-hour cycle per rental day. Chauffeur-driven rentals operate on a full-day basis (up to 10–12 service hours per day).'
   },
   {
-    question: 'Can I extend my rental duration during the trip?',
-    answer: 'Yes, as long as the vehicle has not been booked by another traveler for the subsequent date. Kindly inform our team before your rental expires.'
+    question: 'What is the fuel (BBM) policy for self-drive rentals?',
+    answer: 'We operate on a transparent Bar-to-Bar policy (return as received). The vehicle should be returned with the same fuel gauge level as when it was originally handed over to you.'
   },
   {
-    question: 'Are fuel and driver included in HiAce tour packages?',
-    answer: 'Yes! All Toyota HiAce 15-seater tour and charter packages include the private vehicle, professional chauffeur, and fuel (BBM) for full-day island exploration.'
+    question: 'Are driver and fuel included in HiAce tour packages?',
+    answer: 'Yes! All Toyota HiAce 15-seater tour and private charter packages are All-Inclusive, covering the private vehicle, experienced local chauffeur, and fuel (BBM) for agreed itinerary routes.'
   },
   {
-    question: 'Can I rent a Toyota HiAce or minibus without driver (self-drive)?',
-    answer: 'No. For passenger safety, insurance, and licensing regulations, all Toyota HiAce (Commuter & Premio) and minibuses are provided exclusively with a professional chauffeur.'
+    question: 'Can Toyota HiAce or minibus vans be rented self-drive (without driver)?',
+    answer: 'No. For passenger safety, local road regulations, and group traveling comfort, all Toyota HiAce (Commuter & Premio) and minibus vans are provided exclusively with an experienced professional chauffeur.'
   },
   {
-    question: 'How do I book a car or tour package?',
-    answer: 'Select your preferred vehicle or tour on this website, then click the WhatsApp button to confirm schedule, rates, and ferry terminal meetup details with our team.'
+    question: 'What happens if I return the car late (Overtime policy)?',
+    answer: 'Late returns are subject to an hourly overtime fee (10% of the daily rental rate per hour). Delays exceeding 5 hours will be calculated as an additional full day. Please inform our team in advance if you require an extension.'
+  },
+  {
+    question: 'How do I book a vehicle and what are the payment terms?',
+    answer: 'Select your preferred vehicle or tour package on this website, then tap the WhatsApp button to confirm your schedule. A down payment (DP) secures and locks your booking, with the remaining balance paid upon vehicle handover.'
   }
 ] : [
   {
-    question: 'Apa saja syarat sewa lepas kunci?',
-    answer: 'Penyewa wajib menunjukkan KTP asli yang masih berlaku, SIM A aktif, serta dokumen pendukung atau jaminan yang diverifikasi oleh admin saat proses reservasi.'
+    question: 'Apa saja syarat sewa mobil lepas kunci?',
+    answer: 'Penyewa wajib menunjukkan e-KTP asli yang masih berlaku, SIM A aktif, serta dokumen pendukung atau jaminan identitas yang diverifikasi secara cepat oleh admin saat proses reservasi.'
   },
   {
-    question: 'Apakah tersedia rental mobil dengan driver?',
-    answer: 'Ya, kami menyediakan layanan sewa harian lengkap dengan driver berpengalaman yang ramah dan memahami rute jalan di seluruh Pulau Bintan.'
+    question: 'Apakah mobil bisa diantar-jemput di Pelabuhan Ferry atau Bandara?',
+    answer: 'Bisa! Kami melayani serah terima unit langsung di Pelabuhan Ferry Sri Bintan Pura (Tanjung Pinang), Pelabuhan BBT Lagoi, Pelabuhan Roro Tanjung Uban, Bandara Raja Haji Fisabilillah (RHF), maupun di hotel/resort tempat Anda menginap.'
   },
   {
-    question: 'Berapa lama minimal durasi sewa?',
-    answer: 'Minimal sewa harian adalah 1 hari (24 jam untuk sistem lepas kunci, atau full-day sesuai kesepakatan pemakaian dengan driver).'
+    question: 'Berapa minimal durasi sewa dan bagaimana hitungan jamnya?',
+    answer: 'Minimal sewa harian adalah 1 hari. Untuk sistem lepas kunci (self-drive) dihitung 24 jam penuh per hari sewa. Untuk pemakaian dengan supir dihitung harian (full-day 10–12 jam pemakaian per hari).'
   },
   {
-    question: 'Apakah durasi sewa bisa diperpanjang?',
-    answer: 'Bisa, selama unit yang sedang Anda gunakan belum dipesan oleh penyewa lain pada jadwal berikutnya. Harap informasikan ke admin sebelum masa sewa berakhir.'
+    question: 'Bagaimana ketentuan bahan bakar (BBM) untuk sewa lepas kunci?',
+    answer: 'Menggunakan sistem Bar-to-Bar (kembali sesuai posisi awal). Posisi indikator bahan bakar (BBM) saat unit dikembalikan harus sama dengan posisi saat pertama kali mobil diserahterimakan.'
   },
   {
-    question: 'Apakah paket tour HiAce sudah termasuk supir dan BBM?',
-    answer: 'Ya, tarif Paket Tour & Charter Toyota HiAce 15 Kursi sudah termasuk armada HiAce, supir profesional, dan bahan bakar minyak (BBM) sesuai rute yang disepakati.'
+    question: 'Apakah paket tour & charter HiAce sudah termasuk supir dan BBM?',
+    answer: 'Ya, semua tarif Paket Tour & Charter Toyota HiAce 15 Kursi sudah All-In termasuk armada HiAce bersih, supir profesional berpengalaman, dan bahan bakar minyak (BBM) untuk rute wisata yang disepakati.'
   },
   {
-    question: 'Apakah unit Toyota HiAce atau minibus banyak kursi bisa disewa lepas kunci?',
-    answer: 'Tidak. Khusus unit Toyota HiAce (Commuter & Premio) serta armada minibus/bus hanya disewakan lengkap dengan supir profesional dan BBM demi standar keselamatan, regulasi lisensi, serta kenyamanan rombongan Anda.'
+    question: 'Apakah unit Toyota HiAce atau minibus bisa disewa lepas kunci?',
+    answer: 'Tidak. Khusus unit Toyota HiAce (Commuter & Premio) serta armada minibus/bus hanya disewakan lengkap dengan supir profesional demi standar keselamatan, regulasi lisensi, serta kenyamanan rombongan Anda.'
   },
   {
-    question: 'Bagaimana cara melakukan pemesanan?',
-    answer: 'Pilih unit armada atau paket tour di website ini, lalu klik tombol WhatsApp untuk konfirmasi tanggal, ketersediaan unit, dan titik penjemputan bersama admin.'
+    question: 'Bagaimana jika terlambat mengembalikan mobil (Overtime)?',
+    answer: 'Keterlambatan pengembalian unit dikenakan biaya overtime per jam (10% dari tarif sewa harian). Jika keterlambatan melebihi 5 jam, akan dihitung sewa 1 hari penuh. Harap kabari admin lebih awal jika memerlukan perpanjangan waktu sewa.'
+  },
+  {
+    question: 'Bagaimana cara booking dan bagaimana sistem pembayarannya?',
+    answer: 'Pilih unit armada atau paket tour di website ini, lalu klik tombol WhatsApp untuk konfirmasi tanggal. Pembayaran uang muka (DP) dilakukan untuk mengunci jadwal unit, dan sisa pelunasan dibayarkan saat serah terima mobil di lokasi.'
   }
 ])
 

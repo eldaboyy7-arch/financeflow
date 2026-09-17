@@ -136,11 +136,9 @@ const currentYear = new Date().getFullYear()
       <!-- Copyright Bar -->
       <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-500 text-xs">
         <p>&copy; {{ currentYear }} {{ siteConfig.rentalName }}. {{ t('footer.allRightsReserved') }}</p>
-        <div class="flex items-center gap-4 text-[11px]">
-          <span class="text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">{{ isEnglish ? 'Privacy Policy' : 'Kebijakan Privasi' }}</span>
-          <span class="text-slate-300">&bull;</span>
-          <span class="text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">{{ isEnglish ? 'Terms & Conditions' : 'Syarat & Ketentuan' }}</span>
-        </div>
+        <p class="text-[11px] text-slate-400 font-medium">
+          {{ isEnglish ? 'Bintan Island Trusted Car Rental & Tour Service' : 'Rental Mobil & Paket Wisata Terpercaya Pulau Bintan' }}
+        </p>
       </div>
 
     </div>
