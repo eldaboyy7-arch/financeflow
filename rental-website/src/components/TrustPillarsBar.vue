@@ -1,34 +1,39 @@
 <script setup lang="ts">
-const pillars = [
+import { computed } from 'vue'
+import { useLanguage } from '@/composables/useLanguage'
+
+const { t } = useLanguage()
+
+const pillars = computed(() => [
   {
-    title: 'Armada Terawat',
-    desc: 'Kendaraan bersih, nyaman dan selalu prima',
+    title: t('pillars.p1Title'),
+    desc: t('pillars.p1Desc'),
     iconColor: 'text-amber-500',
     iconBg: 'bg-amber-50',
     icon: 'shield'
   },
   {
-    title: 'Driver Profesional',
-    desc: 'Berpengalaman, ramah dan tepat waktu',
+    title: t('pillars.p2Title'),
+    desc: t('pillars.p2Desc'),
     iconColor: 'text-blue-500',
     iconBg: 'bg-blue-50',
     icon: 'user'
   },
   {
-    title: 'Harga Transparan',
-    desc: 'Harga jelas tanpa biaya tersembunyi',
+    title: t('pillars.p3Title'),
+    desc: t('pillars.p3Desc'),
     iconColor: 'text-emerald-500',
     iconBg: 'bg-emerald-50',
     icon: 'tag'
   },
   {
-    title: 'Layanan 24 Jam',
-    desc: 'Siap membantu kapan pun anda membutuhkan',
+    title: t('pillars.p4Title'),
+    desc: t('pillars.p4Desc'),
     iconColor: 'text-indigo-500',
     iconBg: 'bg-indigo-50',
     icon: 'support'
   },
-]
+])
 </script>
 
 <template>

@@ -6,6 +6,7 @@ import { FLEET_BRACKETS, getVehicleCategoryBracket, isDriverMandatory, TOUR_PACK
 import { siteConfig } from '@/config/site'
 import { generateVehicleWhatsAppUrl, generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
 import { useCurrency } from '@/composables/useCurrency'
+import { useLanguage } from '@/composables/useLanguage'
 import type { PublicVehicle, RentalServiceType } from '@/types/fleet'
 
 const {
@@ -20,6 +21,7 @@ const {
 } = useFleet()
 
 const { convertPrice } = useCurrency()
+const { isEnglish } = useLanguage()
 
 // Dual Pricing state per vehicle: carId -> 'self_drive' | 'with_driver'
 const selectedServices = ref<Record<number, RentalServiceType>>({})
@@ -107,27 +109,35 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
     <div class="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
 
       <!-- Breadcrumb Navigation -->
-      <nav class="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-500 mb-3 sm:mb-6" aria-label="Breadcrumb">
-        <RouterLink to="/" class="hover:text-blue-600 transition-colors">Beranda</RouterLink>
-        <span>/</span>
-        <span class="text-slate-900 font-semibold">Katalog Armada</span>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-5 sm:mb-8" aria-label="Breadcrumb">
+        <RouterLink to="/" class="hover:text-blue-600 transition-colors inline-flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          <span>{{ isEnglish ? 'Home' : 'Beranda' }}</span>
+        </RouterLink>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-900 font-semibold">{{ isEnglish ? 'Fleet Catalog' : 'Katalog Armada' }}</span>
       </nav>
 
       <!-- Page Header -->
-      <header v-reveal:fade-up class="max-w-3xl mb-4 sm:mb-8">
-        <div class="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[11px] sm:text-xs font-semibold mb-2 sm:mb-3">
-          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+      <header v-reveal:fade-up class="max-w-3xl mb-6 sm:mb-10">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-semibold mb-3">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
           </svg>
-          <span>Etalase Lengkap Armada 3 Putri Mulya</span>
+          <span>{{ isEnglish ? 'Official Bintan Rental Fleet' : 'Armada Resmi 3 Putri Mulya' }}</span>
         </div>
 
-        <h1 class="text-xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.2] mb-1.5 sm:mb-3">
-          Pilihan Sewa Mobil &amp; Bus Pariwisata
+        <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-3">
+          {{ isEnglish ? 'Our Full Fleet Selection' : 'Katalog Pilihan Armada Mobil Bintan' }}
         </h1>
 
-        <p class="text-xs sm:text-base text-slate-600 leading-relaxed">
-          Temukan kendaraan yang tepat untuk kebutuhan Anda di Pulau Bintan. Tersedia city car hemat, MPV keluarga lega, hingga minibus HiAce dan bus pariwisata untuk rombongan besar.
+        <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+          {{ isEnglish
+            ? 'Find the ideal vehicle for your stay in Bintan Island. Available from economical city cars, spacious family MPVs, to comfortable 15-seater HiAce vans.'
+            : 'Temukan kendaraan yang tepat untuk kebutuhan Anda di Pulau Bintan. Tersedia city car hemat, MPV keluarga lega, hingga minibus HiAce dan bus pariwisata untuk rombongan besar.'
+          }}
         </p>
       </header>
 
@@ -142,7 +152,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
               : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'"
             class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0"
           >
-            Semua Armada ({{ stats.total }})
+            {{ isEnglish ? `All Fleet (${stats.total})` : `Semua Armada (${stats.total})` }}
           </button>
 
           <button
@@ -161,7 +171,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
               class="text-[10px] px-1.5 py-0.5 rounded-full"
               :class="categoryFilter === bracket.id ? 'bg-blue-700 text-white' : 'bg-amber-100 text-amber-800'"
             >
-              +Supir
+              {{ isEnglish ? '+Driver' : '+Supir' }}
             </span>
           </button>
         </div>
@@ -179,7 +189,7 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Cari tipe mobil (misal: Veloz, Agya, HiAce)..."
+            :placeholder="isEnglish ? 'Search car model (e.g. Veloz, Agya, HiAce)...' : 'Cari tipe mobil (misal: Veloz, Agya, HiAce)...'"
             class="w-full pl-8 sm:pl-9 pr-3 sm:pr-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
           />
         </div>
@@ -188,13 +198,13 @@ const generalWaUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rental
         <div class="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-2 sm:gap-3 shrink-0">
           <!-- Transmission Select -->
           <div class="flex items-center gap-1.5 sm:gap-2 text-xs">
-            <span class="text-slate-500 font-medium hidden md:inline">Transmisi:</span>
+            <span class="text-slate-500 font-medium hidden md:inline">{{ isEnglish ? 'Transmission:' : 'Transmisi:' }}</span>
             <select
               v-model="transmissionFilter"
               class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
             >
-              <option value="all">Semua Transmisi</option>
-              <option value="matic">Matic</option>
+              <option value="all">{{ isEnglish ? 'All Transmissions' : 'Semua Transmisi' }}</option>
+              <option value="matic">{{ isEnglish ? 'Automatic' : 'Matic' }}</option>
               <option value="manual">Manual</option>
             </select>
           </div>

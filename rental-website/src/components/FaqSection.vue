@@ -1,12 +1,44 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useLanguage } from '@/composables/useLanguage'
+
+const { t, isEnglish } = useLanguage()
 
 interface FaqItem {
   question: string
   answer: string
 }
 
-const faqs: FaqItem[] = [
+const faqs = computed<FaqItem[]>(() => isEnglish.value ? [
+  {
+    question: 'What are the requirements for self-drive car rental?',
+    answer: "Renters are required to present a valid driver's license (international driving permit or domestic license), passport or national identity card, and refundable security deposit verified upon reservation."
+  },
+  {
+    question: 'Are chauffeur (with driver) services available?',
+    answer: 'Yes, we offer full-day car rentals complete with professional, polite chauffeurs who know every scenic shortcut and destination in Bintan Island.'
+  },
+  {
+    question: 'What is the minimum rental duration?',
+    answer: 'Minimum rental duration is 1 day (24 hours for self-drive, or full-day up to 12 hours for chauffeur-driven packages).'
+  },
+  {
+    question: 'Can I extend my rental duration during the trip?',
+    answer: 'Yes, as long as the vehicle has not been booked by another traveler for the subsequent date. Kindly inform our team before your rental expires.'
+  },
+  {
+    question: 'Are fuel and driver included in HiAce tour packages?',
+    answer: 'Yes! All Toyota HiAce 15-seater tour and charter packages include the private vehicle, professional chauffeur, and fuel (BBM) for full-day island exploration.'
+  },
+  {
+    question: 'Can I rent a Toyota HiAce or minibus without driver (self-drive)?',
+    answer: 'No. For passenger safety, insurance, and licensing regulations, all Toyota HiAce (Commuter & Premio) and minibuses are provided exclusively with a professional chauffeur.'
+  },
+  {
+    question: 'How do I book a car or tour package?',
+    answer: 'Select your preferred vehicle or tour on this website, then click the WhatsApp button to confirm schedule, rates, and ferry terminal meetup details with our team.'
+  }
+] : [
   {
     question: 'Apa saja syarat sewa lepas kunci?',
     answer: 'Penyewa wajib menunjukkan KTP asli yang masih berlaku, SIM A aktif, serta dokumen pendukung atau jaminan yang diverifikasi oleh admin saat proses reservasi.'
@@ -35,7 +67,7 @@ const faqs: FaqItem[] = [
     question: 'Bagaimana cara melakukan pemesanan?',
     answer: 'Pilih unit armada atau paket tour di website ini, lalu klik tombol WhatsApp untuk konfirmasi tanggal, ketersediaan unit, dan titik penjemputan bersama admin.'
   }
-]
+])
 
 const openIndex = ref<number | null>(0)
 
@@ -48,13 +80,13 @@ const toggleFaq = (index: number) => {
   <div class="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-8 flex flex-col justify-between shadow-xs">
     <div>
       <p class="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
-        Bantuan &amp; Informasi
+        {{ t('faq.sectionBadge') }}
       </p>
       <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight mb-2">
-        Pertanyaan yang Sering Diajukan
+        {{ t('faq.title') }}
       </h3>
       <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
-        Jawaban singkat untuk pertanyaan yang paling sering ditanyakan seputar layanan kami.
+        {{ t('faq.subtitle') }}
       </p>
 
       <!-- Accordion List -->

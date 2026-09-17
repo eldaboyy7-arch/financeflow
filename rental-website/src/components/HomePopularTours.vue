@@ -3,15 +3,17 @@ import { onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useTourPackages } from '@/composables/useTourPackages'
 import { useCurrency } from '@/composables/useCurrency'
+import { useLanguage } from '@/composables/useLanguage'
 
 const { packages: tourPackages, fetchTourPackages } = useTourPackages()
 const { convertPrice } = useCurrency()
+const { t, isEnglish } = useLanguage()
 
 function formatTourCardPrice(pkg: any): string {
   const raw = pkg.rawPrice || (pkg.slug?.includes('commuter') ? 1400000 : pkg.slug?.includes('premio') ? 1500000 : 0)
-  if (!raw || raw <= 0) return 'Konsultasi Gratis'
+  if (!raw || raw <= 0) return isEnglish.value ? 'Free Consultation' : 'Konsultasi Gratis'
   const converted = convertPrice(raw)
-  return `Mulai ${converted.formatted}`
+  return isEnglish.value ? `From ${converted.formatted}` : `Mulai ${converted.formatted}`
 }
 
 onMounted(() => {
@@ -77,13 +79,13 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
       <div v-reveal:fade-up class="flex items-end justify-between gap-3 mb-6 sm:mb-10">
         <div>
           <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-1.5 sm:mb-2">
-            PAKET TOUR
+            {{ t('tours.sectionBadge') }}
           </p>
           <h2 class="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
-            Paket Tour Populer
+            {{ t('tours.title') }}
           </h2>
           <p class="hidden sm:block text-sm text-slate-500 mt-1 max-w-xl">
-            Pilih paket tour terbaik untuk menjelajahi keindahan Bintan bersama kami.
+            {{ t('tours.subtitle') }}
           </p>
         </div>
 
@@ -91,8 +93,8 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
           to="/paket-tour-bintan"
           class="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors shrink-0 group py-1"
         >
-          <span class="sm:hidden">Lihat Semua</span>
-          <span class="hidden sm:inline">Lihat Semua Paket Tour</span>
+          <span class="sm:hidden">{{ isEnglish ? 'View All' : 'Lihat Semua' }}</span>
+          <span class="hidden sm:inline">{{ isEnglish ? 'View All Tour Packages' : 'Lihat Semua Paket Tour' }}</span>
           <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
           </svg>

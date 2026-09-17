@@ -1,5 +1,8 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useLanguage } from '@/composables/useLanguage'
+
+const { t, isEnglish } = useLanguage()
 
 const emit = defineEmits<{
   (e: 'search', params: { vehicleType: string; startDate: string; endDate: string; passengers: number }): void
@@ -15,41 +18,49 @@ const endDate = ref('')
 const passengers = ref(1)
 
 // Options Definitions
-const vehicleOptions = [
-  { value: 'all', label: 'Semua Jenis', sub: 'Seluruh armada tersedia', icon: 'all' },
-  { value: 'city-car', label: 'City Car (Agya)', sub: '4–5 Kursi • Lincah & Hemat', icon: 'car' },
-  { value: 'mpv', label: 'MPV Keluarga (Avanza / Veloz)', sub: '7 Kursi • Paling Populer', icon: 'mpv' },
-  { value: 'hiace', label: 'HiAce Minibus', sub: '11–15 Kursi • Termasuk Supir', icon: 'van' },
-]
+const vehicleOptions = computed(() => [
+  { value: 'all', label: isEnglish.value ? 'All Vehicles' : 'Semua Jenis', sub: isEnglish.value ? 'All available fleet units' : 'Seluruh armada tersedia', icon: 'all' },
+  { value: 'city-car', label: isEnglish.value ? 'City Car (Agya)' : 'City Car (Agya)', sub: isEnglish.value ? '4–5 Seats • Agile & Economical' : '4–5 Kursi • Lincah & Hemat', icon: 'car' },
+  { value: 'mpv', label: isEnglish.value ? 'Family MPV (Avanza / Veloz)' : 'MPV Keluarga (Avanza / Veloz)', sub: isEnglish.value ? '7 Seats • Most Popular' : '7 Kursi • Paling Populer', icon: 'mpv' },
+  { value: 'hiace', label: isEnglish.value ? 'HiAce Minibus' : 'HiAce Minibus', sub: isEnglish.value ? '11–15 Seats • Chauffeur Included' : '11–15 Kursi • Termasuk Supir', icon: 'van' },
+])
 
-const passengerOptions = [
-  { value: 1, label: '1 - 2 Orang', sub: 'Solo traveler / Pasangan' },
-  { value: 4, label: '3 - 4 Orang', sub: 'Keluarga kecil / City Car' },
-  { value: 7, label: '5 - 7 Orang', sub: 'Keluarga besar / MPV' },
-  { value: 15, label: '8 - 15 Orang', sub: 'Rombongan wisata / HiAce' },
-]
+const passengerOptions = computed(() => [
+  { value: 1, label: isEnglish.value ? '1 - 2 Guests' : '1 - 2 Orang', sub: isEnglish.value ? 'Solo traveler / Couple' : 'Solo traveler / Pasangan' },
+  { value: 4, label: isEnglish.value ? '3 - 4 Guests' : '3 - 4 Orang', sub: isEnglish.value ? 'Small family / City Car' : 'Keluarga kecil / City Car' },
+  { value: 7, label: isEnglish.value ? '5 - 7 Guests' : '5 - 7 Orang', sub: isEnglish.value ? 'Large family / MPV' : 'Keluarga besar / MPV' },
+  { value: 15, label: isEnglish.value ? '8 - 15 Guests' : '8 - 15 Orang', sub: isEnglish.value ? 'Tour group / HiAce Minibus' : 'Rombongan wisata / HiAce' },
+])
 
 // Display computed labels
 const selectedVehicleLabel = computed(() => {
-  const opt = vehicleOptions.find(o => o.value === vehicleType.value)
-  return opt ? opt.label : 'Semua Jenis'
+  const opt = vehicleOptions.value.find(o => o.value === vehicleType.value)
+  return opt ? opt.label : (isEnglish.value ? 'All Vehicles' : 'Semua Jenis')
 })
 
 const selectedPassengersLabel = computed(() => {
-  const opt = passengerOptions.find(o => o.value === passengers.value)
-  return opt ? opt.label : '1 - 2 Orang'
+  const opt = passengerOptions.value.find(o => o.value === passengers.value)
+  return opt ? opt.label : (isEnglish.value ? '1 - 2 Guests' : '1 - 2 Orang')
 })
 
 // Month names and formatting
-const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
-const monthShortNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
-const dayHeaders = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab']
+const monthShortNames = computed(() => isEnglish.value
+  ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  : ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'])
+
+const dayHeaders = computed(() => isEnglish.value
+  ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  : ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'])
+
+const monthNames = computed(() => isEnglish.value
+  ? ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  : ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'])
 
 function formatDateDisplay(dateStr: string): string {
-  if (!dateStr) return 'Pilih tanggal'
+  if (!dateStr) return isEnglish.value ? 'Select date' : 'Pilih tanggal'
   const [y, m, d] = dateStr.split('-').map(Number)
-  if (!y || !m || !d) return 'Pilih tanggal'
-  return `${d} ${monthShortNames[m - 1]} ${y}`
+  if (!y || !m || !d) return isEnglish.value ? 'Select date' : 'Pilih tanggal'
+  return `${d} ${monthShortNames.value[m - 1]} ${y}`
 }
 
 // Custom Calendar Logic
@@ -287,7 +298,7 @@ onUnmounted(() => {
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <span class="block text-xs font-bold text-slate-800 leading-tight">Pilih Armada</span>
+                <span class="block text-xs font-bold text-slate-800 leading-tight">{{ t('search.vehicleType') }}</span>
                 <span class="block text-xs text-slate-500 font-medium truncate mt-0.5">{{ selectedVehicleLabel }}</span>
               </div>
               <svg
@@ -343,7 +354,7 @@ onUnmounted(() => {
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <span class="block text-xs font-bold text-slate-800 leading-tight">Tanggal Mulai</span>
+                <span class="block text-xs font-bold text-slate-800 leading-tight">{{ t('search.startDate') }}</span>
                 <span
                   class="block text-xs font-medium truncate mt-0.5"
                   :class="startDate ? 'text-slate-800 font-semibold' : 'text-slate-400'"
@@ -447,7 +458,7 @@ onUnmounted(() => {
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <span class="block text-xs font-bold text-slate-800 leading-tight">Tanggal Selesai</span>
+                <span class="block text-xs font-bold text-slate-800 leading-tight">{{ t('search.endDate') }}</span>
                 <span
                   class="block text-xs font-medium truncate mt-0.5"
                   :class="endDate ? 'text-slate-800 font-semibold' : 'text-slate-400'"
@@ -551,7 +562,7 @@ onUnmounted(() => {
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <span class="block text-xs font-bold text-slate-800 leading-tight">Jumlah Penumpang</span>
+                <span class="block text-xs font-bold text-slate-800 leading-tight">{{ t('search.passengers') }}</span>
                 <span class="block text-xs text-slate-500 font-medium truncate mt-0.5">{{ selectedPassengersLabel }}</span>
               </div>
               <svg
@@ -600,7 +611,7 @@ onUnmounted(() => {
             type="button"
             class="w-full h-12 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs sm:text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-slate-900/20 transition-all hover:shadow-slate-900/30 active:scale-95 cursor-pointer"
           >
-            <span>Cari Armada</span>
+            <span>{{ t('search.btnSearch') }}</span>
             <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
@@ -625,7 +636,7 @@ onUnmounted(() => {
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <span class="block text-xs font-bold text-slate-800 leading-tight">Pilih Armada</span>
+                <span class="block text-xs font-bold text-slate-800 leading-tight">{{ t('search.vehicleType') }}</span>
                 <span class="block text-xs text-slate-500 font-medium truncate mt-0.5">{{ selectedVehicleLabel }}</span>
               </div>
             </div>
@@ -647,7 +658,7 @@ onUnmounted(() => {
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <span class="block text-xs font-bold text-slate-800 leading-tight">Tanggal Mulai</span>
+                <span class="block text-xs font-bold text-slate-800 leading-tight">{{ t('search.startDate') }}</span>
                 <span class="block text-xs font-medium truncate mt-0.5" :class="startDate ? 'text-slate-800 font-semibold' : 'text-slate-400'">
                   {{ formatDateDisplay(startDate) }}
                 </span>
@@ -671,7 +682,7 @@ onUnmounted(() => {
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <span class="block text-xs font-bold text-slate-800 leading-tight">Tanggal Selesai</span>
+                <span class="block text-xs font-bold text-slate-800 leading-tight">{{ t('search.endDate') }}</span>
                 <span class="block text-xs font-medium truncate mt-0.5" :class="endDate ? 'text-slate-800 font-semibold' : 'text-slate-400'">
                   {{ formatDateDisplay(endDate) }}
                 </span>
@@ -695,7 +706,7 @@ onUnmounted(() => {
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <span class="block text-xs font-bold text-slate-800 leading-tight">Jumlah Penumpang</span>
+                <span class="block text-xs font-bold text-slate-800 leading-tight">{{ t('search.passengers') }}</span>
                 <span class="block text-xs text-slate-500 font-medium truncate mt-0.5">{{ selectedPassengersLabel }}</span>
               </div>
             </div>
@@ -712,7 +723,7 @@ onUnmounted(() => {
           type="button"
           class="w-full py-3.5 mt-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-slate-900/20 active:scale-98 transition-all cursor-pointer"
         >
-          <span>Cari Armada</span>
+          <span>{{ t('search.btnSearch') }}</span>
           <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
           </svg>

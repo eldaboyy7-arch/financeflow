@@ -3,6 +3,9 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { siteConfig } from '@/config/site'
 import { generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
+import { useLanguage } from '@/composables/useLanguage'
+
+const { t, isEnglish } = useLanguage()
 
 const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, siteConfig.rentalName))
 const waUrl2 = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhoneSecondary, siteConfig.rentalName))
@@ -24,11 +27,11 @@ const currentYear = new Date().getFullYear()
             </div>
             <div>
               <span class="font-display text-base font-black text-slate-900 block leading-tight tracking-tight">{{ siteConfig.rentalName }}</span>
-              <span class="text-[10px] font-medium tracking-wide text-slate-500 block leading-none mt-0.5">Rental Mobil &amp; Tour Bintan</span>
+              <span class="text-[10px] font-medium tracking-wide text-slate-500 block leading-none mt-0.5">{{ isEnglish ? 'Car Rental & Tour Bintan' : 'Rental Mobil & Tour Bintan' }}</span>
             </div>
           </div>
           <p class="text-slate-600 leading-relaxed text-xs mb-4">
-            Rental mobil lepas kunci &amp; dengan driver serta paket tour di Bintan untuk perjalanan pribadi, keluarga, dan rombongan.
+            {{ t('footer.desc') }}
           </p>
           <!-- Social / Quick Contact Icons -->
           <div class="flex items-center gap-2 pt-1">
@@ -49,31 +52,31 @@ const currentYear = new Date().getFullYear()
 
         <!-- Kolom 2: Navigasi -->
         <div>
-          <h4 class="text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-3">Navigasi</h4>
+          <h4 class="text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-3">{{ t('footer.navTitle') }}</h4>
           <ul class="space-y-2 text-xs">
-            <li><RouterLink to="/layanan" class="hover:text-blue-600 transition-colors">Pilihan Layanan</RouterLink></li>
-            <li><RouterLink to="/armada" class="hover:text-blue-600 transition-colors">Pilihan Armada</RouterLink></li>
-            <li><RouterLink to="/paket-tour-bintan" class="hover:text-blue-600 transition-colors">Paket Tour HiAce</RouterLink></li>
-            <li><RouterLink to="/destinasi" class="hover:text-blue-600 transition-colors">Inspirasi Destinasi</RouterLink></li>
-            <li><a href="/#faq" class="hover:text-blue-600 transition-colors">Pertanyaan Umum (FAQ)</a></li>
+            <li><RouterLink to="/layanan" class="hover:text-blue-600 transition-colors">{{ t('nav.services') }}</RouterLink></li>
+            <li><RouterLink to="/armada" class="hover:text-blue-600 transition-colors">{{ t('nav.fleet') }}</RouterLink></li>
+            <li><RouterLink to="/paket-tour-bintan" class="hover:text-blue-600 transition-colors">{{ t('nav.tours') }}</RouterLink></li>
+            <li><RouterLink to="/destinasi" class="hover:text-blue-600 transition-colors">{{ t('nav.destinations') }}</RouterLink></li>
+            <li><a href="/#faq" class="hover:text-blue-600 transition-colors">{{ t('nav.faq') }}</a></li>
           </ul>
         </div>
 
         <!-- Kolom 3: Layanan -->
         <div>
-          <h4 class="text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-3">Layanan</h4>
+          <h4 class="text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-3">{{ t('nav.services') }}</h4>
           <ul class="space-y-2 text-xs">
-            <li><RouterLink to="/layanan" class="hover:text-blue-600 transition-colors">Rental Mobil Harian</RouterLink></li>
-            <li><RouterLink to="/layanan" class="hover:text-blue-600 transition-colors">Sewa Lepas Kunci (Self-Drive)</RouterLink></li>
-            <li><RouterLink to="/layanan" class="hover:text-blue-600 transition-colors">Sewa dengan Driver</RouterLink></li>
-            <li><RouterLink to="/paket-tour-bintan" class="hover:text-blue-600 transition-colors">Paket Tour HiAce 15 Kursi</RouterLink></li>
-            <li><RouterLink to="/paket-tour-bintan" class="hover:text-blue-600 transition-colors">Charter &amp; Rombongan</RouterLink></li>
+            <li><RouterLink to="/layanan" class="hover:text-blue-600 transition-colors">{{ isEnglish ? 'Daily Car Rental' : 'Rental Mobil Harian' }}</RouterLink></li>
+            <li><RouterLink to="/layanan" class="hover:text-blue-600 transition-colors">{{ t('fleet.serviceSelfDrive') }}</RouterLink></li>
+            <li><RouterLink to="/layanan" class="hover:text-blue-600 transition-colors">{{ t('fleet.serviceWithDriver') }}</RouterLink></li>
+            <li><RouterLink to="/paket-tour-bintan" class="hover:text-blue-600 transition-colors">{{ isEnglish ? 'HiAce 15-Seat Tour Packages' : 'Paket Tour HiAce 15 Kursi' }}</RouterLink></li>
+            <li><RouterLink to="/paket-tour-bintan" class="hover:text-blue-600 transition-colors">{{ isEnglish ? 'Private Charter & Groups' : 'Charter & Rombongan' }}</RouterLink></li>
           </ul>
         </div>
 
         <!-- Kolom 4: Hubungi Kami -->
         <div>
-          <h4 class="text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-3">Hubungi Kami</h4>
+          <h4 class="text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-3">{{ t('footer.contactTitle') }}</h4>
           <ul class="space-y-2.5 text-xs">
             <li>
               <a
@@ -112,10 +115,10 @@ const currentYear = new Date().getFullYear()
                   class="text-slate-700 hover:text-blue-600 transition-colors leading-relaxed block group"
                   title="Buka di Google Maps"
                 >
-                  <span class="font-bold text-slate-900 block mb-0.5">Garasi &amp; Kantor Utama:</span>
+                  <span class="font-bold text-slate-900 block mb-0.5">{{ isEnglish ? 'Garage & Main Office:' : 'Garasi & Kantor Utama:' }}</span>
                   <span class="text-slate-600 block">{{ siteConfig.rentalAddress }}</span>
                   <span class="inline-flex items-center gap-1 text-[11px] text-blue-600 font-bold group-hover:underline mt-1">
-                    Buka Google Maps &rarr;
+                    {{ isEnglish ? 'Open Google Maps →' : 'Buka Google Maps →' }}
                   </span>
                 </a>
               </div>
@@ -124,21 +127,19 @@ const currentYear = new Date().getFullYear()
               <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span>Setiap Hari: 06.00 &ndash; 22.00 WIB</span>
+              <span>{{ t('footer.hoursText') }}</span>
             </li>
           </ul>
         </div>
-
-
       </div>
 
       <!-- Copyright Bar -->
       <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-500 text-xs">
-        <p>&copy; {{ currentYear }} {{ siteConfig.rentalName }}. Seluruh hak cipta dilindungi.</p>
+        <p>&copy; {{ currentYear }} {{ siteConfig.rentalName }}. {{ t('footer.allRightsReserved') }}</p>
         <div class="flex items-center gap-4 text-[11px]">
-          <span class="text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">Kebijakan Privasi</span>
+          <span class="text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">{{ isEnglish ? 'Privacy Policy' : 'Kebijakan Privasi' }}</span>
           <span class="text-slate-300">&bull;</span>
-          <span class="text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">Syarat &amp; Ketentuan</span>
+          <span class="text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">{{ isEnglish ? 'Terms & Conditions' : 'Syarat & Ketentuan' }}</span>
         </div>
       </div>
 

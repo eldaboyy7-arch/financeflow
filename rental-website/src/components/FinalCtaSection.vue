@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { siteConfig } from '@/config/site'
+import { useLanguage } from '@/composables/useLanguage'
+
+const { t, isEnglish } = useLanguage()
 
 const getWaUrl = (phone: string) => {
   const clean = phone.replace(/\D/g, '')
-  const text = 'Halo 3 Putri Mulya, saya ingin konsultasi kebutuhan sewa mobil / paket tour di Bintan.'
+  const text = isEnglish.value
+    ? 'Hello 3 Putri Mulya, I would like to inquire about car rental and tour packages in Bintan Island.'
+    : 'Halo 3 Putri Mulya, saya ingin konsultasi kebutuhan sewa mobil / paket tour di Bintan.'
   return `https://wa.me/${clean}?text=${encodeURIComponent(text)}`
 }
 
@@ -33,17 +38,17 @@ const waUrl2 = computed(() => getWaUrl(siteConfig.rentalPhoneSecondary))
           <!-- Eyebrow Badge -->
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-400/15 text-amber-300 border border-amber-400/30 mb-4">
             <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-            <span>KONSULTASI & PEMESANAN CEPAT</span>
+            <span>{{ isEnglish ? 'FAST INQUIRY & RESERVATION' : 'KONSULTASI & PEMESANAN CEPAT' }}</span>
           </div>
 
           <!-- Heading -->
           <h2 class="font-display text-2xl font-black text-white tracking-tight leading-tight mb-3">
-            Siap Menjelajahi Bintan Bersama Kami?
+            {{ t('finalCta.title') }}
           </h2>
 
           <!-- Subtitle -->
           <p class="text-sm text-slate-300 leading-relaxed mb-6">
-            Hubungi kami via WhatsApp untuk rekomendasi armada, custom rute wisata, dan harga spesial rombongan!
+            {{ t('finalCta.subtitle') }}
           </p>
 
           <!-- 3 Service Highlights � horizontal pills -->

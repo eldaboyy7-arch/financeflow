@@ -2,6 +2,9 @@
 import { RouterLink } from 'vue-router'
 import type { PublicVehicle } from '@/types/fleet'
 import QuickSearchWidget from '@/components/QuickSearchWidget.vue'
+import { useLanguage } from '@/composables/useLanguage'
+
+const { t } = useLanguage()
 
 defineProps<{
   featuredVehicle?: PublicVehicle | null
@@ -22,17 +25,17 @@ const emit = defineEmits<{
       <div v-reveal:fade-up class="max-w-4xl xl:max-w-5xl text-center mx-auto">
         <!-- Eyebrow Tagline (Tanpa kapsul border agar terlihat natural & elegan) -->
         <p class="text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-amber-400 mb-2 sm:mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-          RENTAL MOBIL &amp; TOUR BINTAN
+          {{ t('hero.eyebrow') }}
         </p>
 
         <!-- Headline (1 baris di desktop & lebih besar) -->
         <h1 class="font-display text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white tracking-tight leading-tight mb-2 sm:mb-3 sm:whitespace-nowrap drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]">
-          Jelajahi Bintan dengan Nyaman.
+          {{ t('hero.title') }}
         </h1>
 
         <!-- Subtitle -->
         <p class="text-xs sm:text-sm lg:text-base xl:text-lg text-white/95 font-medium leading-relaxed mb-4 sm:mb-6 max-w-2xl mx-auto drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-          Rental mobil dan paket perjalanan di Bintan untuk kebutuhan pribadi, keluarga, maupun rombongan.
+          {{ t('hero.subtitle') }}
         </p>
 
         <!-- Action Buttons -->
@@ -42,7 +45,7 @@ const emit = defineEmits<{
             href="#armada"
             class="inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-amber-500/30 transition-all hover:shadow-amber-500/40 active:scale-95 cursor-pointer"
           >
-            <span>Lihat Armada</span>
+            <span>{{ t('hero.viewFleet') }}</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
             </svg>
@@ -53,7 +56,7 @@ const emit = defineEmits<{
             to="/paket-tour-bintan"
             class="inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3.5 rounded-xl bg-slate-950/45 hover:bg-slate-950/65 text-white border border-white/40 backdrop-blur-md font-bold text-xs sm:text-sm transition-all active:scale-95 shadow-lg"
           >
-            <span>Paket Tour</span>
+            <span>{{ t('hero.tourPackages') }}</span>
             <svg class="w-4 h-4 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
             </svg>

@@ -6,8 +6,10 @@ import { siteConfig } from '@/config/site'
 import { generateVehicleWhatsAppUrl } from '@/utils/whatsapp'
 import { getVehicleCategoryBracket, isDriverMandatory } from '@/config/fleetCategories'
 import { useCurrency } from '@/composables/useCurrency'
+import { useLanguage } from '@/composables/useLanguage'
 
 const { convertPrice } = useCurrency()
+const { t, isEnglish } = useLanguage()
 
 import type { BookingFilterParams } from '@/utils/whatsapp'
 
@@ -135,13 +137,13 @@ onUnmounted(() => {
       <div v-reveal:fade-up class="flex items-end justify-between gap-3 mb-6 sm:mb-10">
         <div>
           <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-1.5 sm:mb-2">
-            PILIHAN ARMADA
+            {{ t('fleet.sectionBadge') }}
           </p>
           <h2 class="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
-            Armada Nyaman Untuk Anda
+            {{ t('fleet.title') }}
           </h2>
           <p class="hidden sm:block text-sm text-slate-500 mt-1 max-w-xl">
-            Paling diminati untuk keliling santai, wisata keluarga, maupun dinas. Unit terawat, AC dingin, dan siap jalan.
+            {{ t('fleet.subtitle') }}
           </p>
         </div>
 
@@ -150,8 +152,8 @@ onUnmounted(() => {
           to="/armada"
           class="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors shrink-0 group py-1"
         >
-          <span class="sm:hidden">Lihat Semua</span>
-          <span class="hidden sm:inline">Lihat Semua Armada ({{ totalFleetCount > 0 ? `${totalFleetCount} Unit` : 'Lengkap' }})</span>
+          <span class="sm:hidden">{{ isEnglish ? 'View All' : 'Lihat Semua' }}</span>
+          <span class="hidden sm:inline">{{ isEnglish ? `View All Fleet (${totalFleetCount} Units)` : `Lihat Semua Armada (${totalFleetCount > 0 ? `${totalFleetCount} Unit` : 'Lengkap'})` }}</span>
           <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
           </svg>
@@ -293,21 +295,21 @@ onUnmounted(() => {
                 class="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-emerald-600/95 text-white shadow-xs backdrop-blur-xs"
               >
                 <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                <span>Tersedia</span>
+                <span>{{ isEnglish ? 'Available' : 'Tersedia' }}</span>
               </span>
               <span
                 v-else-if="car.status === 'maintenance'"
                 class="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-amber-500 text-white shadow-xs backdrop-blur-xs"
               >
                 <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
-                <span>Perawatan</span>
+                <span>{{ isEnglish ? 'Maintenance' : 'Perawatan' }}</span>
               </span>
               <span
                 v-else
                 class="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-slate-800/90 text-slate-200 shadow-xs backdrop-blur-xs"
               >
                 <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                <span>{{ car.status_label || 'Tidak Tersedia' }}</span>
+                <span>{{ isEnglish ? 'Booked' : (car.status_label || 'Tidak Tersedia') }}</span>
               </span>
             </div>
 
@@ -333,7 +335,7 @@ onUnmounted(() => {
                   {{ getVehicleCategoryBracket(car.capacity).shortLabel }}
                 </span>
                 <span class="text-[10px] sm:text-[11px] text-slate-500 font-medium">
-                  Tahun {{ car.model_year }}
+                  {{ isEnglish ? 'Year ' : 'Tahun ' }}{{ car.model_year }}
                 </span>
               </div>
 
@@ -348,19 +350,19 @@ onUnmounted(() => {
                   <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
-                  <span>{{ car.capacity }} Kursi</span>
+                  <span>{{ car.capacity }} {{ t('fleet.seats') }}</span>
                 </span>
                 <span class="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md bg-slate-100 font-medium">
                   <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                   </svg>
-                  <span>{{ car.transmission_label }}</span>
+                  <span>{{ isEnglish ? (car.transmission === 'matic' ? 'Automatic' : 'Manual') : car.transmission_label }}</span>
                 </span>
                 <span class="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md bg-slate-100 font-medium">
                   <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span>{{ car.fuel_type_label }}</span>
+                  <span>{{ isEnglish ? (car.fuel_type === 'bensin' ? 'Petrol' : 'Diesel') : car.fuel_type_label }}</span>
                 </span>
               </div>
             </div>
@@ -381,7 +383,7 @@ onUnmounted(() => {
                   <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-slate-500" :class="getSelectedService(car) === 'self_drive' ? 'text-blue-600' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
                   </svg>
-                  <span>Lepas Kunci</span>
+                  <span>{{ t('fleet.serviceSelfDrive') }}</span>
                 </button>
                 <button
                   type="button"
@@ -392,7 +394,7 @@ onUnmounted(() => {
                   <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-slate-500" :class="getSelectedService(car) === 'with_driver' ? 'text-blue-600' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                   </svg>
-                  <span>+ Supir</span>
+                  <span>{{ t('fleet.serviceWithDriver') }}</span>
                 </button>
               </div>
 
@@ -404,7 +406,7 @@ onUnmounted(() => {
                 <svg class="w-3 h-3 shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                 </svg>
-                <span>Termasuk Supir</span>
+                <span>{{ t('fleet.driverIncluded') }}</span>
               </div>
 
               <!-- Jika hanya lepas kunci -->
@@ -415,19 +417,19 @@ onUnmounted(() => {
                 <svg class="w-3 h-3 shrink-0 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
                 </svg>
-                <span>Lepas Kunci</span>
+                <span>{{ t('fleet.serviceSelfDrive') }}</span>
               </div>
 
               <div class="flex items-center justify-between mb-0 sm:mb-2.5">
                 <div>
                   <span class="text-[9px] sm:text-[11px] text-slate-400 font-medium block leading-none">
-                    {{ getSelectedService(car) === 'with_driver' ? 'Tarif + Supir' : 'Tarif Lepas Kunci' }}
+                    {{ getSelectedService(car) === 'with_driver' ? (isEnglish ? 'Rate with Chauffeur' : 'Tarif + Supir') : (isEnglish ? 'Self-Drive Rate' : 'Tarif Lepas Kunci') }}
                   </span>
                   <div class="mt-0.5 flex items-baseline gap-0.5 sm:block">
                     <span class="font-display text-xs sm:text-lg font-black text-slate-900 tracking-tight whitespace-nowrap transition-all duration-200">
                       {{ getActiveDailyRatePrice(car).formatted }}
                     </span>
-                    <span class="text-[9px] sm:text-[11px] text-slate-500 font-normal whitespace-nowrap">/hari</span>
+                    <span class="text-[9px] sm:text-[11px] text-slate-500 font-normal whitespace-nowrap">{{ t('fleet.perDay') }}</span>
                   </div>
                   <span v-if="getActiveDailyRatePrice(car).isConverted" class="text-[9px] sm:text-[10px] text-slate-400 font-normal block mt-0.5">
                     ({{ getActiveDailyRatePrice(car).originalFormatted }})
@@ -438,7 +440,7 @@ onUnmounted(() => {
                   @click="openPhotoModal(car)"
                   class="hidden sm:inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors group/link cursor-pointer"
                 >
-                  <span>Lihat Detail</span>
+                  <span>{{ t('fleet.viewDetails') }}</span>
                   <svg class="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                   </svg>
@@ -456,7 +458,7 @@ onUnmounted(() => {
                 <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
                 </svg>
-                <span>Pesan via WhatsApp</span>
+                <span>{{ t('fleet.bookNow') }}</span>
               </a>
 
               <button

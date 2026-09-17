@@ -5,9 +5,11 @@ import { useTourPackages } from '@/composables/useTourPackages'
 import type { TourPackage } from '@/config/tourPackages'
 import { siteConfig } from '@/config/site'
 import { useCurrency } from '@/composables/useCurrency'
+import { useLanguage } from '@/composables/useLanguage'
 
 const { packages: tourPackages, fetchTourPackages } = useTourPackages()
 const { currentCurrency, convertPrice } = useCurrency()
+const { isEnglish } = useLanguage()
 
 // Dynamic package data for comparison table (automatically synced with API / Admin)
 const commuterPkg = computed(() =>
@@ -182,10 +184,10 @@ onBeforeUnmount(() => {
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
           </svg>
-          <span>Beranda</span>
+          <span>{{ isEnglish ? 'Home' : 'Beranda' }}</span>
         </RouterLink>
         <span class="text-slate-300">/</span>
-        <span class="text-slate-900 font-semibold">Paket Tour Bintan</span>
+        <span class="text-slate-900 font-semibold">{{ isEnglish ? 'Bintan Tour Packages' : 'Paket Tour Bintan' }}</span>
       </nav>
 
       <!-- Page Header -->
@@ -194,15 +196,18 @@ onBeforeUnmount(() => {
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h8m-8 4h8m-8 4h4m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z"/>
           </svg>
-          <span>Armada Khusus HiAce (Commuter 15 Kursi &amp; Premio Luxury VIP)</span>
+          <span>{{ isEnglish ? 'Exclusive HiAce Fleet (Commuter 15-Seater & Premio Luxury VIP)' : 'Armada Khusus HiAce (Commuter 15 Kursi & Premio Luxury VIP)' }}</span>
         </div>
 
         <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-3">
-          Paket Tour Wisata Pulau Bintan
+          {{ isEnglish ? 'Bintan Island Private Tour Packages' : 'Paket Tour Wisata Pulau Bintan' }}
         </h1>
 
         <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
-          Pilihan terbaik perjalanan wisata keliling Pulau Bintan untuk rombongan keluarga, instansi, atau sahabat. Seluruh armada Toyota HiAce berkapasitas <strong>11 hingga 15 penumpang</strong>, dilengkapi fasilitas <strong>Karaoke System</strong>, dan tarif sudah <strong>All-In (Sudah Termasuk Mobil + Supir + BBM)</strong>.
+          {{ isEnglish
+            ? 'The premier way to explore Bintan Island for families, corporate retreats, and group vacations. All Toyota HiAce vehicles accommodate 11 to 15 passengers, complete with On-Board Karaoke System, and rates are 100% All-In (Private Vehicle + Professional Chauffeur + Fuel Included).'
+            : 'Pilihan terbaik perjalanan wisata keliling Pulau Bintan untuk rombongan keluarga, instansi, atau sahabat. Seluruh armada Toyota HiAce berkapasitas 11 hingga 15 penumpang, dilengkapi fasilitas Karaoke System, dan tarif sudah All-In (Sudah Termasuk Mobil + Supir + BBM).'
+          }}
         </p>
       </header>
 

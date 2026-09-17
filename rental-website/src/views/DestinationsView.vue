@@ -3,18 +3,28 @@ import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { destinationsList } from '@/config/destinations'
 import { siteConfig } from '@/config/site'
+import { useLanguage } from '@/composables/useLanguage'
+
+const { isEnglish } = useLanguage()
 
 const searchQuery = ref('')
 const selectedCategory = ref<string>('all')
 
-const categories = [
+const categories = computed(() => isEnglish.value ? [
+  { id: 'all', label: 'All Destinations' },
+  { id: 'pantai', label: 'Beaches & Coastlines' },
+  { id: 'ikonik', label: 'Iconic Landmarks' },
+  { id: 'religi', label: 'Heritage & Temples' },
+  { id: 'ekowisata', label: 'Eco-Tourism & Nature' },
+  { id: 'budaya', label: 'Cultural Heritage' }
+] : [
   { id: 'all', label: 'Semua Destinasi' },
   { id: 'pantai', label: 'Pantai & Pesisir' },
   { id: 'ikonik', label: 'Spot Foto Ikonik' },
   { id: 'religi', label: 'Religi & Arsitektur' },
   { id: 'ekowisata', label: 'Ekowisata & Alam' },
   { id: 'budaya', label: 'Cagar Budaya & Museum' }
-]
+])
 
 const filteredDestinations = computed(() => {
   return destinationsList.filter((dest) => {
@@ -36,7 +46,9 @@ const getWhatsAppUrl = (text: string) => {
 
 const waGeneralConsultUrl = computed(() => {
   const phone = siteConfig.rentalPhone.replace(/\D/g, '')
-  const text = 'Halo 3 Putri Mulya, saya ingin konsultasi rute wisata keliling Pulau Bintan dan rekomendasi armada yang cocok.'
+  const text = isEnglish.value
+    ? 'Hello 3 Putri Mulya, I would like to consult on Bintan Island tour itineraries and vehicle options.'
+    : 'Halo 3 Putri Mulya, saya ingin konsultasi rute wisata keliling Pulau Bintan dan rekomendasi armada yang cocok.'
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
 })
 </script>
@@ -58,15 +70,18 @@ const waGeneralConsultUrl = computed(() => {
       <div v-reveal:fade-up class="max-w-7xl mx-auto relative z-10 text-center">
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/25 text-white text-xs font-semibold mb-6 backdrop-blur-md">
           <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-          <span>Dokumentasi Resmi &amp; Pariwisata Bintan</span>
+          <span>{{ isEnglish ? 'BINTAN ISLAND TRAVEL INSPIRATION' : 'PANDUAN LENGKAP WISATA PULAU BINTAN' }}</span>
         </div>
 
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4 leading-tight">
-          Panduan &amp; Inspirasi Destinasi Wisata Bintan
+        <h1 class="font-display text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight mb-4 text-white drop-shadow-md">
+          {{ isEnglish ? 'Top Attractions & Destinations in Bintan' : 'Eksplorasi Destinasi Terbaik di Bintan' }}
         </h1>
 
-        <p class="max-w-xl mx-auto text-sm sm:text-base text-white/80 leading-relaxed mb-8">
-          Eksplorasi pantai pasir putih, cagar sejarah Melayu, dan vihara megah berkelas dunia. Nikmati kebebasan rute dengan sewa mobil lepas kunci atau kenyamanan paket supir 3 Putri Mulya.
+        <p class="text-sm sm:text-lg text-slate-200 max-w-2xl mx-auto leading-relaxed drop-shadow mb-8">
+          {{ isEnglish
+            ? 'From turquoise lagoons, white sandy beaches, to historic maritime heritage. Enjoy seamless journeys with 3 Putri Mulya.'
+            : 'Dari pantai pasir putih tropis, danau biru, hingga vihara megah bernilai sejarah. Nikmati perjalanan keliling Bintan dengan armada nyaman & supir lokal berpengalaman.'
+          }}
         </p>
 
         <!-- Quick Summary Stats -->

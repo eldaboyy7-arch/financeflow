@@ -4,9 +4,12 @@ import { useRoute, RouterLink } from 'vue-router'
 import { siteConfig } from '@/config/site'
 import { generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
 import CurrencySelector from '@/components/CurrencySelector.vue'
+import LanguageSelector from '@/components/LanguageSelector.vue'
 import { useCurrency } from '@/composables/useCurrency'
+import { useLanguage } from '@/composables/useLanguage'
 
 const { currentCurrency, setCurrency } = useCurrency()
+const { currentLang, setLanguage, t } = useLanguage()
 
 const route = useRoute()
 const isHeroPage = computed(() => ['/', '/layanan', '/destinasi'].includes(route.path))
@@ -107,39 +110,49 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
             :class="route.path === '/' && !route.hash ? 'text-blue-400 font-bold' : ''"
             class="hover:text-white hover:drop-shadow transition-colors"
           >
-            Home
+            {{ t('nav.home') }}
           </RouterLink>
           <RouterLink
             to="/layanan"
             class="hover:text-white hover:drop-shadow transition-colors"
             :class="route.path === '/layanan' ? 'text-blue-400 font-bold' : ''"
           >
-            Layanan
+            {{ t('nav.services') }}
           </RouterLink>
           <RouterLink
             to="/armada"
             class="hover:text-white hover:drop-shadow transition-colors"
             :class="route.path === '/armada' ? 'text-blue-400 font-bold' : ''"
           >
-            Armada
+            {{ t('nav.fleet') }}
           </RouterLink>
           <RouterLink
             to="/destinasi"
             class="hover:text-white hover:drop-shadow transition-colors"
             :class="route.path === '/destinasi' ? 'text-blue-400 font-bold' : ''"
           >
-            Destinasi
+            {{ t('nav.destinations') }}
+          </RouterLink>
+          <RouterLink
+            to="/paket-tour-bintan"
+            class="hover:text-white hover:drop-shadow transition-colors"
+            :class="route.path === '/paket-tour-bintan' ? 'text-blue-400 font-bold' : ''"
+          >
+            {{ t('nav.tours') }}
           </RouterLink>
           <RouterLink
             to="/#faq"
             class="hover:text-white hover:drop-shadow transition-colors"
           >
-            FAQ
+            {{ t('nav.faq') }}
           </RouterLink>
         </nav>
 
-        <!-- Right Side Cluster: Currency Selector + WhatsApp CTA + Mobile Hamburger Button -->
+        <!-- Right Side Cluster: Language Selector + Currency Selector + WhatsApp CTA + Mobile Hamburger Button -->
         <div class="flex items-center gap-1.5 sm:gap-2.5">
+          <!-- Language Toggle (EN | ID) -->
+          <LanguageSelector />
+
           <!-- Multi-Currency Selector Dropdown -->
           <CurrencySelector />
 
@@ -153,8 +166,8 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
             <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
             </svg>
-            <span class="hidden sm:inline">Hubungi Kami</span>
-            <span class="sm:hidden">Chat WA</span>
+            <span class="hidden sm:inline">{{ t('nav.whatsappCta') }}</span>
+            <span class="sm:hidden">WhatsApp</span>
           </a>
 
           <!-- Mobile Hamburger Toggle Button (md:hidden) -->
@@ -223,17 +236,47 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
         <div class="max-w-7xl mx-auto px-4 py-4 space-y-3">
           <!-- Section Title -->
           <div class="flex items-center justify-between px-1 pb-1 border-b border-slate-100">
-            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Menu Navigasi</span>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Navigation</span>
             <span class="text-[11px] font-medium text-emerald-700 flex items-center gap-1.5">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-              Layanan Siap 24 Jam
+              {{ t('nav.available24') }}
             </span>
+          </div>
+
+          <!-- Language Quick Switcher in Mobile Drawer -->
+          <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-bold text-slate-800">{{ t('nav.language') }}</span>
+              <span class="text-[10px] text-slate-400">/ Language</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button
+                @click="setLanguage('en')"
+                type="button"
+                class="px-3 py-1 rounded-lg text-xs font-bold transition-all"
+                :class="currentLang === 'en'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'"
+              >
+                English
+              </button>
+              <button
+                @click="setLanguage('id')"
+                type="button"
+                class="px-3 py-1 rounded-lg text-xs font-bold transition-all"
+                :class="currentLang === 'id'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'"
+              >
+                Indonesia
+              </button>
+            </div>
           </div>
 
           <!-- Currency Quick Switcher in Mobile Drawer -->
           <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
             <div class="flex items-center gap-1.5">
-              <span class="text-xs font-bold text-slate-800">Mata Uang</span>
+              <span class="text-xs font-bold text-slate-800">{{ t('nav.currency') }}</span>
               <span class="text-[10px] text-slate-400">/ Currency</span>
             </div>
             <div class="flex items-center gap-1">
