@@ -44,11 +44,16 @@ const filteredDestinations = computed(() => {
   return destinationsList.filter((dest) => {
     const matchesCategory = selectedCategory.value === 'all' || dest.category === selectedCategory.value
     const query = searchQuery.value.toLowerCase().trim()
+    const name = isEnglish.value ? (dest.nameEn || dest.name) : dest.name
+    const loc = isEnglish.value ? (dest.locationEn || dest.location) : dest.location
+    const desc = isEnglish.value ? (dest.descriptionEn || dest.description) : dest.description
+    const cat = isEnglish.value ? (dest.categoryLabelEn || dest.categoryLabel) : dest.categoryLabel
     const matchesSearch = !query || 
+      name.toLowerCase().includes(query) ||
       dest.name.toLowerCase().includes(query) ||
-      dest.location.toLowerCase().includes(query) ||
-      dest.description.toLowerCase().includes(query) ||
-      dest.categoryLabel.toLowerCase().includes(query)
+      loc.toLowerCase().includes(query) ||
+      desc.toLowerCase().includes(query) ||
+      cat.toLowerCase().includes(query)
     return matchesCategory && matchesSearch
   })
 })
@@ -60,7 +65,7 @@ const getWhatsAppUrl = (text: string) => {
 
 const getDestWhatsAppUrl = (dest: (typeof destinationsList)[0]) => {
   const text = isEnglish.value
-    ? `Hello 3 Putri Mulya, I would like to rent a car for a trip to ${dest.name} in Bintan.`
+    ? (dest.waTextEn || `Hello 3 Putri Mulya, I would like to rent a car for a trip to ${dest.nameEn || dest.name} in Bintan.`)
     : dest.waText
   return getWhatsAppUrl(text)
 }
@@ -184,7 +189,7 @@ const waGeneralConsultUrl = computed(() => {
             <!-- Category Badge -->
             <div class="absolute top-3 left-3 z-10">
               <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-900/85 text-slate-100 border border-white/20 backdrop-blur-sm shadow-sm">
-                {{ dest.badge }}
+                {{ isEnglish ? (dest.badgeEn || dest.badge) : dest.badge }}
               </span>
             </div>
 
@@ -205,14 +210,14 @@ const waGeneralConsultUrl = computed(() => {
             <!-- Title & Location Overlay -->
             <div class="absolute bottom-3 left-4 right-4 z-10">
               <h2 class="text-base sm:text-lg font-bold text-white leading-tight drop-shadow-md group-hover:text-blue-200 transition-colors line-clamp-1">
-                {{ dest.name }}
+                {{ isEnglish ? (dest.nameEn || dest.name) : dest.name }}
               </h2>
               <p class="text-xs text-slate-300 flex items-center gap-1 mt-1">
                 <svg class="w-3.5 h-3.5 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span class="truncate">{{ dest.location }}</span>
+                <span class="truncate">{{ isEnglish ? (dest.locationEn || dest.location) : dest.location }}</span>
               </p>
             </div>
           </div>
@@ -221,7 +226,7 @@ const waGeneralConsultUrl = computed(() => {
           <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
             <!-- Description -->
             <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              {{ dest.description }}
+              {{ isEnglish ? (dest.descriptionEn || dest.description) : dest.description }}
             </p>
 
             <!-- Key Highlights List -->
@@ -231,7 +236,7 @@ const waGeneralConsultUrl = computed(() => {
                 {{ isEnglish ? 'Main Highlights:' : 'Daya Tarik Utama:' }}
               </div>
               <ul class="space-y-1">
-                <li v-for="(highlight, hIdx) in dest.highlights" :key="hIdx" class="flex items-start gap-1.5 text-[11px] leading-snug">
+                <li v-for="(highlight, hIdx) in (isEnglish ? (dest.highlightsEn || dest.highlights) : dest.highlights)" :key="hIdx" class="flex items-start gap-1.5 text-[11px] leading-snug">
                   <span class="text-blue-600 font-bold shrink-0">•</span>
                   <span>{{ highlight }}</span>
                 </li>
@@ -244,13 +249,13 @@ const waGeneralConsultUrl = computed(() => {
                 <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>{{ dest.driveTime }}</span>
+                <span>{{ isEnglish ? (dest.driveTimeEn || dest.driveTime) : dest.driveTime }}</span>
               </div>
               <div class="flex items-center gap-2 text-slate-500 text-[11px]">
                 <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
                 </svg>
-                <span>{{ isEnglish ? 'Ideal Fleet:' : 'Armada Pas:' }} <strong class="text-slate-700">{{ dest.recommendedFleet }}</strong></span>
+                <span>{{ isEnglish ? 'Ideal Fleet:' : 'Armada Pas:' }} <strong class="text-slate-700">{{ isEnglish ? (dest.recommendedFleetEn || dest.recommendedFleet) : dest.recommendedFleet }}</strong></span>
               </div>
             </div>
 

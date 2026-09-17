@@ -141,7 +141,7 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
             <!-- Bottom Content -->
             <div class="absolute bottom-0 inset-x-0 p-4 z-10">
               <h3 class="font-display text-sm font-bold text-white leading-snug line-clamp-2 mb-1.5">
-                {{ pkg.title }}
+                {{ isEnglish ? (pkg.titleEn || pkg.title) : pkg.title }}
               </h3>
               <div class="flex items-center justify-between gap-2">
                 <span class="text-[11px] text-slate-300 font-medium leading-tight">
@@ -202,7 +202,7 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
           <!-- Bottom Content (Title & Price Tag) -->
           <div class="absolute bottom-0 inset-x-0 p-5 z-10">
             <h3 class="font-display text-lg font-bold text-white leading-snug group-hover:text-amber-300 transition-colors line-clamp-1 mb-1">
-              {{ pkg.title }}
+              {{ isEnglish ? (pkg.titleEn || pkg.title) : pkg.title }}
             </h3>
             <div class="flex items-center justify-between">
               <span class="text-xs text-slate-300 font-medium">

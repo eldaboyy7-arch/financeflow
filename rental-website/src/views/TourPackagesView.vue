@@ -313,13 +313,13 @@ onBeforeUnmount(() => {
                     class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold text-white shadow"
                     :class="pkg.id === 'tour-hiace-premio' ? 'bg-indigo-600' : 'bg-blue-600'"
                   >
-                    {{ pkg.badge }}
+                    {{ isEnglish ? (pkg.badgeEn || pkg.badge) : pkg.badge }}
                   </span>
                 </div>
                 <div class="absolute bottom-2 right-2 pointer-events-none">
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-black/50 text-white">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                    {{ pkg.capacity }}
+                    {{ isEnglish ? (pkg.capacityEn || pkg.capacity) : pkg.capacity }}
                   </span>
                 </div>
               </div>
@@ -330,15 +330,15 @@ onBeforeUnmount(() => {
               <!-- Title -->
               <div>
                 <p class="text-[11px] font-bold text-blue-600 uppercase tracking-wider mb-0.5">
-                  {{ pkg.vehicle }} &bull; {{ pkg.duration }}
+                  {{ isEnglish ? (pkg.vehicleEn || pkg.vehicle) : pkg.vehicle }} &bull; {{ isEnglish ? (pkg.durationEn || pkg.duration) : pkg.duration }}
                 </p>
-                <h2 class="text-base sm:text-lg font-black text-slate-900 leading-snug">{{ pkg.title }}</h2>
+                <h2 class="text-base sm:text-lg font-black text-slate-900 leading-snug">{{ isEnglish ? (pkg.titleEn || pkg.title) : pkg.title }}</h2>
               </div>
 
               <!-- Price row -->
               <div class="flex items-center gap-3 flex-wrap">
                 <div>
-                  <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">{{ pkg.priceLabel }}</span>
+                  <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">{{ isEnglish ? (pkg.priceLabelEn || pkg.priceLabel) : pkg.priceLabel }}</span>
                   <div class="flex items-baseline gap-1">
                     <span class="text-xl font-black text-slate-900 tracking-tight">{{ getPackagePrice(pkg).formatted }}</span>
                     <span v-if="getPackagePrice(pkg).amount > 0" class="text-xs text-slate-500">{{ t('common.perDay') }}</span>
@@ -357,15 +357,15 @@ onBeforeUnmount(() => {
               <div class="grid grid-cols-3 gap-2">
                 <div class="p-2 rounded-lg bg-slate-50 border border-slate-100 text-center">
                   <span class="text-[9px] text-slate-400 block font-semibold uppercase tracking-wider">{{ isEnglish ? 'Duration' : 'Durasi' }}</span>
-                  <span class="text-[11px] font-black text-slate-800 block mt-0.5 truncate">{{ pkg.duration || '8–10 Jam' }}</span>
+                  <span class="text-[11px] font-black text-slate-800 block mt-0.5 truncate">{{ isEnglish ? (pkg.durationEn || pkg.duration) : (pkg.duration || '8–10 Jam') }}</span>
                 </div>
                 <div class="p-2 rounded-lg bg-slate-50 border border-slate-100 text-center">
                   <span class="text-[9px] text-slate-400 block font-semibold uppercase tracking-wider">{{ isEnglish ? 'Capacity' : 'Kapasitas' }}</span>
-                  <span class="text-[11px] font-black text-slate-800 block mt-0.5 truncate">{{ pkg.capacity || '15 Kursi' }}</span>
+                  <span class="text-[11px] font-black text-slate-800 block mt-0.5 truncate">{{ isEnglish ? (pkg.capacityEn || pkg.capacity) : (pkg.capacity || '15 Kursi') }}</span>
                 </div>
                 <div class="p-2 rounded-lg bg-blue-50 border border-blue-100 text-center">
                   <span class="text-[9px] text-blue-500 block font-semibold uppercase tracking-wider">{{ isEnglish ? 'Facility' : 'Fasilitas' }}</span>
-                  <span class="text-[11px] font-black text-blue-700 block mt-0.5 truncate">{{ pkg.facilities?.[0] || 'Karaoke' }}</span>
+                  <span class="text-[11px] font-black text-blue-700 block mt-0.5 truncate">{{ isEnglish ? ((pkg.facilitiesEn && pkg.facilitiesEn[0]) || pkg.facilities?.[0] || 'Karaoke') : (pkg.facilities?.[0] || 'Karaoke') }}</span>
                 </div>
               </div>
 
@@ -400,7 +400,7 @@ onBeforeUnmount(() => {
           <div v-show="isExpanded(pkg.id)" class="border-t border-slate-100 p-4 sm:p-5 space-y-4">
 
             <!-- Description -->
-            <p class="text-sm text-slate-600 leading-relaxed">{{ pkg.description }}</p>
+            <p class="text-sm text-slate-600 leading-relaxed">{{ isEnglish ? (pkg.descriptionEn || pkg.description) : pkg.description }}</p>
 
             <!-- Route -->
             <div>
@@ -411,11 +411,11 @@ onBeforeUnmount(() => {
                 {{ isEnglish ? 'Tour Route & Stops:' : 'Rute Wisata yang Dikunjungi:' }}
               </span>
               <div class="flex flex-wrap items-center gap-1.5">
-                <template v-for="(stop, sIdx) in getRouteStops(pkg.tourRoute)" :key="sIdx">
+                <template v-for="(stop, sIdx) in getRouteStops(isEnglish ? (pkg.tourRouteEn || pkg.tourRoute) : pkg.tourRoute)" :key="sIdx">
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-[11px] font-semibold text-slate-700">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>{{ stop }}
                   </span>
-                  <svg v-if="sIdx < getRouteStops(pkg.tourRoute).length - 1" class="w-2.5 h-2.5 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg v-if="sIdx < getRouteStops(isEnglish ? (pkg.tourRouteEn || pkg.tourRoute) : pkg.tourRoute).length - 1" class="w-2.5 h-2.5 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                   </svg>
                 </template>
@@ -445,7 +445,7 @@ onBeforeUnmount(() => {
               <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
                 <span class="text-xs font-bold text-slate-800 block mb-2">{{ isEnglish ? 'Vehicle Features:' : 'Fasilitas Kendaraan:' }}</span>
                 <ul class="grid grid-cols-1 gap-1.5 text-xs text-slate-600">
-                  <li v-for="(fac, fIdx) in pkg.facilities" :key="fIdx" class="flex items-start gap-1.5">
+                  <li v-for="(fac, fIdx) in (isEnglish ? (pkg.facilitiesEn || pkg.facilities) : pkg.facilities)" :key="fIdx" class="flex items-start gap-1.5">
                     <svg class="w-3.5 h-3.5 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                     {{ fac }}
                   </li>
@@ -457,7 +457,7 @@ onBeforeUnmount(() => {
                 <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-100">
                   <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider block mb-1.5">{{ isEnglish ? 'Included:' : 'Termasuk:' }}</span>
                   <ul class="space-y-1 text-xs text-slate-600">
-                    <li v-for="(inc, incIdx) in pkg.included" :key="incIdx" class="flex items-start gap-1.5">
+                    <li v-for="(inc, incIdx) in (isEnglish ? (pkg.includedEn || pkg.included) : pkg.included)" :key="incIdx" class="flex items-start gap-1.5">
                       <svg class="w-3 h-3 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                       {{ inc }}
                     </li>
@@ -466,7 +466,7 @@ onBeforeUnmount(() => {
                 <div class="p-3 rounded-xl bg-slate-100 border border-slate-200">
                   <span class="text-[11px] font-bold text-slate-600 uppercase tracking-wider block mb-1.5">{{ isEnglish ? 'Not Included:' : 'Tidak Termasuk:' }}</span>
                   <ul class="space-y-1 text-xs text-slate-500">
-                    <li v-for="(exc, excIdx) in pkg.excluded" :key="excIdx" class="flex items-start gap-1.5">
+                    <li v-for="(exc, excIdx) in (isEnglish ? (pkg.excludedEn || pkg.excluded) : pkg.excluded)" :key="excIdx" class="flex items-start gap-1.5">
                       <span class="text-slate-400 font-bold shrink-0">&bull;</span>{{ exc }}
                     </li>
                   </ul>
@@ -478,7 +478,7 @@ onBeforeUnmount(() => {
             <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
               <span class="text-xs font-bold text-slate-800 block mb-2">{{ isEnglish ? 'Tour Itinerary:' : 'Rencana Perjalanan (Itinerary):' }}</span>
               <ol class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-slate-600">
-                <li v-for="(item, iIdx) in pkg.itinerary" :key="iIdx" class="flex items-start gap-2">
+                <li v-for="(item, iIdx) in (isEnglish ? (pkg.itineraryEn || pkg.itinerary) : pkg.itinerary)" :key="iIdx" class="flex items-start gap-2">
                   <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
                     {{ String(iIdx + 1).padStart(2, '0') }}
                   </span>
@@ -669,10 +669,10 @@ onBeforeUnmount(() => {
           <div class="flex items-center gap-3">
             <div>
               <h3 class="text-sm sm:text-base font-bold text-white leading-tight">
-                {{ lightboxPkg.title }}
+                {{ isEnglish ? (lightboxPkg.titleEn || lightboxPkg.title) : lightboxPkg.title }}
               </h3>
               <p class="text-xs text-slate-400">
-                {{ lightboxPkg.vehicle }} &bull; {{ isEnglish ? `Photo ${lightboxPhotoIdx + 1} of ${currentLightboxPhotos.length}` : `Foto ${lightboxPhotoIdx + 1} dari ${currentLightboxPhotos.length}` }}
+                {{ isEnglish ? (lightboxPkg.vehicleEn || lightboxPkg.vehicle) : lightboxPkg.vehicle }} &bull; {{ isEnglish ? `Photo ${lightboxPhotoIdx + 1} of ${currentLightboxPhotos.length}` : `Foto ${lightboxPhotoIdx + 1} dari ${currentLightboxPhotos.length}` }}
               </p>
             </div>
           </div>
@@ -744,7 +744,7 @@ onBeforeUnmount(() => {
           >
             <img
               :src="currentLightboxPhotos[lightboxPhotoIdx]"
-              :alt="lightboxPkg.title"
+              :alt="isEnglish ? (lightboxPkg.titleEn || lightboxPkg.title) : lightboxPkg.title"
               class="max-w-[92vw] max-h-[68vh] sm:max-h-[76vh] object-contain rounded-xl shadow-2xl transition-all"
             />
           </div>

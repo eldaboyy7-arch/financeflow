@@ -27,7 +27,6 @@ function isBrowserReload(): boolean {
   }
 }
 
-// Normalisasi data dari API Laravel ke interface TourPackage website
 function normalizeApiPackage(item: any): TourPackage {
   const priceNum = Number(item.price) || 0
   const formattedPrice = priceNum > 0
@@ -41,27 +40,43 @@ function normalizeApiPackage(item: any): TourPackage {
         ? item.gallery_photos.map((p: any) => typeof p === 'string' ? p : (p.path || p.url || ''))
         : [coverPhoto])
 
+  const matchedFallback = fallbackPackages.find(f => f.id === item.id || f.slug === item.slug)
+
   return {
     id: String(item.slug || item.id),
     slug: item.slug || `tour-${item.id}`,
     title: item.title,
+    titleEn: item.titleEn || item.title_en || matchedFallback?.titleEn,
     subtitle: item.subtitle || '',
+    subtitleEn: item.subtitleEn || item.subtitle_en || matchedFallback?.subtitleEn,
     badge: item.badge || undefined,
+    badgeEn: item.badgeEn || item.badge_en || matchedFallback?.badgeEn,
     description: item.description || '',
+    descriptionEn: item.descriptionEn || item.description_en || matchedFallback?.descriptionEn,
     duration: item.duration || 'Full Day Tour (8 - 10 Jam)',
+    durationEn: item.durationEn || item.duration_en || matchedFallback?.durationEn,
     price: formattedPrice,
     rawPrice: priceNum,
     priceLabel: item.price_label || (priceNum > 0 ? 'HARGA MULAI' : 'KONSULTASI GRATIS'),
-    vehicle: item.vehicle_name || 'Toyota HiAce',
+    priceLabelEn: item.priceLabelEn || item.price_label_en || matchedFallback?.priceLabelEn,
+    vehicle: item.vehicle_name || item.vehicle || 'Toyota HiAce',
+    vehicleEn: item.vehicleEn || item.vehicle_en || matchedFallback?.vehicleEn,
     capacity: item.capacity || '15 Person',
+    capacityEn: item.capacityEn || item.capacity_en || matchedFallback?.capacityEn,
     vehiclePhoto: coverPhoto,
     galleryPhotos: gallery,
     facilities: Array.isArray(item.facilities) ? item.facilities : [],
-    tourRoute: item.tour_route || '',
+    facilitiesEn: Array.isArray(item.facilitiesEn) ? item.facilitiesEn : (Array.isArray(item.facilities_en) ? item.facilities_en : matchedFallback?.facilitiesEn),
+    tourRoute: item.tour_route || item.tourRoute || '',
+    tourRouteEn: item.tourRouteEn || item.tour_route_en || matchedFallback?.tourRouteEn,
     itinerary: Array.isArray(item.itinerary) ? item.itinerary : [],
+    itineraryEn: Array.isArray(item.itineraryEn) ? item.itineraryEn : (Array.isArray(item.itinerary_en) ? item.itinerary_en : matchedFallback?.itineraryEn),
     included: Array.isArray(item.included) ? item.included : [],
+    includedEn: Array.isArray(item.includedEn) ? item.includedEn : (Array.isArray(item.included_en) ? item.included_en : matchedFallback?.includedEn),
     excluded: Array.isArray(item.excluded) ? item.excluded : [],
-    ctaWhatsappText: item.cta_whatsapp_text || `Halo Admin Bintan Travel, saya ingin booking ${item.title}...`
+    excludedEn: Array.isArray(item.excludedEn) ? item.excludedEn : (Array.isArray(item.excluded_en) ? item.excluded_en : matchedFallback?.excludedEn),
+    ctaWhatsappText: item.cta_whatsapp_text || item.ctaWhatsappText || `Halo Admin Bintan Travel, saya ingin booking ${item.title}...`,
+    ctaWhatsappTextEn: item.ctaWhatsappTextEn || item.cta_whatsapp_text_en || matchedFallback?.ctaWhatsappTextEn
   }
 }
 

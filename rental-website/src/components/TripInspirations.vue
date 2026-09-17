@@ -13,7 +13,7 @@ const destinations = computed(() => destinationsList.filter(d => d.featured).sli
 const getWhatsAppUrl = (dest: any) => {
   const phone = siteConfig.rentalPhone.replace(/\D/g, '')
   const text = isEnglish.value
-    ? `Hello 3 Putri Mulya, I would like to inquire about car rental or tour routes to ${dest.name} in Bintan.`
+    ? (dest.waTextEn || `Hello 3 Putri Mulya, I would like to inquire about car rental or tour routes to ${dest.nameEn || dest.name} in Bintan.`)
     : dest.waText
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
 }
@@ -82,14 +82,14 @@ const getWhatsAppUrl = (dest: any) => {
                 <div class="absolute top-2 left-2 z-10">
                   <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-900/80 text-slate-100 border border-white/20 backdrop-blur-sm">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                    <span class="truncate max-w-[130px]">{{ dest.badge }}</span>
+                    <span class="truncate max-w-[130px]">{{ isEnglish ? (dest.badgeEn || dest.badge) : dest.badge }}</span>
                   </span>
                 </div>
 
                 <!-- Credit -->
                 <div class="absolute top-2 right-2 z-10">
                   <span
-                    :title="'Sumber foto: ' + dest.photoCreditFull"
+                    :title="(isEnglish ? 'Photo source: ' : 'Sumber foto: ') + dest.photoCreditFull"
                     class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-medium bg-slate-950/65 text-slate-200/90 backdrop-blur-sm border border-white/15 cursor-help"
                   >
                     <svg class="w-2.5 h-2.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,7 +103,7 @@ const getWhatsAppUrl = (dest: any) => {
                 <!-- Title over image -->
                 <div class="absolute bottom-2.5 left-3 right-3 z-10">
                   <h3 class="text-sm font-bold text-white leading-tight drop-shadow-md group-hover:text-blue-200 transition-colors line-clamp-1">
-                    {{ dest.name }}
+                    {{ isEnglish ? (dest.nameEn || dest.name) : dest.name }}
                   </h3>
                 </div>
               </div>
@@ -111,7 +111,7 @@ const getWhatsAppUrl = (dest: any) => {
               <!-- Body -->
               <div class="p-3.5 flex-1 flex flex-col justify-between">
                 <p class="text-xs text-slate-600 leading-relaxed mb-3 line-clamp-3">
-                  {{ dest.description }}
+                  {{ isEnglish ? (dest.descriptionEn || dest.description) : dest.description }}
                 </p>
                 <div class="pt-2 border-t border-slate-100">
                   <a
