@@ -2,6 +2,7 @@
 import { RouterView } from 'vue-router'
 import TheNavbar from '@/components/TheNavbar.vue'
 import TheFooter from '@/components/TheFooter.vue'
+import FloatingWhatsappBar from '@/components/FloatingWhatsappBar.vue'
 </script>
 
 <template>
@@ -20,5 +21,8 @@ import TheFooter from '@/components/TheFooter.vue'
 
     <!-- Footer -->
     <TheFooter />
+
+    <!-- Floating WhatsApp Quick Action Button -->
+    <FloatingWhatsappBar />
   </div>
 </template>
