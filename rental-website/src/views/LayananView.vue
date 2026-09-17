@@ -34,6 +34,7 @@ const mainServices = computed(() => isEnglish.value ? [
     desc: 'Book your car, pick up the keys, and explore Bintan on your own schedule. City cars, family MPVs, to HiAce vans — transparent daily rates.',
     link: '/armada',
     linkLabel: 'View Fleet',
+    isExternal: false,
     wa: 'Hello 3 Putri Mulya, I would like to inquire about self-drive car rental in Bintan.',
   },
   {
@@ -41,10 +42,33 @@ const mainServices = computed(() => isEnglish.value ? [
     tag: 'Most Relaxing',
     tagColor: 'text-emerald-400',
     title: 'Rental with Chauffeur',
-    desc: 'Sit back and enjoy the scenery. Our experienced local drivers are ready to escort your family or group all day.',
-    link: '/paket-tour-bintan',
-    linkLabel: 'View Tour Packages',
+    desc: 'Sit back and enjoy the scenery. Our experienced local drivers are ready to escort your family or group all day with utmost hospitality.',
+    link: '/armada',
+    linkLabel: 'View Fleet',
+    isExternal: false,
     wa: 'Hello 3 Putri Mulya, I would like to hire a car with chauffeur in Bintan.',
+  },
+  {
+    img: '/images/layanan-paket-tour.jpg',
+    tag: 'Best Value & All-In',
+    tagColor: 'text-sky-400',
+    title: 'Bintan Private Tour Packages',
+    desc: 'Explore iconic destinations in a single day. Toyota HiAce 15 Seat + Chauffeur + Fuel fully included, plus on-board karaoke system.',
+    link: '/paket-tour-bintan',
+    linkLabel: 'Explore Tour Packages',
+    isExternal: false,
+    wa: 'Hello 3 Putri Mulya, I would like to inquire about Bintan private tour packages.',
+  },
+  {
+    img: '/images/layanan-antar-jemput.jpg',
+    tag: 'Punctual & Direct',
+    tagColor: 'text-violet-400',
+    title: 'Ferry & Airport Transfer',
+    desc: 'Seamless pick-up from BBT Lagoi Ferry Terminal, Sri Bintan Pura, Roro Tj. Uban, or RHF Airport directly to your resort or hotel.',
+    link: waUrl('Hello 3 Putri Mulya, I would like to book an airport or ferry terminal transfer in Bintan.'),
+    linkLabel: 'Book Transfer via WA',
+    isExternal: true,
+    wa: 'Hello 3 Putri Mulya, I would like to book an airport or ferry terminal transfer in Bintan.',
   },
 ] : [
   {
@@ -52,9 +76,10 @@ const mainServices = computed(() => isEnglish.value ? [
     tag: 'Paling Fleksibel',
     tagColor: 'text-amber-400',
     title: 'Sewa Lepas Kunci',
-    desc: 'Pesan mobil, ambil kunci, bebas kemana saja. City Car, MPV, hingga HiAce — harga harian transparan.',
+    desc: 'Pesan mobil, ambil kunci, bebas kemana saja. Pilihan unit City Car hingga MPV (matic & manual) dengan harga harian transparan.',
     link: '/armada',
     linkLabel: 'Lihat Armada',
+    isExternal: false,
     wa: 'Halo 3 Putri Mulya, saya ingin sewa mobil lepas kunci di Bintan.',
   },
   {
@@ -62,10 +87,33 @@ const mainServices = computed(() => isEnglish.value ? [
     tag: 'Paling Santai',
     tagColor: 'text-emerald-400',
     title: 'Sewa dengan Supir',
-    desc: 'Duduk santai, nikmati perjalanan. Driver berpengalaman siap mengantar rombongan seharian penuh.',
-    link: '/paket-tour-bintan',
-    linkLabel: 'Lihat Paket',
+    desc: 'Duduk santai tanpa capek menyetir. Driver lokal berpengalaman siap mengantar rombongan seharian penuh ke berbagai destinasi.',
+    link: '/armada',
+    linkLabel: 'Lihat Armada',
+    isExternal: false,
     wa: 'Halo 3 Putri Mulya, saya ingin sewa mobil dengan supir untuk perjalanan di Bintan.',
+  },
+  {
+    img: '/images/layanan-paket-tour.jpg',
+    tag: 'All-In Terfavorit',
+    tagColor: 'text-sky-400',
+    title: 'Paket Tour Wisata Bintan',
+    desc: 'Keliling destinasi ikonik (Gurun Pasir, Lagoi, Vihara 1000 Wajah, Trikora). HiAce 15 Seat + Supir + BBM + Karaoke on board include.',
+    link: '/paket-tour-bintan',
+    linkLabel: 'Lihat Paket Tour',
+    isExternal: false,
+    wa: 'Halo 3 Putri Mulya, saya ingin tanya info paket tour wisata Bintan.',
+  },
+  {
+    img: '/images/layanan-antar-jemput.jpg',
+    tag: 'Tepat Waktu',
+    tagColor: 'text-violet-400',
+    title: 'Antar-Jemput Bandara & Pelabuhan',
+    desc: 'Layanan transfer tepat waktu dari Pelabuhan Ferry BBT Lagoi, Sri Bintan Pura, Roro Tj. Uban, & Bandara RHF langsung ke hotel/resort tujuan.',
+    link: waUrl('Halo 3 Putri Mulya, saya ingin pesan layanan antar-jemput pelabuhan atau bandara di Bintan.'),
+    linkLabel: 'Pesan Antar-Jemput',
+    isExternal: true,
+    wa: 'Halo 3 Putri Mulya, saya ingin pesan layanan antar-jemput pelabuhan atau bandara di Bintan.',
   },
 ])
 </script>
@@ -128,9 +176,12 @@ const mainServices = computed(() => isEnglish.value ? [
       </div>
     </section>
 
-    <!-- ═══════════ 2 LAYANAN UTAMA ═══════════ -->
-    <section v-reveal:fade-up class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-5">
-      <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-5">{{ isEnglish ? 'Core Services' : 'Layanan Utama' }}</p>
+    <!-- ═══════════ 4 LAYANAN UTAMA ═══════════ -->
+    <section v-reveal:fade-up class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-6">
+      <div class="flex items-center justify-between mb-5">
+        <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400">{{ isEnglish ? 'Core Services' : 'Layanan Utama' }}</p>
+        <span class="text-xs text-slate-400 hidden sm:inline">{{ isEnglish ? '4 Comprehensive Solutions' : '4 Pilihan Layanan Lengkap' }}</span>
+      </div>
 
       <!-- MOBILE: Horizontal scroll -->
       <div class="sm:hidden -mx-4 px-4">
@@ -140,18 +191,32 @@ const mainServices = computed(() => isEnglish.value ? [
             :key="svc.title"
             v-reveal:fade-up="idx * 90"
             class="group relative flex-none snap-start rounded-2xl overflow-hidden bg-slate-900 flex flex-col justify-end"
-            style="width:80vw;max-width:320px;height:360px;"
+            style="width:80vw;max-width:320px;height:380px;"
           >
             <img :src="svc.img" :alt="svc.title"
               class="absolute inset-0 w-full h-full object-cover group-active:scale-105 transition-transform duration-500"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/45 to-transparent"></div>
             <div class="relative z-10 p-5">
               <span class="text-[10px] font-bold uppercase tracking-widest mb-1.5 block" :class="svc.tagColor">{{ svc.tag }}</span>
               <h2 class="text-lg font-black text-white mb-1">{{ svc.title }}</h2>
-              <p class="text-xs text-white/60 leading-relaxed mb-4">{{ svc.desc }}</p>
+              <p class="text-xs text-white/65 leading-relaxed mb-4 line-clamp-3">{{ svc.desc }}</p>
               <div class="flex items-center gap-3">
-                <RouterLink :to="svc.link"
+                <a
+                  v-if="svc.isExternal"
+                  :href="svc.link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-white text-slate-900 font-bold text-xs hover:bg-slate-100 transition-colors"
+                >
+                  {{ svc.linkLabel }}
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </a>
+                <RouterLink
+                  v-else
+                  :to="svc.link"
                   class="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-white text-slate-900 font-bold text-xs hover:bg-slate-100 transition-colors"
                 >
                   {{ svc.linkLabel }}
@@ -175,7 +240,7 @@ const mainServices = computed(() => isEnglish.value ? [
         </div>
       </div>
 
-      <!-- DESKTOP: 2-col grid -->
+      <!-- DESKTOP: 2-col grid (2x2) -->
       <div class="hidden sm:grid grid-cols-2 gap-5">
         <div
           v-for="(svc, idx) in mainServices"
@@ -187,13 +252,27 @@ const mainServices = computed(() => isEnglish.value ? [
           <img :src="svc.img" :alt="svc.title"
             class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/45 to-transparent"></div>
           <div class="relative z-10 p-6 sm:p-7">
             <span class="text-[10px] font-bold uppercase tracking-widest mb-2 block" :class="svc.tagColor">{{ svc.tag }}</span>
             <h2 class="text-xl font-black text-white mb-1.5">{{ svc.title }}</h2>
-            <p class="text-xs text-white/65 leading-relaxed mb-5">{{ svc.desc }}</p>
+            <p class="text-xs text-white/70 leading-relaxed mb-5">{{ svc.desc }}</p>
             <div class="flex items-center gap-3">
-              <RouterLink :to="svc.link"
+              <a
+                v-if="svc.isExternal"
+                :href="svc.link"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-slate-900 font-bold text-xs hover:bg-slate-100 transition-colors"
+              >
+                {{ svc.linkLabel }}
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+              <RouterLink
+                v-else
+                :to="svc.link"
                 class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-slate-900 font-bold text-xs hover:bg-slate-100 transition-colors"
               >
                 {{ svc.linkLabel }}
@@ -207,57 +286,6 @@ const mainServices = computed(() => isEnglish.value ? [
             </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- ═══════════ PAKET TOUR — Full Width ═══════════ -->
-    <section v-reveal:zoom-in class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-      <div class="group relative rounded-2xl overflow-hidden bg-slate-900 flex items-end" style="min-height:260px;">
-        <img src="/images/destinations/busung.jpg" alt="Paket Tour Bintan"
-          class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-        />
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/55 to-slate-950/10"></div>
-        <div class="relative z-10 p-6 sm:p-8 max-w-lg">
-          <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-2 block">All-In</span>
-          <h2 class="text-xl sm:text-2xl font-black text-white mb-2">{{ isEnglish ? 'Bintan Private Tour Packages' : 'Paket Tour Bintan' }}</h2>
-          <p class="text-xs sm:text-sm text-white/65 leading-relaxed mb-5 max-w-sm">
-            {{ isEnglish
-              ? 'Explore top iconic destinations in a single day. Toyota HiAce + Chauffeur + Fuel fully included. On-board karaoke system. Just arrive and enjoy.'
-              : 'Keliling destinasi ikonik dalam satu hari. HiAce + Supir + BBM sudah include. Karaoke on board. Tinggal datang dan nikmati.'
-            }}
-          </p>
-          <RouterLink to="/paket-tour-bintan"
-            class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold text-xs transition-colors"
-          >
-            {{ isEnglish ? 'Explore Tour Packages' : 'Lihat Paket Tour' }}
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-            </svg>
-          </RouterLink>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════ ANTAR JEMPUT ═══════════ -->
-    <section v-reveal:fade-up class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-200 rounded-2xl px-6 py-6">
-        <div>
-          <span class="text-[10px] font-bold uppercase tracking-widest text-violet-500 block mb-1.5">{{ isEnglish ? 'Punctual & Reliable' : 'Tepat Waktu' }}</span>
-          <h2 class="text-base sm:text-lg font-black text-slate-900 mb-1">{{ isEnglish ? 'Airport & Ferry Terminal Transfer' : 'Antar Jemput Bandara & Ferry' }}</h2>
-          <p class="text-sm text-slate-500">
-            {{ isEnglish ? 'RHF Airport · Sri Bintan Pura Ferry Terminal · Solo to Large Groups' : 'Bandara RHF · Pelabuhan Sri Bintan Pura · Personal hingga rombongan besar' }}
-          </p>
-        </div>
-        <a
-          :href="waUrl(isEnglish ? 'Hello 3 Putri Mulya, I would like to book an airport or ferry terminal transfer in Bintan.' : 'Halo 3 Putri Mulya, saya ingin pesan layanan antar/jemput bandara atau pelabuhan di Bintan.')"
-          target="_blank" rel="noopener noreferrer"
-          class="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-700 text-white font-bold text-sm transition-all whitespace-nowrap"
-        >
-          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
-          </svg>
-          {{ isEnglish ? 'Inquire via WA' : 'Tanya Admin WA' }}
-        </a>
       </div>
     </section>
 
