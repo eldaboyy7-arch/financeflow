@@ -113,8 +113,8 @@ class PublicFleetController extends Controller
             ];
         });
 
-        // Instruct browser and Cloudflare CDN to cache response (max-age 5m, CDN s-maxage 30m)
+        // Instruct browser (10s) and Cloudflare CDN (60s with stale-while-revalidate)
         return response()->json($cachedData)
-            ->header('Cache-Control', 'public, max-age=300, s-maxage=1800');
+            ->header('Cache-Control', 'public, max-age=10, s-maxage=60, stale-while-revalidate=300');
     }
 }
