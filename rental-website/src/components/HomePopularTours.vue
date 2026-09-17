@@ -67,6 +67,14 @@ const badgeByKey: Record<string, string> = {
 }
 
 function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?: string }): string {
+  if (isEnglish.value) {
+    if (pkg.id === '1' || pkg.slug?.includes('1-day')) return '1-Day Tour'
+    if (pkg.id === '2' || pkg.slug?.includes('2d1n')) return '2D1N Tour'
+    if (pkg.id === '3' || pkg.slug?.includes('custom')) return 'Custom Route'
+    if (pkg.slug?.includes('commuter')) return 'Full Day Tour'
+    if (pkg.slug?.includes('premio')) return 'Luxury VIP'
+    return 'Bintan Tour'
+  }
   return badgeByKey[pkg.id] || badgeByKey[pkg.slug] || pkg.badge || pkg.duration || 'Wisata Bintan'
 }
 </script>
@@ -140,7 +148,7 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
                   {{ formatTourCardPrice(pkg) }}
                 </span>
                 <span class="text-[11px] font-bold text-amber-400 inline-flex items-center gap-0.5 shrink-0">
-                  Detail
+                  {{ isEnglish ? 'Details' : 'Detail' }}
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                   </svg>
@@ -201,7 +209,7 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
                 {{ formatTourCardPrice(pkg) }}
               </span>
               <span class="text-xs font-bold text-amber-400 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                Detail
+                {{ isEnglish ? 'Details' : 'Detail' }}
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                 </svg>

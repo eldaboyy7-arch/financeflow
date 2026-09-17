@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
+import { useLanguage } from '@/composables/useLanguage'
 import { useFleet } from '@/composables/useFleet'
 import type { BookingFilterParams } from '@/utils/whatsapp'
 import HeroSection from '@/components/HeroSection.vue'
@@ -10,6 +11,8 @@ import TripInspirations from '@/components/TripInspirations.vue'
 import LocationSection from '@/components/LocationSection.vue'
 import FaqSection from '@/components/FaqSection.vue'
 import FinalCtaSection from '@/components/FinalCtaSection.vue'
+
+const { isEnglish } = useLanguage()
 
 const {
   vehicles,
@@ -77,10 +80,20 @@ const featuredVehicle = computed(() => {
     || null
 })
 
+function updateDocTitle() {
+  document.title = isEnglish.value
+    ? '3 Putri Mulya - Bintan Car Rental & Tour'
+    : '3 Putri Mulya - Rental Mobil & Tour Bintan'
+}
+
 onMounted(() => {
-  document.title = '3 Putri Mulya - Rental Mobil & Tour Bintan'
+  updateDocTitle()
   fetchFeaturedVehicles()
   fetchVehicles() // Muat seluruh armada agar pencarian instan
+})
+
+watch(isEnglish, () => {
+  updateDocTitle()
 })
 </script>
 

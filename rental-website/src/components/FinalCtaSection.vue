@@ -51,19 +51,19 @@ const waUrl2 = computed(() => getWaUrl(siteConfig.rentalPhoneSecondary))
             {{ t('finalCta.subtitle') }}
           </p>
 
-          <!-- 3 Service Highlights � horizontal pills -->
+          <!-- 3 Service Highlights — horizontal pills -->
           <div class="flex flex-wrap gap-2 mb-7">
             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 border border-white/15 text-white">
               <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-              Lepas Kunci & Supir
+              {{ isEnglish ? 'Self-Drive & Chauffeur' : 'Lepas Kunci & Supir' }}
             </span>
             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 border border-white/15 text-white">
               <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-              Antar Bandara & Ferry
+              {{ isEnglish ? 'Airport & Ferry Transfer' : 'Antar Bandara & Ferry' }}
             </span>
             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 border border-white/15 text-white">
               <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-              Unit Bersih & Prima
+              {{ isEnglish ? 'Clean & Prime Fleet' : 'Unit Bersih & Prima' }}
             </span>
           </div>
 
@@ -95,7 +95,7 @@ const waUrl2 = computed(() => getWaUrl(siteConfig.rentalPhoneSecondary))
 
           <div class="flex items-center justify-center gap-2 text-xs text-slate-400">
             <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
-            <span>Respon Cepat via 0813-7237-1120</span>
+            <span>{{ isEnglish ? 'Fast Response via 0813-7237-1120' : 'Respon Cepat via 0813-7237-1120' }}</span>
           </div>
         </div>
       </div>
@@ -110,17 +110,17 @@ const waUrl2 = computed(() => getWaUrl(siteConfig.rentalPhoneSecondary))
               <!-- Eyebrow Gold Badge -->
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200 mb-4">
                 <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                <span>KONSULTASI &amp; PEMESANAN CEPAT</span>
+                <span>{{ isEnglish ? 'FAST INQUIRY & RESERVATION' : 'KONSULTASI & PEMESANAN CEPAT' }}</span>
               </div>
 
               <!-- Main Heading -->
               <h2 class="font-display text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight mb-4">
-                Siap Menjelajahi Bintan Bersama Kami?
+                {{ t('finalCta.title') }}
               </h2>
 
               <!-- Subtitle -->
               <p class="text-base text-slate-600 leading-relaxed mb-8 max-w-xl">
-                Hubungi kami sekarang via WhatsApp untuk rekomendasi armada terbaik, custom rute wisata keliling pulau, dan penawaran harga spesial rombongan!
+                {{ t('finalCta.subtitle') }}
               </p>
 
               <!-- 3 Service Highlights -->
@@ -129,19 +129,19 @@ const waUrl2 = computed(() => getWaUrl(siteConfig.rentalPhoneSecondary))
                   <div class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                   </div>
-                  <span class="text-xs font-bold text-slate-700">Lepas Kunci &amp; Supir</span>
+                  <span class="text-xs font-bold text-slate-700">{{ isEnglish ? 'Self-Drive & Chauffeur' : 'Lepas Kunci & Supir' }}</span>
                 </div>
                 <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                   <div class="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                   </div>
-                  <span class="text-xs font-bold text-slate-700">Antar Bandara &amp; Ferry</span>
+                  <span class="text-xs font-bold text-slate-700">{{ isEnglish ? 'Airport & Ferry Transfer' : 'Antar Bandara & Ferry' }}</span>
                 </div>
                 <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                   <div class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                   </div>
-                  <span class="text-xs font-bold text-slate-700">Unit Bersih &amp; Prima</span>
+                  <span class="text-xs font-bold text-slate-700">{{ isEnglish ? 'Clean & Prime Fleet' : 'Unit Bersih & Prima' }}</span>
                 </div>
               </div>
             </div>
@@ -187,7 +187,7 @@ const waUrl2 = computed(() => getWaUrl(siteConfig.rentalPhoneSecondary))
             <div class="absolute bottom-4 right-4 z-10">
               <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold bg-white/90 text-slate-900 border border-slate-200/80 backdrop-blur-md shadow-md">
                 <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                <span>Rute Wisata &amp; Rental Bintan</span>
+                <span>{{ isEnglish ? 'Bintan Tours & Car Rental' : 'Rute Wisata & Rental Bintan' }}</span>
               </span>
             </div>
           </div>

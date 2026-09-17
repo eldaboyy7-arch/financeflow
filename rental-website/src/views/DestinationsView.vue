@@ -1,11 +1,25 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { destinationsList } from '@/config/destinations'
 import { siteConfig } from '@/config/site'
 import { useLanguage } from '@/composables/useLanguage'
 
 const { isEnglish } = useLanguage()
+
+const updatePageTitle = () => {
+  document.title = isEnglish.value
+    ? 'Bintan Tourist Attractions & Travel Destinations Guide | 3 Putri Mulya'
+    : 'Panduan Destinasi & Wisata Populer Pulau Bintan | 3 Putri Mulya'
+}
+
+onMounted(() => {
+  updatePageTitle()
+})
+
+watch(isEnglish, () => {
+  updatePageTitle()
+})
 
 const searchQuery = ref('')
 const selectedCategory = ref<string>('all')
@@ -42,6 +56,13 @@ const filteredDestinations = computed(() => {
 const getWhatsAppUrl = (text: string) => {
   const phone = siteConfig.rentalPhone.replace(/\D/g, '')
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
+}
+
+const getDestWhatsAppUrl = (dest: (typeof destinationsList)[0]) => {
+  const text = isEnglish.value
+    ? `Hello 3 Putri Mulya, I would like to rent a car for a trip to ${dest.name} in Bintan.`
+    : dest.waText
+  return getWhatsAppUrl(text)
 }
 
 const waGeneralConsultUrl = computed(() => {
@@ -87,13 +108,13 @@ const waGeneralConsultUrl = computed(() => {
         <!-- Quick Summary Stats -->
         <div class="inline-flex flex-wrap items-center justify-center gap-2 text-xs text-white">
           <div class="px-4 py-1.5 rounded-full bg-white/10 border border-white/25 backdrop-blur-md flex items-center gap-2">
-            <span class="text-blue-400 font-extrabold">{{ destinationsList.length }}</span> Destinasi Terdata
+            <span class="text-blue-400 font-extrabold">{{ destinationsList.length }}</span> {{ isEnglish ? 'Destinations Listed' : 'Destinasi Terdata' }}
           </div>
           <div class="px-4 py-1.5 rounded-full bg-white/10 border border-white/25 backdrop-blur-md flex items-center gap-2">
-            <span class="text-emerald-400 font-extrabold">100%</span> Rute Bebas Fleksibel
+            <span class="text-emerald-400 font-extrabold">100%</span> {{ isEnglish ? 'Flexible Routes' : 'Rute Bebas Fleksibel' }}
           </div>
           <div class="px-4 py-1.5 rounded-full bg-white/10 border border-white/25 backdrop-blur-md flex items-center gap-2">
-            <span class="text-amber-400 font-extrabold">Lepas Kunci</span> / Driver All-In
+            <span class="text-amber-400 font-extrabold">{{ isEnglish ? 'Self-Drive' : 'Lepas Kunci' }}</span> / {{ isEnglish ? 'Driver All-In' : 'Driver All-In' }}
           </div>
         </div>
       </div>
@@ -114,14 +135,14 @@ const waGeneralConsultUrl = computed(() => {
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Cari destinasi, lokasi, atau kata kunci (misal: Gurun, Lagoi, Vihara)..."
+              :placeholder="isEnglish ? 'Search destinations, locations, or keywords (e.g. Desert, Lagoi, Temple)...' : 'Cari destinasi, lokasi, atau kata kunci (misal: Gurun, Lagoi, Vihara)...'"
               class="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-slate-800 placeholder-slate-400 transition-all"
             />
           </div>
 
           <!-- Counter Info -->
           <div class="text-xs text-slate-500 shrink-0 self-center">
-            Menampilkan <span class="font-bold text-slate-800">{{ filteredDestinations.length }}</span> destinasi
+            {{ isEnglish ? 'Showing' : 'Menampilkan' }} <span class="font-bold text-slate-800">{{ filteredDestinations.length }}</span> {{ isEnglish ? 'destinations' : 'destinasi' }}
           </div>
         </div>
 
@@ -170,7 +191,7 @@ const waGeneralConsultUrl = computed(() => {
             <!-- Official Photo Credit Badge -->
             <div class="absolute top-3 right-3 z-10">
               <span
-                :title="'Sumber foto: ' + dest.photoCreditFull"
+                :title="(isEnglish ? 'Photo source: ' : 'Sumber foto: ') + dest.photoCreditFull"
                 class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-slate-950/70 text-slate-200 backdrop-blur-sm border border-white/15"
               >
                 <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,7 +228,7 @@ const waGeneralConsultUrl = computed(() => {
             <div class="space-y-1.5 bg-slate-50 p-3 rounded-xl border border-slate-100 text-xs text-slate-700">
               <div class="text-[11px] font-bold text-slate-900 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                 <span class="w-1 h-1 rounded-full bg-blue-600"></span>
-                Daya Tarik Utama:
+                {{ isEnglish ? 'Main Highlights:' : 'Daya Tarik Utama:' }}
               </div>
               <ul class="space-y-1">
                 <li v-for="(highlight, hIdx) in dest.highlights" :key="hIdx" class="flex items-start gap-1.5 text-[11px] leading-snug">
@@ -229,14 +250,14 @@ const waGeneralConsultUrl = computed(() => {
                 <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
                 </svg>
-                <span>Armada Pas: <strong class="text-slate-700">{{ dest.recommendedFleet }}</strong></span>
+                <span>{{ isEnglish ? 'Ideal Fleet:' : 'Armada Pas:' }} <strong class="text-slate-700">{{ dest.recommendedFleet }}</strong></span>
               </div>
             </div>
 
             <!-- Action CTA Buttons -->
             <div class="pt-2 flex items-center gap-2">
               <a
-                :href="getWhatsAppUrl(dest.waText)"
+                :href="getDestWhatsAppUrl(dest)"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="flex-1 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-95"
@@ -244,15 +265,15 @@ const waGeneralConsultUrl = computed(() => {
                 <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
                 </svg>
-                <span>Sewa Mobil ke Sini</span>
+                <span>{{ isEnglish ? 'Rent Car for This Trip' : 'Sewa Mobil ke Sini' }}</span>
               </a>
 
               <RouterLink
                 to="/paket-tour-bintan"
                 class="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold inline-flex items-center justify-center transition-colors"
-                title="Lihat Paket Tour HiAce"
+                :title="isEnglish ? 'View HiAce Tour Packages' : 'Lihat Paket Tour HiAce'"
               >
-                Paket Tour
+                {{ isEnglish ? 'Tour Packages' : 'Paket Tour' }}
               </RouterLink>
             </div>
           </div>
@@ -266,24 +287,24 @@ const waGeneralConsultUrl = computed(() => {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h3 class="text-sm font-bold text-slate-800">Tidak ada destinasi yang cocok</h3>
-        <p class="text-xs text-slate-500">Coba ubah kata kunci pencarian atau pilih kategori "Semua Destinasi".</p>
+        <h3 class="text-sm font-bold text-slate-800">{{ isEnglish ? 'No matching destinations found' : 'Tidak ada destinasi yang cocok' }}</h3>
+        <p class="text-xs text-slate-500">{{ isEnglish ? 'Try changing your search keywords or select "All Destinations".' : 'Coba ubah kata kunci pencarian atau pilih kategori "Semua Destinasi".' }}</p>
         <button
           type="button"
           @click="searchQuery = ''; selectedCategory = 'all'"
           class="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition-colors"
         >
-          Reset Pencarian
+          {{ isEnglish ? 'Reset Search' : 'Reset Pencarian' }}
         </button>
       </div>
 
       <!-- Bottom Banner: Custom Itinerary & Consultation -->
       <section v-reveal:zoom-in class="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950 text-white border border-slate-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="space-y-2 text-center md:text-left">
-          <span class="inline-block text-[11px] font-bold uppercase tracking-wider text-blue-400">Konsultasi Rute Wisata</span>
-          <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight">Ingin Rute Kustom atau Keliling Banyak Tempat?</h3>
+          <span class="inline-block text-[11px] font-bold uppercase tracking-wider text-blue-400">{{ isEnglish ? 'Tour Itinerary Consultation' : 'Konsultasi Rute Wisata' }}</span>
+          <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight">{{ isEnglish ? 'Need a Custom Route or Multi-Stop Tour?' : 'Ingin Rute Kustom atau Keliling Banyak Tempat?' }}</h3>
           <p class="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
-            Tim 3 Putri Mulya siap merekomendasikan urutan rute paling efisien, estimasi BBM, dan armada yang paling nyaman untuk rombongan Anda.
+            {{ isEnglish ? 'The 3 Putri Mulya team is ready to recommend the most efficient route stops, fuel estimates, and the most comfortable fleet for your group.' : 'Tim 3 Putri Mulya siap merekomendasikan urutan rute paling efisien, estimasi BBM, dan armada yang paling nyaman untuk rombongan Anda.' }}
           </p>
         </div>
         <div class="flex items-center gap-3 shrink-0">
@@ -296,7 +317,7 @@ const waGeneralConsultUrl = computed(() => {
             <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
             </svg>
-            <span>Konsultasi Itinerary Gratis via WA</span>
+            <span>{{ isEnglish ? 'Free Itinerary Consultation via WA' : 'Konsultasi Itinerary Gratis via WA' }}</span>
           </a>
         </div>
       </section>

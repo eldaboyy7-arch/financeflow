@@ -37,20 +37,20 @@ const filterSummaryText = computed(() => {
   const parts: string[] = []
   if (props.activeFilter.vehicleType && props.activeFilter.vehicleType !== 'all') {
     if (props.activeFilter.vehicleType === 'city-car') parts.push('City Car')
-    else if (props.activeFilter.vehicleType === 'mpv') parts.push('MPV Keluarga')
+    else if (props.activeFilter.vehicleType === 'mpv') parts.push(isEnglish.value ? 'Family MPV' : 'MPV Keluarga')
     else if (props.activeFilter.vehicleType === 'hiace') parts.push('HiAce Minibus')
   }
   if (props.activeFilter.startDate) {
     if (props.activeFilter.endDate) {
-      parts.push(`${props.activeFilter.startDate} s/d ${props.activeFilter.endDate}`)
+      parts.push(`${props.activeFilter.startDate} - ${props.activeFilter.endDate}`)
     } else {
-      parts.push(`Mulai ${props.activeFilter.startDate}`)
+      parts.push(isEnglish.value ? `From ${props.activeFilter.startDate}` : `Mulai ${props.activeFilter.startDate}`)
     }
   }
   if (props.activeFilter.passengers) {
-    parts.push(`${props.activeFilter.passengers} Penumpang`)
+    parts.push(isEnglish.value ? `${props.activeFilter.passengers} Guests` : `${props.activeFilter.passengers} Penumpang`)
   }
-  return parts.join(' • ') || 'Kriteria Terpilih'
+  return parts.join(' • ') || (isEnglish.value ? 'Selected Criteria' : 'Kriteria Terpilih')
 })
 
 // Dual Pricing state per vehicle: carId -> 'self_drive' | 'with_driver'
@@ -173,13 +173,13 @@ onUnmounted(() => {
           </div>
           <div>
             <div class="flex items-center gap-2 flex-wrap">
-              <span class="text-xs sm:text-sm font-bold text-slate-900">Hasil Pencarian:</span>
+              <span class="text-xs sm:text-sm font-bold text-slate-900">{{ t('homeFleet.searchResultTitle') }}</span>
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-600 text-white shadow-2xs">
                 {{ filterSummaryText }}
               </span>
             </div>
             <p class="text-[11px] text-slate-500 mt-0.5">
-              Ditemukan {{ vehicles.length }} unit armada yang cocok dengan kebutuhan perjalanan Anda.
+              {{ t('homeFleet.foundUnits', { count: vehicles.length }) }}
             </p>
           </div>
         </div>
@@ -192,7 +192,7 @@ onUnmounted(() => {
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
-          <span>Reset Pencarian</span>
+          <span>{{ t('common.resetFilter') }}</span>
         </button>
       </div>
 
@@ -221,13 +221,13 @@ onUnmounted(() => {
         class="rounded-2xl bg-red-50 border border-red-200 p-8 text-center text-red-700 my-6"
       >
         <p class="font-bold text-base mb-2">{{ error }}</p>
-        <p class="text-xs text-red-600 mb-4">Pastikan server backend sedang berjalan.</p>
+        <p class="text-xs text-red-600 mb-4">{{ isEnglish ? 'Please ensure the backend server is running.' : 'Pastikan server backend sedang berjalan.' }}</p>
         <button
           @click="emit('retry')"
           type="button"
           class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors"
         >
-          Coba Muat Ulang
+          {{ t('common.tryAgain') }}
         </button>
       </div>
 
@@ -241,16 +241,16 @@ onUnmounted(() => {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
         </div>
-        <h3 class="font-bold text-slate-900 text-base mb-1">Tidak ada armada yang sesuai</h3>
+        <h3 class="font-bold text-slate-900 text-base mb-1">{{ t('homeFleet.emptyTitle') }}</h3>
         <p class="text-xs text-slate-500 mb-4 max-w-md mx-auto">
-          Belum ada unit armada yang cocok dengan kombinasi filter Anda. Silakan coba tipe armada atau kapasitas lain.
+          {{ t('homeFleet.emptyDesc') }}
         </p>
         <button
           @click="emit('resetFilter')"
           type="button"
           class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs transition-all cursor-pointer"
         >
-          Tampilkan Semua Armada
+          {{ t('homeFleet.emptyBtn') }}
         </button>
       </div>
 
@@ -285,7 +285,7 @@ onUnmounted(() => {
               <svg class="w-10 h-10 mb-1 text-slate-300" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
               </svg>
-              <span class="text-[11px]">Foto unit segera hadir</span>
+              <span class="text-[11px]">{{ t('homeFleet.photoComingSoon') }}</span>
             </div>
 
             <!-- Status Badge (Top-Left) -->
@@ -295,14 +295,14 @@ onUnmounted(() => {
                 class="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-emerald-600/95 text-white shadow-xs backdrop-blur-xs"
               >
                 <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                <span>{{ isEnglish ? 'Available' : 'Tersedia' }}</span>
+                <span>{{ t('common.available') }}</span>
               </span>
               <span
                 v-else-if="car.status === 'maintenance'"
                 class="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-amber-500 text-white shadow-xs backdrop-blur-xs"
               >
                 <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
-                <span>{{ isEnglish ? 'Maintenance' : 'Perawatan' }}</span>
+                <span>{{ t('common.maintenance') }}</span>
               </span>
               <span
                 v-else
@@ -318,7 +318,7 @@ onUnmounted(() => {
               @click.stop="openPhotoModal(car)"
               type="button"
               class="absolute top-2.5 right-2.5 z-10 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-xs transition-colors shadow-xs"
-              title="Perbesar foto unit"
+              :title="t('fleet.viewDetails')"
             >
               <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/>
@@ -350,7 +350,7 @@ onUnmounted(() => {
                   <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
-                  <span>{{ car.capacity }} {{ t('fleet.seats') }}</span>
+                  <span>{{ car.capacity }} {{ t('common.seats') }}</span>
                 </span>
                 <span class="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md bg-slate-100 font-medium">
                   <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -383,7 +383,7 @@ onUnmounted(() => {
                   <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-slate-500" :class="getSelectedService(car) === 'self_drive' ? 'text-blue-600' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
                   </svg>
-                  <span>{{ t('fleet.serviceSelfDrive') }}</span>
+                  <span>{{ t('common.selfDrive') }}</span>
                 </button>
                 <button
                   type="button"
@@ -394,7 +394,7 @@ onUnmounted(() => {
                   <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-slate-500" :class="getSelectedService(car) === 'with_driver' ? 'text-blue-600' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                   </svg>
-                  <span>{{ t('fleet.serviceWithDriver') }}</span>
+                  <span>{{ t('common.withChauffeur') }}</span>
                 </button>
               </div>
 
@@ -406,7 +406,7 @@ onUnmounted(() => {
                 <svg class="w-3 h-3 shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                 </svg>
-                <span>{{ t('fleet.driverIncluded') }}</span>
+                <span>{{ t('common.driverIncluded') }}</span>
               </div>
 
               <!-- Jika hanya lepas kunci -->
@@ -417,19 +417,19 @@ onUnmounted(() => {
                 <svg class="w-3 h-3 shrink-0 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
                 </svg>
-                <span>{{ t('fleet.serviceSelfDrive') }}</span>
+                <span>{{ t('common.selfDrive') }}</span>
               </div>
 
               <div class="flex items-center justify-between mb-0 sm:mb-2.5">
                 <div>
                   <span class="text-[9px] sm:text-[11px] text-slate-400 font-medium block leading-none">
-                    {{ getSelectedService(car) === 'with_driver' ? (isEnglish ? 'Rate with Chauffeur' : 'Tarif + Supir') : (isEnglish ? 'Self-Drive Rate' : 'Tarif Lepas Kunci') }}
+                    {{ getSelectedService(car) === 'with_driver' ? t('common.rateWithChauffeur') : t('common.rateSelfDrive') }}
                   </span>
                   <div class="mt-0.5 flex items-baseline gap-0.5 sm:block">
                     <span class="font-display text-xs sm:text-lg font-black text-slate-900 tracking-tight whitespace-nowrap transition-all duration-200">
                       {{ getActiveDailyRatePrice(car).formatted }}
                     </span>
-                    <span class="text-[9px] sm:text-[11px] text-slate-500 font-normal whitespace-nowrap">{{ t('fleet.perDay') }}</span>
+                    <span class="text-[9px] sm:text-[11px] text-slate-500 font-normal whitespace-nowrap">{{ t('common.perDay') }}</span>
                   </div>
                   <span v-if="getActiveDailyRatePrice(car).isConverted" class="text-[9px] sm:text-[10px] text-slate-400 font-normal block mt-0.5">
                     ({{ getActiveDailyRatePrice(car).originalFormatted }})
@@ -440,7 +440,7 @@ onUnmounted(() => {
                   @click="openPhotoModal(car)"
                   class="hidden sm:inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors group/link cursor-pointer"
                 >
-                  <span>{{ t('fleet.viewDetails') }}</span>
+                  <span>{{ t('common.viewDetails') }}</span>
                   <svg class="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                   </svg>
@@ -458,7 +458,7 @@ onUnmounted(() => {
                 <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
                 </svg>
-                <span>{{ t('fleet.bookNow') }}</span>
+                <span>{{ t('common.bookWhatsapp') }}</span>
               </a>
 
               <button
@@ -467,7 +467,7 @@ onUnmounted(() => {
                 class="hidden sm:inline-flex w-full h-9 sm:h-11 px-3 sm:px-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold items-center justify-center gap-1.5 cursor-not-allowed select-none"
               >
                 <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                <span>Perawatan</span>
+                <span>{{ t('common.underMaintenance') }}</span>
               </button>
 
               <button
@@ -475,7 +475,7 @@ onUnmounted(() => {
                 disabled
                 class="hidden sm:inline-flex w-full h-9 sm:h-11 px-3 sm:px-4 rounded-xl bg-slate-100 text-slate-400 text-xs font-medium items-center justify-center cursor-not-allowed"
               >
-                <span>{{ car.status_label || 'Tidak Tersedia' }}</span>
+                <span>{{ isEnglish ? 'Booked' : (car.status_label || 'Tidak Tersedia') }}</span>
               </button>
             </div>
           </div>
@@ -488,13 +488,13 @@ onUnmounted(() => {
           <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
           </svg>
-          <span>Geser untuk melihat unit</span>
+          <span>{{ t('common.swipeHint') }}</span>
         </span>
         <RouterLink
           to="/armada"
           class="font-bold text-blue-600 hover:text-blue-800 text-xs inline-flex items-center gap-1 whitespace-nowrap"
         >
-          <span>Lihat Semua Armada</span>
+          <span>{{ isEnglish ? 'View All Fleet' : 'Lihat Semua Armada' }}</span>
           <span>&rarr;</span>
         </RouterLink>
       </div>
@@ -508,9 +508,9 @@ onUnmounted(() => {
             </svg>
           </div>
           <div>
-            <h3 class="text-sm sm:text-base font-bold text-white leading-snug">Butuh kapasitas lebih besar atau bus pariwisata?</h3>
+            <h3 class="text-sm sm:text-base font-bold text-white leading-snug">{{ t('homeFleet.needBiggerTitle') }}</h3>
             <p class="text-xs sm:text-sm text-slate-300 mt-0.5">
-              Jelajahi seluruh koleksi City Car, MPV, HiAce 15 Seat, hingga Bus Pariwisata di etalase resmi kami.
+              {{ t('homeFleet.needBiggerDesc') }}
             </p>
           </div>
         </div>
@@ -519,7 +519,7 @@ onUnmounted(() => {
           to="/armada"
           class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-blue-600/30 transition-all shrink-0 active:scale-95"
         >
-          <span>Lihat Semua Armada {{ totalFleetCount > 0 ? `(${totalFleetCount} Unit)` : '' }}</span>
+          <span>{{ isEnglish ? `View All Fleet (${totalFleetCount} Units)` : `Lihat Semua Armada (${totalFleetCount > 0 ? `${totalFleetCount} Unit` : 'Lengkap'})` }}</span>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
           </svg>
@@ -545,20 +545,20 @@ onUnmounted(() => {
               class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-white/95 backdrop-blur-md text-emerald-700 border border-slate-200/60 shadow-xs"
             >
               <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Tersedia Siap Jalan</span>
+              <span>{{ t('common.roadReady') }}</span>
             </span>
             <span
               v-else-if="previewVehicle.status === 'maintenance'"
               class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-white/95 backdrop-blur-md text-amber-700 border border-slate-200/60 shadow-xs"
             >
               <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-amber-500"></span>
-              <span>Perawatan</span>
+              <span>{{ t('common.underMaintenance') }}</span>
             </span>
             <span
               v-else
               class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-white/95 backdrop-blur-md text-slate-600 border border-slate-200/60 shadow-xs"
             >
-              <span>{{ previewVehicle.status_label || 'Tidak Tersedia' }}</span>
+              <span>{{ isEnglish ? 'Currently Rented' : (previewVehicle.status_label || 'Tidak Tersedia') }}</span>
             </span>
 
             <button
@@ -580,13 +580,13 @@ onUnmounted(() => {
             />
             <div v-else class="text-center text-slate-400">
               <svg class="w-10 h-10 sm:w-14 sm:h-14 mx-auto mb-1 text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
-              <p class="text-[11px] text-slate-500">Foto unit tidak tersedia</p>
+              <p class="text-[11px] text-slate-500">{{ t('homeFleet.photoUnavailable') }}</p>
             </div>
           </div>
 
           <!-- Caption bar (Clean, no angle buttons) -->
           <div class="hidden sm:block text-[11px] text-slate-500 font-medium text-center">
-            <span>Foto asli armada kami &bull; Unit terawat siap jalan</span>
+            <span>{{ t('homeFleet.authenticPhotoNote') }}</span>
           </div>
         </div>
 
@@ -599,7 +599,7 @@ onUnmounted(() => {
                   <span class="inline-block px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
                     {{ getVehicleCategoryBracket(previewVehicle.capacity).shortLabel }}
                   </span>
-                  <span class="text-[11px] sm:text-xs text-slate-400 font-medium">&bull; Tahun {{ previewVehicle.model_year }}</span>
+                  <span class="text-[11px] sm:text-xs text-slate-400 font-medium">&bull; {{ isEnglish ? 'Year ' : 'Tahun ' }}{{ previewVehicle.model_year }}</span>
                 </div>
 
                 <!-- Desktop close button -->
@@ -620,41 +620,41 @@ onUnmounted(() => {
             <!-- 4 Specs Grid (2x2) -->
             <div class="grid grid-cols-2 gap-1.5 sm:gap-2.5">
               <div class="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-100">
-                <span class="text-[9px] sm:text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">Kapasitas</span>
-                <span class="text-xs sm:text-sm font-bold text-slate-800 mt-0.5 block">{{ previewVehicle.capacity }} Kursi</span>
+                <span class="text-[9px] sm:text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">{{ t('common.capacity') }}</span>
+                <span class="text-xs sm:text-sm font-bold text-slate-800 mt-0.5 block">{{ previewVehicle.capacity }} {{ t('common.seats') }}</span>
               </div>
               <div class="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-100">
-                <span class="text-[9px] sm:text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">Transmisi</span>
-                <span class="text-xs sm:text-sm font-bold text-slate-800 mt-0.5 block">{{ previewVehicle.transmission_label }}</span>
+                <span class="text-[9px] sm:text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">{{ t('common.transmission') }}</span>
+                <span class="text-xs sm:text-sm font-bold text-slate-800 mt-0.5 block">{{ isEnglish ? (previewVehicle.transmission === 'matic' ? 'Automatic' : 'Manual') : previewVehicle.transmission_label }}</span>
               </div>
               <div class="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-100">
-                <span class="text-[9px] sm:text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">Bahan Bakar</span>
-                <span class="text-xs sm:text-sm font-bold text-slate-800 mt-0.5 block">{{ previewVehicle.fuel_type_label }}</span>
+                <span class="text-[9px] sm:text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">{{ t('common.fuel') }}</span>
+                <span class="text-xs sm:text-sm font-bold text-slate-800 mt-0.5 block">{{ isEnglish ? (previewVehicle.fuel_type === 'bensin' ? 'Petrol' : 'Diesel') : previewVehicle.fuel_type_label }}</span>
               </div>
               <div class="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-100">
-                <span class="text-[9px] sm:text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">Kondisi Unit</span>
+                <span class="text-[9px] sm:text-[11px] text-slate-400 block font-semibold uppercase tracking-wider">{{ t('common.condition') }}</span>
                 <span
                   class="text-xs sm:text-sm font-bold mt-0.5 block"
                   :class="previewVehicle.status === 'maintenance' ? 'text-amber-600' : 'text-emerald-600'"
                 >
-                  {{ previewVehicle.status_label }}
+                  {{ previewVehicle.status === 'maintenance' ? t('common.underMaintenance') : t('common.roadReady') }}
                 </span>
               </div>
             </div>
 
             <!-- Description -->
             <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed bg-slate-50/70 p-2.5 sm:p-3.5 rounded-lg sm:rounded-xl border border-slate-100 line-clamp-2 sm:line-clamp-none">
-              {{ previewVehicle.description || 'Unit prima dalam kondisi bersih, AC dingin, mesin responsif, dan siap melayani kebutuhan perjalanan wisata dan bisnis di Tanjungpinang & Bintan.' }}
+              {{ previewVehicle.description || (isEnglish ? 'Prime vehicle in clean condition, cold A/C, responsive performance, ready for leisure and business travel across Bintan Island & Tanjungpinang.' : 'Unit prima dalam kondisi bersih, AC dingin, mesin responsif, dan siap melayani kebutuhan perjalanan wisata dan bisnis di Tanjungpinang & Bintan.') }}
             </p>
 
             <!-- Cross Link if HiAce/Bus (capacity >= 9) -->
             <div v-if="previewVehicle.capacity >= 9" class="rounded-lg sm:rounded-xl border border-indigo-200 bg-indigo-50/60 p-2.5 sm:p-3 text-[11px] sm:text-xs text-indigo-950 flex items-center justify-between gap-2">
               <div>
-                <span class="font-bold block">Paket Tour Wisata All-In</span>
-                <span class="text-indigo-800 text-[10px] sm:text-[11px]">Include Driver, BBM & Karaoke</span>
+                <span class="font-bold block">{{ t('homeFleet.tourCrossSellTitle') }}</span>
+                <span class="text-indigo-800 text-[10px] sm:text-[11px]">{{ t('homeFleet.tourCrossSellDesc') }}</span>
               </div>
               <RouterLink to="/paket-tour-bintan" class="shrink-0 px-2.5 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] sm:text-xs">
-                Lihat Tour &rarr;
+                {{ t('homeFleet.tourCrossSellBtn') }}
               </RouterLink>
             </div>
           </div>
@@ -673,7 +673,7 @@ onUnmounted(() => {
                   <svg class="w-3.5 h-3.5 shrink-0 text-slate-500" :class="getSelectedService(previewVehicle) === 'self_drive' ? 'text-blue-600' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
                   </svg>
-                  <span>Lepas Kunci</span>
+                  <span>{{ t('common.selfDrive') }}</span>
                 </button>
                 <button
                   type="button"
@@ -684,19 +684,19 @@ onUnmounted(() => {
                   <svg class="w-3.5 h-3.5 shrink-0 text-slate-500" :class="getSelectedService(previewVehicle) === 'with_driver' ? 'text-blue-600' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                   </svg>
-                  <span>Dengan Supir</span>
+                  <span>{{ t('common.withChauffeur') }}</span>
                 </button>
               </div>
 
               <div>
                 <span class="text-[9px] sm:text-[11px] text-slate-400 block font-medium uppercase tracking-wider leading-none">
-                  {{ getSelectedService(previewVehicle) === 'with_driver' ? 'Tarif + Supir' : 'Tarif Lepas Kunci' }}
+                  {{ getSelectedService(previewVehicle) === 'with_driver' ? t('common.rateWithChauffeur') : t('common.rateSelfDrive') }}
                 </span>
                 <div class="mt-0.5">
                   <span class="text-base sm:text-2xl font-black text-slate-900 tracking-tight leading-tight transition-all duration-200">
                     {{ getActiveDailyRatePrice(previewVehicle).formatted }}
                   </span>
-                  <span class="text-[10px] sm:text-xs text-slate-500 font-normal"> /hari</span>
+                  <span class="text-[10px] sm:text-xs text-slate-500 font-normal">{{ t('common.perDay') }}</span>
                   <div v-if="getActiveDailyRatePrice(previewVehicle).isConverted" class="text-[11px] text-slate-400 font-normal mt-0.5">
                     ({{ getActiveDailyRatePrice(previewVehicle).originalFormatted }})
                   </div>
@@ -712,7 +712,7 @@ onUnmounted(() => {
               class="w-full sm:w-auto py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm hover:shadow-emerald-600/30 transition-all active:scale-95"
             >
               <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
-              <span>Booking WhatsApp</span>
+              <span>{{ t('common.bookWhatsapp') }}</span>
             </a>
 
             <button
@@ -721,7 +721,7 @@ onUnmounted(() => {
               class="py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-not-allowed select-none"
             >
               <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-              <span>Perawatan</span>
+              <span>{{ t('common.underMaintenance') }}</span>
             </button>
 
             <button
@@ -729,7 +729,7 @@ onUnmounted(() => {
               disabled
               class="py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl bg-slate-100 text-slate-400 font-medium text-xs sm:text-sm flex items-center justify-center cursor-not-allowed select-none"
             >
-              <span>{{ previewVehicle.status_label || 'Tidak Tersedia' }}</span>
+              <span>{{ isEnglish ? 'Currently Rented' : (previewVehicle.status_label || 'Tidak Tersedia') }}</span>
             </button>
           </div>
         </div>

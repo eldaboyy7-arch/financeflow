@@ -1,13 +1,52 @@
 <script setup lang="ts">
+import { computed, onMounted, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { siteConfig } from '@/config/site'
+import { useLanguage } from '@/composables/useLanguage'
+
+const { isEnglish } = useLanguage()
+
+const updatePageTitle = () => {
+  document.title = isEnglish.value
+    ? 'Car Rental Services & Tour Transportation Bintan | 3 Putri Mulya'
+    : 'Layanan Rental Mobil & Transportasi Wisata Bintan | 3 Putri Mulya'
+}
+
+onMounted(() => {
+  updatePageTitle()
+})
+
+watch(isEnglish, () => {
+  updatePageTitle()
+})
 
 const waUrl = (text: string) => {
   const clean = siteConfig.rentalPhone.replace(/\D/g, '')
   return `https://wa.me/${clean}?text=${encodeURIComponent(text)}`
 }
 
-const mainServices = [
+const mainServices = computed(() => isEnglish.value ? [
+  {
+    img: '/images/layanan-lepas-kunci.jpg',
+    tag: 'Most Flexible',
+    tagColor: 'text-amber-400',
+    title: 'Self-Drive Car Rental',
+    desc: 'Book your car, pick up the keys, and explore Bintan on your own schedule. City cars, family MPVs, to HiAce vans — transparent daily rates.',
+    link: '/armada',
+    linkLabel: 'View Fleet',
+    wa: 'Hello 3 Putri Mulya, I would like to inquire about self-drive car rental in Bintan.',
+  },
+  {
+    img: '/images/layanan-driver.jpg',
+    tag: 'Most Relaxing',
+    tagColor: 'text-emerald-400',
+    title: 'Rental with Chauffeur',
+    desc: 'Sit back and enjoy the scenery. Our experienced local drivers are ready to escort your family or group all day.',
+    link: '/paket-tour-bintan',
+    linkLabel: 'View Tour Packages',
+    wa: 'Hello 3 Putri Mulya, I would like to hire a car with chauffeur in Bintan.',
+  },
+] : [
   {
     img: '/images/layanan-lepas-kunci.jpg',
     tag: 'Paling Fleksibel',
@@ -28,7 +67,7 @@ const mainServices = [
     linkLabel: 'Lihat Paket',
     wa: 'Halo 3 Putri Mulya, saya ingin sewa mobil dengan supir untuk perjalanan di Bintan.',
   },
-]
+])
 </script>
 
 <template>
@@ -50,30 +89,30 @@ const mainServices = [
 
       <div v-reveal:fade-up class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 sm:pb-32">
         <p class="text-xs font-bold uppercase tracking-[0.15em] text-amber-400 mb-3">
-          3 Putri Mulya · Bintan & Tanjung Pinang
+          3 Putri Mulya · Bintan &amp; Tanjung Pinang
         </p>
         <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight mb-3 max-w-xl">
-          Layanan untuk Setiap Perjalanan Anda
+          {{ isEnglish ? 'Services for Every Journey You Take' : 'Layanan untuk Setiap Perjalanan Anda' }}
         </h1>
         <p class="text-sm sm:text-base text-white/70 sm:text-white/55 mb-8 max-w-sm">
-          Rental Mobil &nbsp;·&nbsp; Driver &nbsp;·&nbsp; Tour &nbsp;·&nbsp; Antar-Jemput
+          {{ isEnglish ? 'Car Rental · Chauffeur · Tour Packages · Airport Transfer' : 'Rental Mobil · Driver · Tour · Antar-Jemput' }}
         </p>
         <div class="flex flex-wrap items-center gap-3">
           <a
-            :href="waUrl('Halo 3 Putri Mulya, saya ingin tanya informasi layanan yang tersedia.')"
+            :href="waUrl(isEnglish ? 'Hello 3 Putri Mulya, I would like to inquire about available services in Bintan.' : 'Halo 3 Putri Mulya, saya ingin tanya informasi layanan yang tersedia.')"
             target="_blank" rel="noopener noreferrer"
             class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm transition-all active:scale-95"
           >
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
             </svg>
-            Konsultasi Gratis
+            {{ isEnglish ? 'Free Consultation' : 'Konsultasi Gratis' }}
           </a>
           <RouterLink
             to="/armada"
             class="inline-flex items-center gap-1.5 px-6 py-3 rounded-full border border-white/30 text-white font-bold text-sm hover:bg-white/10 transition-all"
           >
-            Lihat Armada
+            {{ isEnglish ? 'View Fleet' : 'Lihat Armada' }}
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
             </svg>
@@ -91,7 +130,7 @@ const mainServices = [
 
     <!-- ═══════════ 2 LAYANAN UTAMA ═══════════ -->
     <section v-reveal:fade-up class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-5">
-      <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-5">Layanan Utama</p>
+      <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-5">{{ isEnglish ? 'Core Services' : 'Layanan Utama' }}</p>
 
       <!-- MOBILE: Horizontal scroll -->
       <div class="sm:hidden -mx-4 px-4">
@@ -122,7 +161,7 @@ const mainServices = [
                 </RouterLink>
                 <a :href="waUrl(svc.wa)" target="_blank" rel="noopener noreferrer"
                   class="text-xs font-bold text-white/60 hover:text-white transition-colors"
-                >Tanya Admin</a>
+                >{{ isEnglish ? 'Inquire via WA' : 'Tanya Admin' }}</a>
               </div>
             </div>
           </div>
@@ -164,7 +203,7 @@ const mainServices = [
               </RouterLink>
               <a :href="waUrl(svc.wa)" target="_blank" rel="noopener noreferrer"
                 class="text-xs font-bold text-white/70 hover:text-white transition-colors"
-              >Tanya Admin</a>
+              >{{ isEnglish ? 'Inquire via WA' : 'Tanya Admin' }}</a>
             </div>
           </div>
         </div>
@@ -180,14 +219,17 @@ const mainServices = [
         <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/55 to-slate-950/10"></div>
         <div class="relative z-10 p-6 sm:p-8 max-w-lg">
           <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-2 block">All-In</span>
-          <h2 class="text-xl sm:text-2xl font-black text-white mb-2">Paket Tour Bintan</h2>
+          <h2 class="text-xl sm:text-2xl font-black text-white mb-2">{{ isEnglish ? 'Bintan Private Tour Packages' : 'Paket Tour Bintan' }}</h2>
           <p class="text-xs sm:text-sm text-white/65 leading-relaxed mb-5 max-w-sm">
-            Keliling destinasi ikonik dalam satu hari. HiAce + Supir + BBM sudah include. Karaoke on board. Tinggal datang dan nikmati.
+            {{ isEnglish
+              ? 'Explore top iconic destinations in a single day. Toyota HiAce + Chauffeur + Fuel fully included. On-board karaoke system. Just arrive and enjoy.'
+              : 'Keliling destinasi ikonik dalam satu hari. HiAce + Supir + BBM sudah include. Karaoke on board. Tinggal datang dan nikmati.'
+            }}
           </p>
           <RouterLink to="/paket-tour-bintan"
             class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold text-xs transition-colors"
           >
-            Lihat Paket Tour
+            {{ isEnglish ? 'Explore Tour Packages' : 'Lihat Paket Tour' }}
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
             </svg>
@@ -200,28 +242,28 @@ const mainServices = [
     <section v-reveal:fade-up class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-200 rounded-2xl px-6 py-6">
         <div>
-          <span class="text-[10px] font-bold uppercase tracking-widest text-violet-500 block mb-1.5">Tepat Waktu</span>
-          <h2 class="text-base sm:text-lg font-black text-slate-900 mb-1">Antar Jemput Bandara & Ferry</h2>
+          <span class="text-[10px] font-bold uppercase tracking-widest text-violet-500 block mb-1.5">{{ isEnglish ? 'Punctual & Reliable' : 'Tepat Waktu' }}</span>
+          <h2 class="text-base sm:text-lg font-black text-slate-900 mb-1">{{ isEnglish ? 'Airport & Ferry Terminal Transfer' : 'Antar Jemput Bandara & Ferry' }}</h2>
           <p class="text-sm text-slate-500">
-            Bandara RHF &nbsp;·&nbsp; Pelabuhan Sri Bintan Pura &nbsp;·&nbsp; Personal hingga rombongan besar
+            {{ isEnglish ? 'RHF Airport · Sri Bintan Pura Ferry Terminal · Solo to Large Groups' : 'Bandara RHF · Pelabuhan Sri Bintan Pura · Personal hingga rombongan besar' }}
           </p>
         </div>
         <a
-          :href="waUrl('Halo 3 Putri Mulya, saya ingin pesan layanan antar/jemput bandara atau pelabuhan di Bintan.')"
+          :href="waUrl(isEnglish ? 'Hello 3 Putri Mulya, I would like to book an airport or ferry terminal transfer in Bintan.' : 'Halo 3 Putri Mulya, saya ingin pesan layanan antar/jemput bandara atau pelabuhan di Bintan.')"
           target="_blank" rel="noopener noreferrer"
           class="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-700 text-white font-bold text-sm transition-all whitespace-nowrap"
         >
           <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
           </svg>
-          Tanya Admin WA
+          {{ isEnglish ? 'Inquire via WA' : 'Tanya Admin WA' }}
         </a>
       </div>
     </section>
 
     <!-- ══════════════ KENAPA KAMI ══════════════ -->
     <section v-reveal:fade-up class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pt-14 sm:pb-16">
-      <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-8">Kenapa Memilih Kami?</p>
+      <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-8">{{ isEnglish ? 'Why Choose Us?' : 'Kenapa Memilih Kami?' }}</p>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-5 sm:gap-6">
 
         <!-- Armada Terawat -->
@@ -232,8 +274,8 @@ const mainServices = [
             </svg>
           </div>
           <div>
-            <h3 class="text-sm font-black text-slate-900 mb-1">Armada Terawat</h3>
-            <p class="text-xs text-slate-500 leading-relaxed">Unit selalu bersih, ber-AC dingin, dan diperiksa sebelum perjalanan.</p>
+            <h3 class="text-sm font-black text-slate-900 mb-1">{{ isEnglish ? 'Well-Maintained Fleet' : 'Armada Terawat' }}</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">{{ isEnglish ? 'All vehicles are clean, feature cold A/C, and pass multi-point checks before dispatch.' : 'Unit selalu bersih, ber-AC dingin, dan diperiksa sebelum perjalanan.' }}</p>
           </div>
         </div>
 
@@ -245,8 +287,8 @@ const mainServices = [
             </svg>
           </div>
           <div>
-            <h3 class="text-sm font-black text-slate-900 mb-1">Driver Berpengalaman</h3>
-            <p class="text-xs text-slate-500 leading-relaxed">Hafal seluruh sudut Bintan & Tanjung Pinang, ramah dan tepat waktu.</p>
+            <h3 class="text-sm font-black text-slate-900 mb-1">{{ isEnglish ? 'Experienced Chauffeurs' : 'Driver Berpengalaman' }}</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">{{ isEnglish ? 'Knowledgeable on every corner of Bintan & Tanjung Pinang, courteous, and always punctual.' : 'Hafal seluruh sudut Bintan & Tanjung Pinang, ramah dan tepat waktu.' }}</p>
           </div>
         </div>
 
@@ -258,8 +300,8 @@ const mainServices = [
             </svg>
           </div>
           <div>
-            <h3 class="text-sm font-black text-slate-900 mb-1">Harga Transparan</h3>
-            <p class="text-xs text-slate-500 leading-relaxed">Tidak ada biaya tersembunyi. Semua sudah jelas di awal sebelum booking.</p>
+            <h3 class="text-sm font-black text-slate-900 mb-1">{{ isEnglish ? 'Transparent Pricing' : 'Harga Transparan' }}</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">{{ isEnglish ? 'No hidden surcharges. Everything is crystal clear upfront prior to booking.' : 'Tidak ada biaya tersembunyi. Semua sudah jelas di awal sebelum booking.' }}</p>
           </div>
         </div>
 
@@ -271,8 +313,8 @@ const mainServices = [
             </svg>
           </div>
           <div>
-            <h3 class="text-sm font-black text-slate-900 mb-1">Respon Cepat</h3>
-            <p class="text-xs text-slate-500 leading-relaxed">Chat WhatsApp langsung dibalas — rata-rata dalam hitungan menit.</p>
+            <h3 class="text-sm font-black text-slate-900 mb-1">{{ isEnglish ? 'Fast Response' : 'Respon Cepat' }}</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">{{ isEnglish ? 'Direct WhatsApp replies — typically within minutes.' : 'Chat WhatsApp langsung dibalas — rata-rata dalam hitungan menit.' }}</p>
           </div>
         </div>
 
@@ -283,19 +325,19 @@ const mainServices = [
     <section v-reveal:zoom-in class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
       <div class="bg-slate-900 rounded-2xl px-7 sm:px-10 py-9 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
         <div>
-          <p class="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-1.5">Butuh Saran?</p>
-          <h3 class="text-lg sm:text-xl font-black text-white">Tidak yakin pilih layanan mana?</h3>
-          <p class="text-sm text-slate-400 mt-1">Konsultasi gratis, kami bantu sesuaikan kebutuhan dan budget kamu.</p>
+          <p class="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-1.5">{{ isEnglish ? 'Need Advice?' : 'Butuh Saran?' }}</p>
+          <h3 class="text-lg sm:text-xl font-black text-white">{{ isEnglish ? 'Unsure which service suits you best?' : 'Tidak yakin pilih layanan mana?' }}</h3>
+          <p class="text-sm text-slate-400 mt-1">{{ isEnglish ? 'Free consultation, we help match your group needs and budget perfectly.' : 'Konsultasi gratis, kami bantu sesuaikan kebutuhan dan budget kamu.' }}</p>
         </div>
         <a
-          :href="waUrl('Halo 3 Putri Mulya, saya ingin konsultasi untuk memilih layanan sewa yang sesuai dengan kebutuhan perjalanan saya di Bintan.')"
+          :href="waUrl(isEnglish ? 'Hello 3 Putri Mulya, I would like to consult on selecting the best rental service for my trip in Bintan.' : 'Halo 3 Putri Mulya, saya ingin konsultasi untuk memilih layanan sewa yang sesuai dengan kebutuhan perjalanan saya di Bintan.')"
           target="_blank" rel="noopener noreferrer"
           class="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm transition-all active:scale-95 whitespace-nowrap"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
           </svg>
-          Chat WhatsApp Sekarang
+          {{ isEnglish ? 'Chat WhatsApp Now' : 'Chat WhatsApp Sekarang' }}
         </a>
       </div>
     </section>

@@ -9,7 +9,7 @@ import { useCurrency } from '@/composables/useCurrency'
 import { useLanguage } from '@/composables/useLanguage'
 
 const { currentCurrency, setCurrency } = useCurrency()
-const { currentLang, setLanguage, t } = useLanguage()
+const { currentLang, setLanguage, t, isEnglish } = useLanguage()
 
 const route = useRoute()
 const isHeroPage = computed(() => ['/', '/layanan', '/destinasi'].includes(route.path))
@@ -98,7 +98,7 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
               {{ siteConfig.rentalName }}
             </span>
             <span class="text-[10px] sm:text-[11px] font-medium tracking-wide text-slate-300 block leading-none mt-0.5 sm:mt-1">
-              Rental Mobil &amp; Tour Bintan
+              {{ isEnglish ? 'Car Rental & Tour Bintan' : 'Rental Mobil & Tour Bintan' }}
             </span>
           </div>
         </RouterLink>
@@ -316,8 +316,12 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
                   </svg>
                 </span>
                 <div>
-                  <div class="text-sm" :class="route.path === '/' && !route.hash ? 'font-bold text-blue-900' : 'font-medium text-slate-800'">Beranda</div>
-                  <div class="text-[11px] text-slate-500">Halaman utama rental &amp; tour</div>
+                  <div class="text-sm" :class="route.path === '/' && !route.hash ? 'font-bold text-blue-900' : 'font-medium text-slate-800'">
+                    {{ t('nav.home') }}
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    {{ isEnglish ? 'Rental & private tours homepage' : 'Halaman utama rental & tour' }}
+                  </div>
                 </div>
               </div>
               <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -344,12 +348,16 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
                   </svg>
                 </span>
                 <div>
-                  <div class="text-sm" :class="route.path === '/armada' ? 'font-bold text-blue-900' : 'font-medium text-slate-800'">Katalog Lengkap Armada</div>
-                  <div class="text-[11px] text-slate-500">City Car, MPV, HiAce &amp; Bus</div>
+                  <div class="text-sm" :class="route.path === '/armada' ? 'font-bold text-blue-900' : 'font-medium text-slate-800'">
+                    {{ t('nav.fleet') }}
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    {{ isEnglish ? 'City Car, MPV, HiAce & Tour Bus' : 'City Car, MPV, HiAce & Bus' }}
+                  </div>
                 </div>
               </div>
               <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                7+ Unit
+                {{ isEnglish ? '7+ Units' : '7+ Unit' }}
               </span>
             </RouterLink>
 
@@ -366,8 +374,44 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
                   </svg>
                 </span>
                 <div>
-                  <div class="text-sm font-medium text-slate-800">Layanan &amp; Cara Sewa</div>
-                  <div class="text-[11px] text-slate-500">Lepas kunci &amp; supir profesional</div>
+                  <div class="text-sm font-medium text-slate-800">
+                    {{ t('nav.services') }}
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    {{ isEnglish ? 'Self-drive & professional chauffeurs' : 'Lepas kunci & supir profesional' }}
+                  </div>
+                </div>
+              </div>
+              <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </RouterLink>
+
+            <!-- 4. Paket Tour -->
+            <RouterLink
+              to="/paket-tour-bintan"
+              @click="closeMobileMenu"
+              class="group flex items-center justify-between p-3 rounded-xl transition-colors border"
+              :class="route.path === '/paket-tour-bintan'
+                ? 'bg-blue-50/80 border-blue-100 text-blue-900 font-semibold'
+                : 'border-transparent text-slate-700 hover:bg-slate-50 hover:text-slate-900'"
+            >
+              <div class="flex items-center gap-3">
+                <span
+                  class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors"
+                  :class="route.path === '/paket-tour-bintan' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h8m-8 4h8m-8 4h4m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z"/>
+                  </svg>
+                </span>
+                <div>
+                  <div class="text-sm" :class="route.path === '/paket-tour-bintan' ? 'font-bold text-blue-900' : 'font-medium text-slate-800'">
+                    {{ t('nav.tours') }}
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    {{ isEnglish ? 'HiAce Commuter & Premio All-In' : 'HiAce Commuter & Premio All-In' }}
+                  </div>
                 </div>
               </div>
               <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -395,8 +439,12 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
                   </svg>
                 </span>
                 <div>
-                  <div class="text-sm" :class="route.path === '/destinasi' ? 'font-bold text-blue-900' : 'font-medium text-slate-800'">Inspirasi Destinasi</div>
-                  <div class="text-[11px] text-slate-500">Gurun Pasir, Lagoi &amp; Vihara Bintan</div>
+                  <div class="text-sm" :class="route.path === '/destinasi' ? 'font-bold text-blue-900' : 'font-medium text-slate-800'">
+                    {{ t('nav.destinations') }}
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    {{ isEnglish ? 'Desert, Lagoi & Bintan Temples' : 'Gurun Pasir, Lagoi & Vihara Bintan' }}
+                  </div>
                 </div>
               </div>
               <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -417,8 +465,12 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
                   </svg>
                 </span>
                 <div>
-                  <div class="text-sm font-medium text-slate-800">Tanya Jawab (FAQ)</div>
-                  <div class="text-[11px] text-slate-500">Pertanyaan seputar sewa &amp; lepas kunci</div>
+                  <div class="text-sm font-medium text-slate-800">
+                    {{ t('nav.faq') }}
+                  </div>
+                  <div class="text-[11px] text-slate-500">
+                    {{ isEnglish ? 'Common questions & rental terms' : 'Pertanyaan seputar sewa & lepas kunci' }}
+                  </div>
                 </div>
               </div>
               <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -432,12 +484,16 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
             <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col gap-3">
               <div class="flex items-center justify-between">
                 <div>
-                  <div class="text-xs font-bold text-slate-900">Konsultasi Rute &amp; Reservasi Cepat</div>
-                  <div class="text-[11px] text-slate-500 mt-0.5">Admin 3 Putri Mulya siap merespons via WA</div>
+                  <div class="text-xs font-bold text-slate-900">
+                    {{ isEnglish ? 'Route Consultation & Fast Booking' : 'Konsultasi Rute & Reservasi Cepat' }}
+                  </div>
+                  <div class="text-[11px] text-slate-500 mt-0.5">
+                    {{ isEnglish ? '3 Putri Mulya team is ready to respond via WA' : 'Admin 3 Putri Mulya siap merespons via WA' }}
+                  </div>
                 </div>
                 <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-[10px] font-bold text-emerald-700">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                  Online
+                  {{ isEnglish ? 'Online' : 'Online' }}
                 </span>
               </div>
 
@@ -450,7 +506,7 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
                 <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
                 </svg>
-                <span>Hubungi Admin WhatsApp</span>
+                <span>{{ isEnglish ? 'Chat with WhatsApp Admin' : 'Hubungi Admin WhatsApp' }}</span>
               </a>
             </div>
           </div>

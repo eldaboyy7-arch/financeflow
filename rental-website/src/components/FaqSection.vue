@@ -135,7 +135,7 @@ const toggleFaq = (index: number) => {
 
     <div class="mt-6 pt-4 text-center">
       <p class="text-xs text-slate-500">
-        Ada pertanyaan lain? Hubungi admin via WhatsApp untuk respons cepat.
+        {{ t('faq.contactSupport') }}
       </p>
     </div>
   </div>
