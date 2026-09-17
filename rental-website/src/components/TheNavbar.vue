@@ -5,11 +5,9 @@ import { siteConfig } from '@/config/site'
 import { generateGeneralWhatsAppUrl } from '@/utils/whatsapp'
 import CurrencySelector from '@/components/CurrencySelector.vue'
 import LanguageSelector from '@/components/LanguageSelector.vue'
-import { useCurrency } from '@/composables/useCurrency'
 import { useLanguage } from '@/composables/useLanguage'
 
-const { currentCurrency, setCurrency } = useCurrency()
-const { currentLang, setLanguage, t, isEnglish } = useLanguage()
+const { t, isEnglish } = useLanguage()
 
 const route = useRoute()
 const isHeroPage = computed(() => ['/', '/layanan', '/destinasi'].includes(route.path))
@@ -226,58 +224,6 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
               {{ t('nav.available24') }}
             </span>
-          </div>
-
-          <!-- Language Quick Switcher in Mobile Drawer -->
-          <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
-            <div class="flex items-center gap-1.5">
-              <span class="text-xs font-bold text-slate-800">{{ t('nav.language') }}</span>
-              <span class="text-[10px] text-slate-400">/ Language</span>
-            </div>
-            <div class="flex items-center gap-1">
-              <button
-                @click="setLanguage('en')"
-                type="button"
-                class="px-3 py-1 rounded-lg text-xs font-bold transition-all"
-                :class="currentLang === 'en'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'"
-              >
-                English
-              </button>
-              <button
-                @click="setLanguage('id')"
-                type="button"
-                class="px-3 py-1 rounded-lg text-xs font-bold transition-all"
-                :class="currentLang === 'id'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'"
-              >
-                Indonesia
-              </button>
-            </div>
-          </div>
-
-          <!-- Currency Quick Switcher in Mobile Drawer -->
-          <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
-            <div class="flex items-center gap-1.5">
-              <span class="text-xs font-bold text-slate-800">{{ t('nav.currency') }}</span>
-              <span class="text-[10px] text-slate-400">/ Currency</span>
-            </div>
-            <div class="flex items-center gap-1">
-              <button
-                v-for="c in (['IDR', 'SGD', 'MYR'] as const)"
-                :key="c"
-                @click="setCurrency(c)"
-                type="button"
-                class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all"
-                :class="currentCurrency === c
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'"
-              >
-                {{ c }}
-              </button>
-            </div>
           </div>
 
           <!-- Primary Navigation Links (Clean, Professional, Non-Dark) -->
