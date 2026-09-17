@@ -23,9 +23,9 @@ export interface TourPackage {
 /**
  * Data Resmi Paket Tour Bintan (Khusus Armada Toyota HiAce 3 Putri Mulya).
  * Disesuaikan 1-to-1 dengan data operasional klien:
- * - HiAce Commuter (Rp 1.000.000)
- * - HiAce Premio (Rp 1.200.000)
- * Keduanya sudah termasuk Supir & BBM dengan kapasitas 15 Person serta Karaoke System.
+ * - HiAce Commuter (Rp 1.400.000)
+ * - HiAce Premio (Rp 1.500.000)
+ * Keduanya sudah termasuk Supir & BBM dengan kapasitas 11-15 Person serta Karaoke System.
  */
 export const tourPackages: TourPackage[] = [
   {
@@ -36,7 +36,7 @@ export const tourPackages: TourPackage[] = [
     badge: 'Paling Populer',
     description: 'Paket tour keliling destinasi favorit Pulau Bintan menggunakan armada Toyota HiAce Commuter 15 kursi yang nyaman, bersih, dan dilengkapi fasilitas hiburan karaoke sepanjang perjalanan.',
     duration: 'Full Day Tour (8 - 10 Jam)',
-    price: 'Rp 1.000.000',
+    price: 'Rp 1.400.000',
     priceLabel: 'HARGA MULAI',
     vehicle: 'Toyota HiAce Commuter (15 Kursi)',
     capacity: '15 Person',
@@ -75,20 +75,20 @@ export const tourPackages: TourPackage[] = [
       'Makan / minum peserta tour',
       'Pengeluaran pribadi di luar rute'
     ],
-    ctaWhatsappText: 'Halo 3 Putri Mulya, saya ingin booking Paket Tour Bintan (HiAce Commuter 15 Person - Rp 1.000.000). Mohon informasi ketersediaan tanggal.'
+    ctaWhatsappText: 'Halo 3 Putri Mulya, saya ingin booking Paket Tour Bintan (HiAce Commuter 15 Person - Rp 1.400.000). Mohon informasi ketersediaan tanggal.'
   },
   {
     id: 'tour-hiace-premio',
     slug: 'tour-bintan-hiace-premio',
     title: 'Tour Bintan — HiAce Premio Luxury',
-    subtitle: 'Hiace Premio, Include Supir & BBM, 15 Person',
+    subtitle: 'Hiace Premio, Include Supir & BBM, 11 - 14 Person',
     badge: 'Luxury VIP',
     description: 'Pengalaman wisata premium berkelas dengan Toyota HiAce Premio (BP 7024 BU). Interior mewah bergaya VIP dengan ambient lighting modern, Smart TV plafon, double wireless microphone untuk karaoke, kursi kulit empuk, dan lantai kayu elegan.',
     duration: 'Full Day Tour (8 - 10 Jam)',
-    price: 'Rp 1.200.000',
+    price: 'Rp 1.500.000',
     priceLabel: 'HARGA MULAI',
     vehicle: 'Toyota HiAce Premio Luxury (BP 7024 BU)',
-    capacity: '15 Person',
+    capacity: '11 - 14 Person',
     vehiclePhoto: '/images/fleet/hiace-premio-gold-bp7024bu.jpg',
     galleryPhotos: [
       '/images/fleet/hiace-premio-gold-bp7024bu.jpg',
@@ -115,7 +115,7 @@ export const tourPackages: TourPackage[] = [
       'Pengantaran kembali dengan pelayanan ramah'
     ],
     included: [
-      'Armada Mewah Toyota HiAce Premio Luxury (15 Kursi)',
+      'Armada Mewah Toyota HiAce Premio Luxury',
       'Supir (Driver) profesional & ramah',
       'Bahan Bakar Minyak (BBM)',
       'Karaoke System (Smart TV Plafon + Double Wireless Mic)',
@@ -126,7 +126,7 @@ export const tourPackages: TourPackage[] = [
       'Makan / minum peserta tour',
       'Pengeluaran pribadi di luar rute'
     ],
-    ctaWhatsappText: 'Halo 3 Putri Mulya, saya ingin booking Paket Tour Bintan Luxury (HiAce Premio 15 Person - Rp 1.200.000). Mohon cek ketersediaan jadwal.'
+    ctaWhatsappText: 'Halo 3 Putri Mulya, saya ingin booking Paket Tour Bintan Luxury (HiAce Premio - Rp 1.500.000). Mohon cek ketersediaan jadwal.'
   },
   {
     id: 'tour-hiace-custom',
@@ -136,7 +136,7 @@ export const tourPackages: TourPackage[] = [
     badge: 'Rute Bebas Sesuai Request',
     description: 'Ingin mengunjungi destinasi tertentu di luar rute reguler (seperti Pantai Trikora, Barelang, ziarah, atau agenda kedinasan instansi)? Kami siap melayani rute khusus sesuai kebutuhan agenda Anda.',
     duration: 'Fleksibel (Harian / Multi-Hari)',
-    price: 'Mulai Rp 1.000.000',
+    price: 'Mulai Rp 1.400.000',
     priceLabel: 'TARIF NEGO FLEKSIBEL',
     vehicle: 'Pilihan HiAce Commuter / HiAce Premio',
     capacity: 'Hingga 15 Person',

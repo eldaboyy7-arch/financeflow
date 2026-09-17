@@ -7,6 +7,19 @@ import { siteConfig } from '@/config/site'
 
 const { packages: tourPackages, fetchTourPackages } = useTourPackages()
 
+// Dynamic package data for comparison table (automatically synced with API / Admin)
+const commuterPkg = computed(() =>
+  tourPackages.value.find(p => p.slug?.includes('commuter') || p.title?.toLowerCase().includes('commuter'))
+)
+const premioPkg = computed(() =>
+  tourPackages.value.find(p => p.slug?.includes('premio') || p.title?.toLowerCase().includes('premio'))
+)
+
+const commuterPrice = computed(() => commuterPkg.value?.price || 'Rp 1.400.000')
+const premioPrice = computed(() => premioPkg.value?.price || 'Rp 1.500.000')
+const commuterCapacity = computed(() => commuterPkg.value?.capacity || '15 Kursi Penumpang')
+const premioCapacity = computed(() => premioPkg.value?.capacity || '11 - 14 Kursi Penumpang')
+
 // Active photo index per package in card
 const activePhotoIndexes = ref<Record<string, number>>({})
 
@@ -469,13 +482,13 @@ onBeforeUnmount(() => {
             <tbody class="divide-y divide-slate-100">
               <tr>
                 <td class="py-3 px-3 sm:px-4 font-medium text-slate-600">Tarif Sewa (All-In)</td>
-                <td class="py-3 px-3 sm:px-4 font-black text-slate-900 bg-slate-50/40">Rp 1.000.000 /hari</td>
-                <td class="py-3 px-3 sm:px-4 font-black text-indigo-700 bg-indigo-50/30">Rp 1.200.000 /hari</td>
+                <td class="py-3 px-3 sm:px-4 font-black text-slate-900 bg-slate-50/40">{{ commuterPrice }} /hari</td>
+                <td class="py-3 px-3 sm:px-4 font-black text-indigo-700 bg-indigo-50/30">{{ premioPrice }} /hari</td>
               </tr>
               <tr>
                 <td class="py-3 px-3 sm:px-4 font-medium text-slate-600">Kapasitas Tempat Duduk</td>
-                <td class="py-3 px-3 sm:px-4 text-slate-800 bg-slate-50/40">15 Kursi Penumpang</td>
-                <td class="py-3 px-3 sm:px-4 text-slate-800 bg-indigo-50/30">15 Kursi Penumpang</td>
+                <td class="py-3 px-3 sm:px-4 text-slate-800 bg-slate-50/40">{{ commuterCapacity }}</td>
+                <td class="py-3 px-3 sm:px-4 text-slate-800 bg-indigo-50/30">{{ premioCapacity }}</td>
               </tr>
               <tr>
                 <td class="py-3 px-3 sm:px-4 font-medium text-slate-600">Supir &amp; BBM</td>
