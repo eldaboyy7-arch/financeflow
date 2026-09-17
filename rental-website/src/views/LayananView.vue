@@ -80,7 +80,7 @@ const mainServices = computed(() => isEnglish.value ? [
         <img
           src="/images/layanan-hero.jpg"
           alt="Layanan Rental Mobil Bintan"
-          class="w-full h-full object-cover object-bottom sm:object-center"
+          class="w-full h-full object-cover object-center"
         />
       </picture>
 
