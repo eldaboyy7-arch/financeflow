@@ -120,25 +120,11 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
             {{ t('nav.services') }}
           </RouterLink>
           <RouterLink
-            to="/armada"
-            class="hover:text-white hover:drop-shadow transition-colors"
-            :class="route.path === '/armada' ? 'text-blue-400 font-bold' : ''"
-          >
-            {{ t('nav.fleet') }}
-          </RouterLink>
-          <RouterLink
             to="/destinasi"
             class="hover:text-white hover:drop-shadow transition-colors"
             :class="route.path === '/destinasi' ? 'text-blue-400 font-bold' : ''"
           >
             {{ t('nav.destinations') }}
-          </RouterLink>
-          <RouterLink
-            to="/paket-tour-bintan"
-            class="hover:text-white hover:drop-shadow transition-colors"
-            :class="route.path === '/paket-tour-bintan' ? 'text-blue-400 font-bold' : ''"
-          >
-            {{ t('nav.tours') }}
           </RouterLink>
           <RouterLink
             to="/#faq"
@@ -329,52 +315,26 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
               </svg>
             </RouterLink>
 
-            <!-- 2. Katalog Lengkap Armada -->
+            <!-- 2. Layanan & Cara Sewa -->
             <RouterLink
-              to="/armada"
+              to="/layanan"
               @click="closeMobileMenu"
-              class="group flex items-center justify-between p-3 rounded-xl transition-colors border"
-              :class="route.path === '/armada'
+              class="group flex items-center justify-between p-3 rounded-xl border transition-colors"
+              :class="route.path === '/layanan'
                 ? 'bg-blue-50/80 border-blue-100 text-blue-900 font-semibold'
                 : 'border-transparent text-slate-700 hover:bg-slate-50 hover:text-slate-900'"
             >
               <div class="flex items-center gap-3">
                 <span
                   class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors"
-                  :class="route.path === '/armada' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'"
+                  :class="route.path === '/layanan' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'"
                 >
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
-                  </svg>
-                </span>
-                <div>
-                  <div class="text-sm" :class="route.path === '/armada' ? 'font-bold text-blue-900' : 'font-medium text-slate-800'">
-                    {{ t('nav.fleet') }}
-                  </div>
-                  <div class="text-[11px] text-slate-500">
-                    {{ isEnglish ? 'City Car, MPV, HiAce & Tour Bus' : 'City Car, MPV, HiAce & Bus' }}
-                  </div>
-                </div>
-              </div>
-              <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                {{ isEnglish ? '7+ Units' : '7+ Unit' }}
-              </span>
-            </RouterLink>
-
-            <!-- 3. Layanan & Cara Sewa -->
-            <RouterLink
-              to="/layanan"
-              @click="closeMobileMenu"
-              class="group flex items-center justify-between p-3 rounded-xl border border-transparent text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
-            >
-              <div class="flex items-center gap-3">
-                <span class="w-9 h-9 rounded-lg bg-slate-100 text-slate-600 group-hover:bg-slate-200 flex items-center justify-center shrink-0 transition-colors">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                   </svg>
                 </span>
                 <div>
-                  <div class="text-sm font-medium text-slate-800">
+                  <div class="text-sm" :class="route.path === '/layanan' ? 'font-bold text-blue-900' : 'font-medium text-slate-800'">
                     {{ t('nav.services') }}
                   </div>
                   <div class="text-[11px] text-slate-500">
@@ -387,39 +347,7 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
               </svg>
             </RouterLink>
 
-            <!-- 4. Paket Tour -->
-            <RouterLink
-              to="/paket-tour-bintan"
-              @click="closeMobileMenu"
-              class="group flex items-center justify-between p-3 rounded-xl transition-colors border"
-              :class="route.path === '/paket-tour-bintan'
-                ? 'bg-blue-50/80 border-blue-100 text-blue-900 font-semibold'
-                : 'border-transparent text-slate-700 hover:bg-slate-50 hover:text-slate-900'"
-            >
-              <div class="flex items-center gap-3">
-                <span
-                  class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors"
-                  :class="route.path === '/paket-tour-bintan' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h8m-8 4h8m-8 4h4m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z"/>
-                  </svg>
-                </span>
-                <div>
-                  <div class="text-sm" :class="route.path === '/paket-tour-bintan' ? 'font-bold text-blue-900' : 'font-medium text-slate-800'">
-                    {{ t('nav.tours') }}
-                  </div>
-                  <div class="text-[11px] text-slate-500">
-                    {{ isEnglish ? 'HiAce Commuter & Premio All-In' : 'HiAce Commuter & Premio All-In' }}
-                  </div>
-                </div>
-              </div>
-              <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </RouterLink>
-
-            <!-- 5. Inspirasi Destinasi -->
+            <!-- 3. Inspirasi Destinasi -->
             <RouterLink
               to="/destinasi"
               @click="closeMobileMenu"
