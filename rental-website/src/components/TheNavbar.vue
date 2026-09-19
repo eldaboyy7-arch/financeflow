@@ -114,8 +114,8 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
           </div>
         </RouterLink>
 
-        <!-- Desktop Navigation (hidden on mobile, visible on md+) -->
-        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-200">
+        <!-- Desktop Navigation (Shifted slightly right for balanced, harmonious center alignment) -->
+        <nav class="hidden md:flex items-center gap-7 lg:gap-8 text-sm font-medium text-slate-200 md:translate-x-4 lg:translate-x-8 xl:translate-x-10">
           <RouterLink
             to="/"
             :class="route.path === '/' && !route.hash ? 'text-blue-400 font-bold' : ''"
