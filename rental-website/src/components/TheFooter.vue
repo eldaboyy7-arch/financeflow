@@ -58,7 +58,7 @@ const currentYear = new Date().getFullYear()
             <li><RouterLink to="/armada" class="hover:text-blue-600 transition-colors">{{ t('nav.fleet') }}</RouterLink></li>
             <li><RouterLink to="/paket-tour-bintan" class="hover:text-blue-600 transition-colors">{{ t('nav.tours') }}</RouterLink></li>
             <li><RouterLink to="/destinasi" class="hover:text-blue-600 transition-colors">{{ t('nav.destinations') }}</RouterLink></li>
-            <li><a href="/#faq" class="hover:text-blue-600 transition-colors">{{ t('nav.faq') }}</a></li>
+            <li><RouterLink to="/#faq" class="hover:text-blue-600 transition-colors">{{ t('nav.faq') }}</RouterLink></li>
           </ul>
         </div>
 

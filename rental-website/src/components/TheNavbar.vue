@@ -26,6 +26,19 @@ const closeMobileMenu = () => {
   isMobileMenuOpen.value = false
 }
 
+const handleFaqClick = (e: MouseEvent) => {
+  closeMobileMenu()
+  if (route.path === '/') {
+    const el = document.getElementById('faq') || document.querySelector('#faq')
+    if (el) {
+      if (route.hash === '#faq') {
+        e.preventDefault()
+      }
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+}
+
 // Close mobile menu whenever route or hash changes & update scroll state
 watch(
   () => [route.path, route.hash],
@@ -126,6 +139,7 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
           </RouterLink>
           <RouterLink
             to="/#faq"
+            @click="handleFaqClick"
             class="hover:text-white hover:drop-shadow transition-colors"
           >
             {{ t('nav.faq') }}
@@ -328,7 +342,7 @@ const waUrl = computed(() => generateGeneralWhatsAppUrl(siteConfig.rentalPhone, 
             <!-- 6. Tanya Jawab (FAQ) -->
             <RouterLink
               to="/#faq"
-              @click="closeMobileMenu"
+              @click="handleFaqClick"
               class="group flex items-center justify-between p-3 rounded-xl border border-transparent text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
             >
               <div class="flex items-center gap-3">

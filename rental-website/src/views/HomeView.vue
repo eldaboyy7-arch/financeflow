@@ -123,15 +123,15 @@ watch(isEnglish, () => {
     <TripInspirations />
 
     <!-- 6 & 7. Side-by-Side: Area Layanan & Titik Koordinasi + Pertanyaan Umum (FAQ) -->
-    <section id="lokasi-faq" class="py-14 sm:py-20 bg-slate-50 border-t border-slate-200 scroll-mt-16">
+    <section id="faq" class="py-14 sm:py-20 bg-slate-50 border-t border-slate-200 scroll-mt-16 sm:scroll-mt-20">
+      <span id="lokasi-faq" class="sr-only"></span>
       <span id="lokasi" class="sr-only"></span>
-      <span id="faq" class="sr-only"></span>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch">
-          <div v-reveal:fade-right>
+          <div id="lokasi-card" v-reveal:fade-right>
             <LocationSection />
           </div>
-          <div v-reveal:fade-left>
+          <div id="faq-card" class="scroll-mt-20" v-reveal:fade-left>
             <FaqSection />
           </div>
         </div>

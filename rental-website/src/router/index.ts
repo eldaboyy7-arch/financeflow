@@ -1,4 +1,4 @@
-﻿import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -41,12 +41,38 @@ const router = createRouter({
       redirect: '/'
     }
   ],
-  scrollBehavior(to, _from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     }
     if (to.hash) {
-      return { el: to.hash, behavior: 'smooth' }
+      // Same-page navigation: element is already mounted in DOM
+      const isInitial = from.matched.length === 0
+      if (!isInitial && from.path === to.path) {
+        return { el: to.hash, behavior: 'smooth' }
+      }
+
+      // Cross-page navigation or initial entry with hash:
+      // Wait for page-fade leave transition (250ms) + target component mount
+      return new Promise((resolve) => {
+        let attempts = 0
+        const checkEl = () => {
+          const el = document.querySelector(to.hash)
+          if (el) {
+            // Found target element! Small delay for layout paint stability
+            setTimeout(() => {
+              resolve({ el: to.hash, behavior: 'smooth' })
+            }, 50)
+          } else if (attempts < 30) {
+            attempts++
+            setTimeout(checkEl, 40)
+          } else {
+            resolve({ top: 0, behavior: 'smooth' })
+          }
+        }
+        // Give the leaving transition (~250ms) time to finish
+        setTimeout(checkEl, isInitial ? 50 : 260)
+      })
     }
     return { top: 0, behavior: 'smooth' }
   }
