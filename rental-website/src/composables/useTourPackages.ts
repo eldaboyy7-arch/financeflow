@@ -40,7 +40,52 @@ function normalizeApiPackage(item: any): TourPackage {
         ? item.gallery_photos.map((p: any) => typeof p === 'string' ? p : (p.path || p.url || ''))
         : [coverPhoto])
 
-  const matchedFallback = fallbackPackages.find(f => f.id === item.id || f.slug === item.slug)
+  const isPremio = Boolean(
+    item.slug?.includes('premio') ||
+    item.title?.toLowerCase().includes('premio') ||
+    item.vehicle_name?.toLowerCase().includes('premio') ||
+    String(item.id) === '2'
+  )
+  const isCommuter = Boolean(
+    item.slug?.includes('commuter') ||
+    item.title?.toLowerCase().includes('commuter') ||
+    item.vehicle_name?.toLowerCase().includes('commuter') ||
+    String(item.id) === '1'
+  )
+
+  const matchedFallback = fallbackPackages.find(f =>
+    f.id === item.id ||
+    String(f.id) === String(item.id) ||
+    f.slug === item.slug ||
+    (isPremio && (f.slug?.includes('premio') || f.id === 'tour-hiace-premio')) ||
+    (isCommuter && (f.slug?.includes('commuter') || f.id === 'tour-hiace-commuter'))
+  )
+
+  const rawOriginalPrice = Number(item.rawOriginalPrice || item.raw_original_price || item.original_price)
+    || matchedFallback?.rawOriginalPrice
+    || (isPremio ? 2000000 : isCommuter ? 1800000 : undefined)
+
+  const calculatedDiscountPercent = rawOriginalPrice && priceNum > 0 && rawOriginalPrice > priceNum
+    ? Math.round(((rawOriginalPrice - priceNum) / rawOriginalPrice) * 100)
+    : (isPremio ? 25 : isCommuter ? 22 : undefined)
+
+  const discountPercent = Number(item.discountPercent || item.discount_percent)
+    || calculatedDiscountPercent
+    || matchedFallback?.discountPercent
+
+  const savingsNum = rawOriginalPrice && priceNum > 0 && rawOriginalPrice > priceNum
+    ? (rawOriginalPrice - priceNum)
+    : 0
+
+  const originalPriceStr = rawOriginalPrice
+    ? (item.originalPrice || item.original_price || `Rp ${rawOriginalPrice.toLocaleString('id-ID')}`)
+    : matchedFallback?.originalPrice
+
+  const discountBadge = item.discountBadge || item.discount_badge
+    || (savingsNum > 0 ? `Hemat Rp ${savingsNum.toLocaleString('id-ID')}` : matchedFallback?.discountBadge)
+
+  const discountBadgeEn = item.discountBadgeEn || item.discount_badge_en
+    || (savingsNum > 0 ? `Save Rp ${savingsNum.toLocaleString('id-ID')}` : matchedFallback?.discountBadgeEn)
 
   return {
     id: String(item.slug || item.id),
@@ -57,11 +102,11 @@ function normalizeApiPackage(item: any): TourPackage {
     durationEn: item.durationEn || item.duration_en || matchedFallback?.durationEn,
     price: formattedPrice,
     rawPrice: priceNum,
-    originalPrice: item.originalPrice || item.original_price || matchedFallback?.originalPrice,
-    rawOriginalPrice: Number(item.rawOriginalPrice || item.raw_original_price || item.original_price) || matchedFallback?.rawOriginalPrice,
-    discountPercent: Number(item.discountPercent || item.discount_percent) || matchedFallback?.discountPercent,
-    discountBadge: item.discountBadge || item.discount_badge || matchedFallback?.discountBadge,
-    discountBadgeEn: item.discountBadgeEn || item.discount_badge_en || matchedFallback?.discountBadgeEn,
+    originalPrice: originalPriceStr,
+    rawOriginalPrice: rawOriginalPrice,
+    discountPercent: discountPercent,
+    discountBadge: discountBadge,
+    discountBadgeEn: discountBadgeEn,
     priceLabel: item.price_label || (priceNum > 0 ? 'HARGA MULAI' : 'KONSULTASI GRATIS'),
     priceLabelEn: item.priceLabelEn || item.price_label_en || matchedFallback?.priceLabelEn,
     vehicle: item.vehicle_name || item.vehicle || 'Toyota HiAce',

@@ -44,13 +44,17 @@ const getPackagePrice = (pkg: TourPackage) => {
 }
 
 const getOriginalPrice = (pkg: TourPackage) => {
-  const raw = pkg.rawOriginalPrice || (pkg.slug?.includes('commuter') ? 1800000 : pkg.slug?.includes('premio') ? 2000000 : 0)
+  const isPremio = pkg.slug?.includes('premio') || pkg.title?.toLowerCase().includes('premio')
+  const isCommuter = pkg.slug?.includes('commuter') || pkg.title?.toLowerCase().includes('commuter')
+  const raw = pkg.rawOriginalPrice || (isPremio ? 2000000 : isCommuter ? 1800000 : 0)
   return convertPrice(raw)
 }
 
 const getSavings = (pkg: TourPackage) => {
-  const original = pkg.rawOriginalPrice || (pkg.slug?.includes('commuter') ? 1800000 : pkg.slug?.includes('premio') ? 2000000 : 0)
-  const current = pkg.rawPrice || (pkg.slug?.includes('commuter') ? 1400000 : pkg.slug?.includes('premio') ? 1500000 : 0)
+  const isPremio = pkg.slug?.includes('premio') || pkg.title?.toLowerCase().includes('premio')
+  const isCommuter = pkg.slug?.includes('commuter') || pkg.title?.toLowerCase().includes('commuter')
+  const original = pkg.rawOriginalPrice || (isPremio ? 2000000 : isCommuter ? 1800000 : 0)
+  const current = pkg.rawPrice || (isPremio ? 1500000 : isCommuter ? 1400000 : 0)
   const diff = Math.max(0, original - current)
   return convertPrice(diff)
 }
@@ -346,10 +350,10 @@ onBeforeUnmount(() => {
                     {{ isEnglish ? (pkg.badgeEn || pkg.badge) : pkg.badge }}
                   </span>
                   <span
-                    v-if="pkg.rawOriginalPrice"
+                    v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')"
                     class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-black bg-rose-600 text-white shadow-md animate-pulse"
                   >
-                    🔥 {{ isEnglish ? `SAVE ${pkg.discountPercent}%` : `DISKON ${pkg.discountPercent}%` }}
+                    🔥 {{ isEnglish ? `SAVE ${pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22)}%` : `DISKON ${pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22)}%` }}
                   </span>
                 </div>
                 <div class="absolute bottom-2 right-2 pointer-events-none">
@@ -375,7 +379,7 @@ onBeforeUnmount(() => {
               <div class="flex items-center gap-3 flex-wrap">
                 <div>
                   <!-- Strike-through Original Price & Savings Pill -->
-                  <div v-if="pkg.rawOriginalPrice" class="flex items-center gap-1.5 mb-1">
+                  <div v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="flex items-center gap-1.5 mb-1">
                     <span class="text-xs font-bold text-slate-400 line-through">
                       {{ getOriginalPrice(pkg).formatted }}
                     </span>
@@ -384,7 +388,7 @@ onBeforeUnmount(() => {
                     </span>
                   </div>
                   <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">
-                    {{ isEnglish ? (pkg.rawOriginalPrice ? 'SPECIAL PROMO PRICE' : (pkg.priceLabelEn || pkg.priceLabel)) : (pkg.rawOriginalPrice ? 'HARGA PROMO SPESIAL' : pkg.priceLabel) }}
+                    {{ isEnglish ? (pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter') ? 'SPECIAL PROMO PRICE' : (pkg.priceLabelEn || pkg.priceLabel)) : (pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter') ? 'HARGA PROMO SPESIAL' : pkg.priceLabel) }}
                   </span>
                   <div class="flex items-baseline gap-1">
                     <span class="text-xl sm:text-2xl font-black text-blue-600 tracking-tight">{{ getPackagePrice(pkg).formatted }}</span>

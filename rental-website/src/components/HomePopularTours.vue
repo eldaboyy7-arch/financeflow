@@ -17,14 +17,18 @@ function formatTourCardPrice(pkg: any): string {
 }
 
 function formatOriginalPrice(pkg: any): string {
-  const raw = pkg.rawOriginalPrice || (pkg.slug?.includes('commuter') ? 1800000 : pkg.slug?.includes('premio') ? 2000000 : 0)
+  const isPremio = pkg.slug?.includes('premio') || pkg.title?.toLowerCase().includes('premio')
+  const isCommuter = pkg.slug?.includes('commuter') || pkg.title?.toLowerCase().includes('commuter')
+  const raw = pkg.rawOriginalPrice || (isPremio ? 2000000 : isCommuter ? 1800000 : 0)
   if (!raw || raw <= 0) return ''
   return convertPrice(raw).formatted
 }
 
 function formatSavings(pkg: any): string {
-  const orig = pkg.rawOriginalPrice || (pkg.slug?.includes('commuter') ? 1800000 : pkg.slug?.includes('premio') ? 2000000 : 0)
-  const current = pkg.rawPrice || (pkg.slug?.includes('commuter') ? 1400000 : pkg.slug?.includes('premio') ? 1500000 : 0)
+  const isPremio = pkg.slug?.includes('premio') || pkg.title?.toLowerCase().includes('premio')
+  const isCommuter = pkg.slug?.includes('commuter') || pkg.title?.toLowerCase().includes('commuter')
+  const orig = pkg.rawOriginalPrice || (isPremio ? 2000000 : isCommuter ? 1800000 : 0)
+  const current = pkg.rawPrice || (isPremio ? 1500000 : isCommuter ? 1400000 : 0)
   const diff = Math.max(0, orig - current)
   if (diff <= 0) return ''
   return convertPrice(diff).formatted
@@ -34,7 +38,7 @@ onMounted(() => {
   fetchTourPackages()
 })
 
-// Fallback scenic photos � cycled by index so even unknown slugs always get a nice photo
+// Fallback scenic photos – cycled by index so even unknown slugs always get a nice photo
 const scenicByIndex = [
   '/images/destinations/treasure-bay.jpg',
   '/images/destinations/trikora.jpg',
@@ -51,10 +55,12 @@ const scenicByKey: Record<string, string> = {
   'hiace-commuter': '/images/destinations/treasure-bay.jpg',
   'tour-hiace-premio': '/images/destinations/trikora.jpg',
   'tour-bintan-hiace-premio': '/images/destinations/trikora.jpg',
+  'tour-bintan-hiace-premio-luxury': '/images/destinations/trikora.jpg',
   'hiace-premio': '/images/destinations/trikora.jpg',
   'tour-hiace-custom': '/images/destinations/patung-seribu.jpg',
   'charter-hiace-bintan-custom': '/images/destinations/patung-seribu.jpg',
   'custom-charter': '/images/destinations/patung-seribu.jpg',
+  'custom-charter-bintan': '/images/destinations/patung-seribu.jpg',
 }
 
 function getScenicPhoto(pkg: { id: string; slug: string }, idx: number): string {
@@ -74,10 +80,12 @@ const badgeByKey: Record<string, string> = {
   'hiace-commuter': 'Full Day Tour',
   'tour-hiace-premio': 'Luxury VIP',
   'tour-bintan-hiace-premio': 'Luxury VIP',
+  'tour-bintan-hiace-premio-luxury': 'Luxury VIP',
   'hiace-premio': 'Luxury VIP',
   'tour-hiace-custom': 'Rute Bebas',
   'charter-hiace-bintan-custom': 'Rute Bebas',
   'custom-charter': 'Paket Kustom',
+  'custom-charter-bintan': 'Rute Bebas',
 }
 
 function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?: string }): string {
@@ -150,8 +158,8 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
               <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-white/90 text-slate-900 shadow-sm">
                 {{ getTourBadge(pkg) }}
               </span>
-              <span v-if="pkg.rawOriginalPrice" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-600 text-white shadow-xs animate-pulse">
-                🔥 PROMO -{{ pkg.discountPercent }}%
+              <span v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-600 text-white shadow-xs animate-pulse">
+                🔥 PROMO -{{ pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22) }}%
               </span>
             </div>
 
@@ -162,7 +170,7 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
               </h3>
               <div class="flex items-end justify-between gap-2">
                 <div>
-                  <div v-if="pkg.rawOriginalPrice" class="flex items-center gap-1.5 leading-none mb-0.5">
+                  <div v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="flex items-center gap-1.5 leading-none mb-0.5">
                     <span class="text-[10px] text-slate-400 line-through">
                       {{ formatOriginalPrice(pkg) }}
                     </span>
@@ -224,8 +232,8 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
             <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-white/90 text-slate-900 shadow-sm backdrop-blur-sm">
               {{ getTourBadge(pkg) }}
             </span>
-            <span v-if="pkg.rawOriginalPrice" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-600 text-white shadow-md animate-pulse">
-              🔥 PROMO -{{ pkg.discountPercent }}%
+            <span v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-600 text-white shadow-md animate-pulse">
+              🔥 PROMO -{{ pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22) }}%
             </span>
           </div>
 
@@ -236,7 +244,7 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
             </h3>
             <div class="flex items-end justify-between">
               <div>
-                <div v-if="pkg.rawOriginalPrice" class="flex items-center gap-1.5 mb-0.5">
+                <div v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="flex items-center gap-1.5 mb-0.5">
                   <span class="text-[11px] text-slate-400 line-through">
                     {{ formatOriginalPrice(pkg) }}
                   </span>

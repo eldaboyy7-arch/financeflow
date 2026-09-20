@@ -142,7 +142,7 @@ export const tourPackages: TourPackage[] = [
   },
   {
     id: 'tour-hiace-premio',
-    slug: 'tour-bintan-hiace-premio',
+    slug: 'tour-bintan-hiace-premio-luxury',
     title: 'Tour Bintan — HiAce Premio Luxury',
     titleEn: 'Bintan Luxury Tour — HiAce Premio VIP',
     subtitle: 'Hiace Premio, Include Supir & BBM, 11 - 14 Person',
