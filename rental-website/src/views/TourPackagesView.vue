@@ -23,8 +23,16 @@ const commuterPrice = computed(() => {
   const raw = commuterPkg.value?.rawPrice || 1400000
   return convertPrice(raw).formatted
 })
+const commuterOriginalPrice = computed(() => {
+  const raw = commuterPkg.value?.rawOriginalPrice || 1800000
+  return convertPrice(raw).formatted
+})
 const premioPrice = computed(() => {
   const raw = premioPkg.value?.rawPrice || 1500000
+  return convertPrice(raw).formatted
+})
+const premioOriginalPrice = computed(() => {
+  const raw = premioPkg.value?.rawOriginalPrice || 2000000
   return convertPrice(raw).formatted
 })
 const commuterCapacity = computed(() => isEnglish.value ? '15 Passenger Seats' : (commuterPkg.value?.capacity || '15 Kursi Penumpang'))
@@ -33,6 +41,18 @@ const premioCapacity = computed(() => isEnglish.value ? '11 - 14 Passenger Seats
 const getPackagePrice = (pkg: TourPackage) => {
   const raw = pkg.rawPrice || (pkg.slug?.includes('commuter') ? 1400000 : pkg.slug?.includes('premio') ? 1500000 : 0)
   return convertPrice(raw)
+}
+
+const getOriginalPrice = (pkg: TourPackage) => {
+  const raw = pkg.rawOriginalPrice || (pkg.slug?.includes('commuter') ? 1800000 : pkg.slug?.includes('premio') ? 2000000 : 0)
+  return convertPrice(raw)
+}
+
+const getSavings = (pkg: TourPackage) => {
+  const original = pkg.rawOriginalPrice || (pkg.slug?.includes('commuter') ? 1800000 : pkg.slug?.includes('premio') ? 2000000 : 0)
+  const current = pkg.rawPrice || (pkg.slug?.includes('commuter') ? 1400000 : pkg.slug?.includes('premio') ? 1500000 : 0)
+  const diff = Math.max(0, original - current)
+  return convertPrice(diff)
 }
 
 // Active photo index per package in card
@@ -150,12 +170,22 @@ const getWhatsAppUrl = (text: string) => {
 const getTourWhatsAppUrl = (pkg: TourPackage) => {
   const phone = siteConfig.rentalPhone.replace(/\D/g, '')
   const priceInfo = getPackagePrice(pkg)
-  let text = isEnglish.value
-    ? `Hello 3 Putri Mulya, I would like to book the ${pkg.title} (${pkg.vehicle}) in Bintan.`
-    : pkg.ctaWhatsappText
-  if (priceInfo.isConverted && priceInfo.amount > 0) {
-    text += ` (Est. ${priceInfo.formatted})`
+  const savings = getSavings(pkg)
+  let text = ''
+
+  if (pkg.rawOriginalPrice && pkg.rawOriginalPrice > 0) {
+    text = isEnglish.value
+      ? `Hello 3 Putri Mulya, I would like to claim the Special Online Promo for ${pkg.title} (${priceInfo.formatted}, Save ${savings.formatted}) in Bintan. Please inform availability for [insert date].`
+      : `Halo 3 Putri Mulya, saya ingin klaim Promo Spesial Website untuk ${pkg.title} (${priceInfo.formatted}, Hemat ${savings.formatted}). Mohon info ketersediaan untuk tanggal [isi tanggal].`
+  } else {
+    text = isEnglish.value
+      ? `Hello 3 Putri Mulya, I would like to book the ${pkg.title} (${pkg.vehicle}) in Bintan.`
+      : pkg.ctaWhatsappText
+    if (priceInfo.isConverted && priceInfo.amount > 0) {
+      text += ` (Est. ${priceInfo.formatted})`
+    }
   }
+
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
 }
 
@@ -315,6 +345,12 @@ onBeforeUnmount(() => {
                   >
                     {{ isEnglish ? (pkg.badgeEn || pkg.badge) : pkg.badge }}
                   </span>
+                  <span
+                    v-if="pkg.rawOriginalPrice"
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-black bg-rose-600 text-white shadow-md animate-pulse"
+                  >
+                    🔥 {{ isEnglish ? `SAVE ${pkg.discountPercent}%` : `DISKON ${pkg.discountPercent}%` }}
+                  </span>
                 </div>
                 <div class="absolute bottom-2 right-2 pointer-events-none">
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-black/50 text-white">
@@ -338,10 +374,21 @@ onBeforeUnmount(() => {
               <!-- Price row -->
               <div class="flex items-center gap-3 flex-wrap">
                 <div>
-                  <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">{{ isEnglish ? (pkg.priceLabelEn || pkg.priceLabel) : pkg.priceLabel }}</span>
+                  <!-- Strike-through Original Price & Savings Pill -->
+                  <div v-if="pkg.rawOriginalPrice" class="flex items-center gap-1.5 mb-1">
+                    <span class="text-xs font-bold text-slate-400 line-through">
+                      {{ getOriginalPrice(pkg).formatted }}
+                    </span>
+                    <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-50 text-rose-600 border border-rose-200 shadow-2xs">
+                      🔥 {{ isEnglish ? `Save ${getSavings(pkg).formatted}` : `Hemat ${getSavings(pkg).formatted}` }}
+                    </span>
+                  </div>
+                  <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">
+                    {{ isEnglish ? (pkg.rawOriginalPrice ? 'SPECIAL PROMO PRICE' : (pkg.priceLabelEn || pkg.priceLabel)) : (pkg.rawOriginalPrice ? 'HARGA PROMO SPESIAL' : pkg.priceLabel) }}
+                  </span>
                   <div class="flex items-baseline gap-1">
-                    <span class="text-xl font-black text-slate-900 tracking-tight">{{ getPackagePrice(pkg).formatted }}</span>
-                    <span v-if="getPackagePrice(pkg).amount > 0" class="text-xs text-slate-500">{{ t('common.perDay') }}</span>
+                    <span class="text-xl sm:text-2xl font-black text-blue-600 tracking-tight">{{ getPackagePrice(pkg).formatted }}</span>
+                    <span v-if="getPackagePrice(pkg).amount > 0" class="text-xs text-slate-500 font-semibold">{{ t('common.perDay') }}</span>
                   </div>
                   <span v-if="getPackagePrice(pkg).isConverted && getPackagePrice(pkg).amount > 0" class="text-[10px] text-slate-400 font-medium block -mt-0.5">
                     ({{ getPackagePrice(pkg).originalFormatted }})
@@ -526,15 +573,27 @@ onBeforeUnmount(() => {
               <tr>
                 <td class="py-3 px-3 sm:px-4 font-medium text-slate-600">{{ isEnglish ? 'Rental Rate (All-In)' : 'Tarif Sewa (All-In)' }}</td>
                 <td class="py-3 px-3 sm:px-4 font-black text-slate-900 bg-slate-50/40">
-                  <span>{{ commuterPrice }} {{ t('common.perDay') }}</span>
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="text-xs text-slate-400 line-through font-normal">{{ commuterOriginalPrice }}</span>
+                    <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">-22%</span>
+                  </div>
+                  <div class="text-blue-600 font-black">
+                    <span>{{ commuterPrice }}</span> <span class="text-xs font-semibold text-slate-500">{{ t('common.perDay') }}</span>
+                  </div>
                   <span v-if="currentCurrency !== 'IDR'" class="block text-[10px] text-slate-400 font-normal mt-0.5">
-                    (Rp 1.400.000)
+                    (Promo Rp 1.400.000, Normal Rp 1.800.000)
                   </span>
                 </td>
                 <td class="py-3 px-3 sm:px-4 font-black text-indigo-700 bg-indigo-50/30">
-                  <span>{{ premioPrice }} {{ t('common.perDay') }}</span>
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="text-xs text-slate-400 line-through font-normal">{{ premioOriginalPrice }}</span>
+                    <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">-25%</span>
+                  </div>
+                  <div class="text-indigo-700 font-black">
+                    <span>{{ premioPrice }}</span> <span class="text-xs font-semibold text-slate-500">{{ t('common.perDay') }}</span>
+                  </div>
                   <span v-if="currentCurrency !== 'IDR'" class="block text-[10px] text-slate-400 font-normal mt-0.5">
-                    (Rp 1.500.000)
+                    (Promo Rp 1.500.000, Normal Rp 2.000.000)
                   </span>
                 </td>
               </tr>

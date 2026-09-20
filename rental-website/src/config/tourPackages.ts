@@ -13,6 +13,11 @@ export interface TourPackage {
   durationEn?: string
   price: string
   rawPrice?: number
+  originalPrice?: string
+  rawOriginalPrice?: number
+  discountPercent?: number
+  discountBadge?: string
+  discountBadgeEn?: string
   priceLabel: string
   priceLabelEn?: string
   vehicle: string
@@ -58,6 +63,11 @@ export const tourPackages: TourPackage[] = [
     durationEn: 'Full Day Tour (8 - 10 Hours)',
     price: 'Rp 1.400.000',
     rawPrice: 1400000,
+    originalPrice: 'Rp 1.800.000',
+    rawOriginalPrice: 1800000,
+    discountPercent: 22,
+    discountBadge: 'Hemat Rp 400.000',
+    discountBadgeEn: 'Save Rp 400,000',
     priceLabel: 'HARGA MULAI',
     priceLabelEn: 'STARTING FROM',
     vehicle: 'Toyota HiAce Commuter (15 Kursi)',
@@ -145,6 +155,11 @@ export const tourPackages: TourPackage[] = [
     durationEn: 'Full Day Tour (8 - 10 Hours)',
     price: 'Rp 1.500.000',
     rawPrice: 1500000,
+    originalPrice: 'Rp 2.000.000',
+    rawOriginalPrice: 2000000,
+    discountPercent: 25,
+    discountBadge: 'Hemat Rp 500.000',
+    discountBadgeEn: 'Save Rp 500,000',
     priceLabel: 'HARGA MULAI',
     priceLabelEn: 'STARTING FROM',
     vehicle: 'Toyota HiAce Premio Luxury (BP 7024 BU)',

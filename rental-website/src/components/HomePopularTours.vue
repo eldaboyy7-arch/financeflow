@@ -16,6 +16,20 @@ function formatTourCardPrice(pkg: any): string {
   return isEnglish.value ? `From ${converted.formatted}` : `Mulai ${converted.formatted}`
 }
 
+function formatOriginalPrice(pkg: any): string {
+  const raw = pkg.rawOriginalPrice || (pkg.slug?.includes('commuter') ? 1800000 : pkg.slug?.includes('premio') ? 2000000 : 0)
+  if (!raw || raw <= 0) return ''
+  return convertPrice(raw).formatted
+}
+
+function formatSavings(pkg: any): string {
+  const orig = pkg.rawOriginalPrice || (pkg.slug?.includes('commuter') ? 1800000 : pkg.slug?.includes('premio') ? 2000000 : 0)
+  const current = pkg.rawPrice || (pkg.slug?.includes('commuter') ? 1400000 : pkg.slug?.includes('premio') ? 1500000 : 0)
+  const diff = Math.max(0, orig - current)
+  if (diff <= 0) return ''
+  return convertPrice(diff).formatted
+}
+
 onMounted(() => {
   fetchTourPackages()
 })
@@ -132,21 +146,34 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
 
             <!-- Top Badge -->
-            <div class="absolute top-3 left-3 z-10">
+            <div class="absolute top-3 left-3 z-10 flex flex-wrap gap-1.5 items-center">
               <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-white/90 text-slate-900 shadow-sm">
                 {{ getTourBadge(pkg) }}
+              </span>
+              <span v-if="pkg.rawOriginalPrice" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-600 text-white shadow-xs animate-pulse">
+                🔥 PROMO -{{ pkg.discountPercent }}%
               </span>
             </div>
 
             <!-- Bottom Content -->
             <div class="absolute bottom-0 inset-x-0 p-4 z-10">
-              <h3 class="font-display text-sm font-bold text-white leading-snug line-clamp-2 mb-1.5">
+              <h3 class="font-display text-sm font-bold text-white leading-snug line-clamp-2 mb-1">
                 {{ isEnglish ? (pkg.titleEn || pkg.title) : pkg.title }}
               </h3>
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[11px] text-slate-300 font-medium leading-tight">
-                  {{ formatTourCardPrice(pkg) }}
-                </span>
+              <div class="flex items-end justify-between gap-2">
+                <div>
+                  <div v-if="pkg.rawOriginalPrice" class="flex items-center gap-1.5 leading-none mb-0.5">
+                    <span class="text-[10px] text-slate-400 line-through">
+                      {{ formatOriginalPrice(pkg) }}
+                    </span>
+                    <span class="text-[9px] font-bold text-rose-300">
+                      {{ isEnglish ? `Save ${formatSavings(pkg)}` : `Hemat ${formatSavings(pkg)}` }}
+                    </span>
+                  </div>
+                  <span class="text-xs text-amber-300 font-black leading-tight block">
+                    {{ formatTourCardPrice(pkg) }}
+                  </span>
+                </div>
                 <span class="text-[11px] font-bold text-amber-400 inline-flex items-center gap-0.5 shrink-0">
                   {{ isEnglish ? 'Details' : 'Detail' }}
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -193,9 +220,12 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
 
           <!-- Top Badge -->
-          <div class="absolute top-3.5 left-3.5 z-10">
+          <div class="absolute top-3.5 left-3.5 z-10 flex items-center gap-2">
             <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-white/90 text-slate-900 shadow-sm backdrop-blur-sm">
               {{ getTourBadge(pkg) }}
+            </span>
+            <span v-if="pkg.rawOriginalPrice" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-600 text-white shadow-md animate-pulse">
+              🔥 PROMO -{{ pkg.discountPercent }}%
             </span>
           </div>
 
@@ -204,10 +234,20 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
             <h3 class="font-display text-lg font-bold text-white leading-snug group-hover:text-amber-300 transition-colors line-clamp-1 mb-1">
               {{ isEnglish ? (pkg.titleEn || pkg.title) : pkg.title }}
             </h3>
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-slate-300 font-medium">
-                {{ formatTourCardPrice(pkg) }}
-              </span>
+            <div class="flex items-end justify-between">
+              <div>
+                <div v-if="pkg.rawOriginalPrice" class="flex items-center gap-1.5 mb-0.5">
+                  <span class="text-[11px] text-slate-400 line-through">
+                    {{ formatOriginalPrice(pkg) }}
+                  </span>
+                  <span class="text-[10px] font-bold text-rose-300 bg-rose-950/60 px-1.5 py-0.5 rounded border border-rose-500/30">
+                    {{ isEnglish ? `Save ${formatSavings(pkg)}` : `Hemat ${formatSavings(pkg)}` }}
+                  </span>
+                </div>
+                <span class="text-sm sm:text-base font-black text-amber-300">
+                  {{ formatTourCardPrice(pkg) }}
+                </span>
+              </div>
               <span class="text-xs font-bold text-amber-400 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                 {{ isEnglish ? 'Details' : 'Detail' }}
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
