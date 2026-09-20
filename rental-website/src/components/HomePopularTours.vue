@@ -38,32 +38,46 @@ onMounted(() => {
   fetchTourPackages()
 })
 
-// Fallback scenic photos – cycled by index so even unknown slugs always get a nice photo
+// Fallback scenic vertical posters (9:16)
 const scenicByIndex = [
-  '/images/destinations/treasure-bay.jpg',
-  '/images/destinations/trikora.jpg',
-  '/images/destinations/patung-seribu.jpg',
+  '/images/tours/poster-hiace-premio.jpg',
+  '/images/tours/poster-hiace-commuter.jpg',
+  '/images/tours/poster-custom-charter.jpg',
 ]
 
-// Explicit slug/id overrides (supports API slug, fallback id, numeric id)
+// Explicit slug/id overrides to vertical 9:16 posters
 const scenicByKey: Record<string, string> = {
-  '1': '/images/destinations/treasure-bay.jpg',
-  '2': '/images/destinations/trikora.jpg',
-  '3': '/images/destinations/patung-seribu.jpg',
-  'tour-hiace-commuter': '/images/destinations/treasure-bay.jpg',
-  'tour-bintan-hiace-commuter': '/images/destinations/treasure-bay.jpg',
-  'hiace-commuter': '/images/destinations/treasure-bay.jpg',
-  'tour-hiace-premio': '/images/destinations/trikora.jpg',
-  'tour-bintan-hiace-premio': '/images/destinations/trikora.jpg',
-  'tour-bintan-hiace-premio-luxury': '/images/destinations/trikora.jpg',
-  'hiace-premio': '/images/destinations/trikora.jpg',
-  'tour-hiace-custom': '/images/destinations/patung-seribu.jpg',
-  'charter-hiace-bintan-custom': '/images/destinations/patung-seribu.jpg',
-  'custom-charter': '/images/destinations/patung-seribu.jpg',
-  'custom-charter-bintan': '/images/destinations/patung-seribu.jpg',
+  '1': '/images/tours/poster-hiace-commuter.jpg',
+  '2': '/images/tours/poster-hiace-premio.jpg',
+  '3': '/images/tours/poster-custom-charter.jpg',
+  'tour-hiace-commuter': '/images/tours/poster-hiace-commuter.jpg',
+  'tour-bintan-hiace-commuter': '/images/tours/poster-hiace-commuter.jpg',
+  'hiace-commuter': '/images/tours/poster-hiace-commuter.jpg',
+  'tour-hiace-premio': '/images/tours/poster-hiace-premio.jpg',
+  'tour-bintan-hiace-premio': '/images/tours/poster-hiace-premio.jpg',
+  'tour-bintan-hiace-premio-luxury': '/images/tours/poster-hiace-premio.jpg',
+  'hiace-premio': '/images/tours/poster-hiace-premio.jpg',
+  'tour-hiace-custom': '/images/tours/poster-custom-charter.jpg',
+  'charter-hiace-bintan-custom': '/images/tours/poster-custom-charter.jpg',
+  'custom-charter': '/images/tours/poster-custom-charter.jpg',
+  'custom-charter-bintan': '/images/tours/poster-custom-charter.jpg',
 }
 
-function getScenicPhoto(pkg: { id: string; slug: string }, idx: number): string {
+function getScenicPhoto(pkg: { id: string; slug: string; title?: string }, idx: number): string {
+  const slug = (pkg.slug || '').toLowerCase()
+  const title = (pkg.title || '').toLowerCase()
+  const idStr = String(pkg.id || '')
+
+  if (slug.includes('premio') || title.includes('premio') || idStr === '2') {
+    return '/images/tours/poster-hiace-premio.jpg'
+  }
+  if (slug.includes('commuter') || title.includes('commuter') || idStr === '1') {
+    return '/images/tours/poster-hiace-commuter.jpg'
+  }
+  if (slug.includes('custom') || title.includes('custom') || idStr === '3') {
+    return '/images/tours/poster-custom-charter.jpg'
+  }
+
   return (
     scenicByKey[pkg.id] ||
     scenicByKey[pkg.slug] ||
@@ -102,19 +116,19 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
 </script>
 
 <template>
-  <section class="py-14 sm:py-20 bg-white border-t border-slate-200/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section id="tour-packages" class="py-12 sm:py-16 bg-white border-t border-slate-200/80 scroll-mt-16 sm:scroll-mt-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Section Header -->
-      <div v-reveal:fade-up class="flex items-end justify-between gap-3 mb-6 sm:mb-10">
+      <div v-reveal:fade-up class="flex items-end justify-between gap-3 mb-6 sm:mb-8">
         <div>
-          <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-1.5 sm:mb-2">
+          <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-amber-500 mb-1 sm:mb-1.5">
             {{ t('tours.sectionBadge') }}
           </p>
-          <h2 class="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
+          <h2 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
             {{ t('tours.title') }}
           </h2>
-          <p class="hidden sm:block text-sm text-slate-500 mt-1 max-w-xl">
+          <p class="hidden sm:block text-xs sm:text-sm text-slate-500 mt-1 max-w-lg">
             {{ t('tours.subtitle') }}
           </p>
         </div>
@@ -133,58 +147,58 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
 
       <!-- MOBILE: Horizontal Scroll Carousel -->
       <div class="sm:hidden -mx-4 px-4">
-        <div class="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory" style="scrollbar-width:none;-ms-overflow-style:none;">
+        <div class="flex gap-3.5 overflow-x-auto pb-3 snap-x snap-mandatory" style="scrollbar-width:none;-ms-overflow-style:none;">
           <RouterLink
             v-for="(pkg, idx) in tourPackages.slice(0, 3)"
             :key="pkg.id || idx"
             v-reveal:fade-up="idx * 80"
             to="/paket-tour-bintan"
-            class="group relative rounded-2xl overflow-hidden bg-slate-900 shadow-md flex-none snap-start block"
-            style="width:72vw;max-width:280px;aspect-ratio:3/4;"
+            class="group relative rounded-2xl overflow-hidden bg-slate-900 shadow-md flex-none snap-start block border border-slate-200/50"
+            style="width:68vw;max-width:245px;aspect-ratio:9/16;"
           >
-            <!-- Scenic Background Photo -->
+            <!-- Vertical Poster Background Photo -->
             <img
               :src="getScenicPhoto(pkg, idx)"
               :alt="pkg.title"
-              class="w-full h-full object-cover opacity-90"
+              class="w-full h-full object-cover opacity-95 group-hover:scale-105 transition-transform duration-500"
               loading="lazy"
             />
 
-            <!-- Gradient Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
+            <!-- Subtle Gradient Overlay (Mainly Bottom for Readability) -->
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/20 to-transparent pointer-events-none"></div>
 
             <!-- Top Badge -->
-            <div class="absolute top-3 left-3 z-10 flex flex-wrap gap-1.5 items-center">
-              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-white/90 text-slate-900 shadow-sm">
+            <div class="absolute top-2.5 left-2.5 z-10 flex flex-wrap gap-1 items-center">
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/95 text-slate-900 shadow-sm backdrop-blur-xs">
                 {{ getTourBadge(pkg) }}
               </span>
-              <span v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-600 text-white shadow-xs animate-pulse">
-                🔥 PROMO -{{ pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22) }}%
+              <span v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-black bg-rose-600 text-white shadow-xs animate-pulse">
+                🔥 -{{ pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22) }}%
               </span>
             </div>
 
             <!-- Bottom Content -->
-            <div class="absolute bottom-0 inset-x-0 p-4 z-10">
-              <h3 class="font-display text-sm font-bold text-white leading-snug line-clamp-2 mb-1">
+            <div class="absolute bottom-0 inset-x-0 p-3 z-10">
+              <h3 class="font-display text-xs sm:text-sm font-bold text-white leading-snug line-clamp-1 mb-1 drop-shadow-sm">
                 {{ isEnglish ? (pkg.titleEn || pkg.title) : pkg.title }}
               </h3>
-              <div class="flex items-end justify-between gap-2">
-                <div>
-                  <div v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="flex items-center gap-1.5 leading-none mb-0.5">
-                    <span class="text-[10px] text-slate-400 line-through">
+              <div class="flex items-end justify-between gap-1.5">
+                <div class="min-w-0">
+                  <div v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="flex items-center gap-1 leading-none mb-0.5">
+                    <span class="text-[9px] text-slate-300 line-through whitespace-nowrap">
                       {{ formatOriginalPrice(pkg) }}
                     </span>
-                    <span class="text-[9px] font-bold text-rose-300">
+                    <span class="text-[8px] font-bold text-rose-300 bg-rose-950/80 px-1 py-0.2 rounded border border-rose-500/40 whitespace-nowrap">
                       {{ isEnglish ? `Save ${formatSavings(pkg)}` : `Hemat ${formatSavings(pkg)}` }}
                     </span>
                   </div>
-                  <span class="text-xs text-amber-300 font-black leading-tight block">
+                  <span class="text-[11px] font-black text-amber-300 leading-tight block whitespace-nowrap">
                     {{ formatTourCardPrice(pkg) }}
                   </span>
                 </div>
-                <span class="text-[11px] font-bold text-amber-400 inline-flex items-center gap-0.5 shrink-0">
+                <span class="text-[10px] font-bold text-amber-300 inline-flex items-center gap-0.5 shrink-0 bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-400/30 backdrop-blur-xs">
                   {{ isEnglish ? 'Details' : 'Detail' }}
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                   </svg>
                 </span>
@@ -207,58 +221,58 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
         </div>
       </div>
 
-      <!-- DESKTOP: 3-Column Grid -->
+      <!-- DESKTOP: Centered 3-Column Grid with Medium Vertical Cards -->
       <div class="hidden sm:grid grid-cols-3 gap-6">
         <RouterLink
           v-for="(pkg, idx) in tourPackages.slice(0, 3)"
           :key="pkg.id || idx"
           v-reveal:fade-up="idx * 120"
           to="/paket-tour-bintan"
-          class="group relative rounded-3xl overflow-hidden aspect-[16/10] bg-slate-900 shadow-md hover:shadow-xl transition-all duration-300 block"
+          class="group relative rounded-2xl sm:rounded-3xl overflow-hidden aspect-[9/16] bg-slate-900 shadow-md hover:shadow-xl transition-all duration-300 block border border-slate-200/60 hover:-translate-y-1.5"
         >
-          <!-- Scenic Background Photo -->
+          <!-- Vertical Poster Background Photo -->
           <img
             :src="getScenicPhoto(pkg, idx)"
             :alt="pkg.title"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-85 group-hover:opacity-95"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-95 group-hover:opacity-100"
             loading="lazy"
           />
 
-          <!-- Gradient Overlay -->
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+          <!-- Subtle Gradient Overlay (Mainly Bottom for Readability) -->
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/20 to-transparent pointer-events-none"></div>
 
           <!-- Top Badge -->
-          <div class="absolute top-3.5 left-3.5 z-10 flex items-center gap-2">
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-white/90 text-slate-900 shadow-sm backdrop-blur-sm">
+          <div class="absolute top-3.5 left-3.5 z-10 flex items-center gap-1.5">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white/95 text-slate-900 shadow-sm backdrop-blur-xs">
               {{ getTourBadge(pkg) }}
             </span>
-            <span v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-600 text-white shadow-md animate-pulse">
-              🔥 PROMO -{{ pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22) }}%
+            <span v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-600 text-white shadow-md animate-pulse">
+              🔥 -{{ pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22) }}%
             </span>
           </div>
 
           <!-- Bottom Content (Title & Price Tag) -->
-          <div class="absolute bottom-0 inset-x-0 p-5 z-10">
-            <h3 class="font-display text-lg font-bold text-white leading-snug group-hover:text-amber-300 transition-colors line-clamp-1 mb-1">
+          <div class="absolute bottom-0 inset-x-0 p-4 sm:p-4.5 z-10">
+            <h3 class="font-display text-sm sm:text-base font-bold text-white leading-snug group-hover:text-amber-300 transition-colors line-clamp-1 mb-1.5 drop-shadow-sm">
               {{ isEnglish ? (pkg.titleEn || pkg.title) : pkg.title }}
             </h3>
-            <div class="flex items-end justify-between">
-              <div>
+            <div class="flex items-end justify-between gap-2">
+              <div class="min-w-0">
                 <div v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="flex items-center gap-1.5 mb-0.5">
-                  <span class="text-[11px] text-slate-400 line-through">
+                  <span class="text-[10px] sm:text-[11px] text-slate-300 line-through whitespace-nowrap">
                     {{ formatOriginalPrice(pkg) }}
                   </span>
-                  <span class="text-[10px] font-bold text-rose-300 bg-rose-950/60 px-1.5 py-0.5 rounded border border-rose-500/30">
+                  <span class="text-[9px] sm:text-[10px] font-bold text-rose-300 bg-rose-950/80 px-1.5 py-0.5 rounded border border-rose-500/40 whitespace-nowrap">
                     {{ isEnglish ? `Save ${formatSavings(pkg)}` : `Hemat ${formatSavings(pkg)}` }}
                   </span>
                 </div>
-                <span class="text-sm sm:text-base font-black text-amber-300">
+                <span class="text-xs sm:text-sm lg:text-base font-black text-amber-300 whitespace-nowrap">
                   {{ formatTourCardPrice(pkg) }}
                 </span>
               </div>
-              <span class="text-xs font-bold text-amber-400 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              <span class="text-xs font-bold text-amber-300 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform shrink-0 bg-amber-400/10 px-2.5 py-1 rounded-lg border border-amber-400/30 backdrop-blur-xs">
                 {{ isEnglish ? 'Details' : 'Detail' }}
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                 </svg>
               </span>
