@@ -38,6 +38,20 @@ const premioOriginalPrice = computed(() => {
 const commuterCapacity = computed(() => isEnglish.value ? '15 Passenger Seats' : (commuterPkg.value?.capacity || '15 Kursi Penumpang'))
 const premioCapacity = computed(() => isEnglish.value ? '11 - 14 Passenger Seats' : (premioPkg.value?.capacity || '11 - 14 Kursi Penumpang'))
 
+const commuterDiscountPercent = computed(() => {
+  if (commuterPkg.value?.discountPercent) return commuterPkg.value.discountPercent
+  const raw = commuterPkg.value?.rawPrice || 1400000
+  const orig = commuterPkg.value?.rawOriginalPrice || 1800000
+  return orig > raw ? Math.round(((orig - raw) / orig) * 100) : 22
+})
+
+const premioDiscountPercent = computed(() => {
+  if (premioPkg.value?.discountPercent) return premioPkg.value.discountPercent
+  const raw = premioPkg.value?.rawPrice || 1500000
+  const orig = premioPkg.value?.rawOriginalPrice || 2000000
+  return orig > raw ? Math.round(((orig - raw) / orig) * 100) : 25
+})
+
 const getPackagePrice = (pkg: TourPackage) => {
   const raw = pkg.rawPrice || (pkg.slug?.includes('commuter') ? 1400000 : pkg.slug?.includes('premio') ? 1500000 : 0)
   return convertPrice(raw)
@@ -579,25 +593,25 @@ onBeforeUnmount(() => {
                 <td class="py-3 px-3 sm:px-4 font-black text-slate-900 bg-slate-50/40">
                   <div class="flex items-center gap-1.5 flex-wrap">
                     <span class="text-xs text-slate-400 line-through font-normal">{{ commuterOriginalPrice }}</span>
-                    <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">-22%</span>
+                    <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">-{{ commuterDiscountPercent }}%</span>
                   </div>
                   <div class="text-blue-600 font-black">
                     <span>{{ commuterPrice }}</span> <span class="text-xs font-semibold text-slate-500">{{ t('common.perDay') }}</span>
                   </div>
                   <span v-if="currentCurrency !== 'IDR'" class="block text-[10px] text-slate-400 font-normal mt-0.5">
-                    (Promo Rp 1.400.000, Normal Rp 1.800.000)
+                    (Promo Rp {{ (commuterPkg?.rawPrice || 1400000).toLocaleString('id-ID') }}, Normal Rp {{ (commuterPkg?.rawOriginalPrice || 1800000).toLocaleString('id-ID') }})
                   </span>
                 </td>
                 <td class="py-3 px-3 sm:px-4 font-black text-indigo-700 bg-indigo-50/30">
                   <div class="flex items-center gap-1.5 flex-wrap">
                     <span class="text-xs text-slate-400 line-through font-normal">{{ premioOriginalPrice }}</span>
-                    <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">-25%</span>
+                    <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">-{{ premioDiscountPercent }}%</span>
                   </div>
                   <div class="text-indigo-700 font-black">
                     <span>{{ premioPrice }}</span> <span class="text-xs font-semibold text-slate-500">{{ t('common.perDay') }}</span>
                   </div>
                   <span v-if="currentCurrency !== 'IDR'" class="block text-[10px] text-slate-400 font-normal mt-0.5">
-                    (Promo Rp 1.500.000, Normal Rp 2.000.000)
+                    (Promo Rp {{ (premioPkg?.rawPrice || 1500000).toLocaleString('id-ID') }}, Normal Rp {{ (premioPkg?.rawOriginalPrice || 2000000).toLocaleString('id-ID') }})
                   </span>
                 </td>
               </tr>
