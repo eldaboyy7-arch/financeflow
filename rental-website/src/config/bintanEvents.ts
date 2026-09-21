@@ -25,7 +25,87 @@ export interface BintanEvent {
   highlightBadgeEn?: string
 }
 
+// ─── Event Category Tags ────────────────────────────────────────────────────
+// 'budaya' = Tradisi & Budaya Daerah Khas Bintan
+// 'sport'  = Sport Tourism & Kejuaraan Internasional
+// ─────────────────────────────────────────────────────────────────────────────
+
 export const bintanEventsData: BintanEvent[] = [
+  // ── 🎏 TRADISI & BUDAYA DAERAH ────────────────────────────────────────────
+  {
+    id: 'festival-jong-bintan',
+    title: 'Festival Jong Bintan (Bintan Jong Race Festival)',
+    titleEn: 'Festival Jong Bintan (Bintan Jong Race Festival)',
+    category: 'Tradisi Bahari Khas Melayu · KEN',
+    categoryEn: 'Malay Maritime Tradition · KEN',
+    startDate: '2026-10-10',
+    endDate: '2026-10-12',
+    dateDisplay: '10 - 12 Oktober 2026',
+    dateDisplayEn: '10 - 12 October 2026',
+    location: 'Lagoi Bay / Pantai Trikora / Sebong Pereh, Bintan',
+    locationEn: 'Lagoi Bay / Trikora Beach / Sebong Pereh, Bintan',
+    venue: 'Pesisir Pantai Lagoi Bay & Sebong Pereh',
+    description: 'Perlombaan miniatur perahu layar tradisional tanpa awak khas Melayu pesisir yang meluncur di laut memanfaatkan angin. Diikuti ratusan peserta dari Kepri hingga Malaysia/Singapura, diramaikan klinik pembuatan jong dan permainan rakyat (gasing & egrang). Masuk Karisma Event Nasional (KEN).',
+    descriptionEn: 'Traditional unmanned miniature sailboat racing unique to Malay coastal culture, powered by sea winds. Hundreds of participants from Kepri, Malaysia & Singapore compete alongside traditional craft workshops and folk games (spinning tops & stilts). Listed in Indonesia\'s National Charisma Events (KEN).',
+    recommendedFleet: 'Toyota Avanza / Veloz / Innova (Rombongan Keluarga & Wisatawan)',
+    recommendedFleetEn: 'Toyota Avanza / Veloz / Innova (Family Groups & Visitors)',
+    image: '/images/events/festival-jong-bintan.jpg',
+    sourceCredit: 'Disparbud Kepri / Pemprov Kepri',
+    officialLink: 'https://indonesia.travel',
+    tags: ['Jong', 'Tradisi Melayu', 'KEN', 'Perahu Layar', 'Budaya Pesisir'],
+    highlightBadge: 'Tradisi Melayu · KEN',
+    highlightBadgeEn: 'Malay Tradition · KEN'
+  },
+  {
+    id: 'hari-jadi-bintan',
+    title: 'Hari Jadi Kab. Bintan & Pawai Budaya Adat',
+    titleEn: 'Bintan Regency Anniversary & Cultural Parade',
+    category: 'Pesta Rakyat & Pawai Budaya Adat',
+    categoryEn: 'Cultural Parade & Public Celebration',
+    startDate: '2026-12-01',
+    endDate: '2026-12-01',
+    dateDisplay: '1 Desember 2026',
+    dateDisplayEn: '1 December 2026',
+    location: 'Bandar Seri Bentan / Kijang / Tanjung Uban, Bintan',
+    locationEn: 'Bandar Seri Bentan / Kijang / Tanjung Uban, Bintan',
+    venue: 'Lapangan Utama Bandar Seri Bentan & Kijang',
+    description: 'Pawai kebudayaan akbar dengan busana adat Melayu lengkap, atraksi silat pesisir, parade tarian tradisional, pasar rakyat, pameran UMKM Bintan Expo, dan pesta rakyat tahunan yang meriah.',
+    descriptionEn: 'A grand cultural parade featuring full traditional Malay attire, coastal silat martial arts displays, traditional dance processions, local market, UMKM Bintan Expo exhibition, and vibrant public festivities.',
+    recommendedFleet: 'Toyota Avanza / Innova Reborn / HiAce (Rombongan Pawai & Keluarga)',
+    recommendedFleetEn: 'Toyota Avanza / Innova Reborn / HiAce (Parade Groups & Families)',
+    image: '/images/events/hari-jadi-bintan.webp',
+    sourceCredit: 'Pemkab Bintan / Bintan Resorts',
+    officialLink: 'https://bintankab.go.id',
+    tags: ['Hari Jadi Bintan', 'Pawai Budaya', 'Adat Melayu', 'Silat', 'UMKM'],
+    highlightBadge: 'Pesta Rakyat Bintan',
+    highlightBadgeEn: 'Bintan Cultural Fest'
+  },
+  {
+    id: 'festival-lampu-colok',
+    title: 'Festival Lampu Colok – Malam Tujuh Likur',
+    titleEn: 'Festival Lampu Colok – Malam Tujuh Likur',
+    category: 'Tradisi Budaya Religi Melayu',
+    categoryEn: 'Malay Religious Cultural Tradition',
+    startDate: '2027-03-24',
+    endDate: '2027-03-24',
+    dateDisplay: 'Malam ke-27 Ramadan 2027',
+    dateDisplayEn: 'Night of 27 Ramadan 2027',
+    location: 'Kijang, Bintan Timur & Seri Kuala Lobam, Bintan',
+    locationEn: 'Kijang, East Bintan & Seri Kuala Lobam, Bintan',
+    venue: 'Seluruh Desa & Kecamatan di Bintan',
+    description: 'Tradisi ratusan tahun menyambut Lailatul Qadar. Ribuan pelita minyak tanah disusun masyarakat secara gotong royong membentuk gerbang gapura dan replika kubah masjid megah yang menyala berkilau di malam hari.',
+    descriptionEn: 'A centuries-old tradition welcoming Lailatul Qadar night. Thousands of oil lamps are arranged communally to form illuminated arches and mosque dome replicas that glow majestically throughout the night.',
+    recommendedFleet: 'Toyota Avanza / Innova (Sewa Malam & Kunjungan Antarkelurahan)',
+    recommendedFleetEn: 'Toyota Avanza / Innova (Evening Rental & Village Hopping)',
+    image: '/images/events/festival-lampu-colok.jpg',
+    sourceCredit: 'Disparbud Kepri / Media Kepri',
+    officialLink: 'https://indonesia.travel',
+    tags: ['Lampu Colok', 'Ramadan', 'Tradisi Melayu', 'Lailatul Qadar', 'Religi'],
+    highlightBadge: 'Tradisi Ramadan Melayu',
+    highlightBadgeEn: 'Malay Ramadan Tradition'
+  },
+
+  // ── 🏆 SPORT TOURISM & KEJUARAAN INTERNASIONAL ───────────────────────────
   {
     id: 'dragon-boat-tanjungpinang',
     title: 'Tanjungpinang International Dragon Boat Race',
@@ -149,25 +229,46 @@ export function getActiveUpcomingEvents(limit: number = 4): BintanEvent[] {
   const now = new Date()
   const todayStr = now.toISOString().split('T')[0]
 
-  // Filter events that have not ended yet
-  let active = bintanEventsData.filter(e => e.endDate >= todayStr)
+  // Tags that classify as sport tourism vs budaya (tradisi daerah)
+  const SPORT_IDS = ['dragon-boat-tanjungpinang', 'mandiri-bintan-marathon', 'bintan-triathlon', 'tour-de-bintan']
+  const BUDAYA_IDS = ['festival-jong-bintan', 'hari-jadi-bintan', 'festival-lampu-colok', 'festival-desa-pengudang', 'festival-durian-masiran', 'pek-cun-sembahyang-laut']
 
-  // Fallback: If all events have passed, roll forward the schedule so the section never looks broken or empty
-  if (active.length === 0) {
-    active = bintanEventsData
-  }
+  const isSport  = (e: BintanEvent) => SPORT_IDS.includes(e.id)
+  const isBudaya = (e: BintanEvent) => BUDAYA_IDS.includes(e.id)
 
-  // Sort: live events first, then closest upcoming date
-  return active
-    .slice()
-    .sort((a, b) => {
+  // Sort helper: live first, then nearest upcoming date
+  const sortByNearest = (list: BintanEvent[]) =>
+    list.slice().sort((a, b) => {
       const aLive = getEventStatus(a, now) === 'live'
       const bLive = getEventStatus(b, now) === 'live'
       if (aLive && !bLive) return -1
       if (!aLive && bLive) return 1
       return a.startDate.localeCompare(b.startDate)
     })
-    .slice(0, limit)
+
+  // Filter active (not yet ended) events per category
+  let activeBudaya = bintanEventsData.filter(e => isBudaya(e) && e.endDate >= todayStr)
+  let activeSport  = bintanEventsData.filter(e => isSport(e)  && e.endDate >= todayStr)
+
+  // Fallback: if all events of a category have passed, use full list of that category
+  if (activeBudaya.length === 0) activeBudaya = bintanEventsData.filter(isBudaya)
+  if (activeSport.length  === 0) activeSport  = bintanEventsData.filter(isSport)
+
+  // Build balanced 2+2 mix (for limit=4)
+  if (limit === 4) {
+    const topBudaya = sortByNearest(activeBudaya).slice(0, 2)
+    const topSport  = sortByNearest(activeSport).slice(0, 2)
+
+    // Merge and sort combined list by date (live first, then nearest)
+    return sortByNearest([...topBudaya, ...topSport])
+  }
+
+  // Generic path for other limit values: merge all active, sort, slice
+  const allActive = [
+    ...bintanEventsData.filter(e => e.endDate >= todayStr),
+  ]
+  if (allActive.length === 0) return sortByNearest(bintanEventsData).slice(0, limit)
+  return sortByNearest(allActive).slice(0, limit)
 }
 
 export function generateEventWhatsAppUrl(
