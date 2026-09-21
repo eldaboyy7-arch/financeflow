@@ -104,6 +104,18 @@ export const en = {
     specsTitle: 'Vehicle Specifications',
     rentalTermsShort: 'Free pickup/drop-off at Lagoi Ferry Terminal (BBT) & Sri Bintan Pura with prior confirmation.'
   },
+  events: {
+    sectionBadge: 'UPCOMING AGENDA & EVENTS',
+    title: 'Upcoming Events in Bintan',
+    subtitle: 'International sporting events & cultural festivals in Bintan Island. Book your transport & private charter early for peace of mind.',
+    viewAll: 'All Events',
+    daysLeft: 'days left',
+    today: 'Today!',
+    liveNow: 'Live Now',
+    recommendedFleet: 'Recommended Fleet:',
+    bookTransport: 'Book Car for This Event',
+    sourcePhoto: 'Photo'
+  },
   tours: {
     sectionBadge: 'BESTSELLER PACKAGES',
     title: 'Popular Bintan Tour Packages',

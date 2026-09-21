@@ -6,6 +6,7 @@ import type { BookingFilterParams } from '@/utils/whatsapp'
 import HeroSection from '@/components/HeroSection.vue'
 import TrustPillarsBar from '@/components/TrustPillarsBar.vue'
 import HomeFeaturedFleet from '@/components/HomeFeaturedFleet.vue'
+import HomeUpcomingEvents from '@/components/HomeUpcomingEvents.vue'
 import HomePopularTours from '@/components/HomePopularTours.vue'
 import TripInspirations from '@/components/TripInspirations.vue'
 import LocationSection from '@/components/LocationSection.vue'
@@ -116,7 +117,10 @@ watch(isEnglish, () => {
       @reset-filter="handleResetFilter"
     />
 
-    <!-- 4. Paket Tour Populer (3 Scenic Highlight Cards) -->
+    <!-- 4. Agenda & Kalender Event Bintan Mendatang (Official Sports & Cultural Events) -->
+    <HomeUpcomingEvents />
+
+    <!-- 5. Paket Tour Populer (3 Scenic Highlight Cards) -->
     <HomePopularTours />
 
     <!-- 5. Destinasi Favorit di Bintan (Inspirasi Perjalanan) -->

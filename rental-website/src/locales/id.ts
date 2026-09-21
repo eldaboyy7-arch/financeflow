@@ -106,6 +106,18 @@ export const id: LocaleSchema = {
     specsTitle: 'Spesifikasi Kendaraan',
     rentalTermsShort: 'Antar-jemput gratis di Pelabuhan Ferry Lagoi (BBT) & Sri Bintan Pura dengan konfirmasi awal.'
   },
+  events: {
+    sectionBadge: 'AGENDA & KALENDER WISATA',
+    title: 'Event Mendatang di Bintan',
+    subtitle: 'Jadwal ajang olahraga internasional & festival budaya di Pulau Bintan. Pesan transportasi & armada lebih awal untuk kenyamanan Anda.',
+    viewAll: 'Semua Event',
+    daysLeft: 'hari lagi',
+    today: 'Hari ini!',
+    liveNow: 'Sedang Berlangsung',
+    recommendedFleet: 'Rekomendasi Armada:',
+    bookTransport: 'Sewa Mobil untuk Event Ini',
+    sourcePhoto: 'Foto'
+  },
   tours: {
     sectionBadge: 'PAKET WISATA FAVORIT',
     title: 'Paket Tour Bintan Populer',
