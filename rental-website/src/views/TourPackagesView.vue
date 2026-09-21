@@ -210,13 +210,172 @@ const getTourWhatsAppUrl = (pkg: TourPackage) => {
 const updatePageTitle = () => {
   document.title = isEnglish.value
     ? 'Bintan HiAce Tour Packages (Commuter & Premio) - Driver & Fuel Included | 3 Putri Mulya'
-    : 'Paket Tour Bintan HiAce (Commuter & Premio) - Include Supir & BBM | 3 Putri Mulya'
+    : 'Paket Tour Bintan HiAce - Mulai Rp 1.400.000 All-In (Supir & BBM) | 3 Putri Mulya'
+}
+
+// ── Google Structured Data JSON-LD ───────────────────────────────────────────
+const TOUR_SCHEMA_ID = 'jsonld-tour-packages'
+const SITE_URL = 'https://www.3putrimulya.com'
+
+function injectTourPageSchema() {
+  const existing = document.getElementById(TOUR_SCHEMA_ID)
+  if (existing) existing.remove()
+
+  const schemas = [
+    // 1. BreadcrumbList — tampilkan breadcrumb di SERP Google
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Beranda',
+          item: SITE_URL
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Paket Tour Bintan',
+          item: `${SITE_URL}/paket-tour-bintan`
+        }
+      ]
+    },
+    // 2. TouristTrip — HiAce Commuter
+    {
+      '@context': 'https://schema.org',
+      '@type': 'TouristTrip',
+      name: 'Paket Tour Bintan Seharian – Toyota HiAce Commuter (15 Kursi)',
+      description: 'Paket wisata keliling Pulau Bintan seharian menggunakan Toyota HiAce Commuter berkapasitas 15 penumpang. Sudah termasuk supir profesional, BBM, dan fasilitas Karaoke On-Board. Rute meliputi Lagoi Bay, Pantai Trikora, Danau Biru, dan Gurun Pasir Bintan.',
+      touristType: ['Keluarga', 'Grup', 'Rombongan Kantor', 'Wisatawan'],
+      itinerary: {
+        '@type': 'ItemList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Lagoi Bay & Pantai Pasir Putih' },
+          { '@type': 'ListItem', position: 2, name: 'Pantai Trikora & Peninggalan Jepang' },
+          { '@type': 'ListItem', position: 3, name: 'Danau Biru Kapur Bintan' },
+          { '@type': 'ListItem', position: 4, name: 'Gurun Pasir Busung Bintan' },
+          { '@type': 'ListItem', position: 5, name: 'Vihara 500 Lohan Tanjungpinang' }
+        ]
+      },
+      offers: {
+        '@type': 'Offer',
+        name: 'Paket Tour Bintan HiAce Commuter Seharian',
+        price: '1400000',
+        priceCurrency: 'IDR',
+        availability: 'https://schema.org/InStock',
+        url: `${SITE_URL}/paket-tour-bintan`,
+        seller: {
+          '@type': 'LocalBusiness',
+          name: '3 Putri Mulya',
+          telephone: `+${import.meta.env.VITE_RENTAL_PHONE || '6281372371120'}`,
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Bintan',
+            addressRegion: 'Kepulauan Riau',
+            addressCountry: 'ID'
+          }
+        }
+      }
+    },
+    // 3. TouristTrip — HiAce Premio Luxury
+    {
+      '@context': 'https://schema.org',
+      '@type': 'TouristTrip',
+      name: 'Paket Tour Bintan Seharian – Toyota HiAce Premio Luxury VIP (11-14 Kursi)',
+      description: 'Paket wisata premium keliling Pulau Bintan seharian menggunakan Toyota HiAce Premio Luxury VIP berkapasitas 11-14 penumpang dengan kursi captain seat mewah. Sudah termasuk supir profesional, BBM, dan fasilitas Karaoke On-Board.',
+      touristType: ['Keluarga VIP', 'Grup Premium', 'Wisatawan Internasional'],
+      offers: {
+        '@type': 'Offer',
+        name: 'Paket Tour Bintan HiAce Premio Luxury Seharian',
+        price: '1500000',
+        priceCurrency: 'IDR',
+        availability: 'https://schema.org/InStock',
+        url: `${SITE_URL}/paket-tour-bintan`,
+        seller: {
+          '@type': 'LocalBusiness',
+          name: '3 Putri Mulya',
+          telephone: `+${import.meta.env.VITE_RENTAL_PHONE || '6281372371120'}`
+        }
+      }
+    },
+    // 4. FAQPage — tampil sebagai rich snippet FAQ langsung di SERP Google
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Berapa harga paket tour Bintan seharian?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Harga paket tour Bintan seharian mulai dari Rp 1.400.000 untuk Toyota HiAce Commuter (15 kursi) dan Rp 1.500.000 untuk HiAce Premio Luxury VIP (11-14 kursi). Harga sudah All-In termasuk supir profesional dan BBM.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Apa saja yang sudah termasuk dalam paket tour Bintan?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Paket tour Bintan 3 Putri Mulya sudah termasuk: unit Toyota HiAce (Commuter atau Premio), supir profesional berpengalaman, BBM/bahan bakar penuh, dan fasilitas Karaoke On-Board (Smart TV + Mic Wireless). Tidak termasuk: tiket masuk destinasi, makan, dan penginapan.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Berapa kapasitas penumpang HiAce Commuter vs Premio?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Toyota HiAce Commuter berkapasitas 15 kursi penumpang standar. Toyota HiAce Premio Luxury VIP berkapasitas 11-14 kursi dengan captain seat mewah dan konfigurasi lebih lapang.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Rute mana saja yang bisa dikunjungi dalam paket tour Bintan?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Rute populer paket tour Bintan mencakup: Lagoi Bay & Pantai Pasir Putih, Pantai Trikora, Danau Biru Kapur Bintan, Gurun Pasir Busung, Vihara 500 Lohan, Peninggalan Jepang, Pasar Bintan Center, hingga pelabuhan feri Tanjung Uban. Rute bisa dikustom sesuai permintaan.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Bagaimana cara memesan paket tour Bintan?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Pemesanan dilakukan langsung via WhatsApp ke nomor 3 Putri Mulya. Klik tombol "Pesan via WhatsApp" di halaman paket, isi tanggal dan jumlah penumpang, dan tim kami akan konfirmasi ketersediaan dalam waktu singkat.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Apakah bisa sewa untuk grup lebih dari 15 orang?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Ya, bisa. Untuk rombongan lebih dari 15 orang, kami menyediakan kombinasi armada HiAce (Commuter + Premio) atau beberapa unit sekaligus. Hubungi kami via WhatsApp untuk penawaran harga khusus grup besar.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'Berapa lama durasi paket tour Bintan seharian?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Durasi paket tour Bintan seharian umumnya 8-10 jam, mulai dari pukul 08.00 hingga sekitar 17.00-18.00 WIB. Titik jemput dan antar bisa disesuaikan (hotel, pelabuhan feri, atau lokasi lain di Bintan & Tanjungpinang).'
+          }
+        }
+      ]
+    }
+  ]
+
+  const script = document.createElement('script')
+  script.id = TOUR_SCHEMA_ID
+  script.type = 'application/ld+json'
+  script.textContent = JSON.stringify(schemas)
+  document.head.appendChild(script)
 }
 
 onMounted(() => {
   updatePageTitle()
   window.scrollTo({ top: 0, behavior: 'smooth' })
   fetchTourPackages()
+  injectTourPageSchema()
   if (typeof window !== 'undefined') {
     window.addEventListener('keydown', handleKeydown)
   }
@@ -231,6 +390,8 @@ onBeforeUnmount(() => {
     window.removeEventListener('keydown', handleKeydown)
     document.body.classList.remove('overflow-hidden')
   }
+  const el = document.getElementById(TOUR_SCHEMA_ID)
+  if (el) el.remove()
 })
 </script>
 
@@ -724,6 +885,95 @@ onBeforeUnmount(() => {
           </RouterLink>
         </div>
       </div>
+
+      <!-- ── SEO: Rute Populer Paket Tour Bintan ───────────────────────────── -->
+      <section class="mt-12 sm:mt-16 pb-2">
+        <div class="max-w-3xl">
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 mb-3">
+            {{ isEnglish ? 'Popular Tour Routes in Bintan Island' : 'Rute Wisata Populer di Pulau Bintan' }}
+          </h2>
+          <p class="text-sm text-slate-600 leading-relaxed mb-4">
+            {{ isEnglish
+              ? 'Our Bintan tour packages cover the most iconic destinations across the island. Every route is customizable based on your group\'s preferences and time.'
+              : 'Paket tour Bintan kami mencakup destinasi-destinasi paling ikonik di seluruh penjuru pulau. Setiap rute bisa dikostum sesuai preferensi dan durasi perjalanan rombongan Anda.'
+            }}
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div
+              v-for="dest in (isEnglish ? [
+                { name: 'Lagoi Bay &amp; Pristine White Sandy Beach', desc: 'Bintan resort area, home to 5-star international resorts and pristine white sand beaches.' },
+                { name: 'Trikora Beach &amp; Japanese War Remnants', desc: 'The longest and most beautiful beach on Bintan\'s east coast, with historical World War II artifacts.' },
+                { name: 'Bintan Blue Lake (Danau Biru)', desc: 'A stunning turquoise lake formed from a former limestone quarry, now a hidden gem of Bintan.' },
+                { name: 'Bintan Sand Dunes (Busung Desert)', desc: 'A unique mini desert landscape in the tropics, ideal for off-road adventures and photography.' },
+                { name: 'Vihara 500 Lohan Temple, Tanjungpinang', desc: 'An ornate Chinese Buddhist temple featuring 500 unique Lohan statues, a cultural landmark of Tanjungpinang.' },
+                { name: 'Tanjung Uban Ferry Port', desc: 'The main gateway for passengers arriving from Singapore, Batam, and Johor Bahru.' }
+              ] : [
+                { name: 'Lagoi Bay &amp; Pantai Pasir Putih', desc: 'Kawasan resort internasional Bintan, rumah bagi resor bintang 5 dan pantai berpasir putih bersih.' },
+                { name: 'Pantai Trikora &amp; Peninggalan Jepang', desc: 'Pantai terpanjang dan terindah di pesisir timur Bintan, dilengkapi artefak sejarah Perang Dunia II.' },
+                { name: 'Danau Biru Kapur Bintan', desc: 'Danau berwarna pirus memukau yang terbentuk dari bekas tambang kapur, kini menjadi permata tersembunyi Bintan.' },
+                { name: 'Gurun Pasir Busung Bintan', desc: 'Lanskap gurun mini unik di tengah iklim tropis, ideal untuk petualangan off-road dan fotografi.' },
+                { name: 'Vihara 500 Lohan, Tanjungpinang', desc: 'Vihara Tionghoa megah dengan 500 patung Lohan unik, ikon budaya kota Tanjungpinang.' },
+                { name: 'Pelabuhan Feri Tanjung Uban', desc: 'Pintu masuk utama penumpang dari Singapura, Batam, dan Johor Bahru menuju Bintan.' }
+              ])"
+              :key="dest.name"
+              class="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs"
+            >
+              <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-900 leading-tight">{{ dest.name }}</p>
+                <p class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">{{ dest.desc }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SEO: FAQ Section ──────────────────────────────────────────────── -->
+      <section class="mt-10 sm:mt-14 pb-12 sm:pb-16">
+        <div class="max-w-3xl">
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 mb-6">
+            {{ isEnglish ? 'Frequently Asked Questions' : 'Pertanyaan yang Sering Ditanyakan' }}
+          </h2>
+          <div class="space-y-3">
+            <details
+              v-for="(faq, i) in (isEnglish ? [
+                { q: 'How much does a full-day Bintan tour package cost?', a: 'A full-day Bintan tour package starts from Rp 1,400,000 for Toyota HiAce Commuter (15 seats) and Rp 1,500,000 for HiAce Premio Luxury VIP (11–14 seats). All-In pricing includes professional driver and fuel.' },
+                { q: 'What is included in the Bintan tour package?', a: 'The package includes: Toyota HiAce vehicle (Commuter or Premio), professional driver, full fuel, and On-Board Karaoke System (Smart TV + Wireless Mics). Excludes: entrance tickets, meals, and accommodation.' },
+                { q: 'What is the passenger capacity of HiAce Commuter vs Premio?', a: 'Toyota HiAce Commuter seats 15 passengers (standard). HiAce Premio Luxury VIP seats 11–14 with captain seat configuration and more spacious cabin.' },
+                { q: 'Which destinations are covered in the Bintan tour package?', a: 'Popular routes include: Lagoi Bay, Trikora Beach, Danau Biru (Blue Lake), Busung Sand Dunes, Vihara 500 Lohan, Japanese War Remnants, Tanjung Uban Ferry Port. Routes are fully customizable.' },
+                { q: 'How do I book a Bintan tour package?', a: 'Simply click the Book via WhatsApp button on this page, provide your preferred date and number of passengers, and our team will confirm availability promptly.' },
+                { q: 'Can we book for groups larger than 15 people?', a: 'Yes! For groups exceeding 15 passengers, we offer a combination of multiple HiAce units (Commuter + Premio). Contact us via WhatsApp for a special group rate quote.' },
+                { q: 'How long is a full-day Bintan tour?', a: 'A full-day tour runs approximately 8–10 hours, typically 08:00–17:00/18:00 WIB. Pick-up and drop-off points are flexible — hotel, ferry port, or any location in Bintan and Tanjungpinang.' }
+              ] : [
+                { q: 'Berapa harga paket tour Bintan seharian?', a: 'Harga paket tour Bintan seharian mulai dari Rp 1.400.000 untuk Toyota HiAce Commuter (15 kursi) dan Rp 1.500.000 untuk HiAce Premio Luxury VIP (11–14 kursi). Harga sudah All-In termasuk supir profesional dan BBM.' },
+                { q: 'Apa saja yang sudah termasuk dalam paket tour Bintan?', a: 'Sudah termasuk: unit Toyota HiAce (Commuter atau Premio), supir profesional berpengalaman, BBM penuh, dan Karaoke On-Board (Smart TV + Mic Wireless). Tidak termasuk: tiket masuk destinasi, makan, dan penginapan.' },
+                { q: 'Berapa kapasitas penumpang HiAce Commuter vs Premio?', a: 'Toyota HiAce Commuter berkapasitas 15 kursi penumpang standar. Toyota HiAce Premio Luxury VIP berkapasitas 11–14 kursi dengan captain seat mewah dan kabin yang lebih lapang.' },
+                { q: 'Rute mana saja yang bisa dikunjungi dalam paket tour Bintan?', a: 'Rute populer mencakup: Lagoi Bay, Pantai Trikora, Danau Biru, Gurun Pasir Busung, Vihara 500 Lohan, Peninggalan Jepang, dan Pelabuhan Feri Tanjung Uban. Rute bisa dikustom sesuai permintaan.' },
+                { q: 'Bagaimana cara memesan paket tour Bintan?', a: 'Klik tombol Pesan via WhatsApp di halaman ini, isi tanggal dan jumlah penumpang, dan tim kami akan konfirmasi ketersediaan dalam waktu singkat.' },
+                { q: 'Apakah bisa sewa untuk grup lebih dari 15 orang?', a: 'Ya, bisa! Untuk rombongan lebih dari 15 orang, kami menyediakan kombinasi armada HiAce (Commuter + Premio) atau beberapa unit sekaligus. Hubungi kami via WhatsApp untuk penawaran harga khusus grup besar.' },
+                { q: 'Berapa lama durasi paket tour Bintan seharian?', a: 'Durasi umumnya 8–10 jam, mulai pukul 08.00 hingga sekitar 17.00–18.00 WIB. Titik jemput dan antar fleksibel — hotel, pelabuhan feri, atau lokasi lain di Bintan dan Tanjungpinang.' }
+              ])"
+              :key="i"
+              class="group rounded-xl border border-slate-200 bg-white overflow-hidden shadow-xs"
+            >
+              <summary class="flex items-center justify-between gap-3 px-4 py-3.5 cursor-pointer list-none select-none hover:bg-slate-50 transition-colors">
+                <span class="text-sm font-bold text-slate-900">{{ faq.q }}</span>
+                <svg class="w-4 h-4 text-slate-400 shrink-0 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </summary>
+              <div class="px-4 pb-4 pt-1 text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                {{ faq.a }}
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
 
     </div>
 

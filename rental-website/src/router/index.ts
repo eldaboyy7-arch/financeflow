@@ -26,8 +26,8 @@ const router = createRouter({
       name: 'tour-packages',
       component: () => import('@/views/TourPackagesView.vue'),
       meta: {
-        title: 'Paket Tour Wisata Bintan & Sewa HiAce - 3 Putri Mulya',
-        description: 'Paket tour wisata Bintan seharian dengan Toyota HiAce Luxury. Rute Lagoi Bay, Trikora Beach, Danau Biru, dan Gurun Pasir Bintan.'
+        title: 'Paket Tour Bintan HiAce - Mulai Rp 1.400.000 All-In (Supir & BBM) | 3 Putri Mulya',
+        description: 'Paket tour seharian keliling Pulau Bintan naik Toyota HiAce Commuter (15 kursi) mulai Rp 1.400.000 atau HiAce Premio Luxury (14 kursi VIP) mulai Rp 1.500.000. All-In sudah termasuk supir profesional & BBM. Rute Lagoi Bay, Trikora, Danau Biru, Gurun Pasir Bintan.'
       }
     },
     {
