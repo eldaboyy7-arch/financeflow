@@ -184,17 +184,17 @@ export function generateEventWhatsAppUrl(
 
   const text = isEn
     ? `Hello ${siteConfig.rentalName}, I am planning to visit Bintan for the event:
-🎯 *${title}*
-📅 Date: ${date}
-📍 Location: ${loc}
-🚐 Recommended Vehicle: ${fleet}
+*${title}*
+Date: ${date}
+Location: ${loc}
+Recommended Fleet: ${fleet}
 
-I would like to inquire about car rental / private charter availability and rates for this event. Thank you!`
-    : `Halo ${siteConfig.rentalName}, saya berencana datang ke Bintan untuk acara:
-🎯 *${title}*
-📅 Jadwal: ${date}
-📍 Lokasi: ${loc}
-🚐 Rekomendasi Armada: ${fleet}
+I would like to inquire about car rental / charter availability and rates for this event. Thank you!`
+    : `Halo ${siteConfig.rentalName}, saya berencana ke Bintan untuk menghadiri acara:
+*${title}*
+Jadwal: ${date}
+Lokasi: ${loc}
+Rekomendasi Armada: ${fleet}
 
 Saya ingin tanya ketersediaan sewa mobil / carter untuk acara ini. Boleh info tarif dan ketersediaannya? Terima kasih!`
 
