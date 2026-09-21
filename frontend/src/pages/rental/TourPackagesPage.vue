@@ -232,6 +232,18 @@ const uploadingGallery = ref(false)
 const coverFileInput = ref<HTMLInputElement | null>(null)
 const galleryFileInput = ref<HTMLInputElement | null>(null)
 
+function resolvePhotoUrl(photo: string | any): string {
+  if (!photo) return ''
+  const str = typeof photo === 'string' ? photo : (photo.url || photo.path || '')
+  if (!str) return ''
+  if (str.startsWith('http://') || str.startsWith('https://') || str.startsWith('/')) {
+    return str
+  }
+  const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL || 'https://fwauponvpdlyxtwcljcn.supabase.co').replace(/\/$/, '')
+  const bucket = import.meta.env.VITE_SUPABASE_BUCKET || 'fleet'
+  return `${supabaseUrl}/storage/v1/object/public/${bucket}/${str}`
+}
+
 onMounted(async () => {
   const [_, __, accs, cats] = await Promise.all([
     store.fetchPackages(),
@@ -1295,7 +1307,7 @@ function getBadgeStyle(color: string) {
                 <div class="w-32 h-20 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 overflow-hidden flex items-center justify-center flex-shrink-0">
                   <img
                     v-if="form.cover_photo_url || form.cover_photo_path"
-                    :src="form.cover_photo_url || form.cover_photo_path"
+                    :src="resolvePhotoUrl(form.cover_photo_url || form.cover_photo_path)"
                     alt="Cover Preview"
                     class="w-full h-full object-cover"
                   />
@@ -1368,7 +1380,7 @@ function getBadgeStyle(color: string) {
                   class="relative w-24 h-16 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 overflow-hidden group"
                 >
                   <img
-                    :src="photo"
+                    :src="resolvePhotoUrl(photo)"
                     alt="Gallery"
                     class="w-full h-full object-cover"
                   />
