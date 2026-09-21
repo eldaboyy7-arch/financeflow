@@ -7,6 +7,9 @@ import { useLanguage } from '@/composables/useLanguage'
 
 const { t, isEnglish } = useLanguage()
 
+// Total destinasi otomatis dari config (selalu update mengikuti destinationsList)
+const totalDestinations = computed(() => destinationsList.length)
+
 // 3 Destinasi Pilihan di Homepage agar tidak terlalu penuh
 const destinations = computed(() => destinationsList.filter(d => d.featured).slice(0, 3))
 
@@ -137,7 +140,7 @@ const getWhatsAppUrl = (dest: any) => {
               {{ t('tripInspirations.swipeHint') }}
             </span>
             <RouterLink to="/destinasi" class="font-bold text-blue-600">
-              {{ t('tripInspirations.viewAll15') }}
+              {{ t('tripInspirations.viewAll15', { count: totalDestinations }) }}
             </RouterLink>
           </div>
 
@@ -145,13 +148,13 @@ const getWhatsAppUrl = (dest: any) => {
           <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 sm:p-4 rounded-xl bg-white border border-slate-200">
             <div class="text-left w-full sm:w-auto">
               <div class="text-xs font-bold text-slate-800">{{ t('tripInspirations.otherDestTitle') }}</div>
-              <div class="text-[11px] text-slate-500 mt-0.5">{{ t('tripInspirations.otherDestSubtitle') }}</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">{{ t('tripInspirations.otherDestSubtitle', { count: totalDestinations }) }}</div>
             </div>
             <RouterLink
               to="/destinasi"
               class="w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-xs transition-colors shrink-0"
             >
-              <span>{{ t('tripInspirations.openCatalogBtn') }}</span>
+              <span>{{ t('tripInspirations.openCatalogBtn', { count: totalDestinations }) }}</span>
             </RouterLink>
           </div>
 

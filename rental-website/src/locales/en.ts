@@ -162,10 +162,10 @@ export const en = {
     hiacePkg: 'HiAce Packages →',
     askRoute: 'Inquire Tour Route',
     swipeHint: 'Swipe for more destinations',
-    viewAll15: 'View All (15) →',
+    viewAll15: 'View All ({count}) →',
     otherDestTitle: 'Looking for More Travel Inspirations?',
-    otherDestSubtitle: 'Guides for Safari Lagoi, Mount Bintan, Sleeping Buddha, Trikora Beach & more (15 Destinations).',
-    openCatalogBtn: 'Open Destination Catalog (15 Places) →',
+    otherDestSubtitle: 'Guides for Safari Lagoi, Mount Bintan, Sleeping Buddha, Trikora Beach & more ({count} Destinations).',
+    openCatalogBtn: 'Open Destination Catalog ({count} Places) →',
     footnote: '* Destination information and photos sourced officially from Bintan Tourism Board, Ministry of Tourism RI, and Wikimedia Commons.'
   },
   locationSection: {

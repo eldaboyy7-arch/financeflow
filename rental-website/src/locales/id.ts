@@ -164,10 +164,10 @@ export const id: LocaleSchema = {
     hiacePkg: 'Paket HiAce →',
     askRoute: 'Tanya Rute Wisata',
     swipeHint: 'Geser untuk destinasi lainnya',
-    viewAll15: 'Lihat Semua (15) →',
+    viewAll15: 'Lihat Semua ({count}) →',
     otherDestTitle: 'Cari Referensi Wisata Lainnya?',
-    otherDestSubtitle: 'Tersedia panduan Safari Lagoi, Gunung Bintan, Sleeping Buddha, Trikora, dll (15 Destinasi).',
-    openCatalogBtn: 'Buka Katalog Wisata (15 Tempat) →',
+    otherDestSubtitle: 'Tersedia panduan Safari Lagoi, Gunung Bintan, Sleeping Buddha, Trikora, dll ({count} Destinasi).',
+    openCatalogBtn: 'Buka Katalog Wisata ({count} Tempat) →',
     footnote: '* Data dan foto destinasi bersumber resmi dari Dinas Kebudayaan & Pariwisata Kab. Bintan, Kemenparekraf RI, dan Wikimedia Commons.'
   },
   locationSection: {
