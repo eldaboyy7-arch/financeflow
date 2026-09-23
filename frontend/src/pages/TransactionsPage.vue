@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, defineAsyncComponent } from 'vue'
 import { transactionsApi, transfersApi } from '@/api/transactions'
 import { useAccountsStore } from '@/stores/accounts'
 import { useCategoriesStore } from '@/stores/categories'
@@ -10,7 +10,7 @@ import type { ApiPagination } from '@/types/api'
 import DateInput from '@/components/DateInput.vue'
 import SelectInput from '@/components/SelectInput.vue'
 import CurrencyInput from '@/components/CurrencyInput.vue'
-import ReceiptScannerModal from '@/components/ReceiptScannerModal.vue'
+const ReceiptScannerModal = defineAsyncComponent(() => import('@/components/ReceiptScannerModal.vue'))
 import MoneySpinner from '@/components/MoneySpinner.vue'
 import EmptyState from '@/components/EmptyState.vue'
 import type { SelectOption } from '@/components/SelectInput.vue'

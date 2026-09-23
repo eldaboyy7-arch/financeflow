@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, defineAsyncComponent } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { dashboardApi, type DashboardSummary, type ChartData, type ExpenseBreakdownItem } from '@/api/dashboard'
 import { useFormatCurrency } from '@/composables/useFormatCurrency'
 import { useAuthStore } from '@/stores/auth'
 import type { Transaction } from '@/types/transaction'
-import ReceiptScannerModal from '@/components/ReceiptScannerModal.vue'
+import VueApexCharts from 'vue3-apexcharts'
+const ReceiptScannerModal = defineAsyncComponent(() => import('@/components/ReceiptScannerModal.vue'))
 import SmartInsightsCard from '@/components/SmartInsightsCard.vue'
 import YourBudgetsCard from '@/components/YourBudgetsCard.vue'
 import EmptyState from '@/components/EmptyState.vue'

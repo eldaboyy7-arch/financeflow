@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import VueApexCharts from 'vue3-apexcharts'
 import { reportsApi, type MonthlyReport } from '@/api/reports'
 import { useFormatCurrency } from '@/composables/useFormatCurrency'
 import SelectInput from '@/components/SelectInput.vue'

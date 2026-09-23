@@ -38,8 +38,11 @@ export const useVehiclesStore = defineStore('vehicles', () => {
   const vehicles  = ref<Vehicle[]>([])
   const loading   = ref(false)
   const error     = ref<string | null>(null)
+  const _cacheKey = ref<string | null>(null) // "month-year" terakhir di-fetch
 
-  async function fetchVehicles(month?: number, year?: number) {
+  async function fetchVehicles(month?: number, year?: number, force = false) {
+    const key = `${month ?? 0}-${year ?? 0}`
+    if (!force && _cacheKey.value === key && vehicles.value.length > 0) return
     loading.value = true
     error.value   = null
     try {
@@ -47,7 +50,8 @@ export const useVehiclesStore = defineStore('vehicles', () => {
       if (month) params.month = month
       if (year)  params.year  = year
       const { data } = await api.get('/vehicles', { params })
-      vehicles.value = data.data
+      vehicles.value  = data.data
+      _cacheKey.value = key
     } catch (e: any) {
       error.value = e?.response?.data?.message ?? 'Gagal memuat data kendaraan.'
     } finally {

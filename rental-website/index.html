@@ -141,10 +141,11 @@
     ]
     </script>
 
-    <!-- ── Google Fonts: Plus Jakarta Sans & Inter ────────────────────────── -->
+    <!-- ── Google Fonts: Plus Jakarta Sans (non-blocking) ────────────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800&display=swap"></noscript>
   </head>
   <body class="bg-slate-50 text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900 min-h-screen">
     <div id="app"></div>

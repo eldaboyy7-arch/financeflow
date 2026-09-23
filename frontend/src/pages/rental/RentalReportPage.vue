@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import VueApexCharts from 'vue3-apexcharts'
 import { useVehiclesStore } from '@/stores/vehicles'
 import { useFormatCurrency } from '@/composables/useFormatCurrency'
 import MoneySpinner from '@/components/MoneySpinner.vue'

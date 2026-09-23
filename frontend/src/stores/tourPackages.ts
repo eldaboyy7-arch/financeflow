@@ -36,16 +36,19 @@ export interface TourPackage {
 }
 
 export const useTourPackagesStore = defineStore('tourPackages', () => {
-  const packages = ref<TourPackage[]>([])
-  const loading = ref(false)
-  const error = ref<string | null>(null)
+  const packages  = ref<TourPackage[]>([])
+  const loading   = ref(false)
+  const error     = ref<string | null>(null)
+  const hasLoaded = ref(false)
 
-  async function fetchPackages() {
+  async function fetchPackages(force = false) {
+    if (!force && hasLoaded.value && packages.value.length > 0) return
     loading.value = true
     error.value = null
     try {
       const { data } = await api.get('/tour-packages')
       packages.value = data.data
+      hasLoaded.value = true
     } catch (e: any) {
       error.value = e?.response?.data?.message ?? 'Gagal memuat paket tour.'
     } finally {

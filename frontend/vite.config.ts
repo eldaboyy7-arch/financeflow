@@ -19,17 +19,17 @@ export default defineConfig({
     },
   },
   build: {
+    sourcemap: false,
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['vue', 'vue-router', 'pinia'],
-          charts: ['apexcharts', 'vue3-apexcharts'],
+          // charts: lazy-loaded per-page, tidak perlu di manualChunks lagi
           i18n: ['vue-i18n'],
           utils: ['axios', 'dayjs'],
         },
       },
     },
-    chunkSizeWarningLimit: 600,
   },
 })
-

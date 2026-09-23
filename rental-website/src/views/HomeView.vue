@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
 import { useFleet } from '@/composables/useFleet'
 import type { BookingFilterParams } from '@/utils/whatsapp'
+// Above-fold: eager load
 import HeroSection from '@/components/HeroSection.vue'
 import TrustPillarsBar from '@/components/TrustPillarsBar.vue'
 import HomeFeaturedFleet from '@/components/HomeFeaturedFleet.vue'
 import HomeUpcomingEvents from '@/components/HomeUpcomingEvents.vue'
 import HomePopularTours from '@/components/HomePopularTours.vue'
-import TripInspirations from '@/components/TripInspirations.vue'
-import LocationSection from '@/components/LocationSection.vue'
-import FaqSection from '@/components/FaqSection.vue'
-import FinalCtaSection from '@/components/FinalCtaSection.vue'
+// Below-fold: lazy load untuk tidak membebani first paint
+const TripInspirations  = defineAsyncComponent(() => import('@/components/TripInspirations.vue'))
+const LocationSection   = defineAsyncComponent(() => import('@/components/LocationSection.vue'))
+const FaqSection        = defineAsyncComponent(() => import('@/components/FaqSection.vue'))
+const FinalCtaSection   = defineAsyncComponent(() => import('@/components/FinalCtaSection.vue'))
 
 const { isEnglish } = useLanguage()
 
