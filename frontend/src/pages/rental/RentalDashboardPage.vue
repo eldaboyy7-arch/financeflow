@@ -279,25 +279,27 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
         </div>
       </div>
 
-      <!-- ══ 4 METRIC CARDS dengan Ring Chart (Super Compact di Mobile) ══ -->
+      <!-- ══ 4 METRIC CARDS dengan Ring Chart (Judul di Samping Icon & Diagram Lebih Besar) ══ -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3.5 lg:gap-4">
 
         <!-- 1. Total Sewa Masuk -->
-        <div class="card p-2 sm:p-4 lg:p-5 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between gap-1 mb-0.5 sm:mb-1">
+        <div class="card p-2.5 sm:p-4 lg:p-5 flex flex-col justify-between">
+          <!-- Title beside Icon -->
+          <div class="flex items-center justify-between gap-1">
+            <div class="flex items-center gap-1.5 min-w-0">
               <div class="w-6 h-6 sm:w-8 lg:w-9 sm:h-8 lg:h-9 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center shrink-0">
-                <BanknotesIcon class="w-3.5 h-3.5 sm:w-4 lg:w-5 text-emerald-600 dark:text-emerald-400" />
+                <BanknotesIcon class="w-3.5 h-3.5 sm:w-4.5 lg:w-5 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-emerald-50 dark:bg-emerald-900/40 flex items-center justify-center">
-                <ArrowTrendingUpIcon class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-500" />
-              </div>
+              <span class="text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-200 truncate">Total Sewa</span>
             </div>
-            <p class="text-[9px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 leading-tight">Total Sewa Masuk</p>
+            <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-emerald-50 dark:bg-emerald-900/40 flex items-center justify-center shrink-0">
+              <ArrowTrendingUpIcon class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-500" />
+            </div>
           </div>
 
-          <div class="flex items-center justify-center py-0.5 sm:py-1.5 lg:py-2">
-            <div class="relative w-16 h-16 sm:w-24 sm:h-24 lg:w-28 lg:h-28">
+          <!-- Enlarged Ring chart -->
+          <div class="flex items-center justify-center py-1 sm:py-2">
+            <div class="relative w-20 h-20 sm:w-26 sm:h-26 lg:w-28 lg:h-28">
               <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
                 <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" class="dark:[stroke:#1E293B]"/>
                 <circle
@@ -309,14 +311,14 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
                 />
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-0.5">
-                <p class="text-[9px] sm:text-xs lg:text-sm font-bold text-slate-900 dark:text-white tabular-nums leading-tight">
+                <p class="text-[10px] sm:text-xs lg:text-sm font-extrabold text-slate-900 dark:text-white tabular-nums leading-tight">
                   {{ formatCurrency(totalIncome) }}
                 </p>
               </div>
             </div>
           </div>
 
-          <div class="flex items-center justify-between pt-1 sm:pt-1.5 border-t border-slate-100 dark:border-slate-700/60 text-[8px] sm:text-[10px]">
+          <div class="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-slate-100 dark:border-slate-700/60 text-[9px] sm:text-[10px]">
             <span class="inline-flex items-center gap-0.5 font-semibold text-emerald-600 dark:text-emerald-400 truncate">
               <ArrowTrendingUpIcon class="w-2.5 h-2.5 hidden sm:inline" /> Pemasukan
             </span>
@@ -325,21 +327,23 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
         </div>
 
         <!-- 2. Biaya Operasional -->
-        <div class="card p-2 sm:p-4 lg:p-5 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between gap-1 mb-0.5 sm:mb-1">
+        <div class="card p-2.5 sm:p-4 lg:p-5 flex flex-col justify-between">
+          <!-- Title beside Icon -->
+          <div class="flex items-center justify-between gap-1">
+            <div class="flex items-center gap-1.5 min-w-0">
               <div class="w-6 h-6 sm:w-8 lg:w-9 sm:h-8 lg:h-9 rounded-lg sm:rounded-xl bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center shrink-0">
-                <ReceiptRefundIcon class="w-3.5 h-3.5 sm:w-4 lg:w-5 text-rose-600 dark:text-rose-400" />
+                <ReceiptRefundIcon class="w-3.5 h-3.5 sm:w-4.5 lg:w-5 text-rose-600 dark:text-rose-400" />
               </div>
-              <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-rose-50 dark:bg-rose-900/40 flex items-center justify-center">
-                <ArrowTrendingUpIcon class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-rose-500 rotate-180" />
-              </div>
+              <span class="text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-200 truncate">Biaya Ops</span>
             </div>
-            <p class="text-[9px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 leading-tight">Biaya Operasional</p>
+            <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-rose-50 dark:bg-rose-900/40 flex items-center justify-center shrink-0">
+              <ArrowTrendingUpIcon class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-rose-500 rotate-180" />
+            </div>
           </div>
 
-          <div class="flex items-center justify-center py-0.5 sm:py-1.5 lg:py-2">
-            <div class="relative w-16 h-16 sm:w-24 sm:h-24 lg:w-28 lg:h-28">
+          <!-- Enlarged Ring chart -->
+          <div class="flex items-center justify-center py-1 sm:py-2">
+            <div class="relative w-20 h-20 sm:w-26 sm:h-26 lg:w-28 lg:h-28">
               <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
                 <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" class="dark:[stroke:#1E293B]"/>
                 <circle
@@ -351,14 +355,14 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
                 />
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-0.5">
-                <p class="text-[9px] sm:text-xs lg:text-sm font-bold text-slate-900 dark:text-white tabular-nums leading-tight">
+                <p class="text-[10px] sm:text-xs lg:text-sm font-extrabold text-slate-900 dark:text-white tabular-nums leading-tight">
                   {{ formatCurrency(totalExpense) }}
                 </p>
               </div>
             </div>
           </div>
 
-          <div class="flex items-center justify-between pt-1 sm:pt-1.5 border-t border-slate-100 dark:border-slate-700/60 text-[8px] sm:text-[10px]">
+          <div class="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-slate-100 dark:border-slate-700/60 text-[9px] sm:text-[10px]">
             <span class="inline-flex items-center gap-0.5 font-semibold text-rose-500 dark:text-rose-400 truncate">
               Beban
             </span>
@@ -367,24 +371,26 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
         </div>
 
         <!-- 3. Laba Bersih -->
-        <div class="card p-2 sm:p-4 lg:p-5 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between gap-1 mb-0.5 sm:mb-1">
+        <div class="card p-2.5 sm:p-4 lg:p-5 flex flex-col justify-between">
+          <!-- Title beside Icon -->
+          <div class="flex items-center justify-between gap-1">
+            <div class="flex items-center gap-1.5 min-w-0">
               <div class="w-6 h-6 sm:w-8 lg:w-9 sm:h-8 lg:h-9 rounded-lg sm:rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center shrink-0">
-                <ChartBarIcon class="w-3.5 h-3.5 sm:w-4 lg:w-5 text-blue-600 dark:text-blue-400" />
+                <ChartBarIcon class="w-3.5 h-3.5 sm:w-4.5 lg:w-5 text-blue-600 dark:text-blue-400" />
               </div>
-              <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-blue-50 dark:bg-blue-900/40 flex items-center justify-center">
-                <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3" :class="totalProfit >= 0 ? 'text-blue-500' : 'text-rose-500'" fill="currentColor" viewBox="0 0 20 20">
-                  <path v-if="totalProfit >= 0" fill-rule="evenodd" d="M12.577 4.878a.75.75 0 01.919-.53l4.78 1.281a.75.75 0 01.531.919l-1.281 4.78a.75.75 0 01-1.449-.387l.81-3.022a19.407 19.407 0 00-5.594 5.203.75.75 0 01-1.139.093L7 10.06l-4.72 4.72a.75.75 0 01-1.06-1.061l5.25-5.25a.75.75 0 011.06 0l3.074 3.073a20.923 20.923 0 015.545-4.931l-3.042-.815a.75.75 0 01-.53-.918z" clip-rule="evenodd"/>
-                  <path v-else fill-rule="evenodd" d="M1.22 5.222a.75.75 0 011.06 0L7 9.942l3.768-3.769a.75.75 0 011.113.058 20.908 20.908 0 013.813 7.254l1.574-2.727a.75.75 0 011.3.75l-2.475 4.286a.75.75 0 01-1.025.275l-4.287-2.475a.75.75 0 01.75-1.3l2.71 1.565a19.422 19.422 0 00-3.013-6.024L7.53 11.533a.75.75 0 01-1.06 0l-5.25-5.25a.75.75 0 010-1.061z" clip-rule="evenodd"/>
-                </svg>
-              </div>
+              <span class="text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-200 truncate">Laba Bersih</span>
             </div>
-            <p class="text-[9px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 leading-tight">Laba Bersih</p>
+            <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-blue-50 dark:bg-blue-900/40 flex items-center justify-center shrink-0">
+              <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3" :class="totalProfit >= 0 ? 'text-blue-500' : 'text-rose-500'" fill="currentColor" viewBox="0 0 20 20">
+                <path v-if="totalProfit >= 0" fill-rule="evenodd" d="M12.577 4.878a.75.75 0 01.919-.53l4.78 1.281a.75.75 0 01.531.919l-1.281 4.78a.75.75 0 01-1.449-.387l.81-3.022a19.407 19.407 0 00-5.594 5.203.75.75 0 01-1.139.093L7 10.06l-4.72 4.72a.75.75 0 01-1.06-1.061l5.25-5.25a.75.75 0 011.06 0l3.074 3.073a20.923 20.923 0 015.545-4.931l-3.042-.815a.75.75 0 01-.53-.918z" clip-rule="evenodd"/>
+                <path v-else fill-rule="evenodd" d="M1.22 5.222a.75.75 0 011.06 0L7 9.942l3.768-3.769a.75.75 0 011.113.058 20.908 20.908 0 013.813 7.254l1.574-2.727a.75.75 0 011.3.75l-2.475 4.286a.75.75 0 01-1.025.275l-4.287-2.475a.75.75 0 01.75-1.3l2.71 1.565a19.422 19.422 0 00-3.013-6.024L7.53 11.533a.75.75 0 01-1.06 0l-5.25-5.25a.75.75 0 010-1.061z" clip-rule="evenodd"/>
+              </svg>
+            </div>
           </div>
 
-          <div class="flex items-center justify-center py-0.5 sm:py-1.5 lg:py-2">
-            <div class="relative w-16 h-16 sm:w-24 sm:h-24 lg:w-28 lg:h-28">
+          <!-- Enlarged Ring chart -->
+          <div class="flex items-center justify-center py-1 sm:py-2">
+            <div class="relative w-20 h-20 sm:w-26 sm:h-26 lg:w-28 lg:h-28">
               <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
                 <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" class="dark:[stroke:#1E293B]"/>
                 <circle
@@ -396,14 +402,14 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
                 />
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-0.5">
-                <p :class="['text-[9px] sm:text-xs lg:text-sm font-bold tabular-nums leading-tight', totalProfit >= 0 ? 'text-slate-900 dark:text-white' : 'text-rose-600']">
+                <p :class="['text-[10px] sm:text-xs lg:text-sm font-extrabold tabular-nums leading-tight', totalProfit >= 0 ? 'text-slate-900 dark:text-white' : 'text-rose-600']">
                   {{ formatCurrency(totalProfit) }}
                 </p>
               </div>
             </div>
           </div>
 
-          <div class="flex items-center justify-between pt-1 sm:pt-1.5 border-t border-slate-100 dark:border-slate-700/60 text-[8px] sm:text-[10px]">
+          <div class="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-slate-100 dark:border-slate-700/60 text-[9px] sm:text-[10px]">
             <span class="inline-flex items-center gap-0.5 font-semibold text-blue-600 dark:text-blue-400 truncate">
               <ArrowTrendingUpIcon class="w-2.5 h-2.5 hidden sm:inline" /> Laba
             </span>
@@ -412,21 +418,23 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
         </div>
 
         <!-- 4. Unit Armada — multi-segment ring -->
-        <div class="card p-2 sm:p-4 lg:p-5 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between gap-1 mb-0.5 sm:mb-1">
+        <div class="card p-2.5 sm:p-4 lg:p-5 flex flex-col justify-between">
+          <!-- Title beside Icon -->
+          <div class="flex items-center justify-between gap-1">
+            <div class="flex items-center gap-1.5 min-w-0">
               <div class="w-6 h-6 sm:w-8 lg:w-9 sm:h-8 lg:h-9 rounded-lg sm:rounded-xl bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center shrink-0">
-                <TruckIcon class="w-3.5 h-3.5 sm:w-4 lg:w-5 text-violet-600 dark:text-violet-400" />
+                <TruckIcon class="w-3.5 h-3.5 sm:w-4.5 lg:w-5 text-violet-600 dark:text-violet-400" />
               </div>
-              <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-violet-50 dark:bg-violet-900/40 flex items-center justify-center">
-                <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-violet-500" fill="currentColor" viewBox="0 0 20 20"><path d="M3.196 12.87l-.825.483a.75.75 0 000 1.294l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.294l-.825-.484-5.666 3.322a1.5 1.5 0 01-1.516 0l-5.426-3.32z"/><path d="M16.94 9.123l.75-.44a.75.75 0 000-1.29l-7.25-4.26a.75.75 0 00-.76 0L2.43 7.393a.75.75 0 000 1.29l.75.44 5.33-3.131a1.5 1.5 0 011.52 0l6.91 4.131z"/><path d="M8.31 13.723l-5.01-2.944-1.48.868a.75.75 0 000 1.296l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.296l-1.48-.868-5.01 2.944a1.5 1.5 0 01-1.278 0z"/></svg>
-              </div>
+              <span class="text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-200 truncate">Unit Armada</span>
             </div>
-            <p class="text-[9px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 leading-tight">Unit Armada</p>
+            <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-violet-50 dark:bg-violet-900/40 flex items-center justify-center shrink-0">
+              <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-violet-500" fill="currentColor" viewBox="0 0 20 20"><path d="M3.196 12.87l-.825.483a.75.75 0 000 1.294l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.294l-.825-.484-5.666 3.322a1.5 1.5 0 01-1.516 0l-5.426-3.32z"/><path d="M16.94 9.123l.75-.44a.75.75 0 000-1.29l-7.25-4.26a.75.75 0 00-.76 0L2.43 7.393a.75.75 0 000 1.29l.75.44 5.33-3.131a1.5 1.5 0 011.52 0l6.91 4.131z"/><path d="M8.31 13.723l-5.01-2.944-1.48.868a.75.75 0 000 1.296l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.296l-1.48-.868-5.01 2.944a1.5 1.5 0 01-1.278 0z"/></svg>
+            </div>
           </div>
 
-          <div class="flex items-center justify-center gap-1 sm:gap-2.5 lg:gap-3 py-0.5 sm:py-1.5 lg:py-2">
-            <div class="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 shrink-0">
+          <!-- Enlarged Ring chart & Legend -->
+          <div class="flex items-center justify-center gap-1.5 sm:gap-2.5 lg:gap-3 py-1 sm:py-2">
+            <div class="relative w-18 h-18 sm:w-22 sm:h-22 lg:w-24 lg:h-24 shrink-0">
               <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
                 <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" class="dark:[stroke:#1E293B]"/>
                 <circle v-if="availableCount > 0" cx="60" cy="60" r="48" fill="none" stroke="#10B981" stroke-width="11" stroke-linecap="butt" :stroke-dasharray="`${availableArc.toFixed(1)} ${C}`" stroke-dashoffset="0"/>
@@ -435,27 +443,27 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
                 <circle v-if="vehiclesStore.vehicles.length === 0" cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" :stroke-dasharray="`${C * 0.03} ${C}`"/>
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-                <p class="text-xs sm:text-lg lg:text-xl font-extrabold text-slate-900 dark:text-white leading-none">{{ vehiclesStore.vehicles.length }}</p>
+                <p class="text-sm sm:text-lg lg:text-xl font-extrabold text-slate-900 dark:text-white leading-none">{{ vehiclesStore.vehicles.length }}</p>
                 <p class="text-[8px] sm:text-[9px] text-slate-400 mt-0.5">Mobil</p>
               </div>
             </div>
-            <div class="flex flex-col gap-0.5 sm:gap-1 text-[8px] sm:text-[10px]">
+            <div class="flex flex-col gap-0.5 sm:gap-1 text-[9px] sm:text-[10px]">
               <div class="flex items-center gap-1">
                 <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 shrink-0"></span>
-                <span class="text-slate-600 dark:text-slate-300">{{ availableCount }} siap</span>
+                <span class="text-slate-600 dark:text-slate-300 font-medium">{{ availableCount }} siap</span>
               </div>
               <div class="flex items-center gap-1">
                 <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-blue-500 shrink-0"></span>
-                <span class="text-slate-600 dark:text-slate-300">{{ rentedCount }} sewa</span>
+                <span class="text-slate-600 dark:text-slate-300 font-medium">{{ rentedCount }} sewa</span>
               </div>
               <div class="flex items-center gap-1">
                 <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-amber-400 shrink-0"></span>
-                <span class="text-slate-600 dark:text-slate-300">{{ maintenanceCount }} servis</span>
+                <span class="text-slate-600 dark:text-slate-300 font-medium">{{ maintenanceCount }} servis</span>
               </div>
             </div>
           </div>
 
-          <div class="flex items-center justify-between pt-1 sm:pt-1.5 border-t border-slate-100 dark:border-slate-700/60 text-[8px] sm:text-[10px]">
+          <div class="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-slate-100 dark:border-slate-700/60 text-[9px] sm:text-[10px]">
             <span class="font-semibold text-violet-600 dark:text-violet-400">Total</span>
             <span :class="['font-medium', maintenanceCount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-slate-400']">
               {{ maintenanceCount > 0 ? `${maintenanceCount} bengkel` : 'Siap semua' }}
