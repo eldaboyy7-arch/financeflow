@@ -109,49 +109,58 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
 
     <!-- ══ HEADER BANNER ══════════════════════════════════════════════════════ -->
     <div
-      class="card overflow-hidden relative min-h-[115px] sm:min-h-[185px] lg:min-h-[205px] flex items-center bg-gradient-to-r from-[#d9edf9] via-[#e8f4fc] to-[#f4faff] dark:from-slate-900 dark:via-slate-850 dark:to-slate-800 border border-sky-100/80 dark:border-slate-700/80"
+      class="card overflow-hidden relative min-h-[140px] sm:min-h-[185px] lg:min-h-[205px] flex items-center bg-gradient-to-r from-[#d8edf9] via-[#e5f2fa] to-[#f2f8fc] dark:from-slate-900 dark:via-slate-850 dark:to-slate-800 border border-sky-100/90 dark:border-slate-700/80"
     >
-      <!-- HiAce panorama image on the right: fully visible, road and wheels grounded at bottom-right -->
-      <img
-        src="/header-rental.png"
-        alt="Armada Rental Mobil Bintan"
-        class="absolute right-0 bottom-0 h-full w-auto max-w-[55%] sm:max-w-[52%] lg:max-w-[48%] object-contain object-right-bottom select-none pointer-events-none drop-shadow-sm"
-        draggable="false"
-      />
-
-      <!-- Soft gradient overlay: melindungi teks di kiri, 100% transparan di kanan agar mobil tajam -->
+      <!-- HiAce panorama image: feathered mask on the left so there is ZERO hard cutoff edge -->
       <div
-        class="absolute inset-0 bg-gradient-to-r from-[#d9edf9] via-[#d9edf9]/90 to-transparent sm:via-[#d9edf9]/60 dark:from-slate-900 dark:via-slate-900/85 sm:dark:via-slate-900/60 dark:to-transparent pointer-events-none"
+        class="absolute right-0 top-0 bottom-0 w-full sm:w-[60%] lg:w-[50%] pointer-events-none select-none overflow-hidden"
+        style="-webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.2) 15%, black 45%); mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.2) 15%, black 45%);"
+      >
+        <img
+          src="/header-rental.png"
+          alt="Armada Rental Mobil Bintan"
+          class="w-full h-full object-cover sm:object-contain object-right-bottom"
+          draggable="false"
+        />
+      </div>
+
+      <!-- Soft protective gradient overlay for text readability -->
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-[#d8edf9] via-[#d8edf9]/85 to-transparent sm:via-[#d8edf9]/50 dark:from-slate-900 dark:via-slate-900/90 dark:to-transparent pointer-events-none"
       />
 
-      <div class="relative z-10 p-3 sm:p-5 lg:p-6 flex flex-col justify-center gap-1 sm:gap-2 max-w-[70%] sm:max-w-md lg:max-w-lg">
+      <!-- Content text on the left -->
+      <div class="relative z-10 p-3.5 sm:p-5 lg:p-6 flex flex-col justify-center gap-1 sm:gap-2 max-w-[65%] sm:max-w-md lg:max-w-lg">
         <!-- Badge -->
-        <div class="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm text-blue-700 dark:text-blue-300 text-[9px] sm:text-xs font-semibold w-fit border border-blue-100 dark:border-blue-800/60 shadow-2xs">
+        <div class="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm text-blue-700 dark:text-blue-300 text-[9px] sm:text-xs font-semibold w-fit border border-blue-100 dark:border-blue-800/60 shadow-2xs">
           <TruckIcon class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600 dark:text-blue-400" />
           <span>Rental &amp; Paket Tour</span>
         </div>
 
         <!-- Title -->
-        <h1 class="text-sm sm:text-xl lg:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+        <h1 class="text-sm sm:text-xl lg:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
           Ringkasan Rental
-          <span class="block sm:inline"> · {{ monthNames[month - 1] }} {{ year }}</span>
+          <span class="block text-xs sm:text-xl lg:text-2xl font-bold sm:font-extrabold text-slate-700 dark:text-slate-300 sm:text-slate-900 sm:dark:text-white">· {{ monthNames[month - 1] }} {{ year }}</span>
         </h1>
-        <p class="text-[10px] sm:text-xs lg:text-sm text-slate-600 dark:text-slate-300 line-clamp-1 sm:line-clamp-none">
-          Pantau pendapatan sewa, operasional {{ vehiclesStore.vehicles.length }} armada, dan performa paket wisata.
+
+        <!-- Subtitle: clean, no ellipsis, no 'dan...' cut off -->
+        <p class="text-[10px] sm:text-xs lg:text-sm text-slate-600 dark:text-slate-300 leading-snug">
+          Pantau sewa, operasional {{ vehiclesStore.vehicles.length }} armada &amp; paket wisata.
         </p>
 
         <!-- Action buttons -->
-        <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap mt-0.5 sm:mt-1">
+        <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap pt-0.5 sm:pt-1">
           <button
             @click="router.push('/rental/transaksi')"
-            class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-[10px] sm:text-xs lg:text-sm font-bold shadow-sm transition-all"
+            class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-[10px] sm:text-xs lg:text-sm font-bold shadow-sm transition-all active:scale-95"
           >
             <PlusIcon class="w-3 h-3 sm:w-4 sm:h-4" />
-            <span>Catat Transaksi</span>
+            <span class="sm:inline hidden">Catat Transaksi</span>
+            <span class="sm:hidden inline">Catat Sewa</span>
           </button>
           <button
             @click="router.push('/rental/paket-tour')"
-            class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[10px] sm:text-xs lg:text-sm font-semibold border border-slate-200/80 dark:border-slate-600 shadow-2xs transition-all"
+            class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[10px] sm:text-xs lg:text-sm font-semibold border border-slate-200/90 dark:border-slate-600 shadow-2xs transition-all active:scale-95"
           >
             <MapPinIcon class="w-3 h-3 sm:w-4 sm:h-4 text-blue-500" />
             <span>Paket Tour</span>
