@@ -287,10 +287,10 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
           <!-- Title beside Icon -->
           <div class="flex items-center justify-between gap-1">
             <div class="flex items-center gap-1.5 min-w-0">
-              <div class="w-6 h-6 sm:w-8 lg:w-9 sm:h-8 lg:h-9 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center shrink-0">
-                <BanknotesIcon class="w-3.5 h-3.5 sm:w-4.5 lg:w-5 text-emerald-600 dark:text-emerald-400" />
+              <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center shrink-0">
+                <BanknotesIcon class="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <span class="text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-200 truncate">Total Sewa</span>
+              <span class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight">Total Sewa Masuk</span>
             </div>
             <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-emerald-50 dark:bg-emerald-900/40 flex items-center justify-center shrink-0">
               <ArrowTrendingUpIcon class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-500" />
@@ -298,8 +298,8 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
           </div>
 
           <!-- Enlarged Ring chart -->
-          <div class="flex items-center justify-center py-1 sm:py-2">
-            <div class="relative w-20 h-20 sm:w-26 sm:h-26 lg:w-28 lg:h-28">
+          <div class="flex items-center justify-center py-1.5 sm:py-2">
+            <div class="relative w-[76px] h-[76px] sm:w-[92px] sm:h-[92px] lg:w-[100px] lg:h-[100px] shrink-0">
               <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
                 <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" class="dark:[stroke:#1E293B]"/>
                 <circle
@@ -331,10 +331,10 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
           <!-- Title beside Icon -->
           <div class="flex items-center justify-between gap-1">
             <div class="flex items-center gap-1.5 min-w-0">
-              <div class="w-6 h-6 sm:w-8 lg:w-9 sm:h-8 lg:h-9 rounded-lg sm:rounded-xl bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center shrink-0">
-                <ReceiptRefundIcon class="w-3.5 h-3.5 sm:w-4.5 lg:w-5 text-rose-600 dark:text-rose-400" />
+              <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center shrink-0">
+                <ReceiptRefundIcon class="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 text-rose-600 dark:text-rose-400" />
               </div>
-              <span class="text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-200 truncate">Biaya Ops</span>
+              <span class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight">Biaya Operasional</span>
             </div>
             <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-rose-50 dark:bg-rose-900/40 flex items-center justify-center shrink-0">
               <ArrowTrendingUpIcon class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-rose-500 rotate-180" />
@@ -342,8 +342,8 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
           </div>
 
           <!-- Enlarged Ring chart -->
-          <div class="flex items-center justify-center py-1 sm:py-2">
-            <div class="relative w-20 h-20 sm:w-26 sm:h-26 lg:w-28 lg:h-28">
+          <div class="flex items-center justify-center py-1.5 sm:py-2">
+            <div class="relative w-[76px] h-[76px] sm:w-[92px] sm:h-[92px] lg:w-[100px] lg:h-[100px] shrink-0">
               <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
                 <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" class="dark:[stroke:#1E293B]"/>
                 <circle
@@ -375,10 +375,10 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
           <!-- Title beside Icon -->
           <div class="flex items-center justify-between gap-1">
             <div class="flex items-center gap-1.5 min-w-0">
-              <div class="w-6 h-6 sm:w-8 lg:w-9 sm:h-8 lg:h-9 rounded-lg sm:rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center shrink-0">
+              <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center shrink-0">
                 <ChartBarIcon class="w-3.5 h-3.5 sm:w-4.5 lg:w-5 text-blue-600 dark:text-blue-400" />
               </div>
-              <span class="text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-200 truncate">Laba Bersih</span>
+              <span class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight">Laba Bersih</span>
             </div>
             <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-blue-50 dark:bg-blue-900/40 flex items-center justify-center shrink-0">
               <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3" :class="totalProfit >= 0 ? 'text-blue-500' : 'text-rose-500'" fill="currentColor" viewBox="0 0 20 20">
@@ -389,8 +389,8 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
           </div>
 
           <!-- Enlarged Ring chart -->
-          <div class="flex items-center justify-center py-1 sm:py-2">
-            <div class="relative w-20 h-20 sm:w-26 sm:h-26 lg:w-28 lg:h-28">
+          <div class="flex items-center justify-center py-1.5 sm:py-2">
+            <div class="relative w-[76px] h-[76px] sm:w-[92px] sm:h-[92px] lg:w-[100px] lg:h-[100px] shrink-0">
               <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
                 <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" class="dark:[stroke:#1E293B]"/>
                 <circle
@@ -422,19 +422,19 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
           <!-- Title beside Icon -->
           <div class="flex items-center justify-between gap-1">
             <div class="flex items-center gap-1.5 min-w-0">
-              <div class="w-6 h-6 sm:w-8 lg:w-9 sm:h-8 lg:h-9 rounded-lg sm:rounded-xl bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center shrink-0">
+              <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center shrink-0">
                 <TruckIcon class="w-3.5 h-3.5 sm:w-4.5 lg:w-5 text-violet-600 dark:text-violet-400" />
               </div>
-              <span class="text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-200 truncate">Unit Armada</span>
+              <span class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight">Unit Armada</span>
             </div>
             <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-violet-50 dark:bg-violet-900/40 flex items-center justify-center shrink-0">
-              <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-violet-500" fill="currentColor" viewBox="0 0 20 20"><path d="M3.196 12.87l-.825.483a.75.75 0 000 1.294l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.294l-.825-.484-5.666 3.322a1.5 1.5 0 01-1.516 0l-5.426-3.32z"/><path d="M16.94 9.123l.75-.44a.75.75 0 000-1.29l-7.25-4.26a.75.75 0 00-.76 0L2.43 7.393a.75.75 0 000 1.29l.75.44 5.33-3.131a1.5 1.5 0 011.52 0l6.91 4.131z"/><path d="M8.31 13.723l-5.01-2.944-1.48.868a.75.75 0 000 1.296l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.296l-1.48-.868-5.01 2.944a1.5 1.5 0 01-1.278 0z"/></svg>
+              <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-violet-500" fill="currentColor" viewBox="0 0 20 20"><path d="M3.196 12.87l-.825.483a.75.75 0 000 1.294l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.294l-.825-.484-5.666 3.322a1.5 1.5 0 01-1.516 0l-5.426-3.32z"/><path d="M16.94 9.123l.75-.44a.75.75 0 000-1.29l-7.25-4.26a.75.75 0 00-.76 0L2.43 7.393a.75.75 0 000 1.29l.75.44 5.33-3.131a1.5 1.5 0 011.52 0l6.91 4.131z"/><path d="M8.31 13.723l-5.01-2.944-1.48.868a.75.75 0 000 1.296l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 00-1.296l-1.48-.868-5.01 2.944a1.5 1.5 0 01-1.278 0z"/></svg>
             </div>
           </div>
 
-          <!-- Enlarged Ring chart & Legend -->
-          <div class="flex items-center justify-center gap-1.5 sm:gap-2.5 lg:gap-3 py-1 sm:py-2">
-            <div class="relative w-18 h-18 sm:w-22 sm:h-22 lg:w-24 lg:h-24 shrink-0">
+          <!-- Fixed Ring chart & Legend -->
+          <div class="flex items-center justify-center gap-1.5 sm:gap-2.5 lg:gap-3 py-1.5 sm:py-2">
+            <div class="relative w-[72px] h-[72px] sm:w-[84px] sm:h-[84px] lg:w-[92px] lg:h-[92px] shrink-0">
               <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
                 <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" class="dark:[stroke:#1E293B]"/>
                 <circle v-if="availableCount > 0" cx="60" cy="60" r="48" fill="none" stroke="#10B981" stroke-width="11" stroke-linecap="butt" :stroke-dasharray="`${availableArc.toFixed(1)} ${C}`" stroke-dashoffset="0"/>
@@ -447,7 +447,7 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
                 <p class="text-[8px] sm:text-[9px] text-slate-400 mt-0.5">Mobil</p>
               </div>
             </div>
-            <div class="flex flex-col gap-0.5 sm:gap-1 text-[9px] sm:text-[10px]">
+            <div class="flex flex-col gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] shrink-0">
               <div class="flex items-center gap-1">
                 <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 shrink-0"></span>
                 <span class="text-slate-600 dark:text-slate-300 font-medium">{{ availableCount }} siap</span>
