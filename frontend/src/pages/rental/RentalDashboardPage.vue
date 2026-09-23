@@ -239,7 +239,7 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
 
         <div class="mt-2 sm:mt-3 grid grid-cols-3 gap-1.5 sm:gap-2">
           <button
-            @click="openQuickIncome(sortedVehicles[0])"
+            @click="openQuickIncome(null)"
             class="flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg sm:rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 text-center sm:text-left transition-all shadow-2xs"
           >
             <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-emerald-100 dark:bg-emerald-950/50 flex items-center justify-center shrink-0">
@@ -247,7 +247,7 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
             </span>
             <span class="min-w-0">
               <p class="text-[9px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight truncate">Sewa Cepat</p>
-              <p class="text-[9px] text-slate-400 hidden sm:block truncate">{{ sortedVehicles[0]?.name || 'Pilih mobil' }}</p>
+              <p class="text-[9px] text-slate-400 hidden sm:block truncate">Pilih armada mobil</p>
             </span>
           </button>
 

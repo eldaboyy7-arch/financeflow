@@ -17,7 +17,8 @@ import {
   UserIcon,
   PhoneIcon,
   TruckIcon,
-  ArrowPathIcon
+  ArrowPathIcon,
+  ChevronUpDownIcon
 } from '@heroicons/vue/24/outline'
 
 const props = defineProps<{
@@ -39,6 +40,19 @@ const { formatCurrency } = useFormatCurrency()
 const submitting = ref(false)
 const errorMessage = ref('')
 
+// Selected vehicle id for flexible switching
+const selectedVehicleId = ref<string | number>('')
+
+// Computed active vehicle (from selector, prop, or fallback to first available/first vehicle)
+const activeVehicle = computed<Vehicle | null>(() => {
+  if (selectedVehicleId.value) {
+    const found = vehiclesStore.vehicles.find(v => String(v.id) === String(selectedVehicleId.value))
+    if (found) return found
+  }
+  if (props.vehicle) return props.vehicle
+  return vehiclesStore.vehicles.find(v => v.status === 'available') || vehiclesStore.vehicles[0] || null
+})
+
 // Form State
 const durationDays = ref(1)
 const dailyRate = ref(0)
@@ -59,7 +73,8 @@ const durationPresets = [1, 2, 3, 4, 5, 7, 10, 14, 30]
 onMounted(async () => {
   await Promise.all([
     accountsStore.fetchAccounts(),
-    categoriesStore.fetchCategories()
+    categoriesStore.fetchCategories(),
+    vehiclesStore.vehicles.length === 0 ? vehiclesStore.fetchVehicles() : Promise.resolve()
   ])
 })
 
@@ -67,8 +82,7 @@ onMounted(async () => {
 const accountOptions = computed<SelectOption[]>(() =>
   accountsStore.activeAccounts.map(a => ({
     value: String(a.id),
-    label: `${a.name} (${formatCurrency(a.current_balance)})`,
-    icon: '💳'
+    label: `${a.name} (${formatCurrency(a.current_balance)})`
   }))
 )
 
@@ -76,8 +90,7 @@ const accountOptions = computed<SelectOption[]>(() =>
 const categoryOptions = computed<SelectOption[]>(() =>
   categoriesStore.incomeCategories.map(c => ({
     value: String(c.id),
-    label: c.name,
-    icon: '💰'
+    label: c.name
   }))
 )
 
@@ -99,37 +112,77 @@ const returnDateFormatted = computed(() => {
   return `${startStr} s/d ${endStr} (${durationDays.value} Hari)`
 })
 
+function applyVehicleConfig(v: Vehicle) {
+  dailyRate.value = Number(v.daily_rate) || 200000
+  durationDays.value = 1
+  totalAmount.value = dailyRate.value
+  isCustomAmount.value = false
+  startDate.value = new Date().toISOString().slice(0, 10)
+  customerName.value = ''
+  customerPhone.value = ''
+  note.value = ''
+  errorMessage.value = ''
+  updateStatusToRented.value = v.status !== 'rented'
+
+  // Detect service type based on vehicle capacity / model
+  const isLargeFleet = (v.capacity && v.capacity >= 10) || 
+                       v.name.toLowerCase().includes('hiace') || 
+                       v.name.toLowerCase().includes('bus')
+  
+  rentalType.value = isLargeFleet ? 'dengan_supir' : 'lepas_kunci'
+
+  // Pre-select account (first active account)
+  if (accountsStore.activeAccounts.length > 0 && !selectedAccountId.value) {
+    selectedAccountId.value = String(accountsStore.activeAccounts[0].id)
+  }
+
+  // Pre-select category matching rental type
+  syncCategoryWithRentalType(rentalType.value)
+}
+
+function onVehicleChange(val: string | number) {
+  selectedVehicleId.value = val
+  const v = vehiclesStore.vehicles.find(item => String(item.id) === String(val))
+  if (v) {
+    dailyRate.value = Number(v.daily_rate) || 200000
+    if (!isCustomAmount.value) {
+      totalAmount.value = dailyRate.value * durationDays.value
+    }
+    updateStatusToRented.value = v.status !== 'rented'
+
+    const isLargeFleet = (v.capacity && v.capacity >= 10) || 
+                         v.name.toLowerCase().includes('hiace') || 
+                         v.name.toLowerCase().includes('bus')
+    if (isLargeFleet && rentalType.value === 'lepas_kunci') {
+      rentalType.value = 'dengan_supir'
+    }
+  }
+}
+
 // Sync state when vehicle changes or modal opens
 watch(
   () => [props.show, props.vehicle],
-  ([isOpen]) => {
-    if (isOpen && props.vehicle) {
-      const v = props.vehicle
-      dailyRate.value = Number(v.daily_rate) || 200000
-      durationDays.value = 1
-      totalAmount.value = dailyRate.value
-      isCustomAmount.value = false
-      startDate.value = new Date().toISOString().slice(0, 10)
-      customerName.value = ''
-      customerPhone.value = ''
-      note.value = ''
-      errorMessage.value = ''
-      updateStatusToRented.value = v.status !== 'rented'
-
-      // Detect service type based on vehicle capacity / model
-      const isLargeFleet = (v.capacity && v.capacity >= 10) || 
-                           v.name.toLowerCase().includes('hiace') || 
-                           v.name.toLowerCase().includes('bus')
-      
-      rentalType.value = isLargeFleet ? 'dengan_supir' : 'lepas_kunci'
-
-      // Pre-select account (first active account)
-      if (accountsStore.activeAccounts.length > 0) {
-        selectedAccountId.value = String(accountsStore.activeAccounts[0].id)
+  async ([isOpen]) => {
+    if (isOpen) {
+      if (vehiclesStore.vehicles.length === 0) {
+        await vehiclesStore.fetchVehicles()
       }
 
-      // Pre-select category matching rental type
-      syncCategoryWithRentalType(rentalType.value)
+      let targetVehicle: Vehicle | null = null
+      if (props.vehicle) {
+        targetVehicle = props.vehicle
+        selectedVehicleId.value = String(props.vehicle.id)
+      } else {
+        // Fallback to first available or first vehicle
+        targetVehicle = vehiclesStore.vehicles.find(v => v.status === 'available') || vehiclesStore.vehicles[0] || null
+        if (targetVehicle) {
+          selectedVehicleId.value = String(targetVehicle.id)
+        }
+      }
+
+      if (targetVehicle) {
+        applyVehicleConfig(targetVehicle)
+      }
     }
   },
   { immediate: true }
@@ -176,7 +229,11 @@ function resetToCalculatedRate() {
 }
 
 async function handleSubmit() {
-  if (!props.vehicle) return
+  const v = activeVehicle.value
+  if (!v) {
+    errorMessage.value = 'Silakan pilih armada mobil terlebih dahulu.'
+    return
+  }
   if (!selectedAccountId.value) {
     errorMessage.value = 'Silakan pilih rekening / dompet penerima.'
     return
@@ -194,7 +251,6 @@ async function handleSubmit() {
   errorMessage.value = ''
 
   try {
-    const v = props.vehicle
     const typeLabel = rentalType.value === 'lepas_kunci' ? 'Lepas Kunci' : 'Mobil + Supir'
     
     // Format description: [Penyewa] ([No WA]) — Sewa [Tipe] [X] Hari [Mobil] ([Plat])
@@ -252,7 +308,7 @@ async function handleSubmit() {
 <template>
   <Teleport to="body">
     <div
-      v-if="show && vehicle"
+      v-if="show && activeVehicle"
       class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/70 backdrop-blur-sm overflow-y-auto"
     >
       <div
@@ -294,24 +350,55 @@ async function handleSubmit() {
             {{ errorMessage }}
           </div>
 
+          <!-- Section: Pilih Armada Mobil -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                Pilih Armada Mobil <span class="text-rose-500">*</span>
+              </label>
+              <span class="text-[11px] text-slate-400">
+                {{ vehiclesStore.vehicles.filter(v => v.status === 'available').length }} unit siap disewa
+              </span>
+            </div>
+            <div class="relative">
+              <select
+                v-model="selectedVehicleId"
+                @change="onVehicleChange(selectedVehicleId)"
+                class="w-full pl-3 pr-10 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-2xs appearance-none"
+              >
+                <option value="" disabled>-- Pilih Armada Mobil --</option>
+                <option
+                  v-for="v in vehiclesStore.vehicles"
+                  :key="v.id"
+                  :value="v.id"
+                >
+                  {{ v.name }} {{ v.plate_number ? `(${v.plate_number})` : '' }} &mdash; {{ formatCurrency(v.daily_rate) }}/hari ({{ v.status === 'available' ? 'Siap' : (v.status === 'rented' ? 'Sedang Disewa' : 'Servis') }})
+                </option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
+                <ChevronUpDownIcon class="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
           <!-- Vehicle Info Card (Live Target) -->
           <div class="p-3.5 rounded-2xl bg-gradient-to-r from-slate-50 via-slate-50 to-primary-50/30 dark:from-slate-850 dark:to-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0">
               <div class="w-14 h-12 rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-700 shrink-0 flex items-center justify-center">
                 <img
-                  v-if="vehicle.photo_url"
-                  :src="vehicle.photo_url"
-                  :alt="vehicle.name"
+                  v-if="activeVehicle.photo_url"
+                  :src="activeVehicle.photo_url"
+                  :alt="activeVehicle.name"
                   class="w-full h-full object-cover"
                 />
                 <TruckIcon v-else class="w-6 h-6 text-slate-400" />
               </div>
               <div class="min-w-0">
                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block truncate">
-                  {{ vehicle.plate_number || 'Tanpa Plat' }} &bull; {{ vehicle.capacity || 7 }} Kursi
+                  {{ activeVehicle.plate_number || 'Tanpa Plat' }} &bull; {{ activeVehicle.capacity || 7 }} Kursi
                 </span>
                 <h4 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white truncate">
-                  {{ vehicle.name }}
+                  {{ activeVehicle.name }}
                 </h4>
                 <div class="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
                   <span>Tarif dasar:</span>
@@ -323,10 +410,14 @@ async function handleSubmit() {
 
             <div class="text-right shrink-0">
               <span
-                class="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold"
-                :class="vehicle.status === 'available' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300' : (vehicle.status === 'rented' ? 'bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300')"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold"
+                :class="activeVehicle.status === 'available' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300' : (activeVehicle.status === 'rented' ? 'bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300')"
               >
-                {{ vehicle.status === 'available' ? '🟢 Siap Disewa' : (vehicle.status === 'rented' ? '🔵 Sedang Disewa' : '🟡 Di Bengkel') }}
+                <span
+                  class="w-1.5 h-1.5 rounded-full"
+                  :class="activeVehicle.status === 'available' ? 'bg-emerald-500' : (activeVehicle.status === 'rented' ? 'bg-blue-500' : 'bg-amber-500')"
+                />
+                {{ activeVehicle.status === 'available' ? 'Siap Disewa' : (activeVehicle.status === 'rented' ? 'Sedang Disewa' : 'Di Bengkel') }}
               </span>
             </div>
           </div>
@@ -403,7 +494,7 @@ async function handleSubmit() {
                 class="p-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-2"
                 :class="rentalType === 'lepas_kunci' ? 'bg-primary-50 dark:bg-primary-950/40 border-primary-500 text-primary-700 dark:text-primary-300 ring-1 ring-primary-500' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50'"
               >
-                <span>🔑 Lepas Kunci</span>
+                <span>Lepas Kunci (Self-Drive)</span>
               </button>
               <button
                 type="button"
@@ -411,7 +502,7 @@ async function handleSubmit() {
                 class="p-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-2"
                 :class="rentalType === 'dengan_supir' ? 'bg-primary-50 dark:bg-primary-950/40 border-primary-500 text-primary-700 dark:text-primary-300 ring-1 ring-primary-500' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50'"
               >
-                <span>👨‍✈️ Dengan Supir (+Driver)</span>
+                <span>Dengan Supir (+Driver)</span>
               </button>
             </div>
           </div>
