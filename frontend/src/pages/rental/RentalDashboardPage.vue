@@ -105,61 +105,63 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
 </script>
 
 <template>
-  <div class="space-y-4 sm:space-y-5">
+  <div class="space-y-2.5 sm:space-y-4 lg:space-y-5">
 
     <!-- ══ HEADER BANNER ══════════════════════════════════════════════════════ -->
-    <div class="card overflow-hidden relative bg-gradient-to-br from-blue-50 via-slate-50 to-white dark:from-slate-800 dark:via-slate-800 dark:to-slate-800/90">
-      <!-- Decorative bg circle -->
-      <div class="absolute -right-8 -top-8 w-52 h-52 rounded-full bg-blue-100/60 dark:bg-blue-900/20 pointer-events-none" />
-      <div class="absolute right-28 -bottom-10 w-36 h-36 rounded-full bg-indigo-100/40 dark:bg-indigo-900/10 pointer-events-none" />
+    <div
+      class="card overflow-hidden relative min-h-[115px] sm:min-h-[185px] lg:min-h-[205px] flex items-center bg-gradient-to-r from-[#d9edf9] via-[#e8f4fc] to-[#f4faff] dark:from-slate-900 dark:via-slate-850 dark:to-slate-800 border border-sky-100/80 dark:border-slate-700/80"
+    >
+      <!-- HiAce panorama image on the right: fully visible, road and wheels grounded at bottom-right -->
+      <img
+        src="/header-rental.png"
+        alt="Armada Rental Mobil Bintan"
+        class="absolute right-0 bottom-0 h-full w-auto max-w-[55%] sm:max-w-[52%] lg:max-w-[48%] object-contain object-right-bottom select-none pointer-events-none drop-shadow-sm"
+        draggable="false"
+      />
 
-      <div class="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-6">
-        <!-- Left: text -->
-        <div class="z-10">
-          <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs font-semibold mb-3">
-            <TruckIcon class="w-3.5 h-3.5" />
-            <span>Rental &amp; Paket Tour</span>
-          </div>
-          <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-            Ringkasan Rental
-            <span class="block sm:inline"> · {{ monthNames[month - 1] }} {{ year }}</span>
-          </h1>
-          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 max-w-sm">
-            Pantau pendapatan sewa, biaya operasional {{ vehiclesStore.vehicles.length }} armada, dan performa paket wisata.
-          </p>
-          <!-- Action buttons -->
-          <div class="flex items-center gap-2 mt-4 flex-wrap">
-            <button
-              @click="router.push('/rental/transaksi')"
-              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-sm font-bold shadow transition-all"
-            >
-              <PlusIcon class="w-4 h-4" />
-              Catat Transaksi
-            </button>
-            <button
-              @click="router.push('/rental/paket-tour')"
-              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white dark:bg-slate-700 hover:bg-blue-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-semibold border border-slate-200 dark:border-slate-600 shadow-xs transition-all"
-            >
-              <MapPinIcon class="w-4 h-4 text-blue-500" />
-              Paket Tour
-            </button>
-          </div>
+      <!-- Soft gradient overlay: melindungi teks di kiri, 100% transparan di kanan agar mobil tajam -->
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-[#d9edf9] via-[#d9edf9]/90 to-transparent sm:via-[#d9edf9]/60 dark:from-slate-900 dark:via-slate-900/85 sm:dark:via-slate-900/60 dark:to-transparent pointer-events-none"
+      />
+
+      <div class="relative z-10 p-3 sm:p-5 lg:p-6 flex flex-col justify-center gap-1 sm:gap-2 max-w-[70%] sm:max-w-md lg:max-w-lg">
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm text-blue-700 dark:text-blue-300 text-[9px] sm:text-xs font-semibold w-fit border border-blue-100 dark:border-blue-800/60 shadow-2xs">
+          <TruckIcon class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600 dark:text-blue-400" />
+          <span>Rental &amp; Paket Tour</span>
         </div>
 
-        <!-- Right: car illustration -->
-        <div class="hidden sm:flex items-end justify-end z-10 shrink-0">
-          <img
-            src="/car-illustration.jpg"
-            alt="Armada Rental"
-            class="w-52 xl:w-64 object-contain drop-shadow-md select-none pointer-events-none"
-            draggable="false"
-          />
+        <!-- Title -->
+        <h1 class="text-sm sm:text-xl lg:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+          Ringkasan Rental
+          <span class="block sm:inline"> · {{ monthNames[month - 1] }} {{ year }}</span>
+        </h1>
+        <p class="text-[10px] sm:text-xs lg:text-sm text-slate-600 dark:text-slate-300 line-clamp-1 sm:line-clamp-none">
+          Pantau pendapatan sewa, operasional {{ vehiclesStore.vehicles.length }} armada, dan performa paket wisata.
+        </p>
+
+        <!-- Action buttons -->
+        <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap mt-0.5 sm:mt-1">
+          <button
+            @click="router.push('/rental/transaksi')"
+            class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-[10px] sm:text-xs lg:text-sm font-bold shadow-sm transition-all"
+          >
+            <PlusIcon class="w-3 h-3 sm:w-4 sm:h-4" />
+            <span>Catat Transaksi</span>
+          </button>
+          <button
+            @click="router.push('/rental/paket-tour')"
+            class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[10px] sm:text-xs lg:text-sm font-semibold border border-slate-200/80 dark:border-slate-600 shadow-2xs transition-all"
+          >
+            <MapPinIcon class="w-3 h-3 sm:w-4 sm:h-4 text-blue-500" />
+            <span>Paket Tour</span>
+          </button>
         </div>
       </div>
     </div>
 
     <!-- ══ LOADING ═══════════════════════════════════════════════════════════ -->
-    <div v-if="vehiclesStore.loading" class="card p-12 flex items-center justify-center">
+    <div v-if="vehiclesStore.loading" class="card p-8 sm:p-12 flex items-center justify-center">
       <MoneySpinner size="md" text="Memuat ringkasan rental..." subtext="Menghitung total pendapatan dan biaya operasional" />
     </div>
 
@@ -168,23 +170,23 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
       <!-- ① ALERT: armada di bengkel -->
       <div
         v-if="maintenanceVehicles.length > 0"
-        class="rounded-2xl border border-amber-200 dark:border-amber-800/60 bg-amber-50 dark:bg-amber-950/20 px-4 py-3.5 flex items-start gap-3"
+        class="rounded-xl sm:rounded-2xl border border-amber-200 dark:border-amber-800/60 bg-amber-50 dark:bg-amber-950/20 px-3 py-2 sm:px-4 sm:py-3.5 flex items-start gap-2.5 sm:gap-3"
       >
-        <div class="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center shrink-0 mt-0.5">
-          <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+        <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600 dark:text-amber-400" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
           </svg>
         </div>
         <div class="flex-1 min-w-0">
-          <p class="text-sm font-bold text-amber-800 dark:text-amber-300">
+          <p class="text-xs sm:text-sm font-bold text-amber-800 dark:text-amber-300">
             {{ maintenanceVehicles.length }} armada sedang di bengkel
           </p>
-          <p class="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
+          <p class="text-[10px] sm:text-xs text-amber-700 dark:text-amber-400 mt-0.5 line-clamp-1 sm:line-clamp-none">
             <span class="font-medium">{{ maintenanceVehicles.map(v => v.name).join(', ') }}</span>
-            · Pastikan segera ditangani agar tidak mengurangi potensi pendapatan sewa.
+            · Segera tangani agar tidak mengurangi potensi pendapatan.
           </p>
         </div>
-        <button @click="router.push('/rental/armada')" class="text-xs font-bold text-amber-700 dark:text-amber-300 hover:underline shrink-0 mt-0.5">
+        <button @click="router.push('/rental/armada')" class="text-[11px] sm:text-xs font-bold text-amber-700 dark:text-amber-300 hover:underline shrink-0 mt-0.5">
           Kelola →
         </button>
       </div>
@@ -192,251 +194,262 @@ const maintenArc    = computed(() => (maintenanceCount.value / totalVehicles.val
       <!-- ② ALERT: armada aktif disewa -->
       <div
         v-if="rentedVehicles.length > 0"
-        class="rounded-2xl border border-blue-200 dark:border-blue-800/60 bg-blue-50 dark:bg-blue-950/20 px-4 py-3 flex items-center gap-3"
+        class="rounded-xl sm:rounded-2xl border border-blue-200 dark:border-blue-800/60 bg-blue-50 dark:bg-blue-950/20 px-3 py-2 sm:px-4 sm:py-3 flex items-center gap-2.5 sm:gap-3"
       >
         <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse shrink-0"></span>
-        <p class="text-xs text-blue-700 dark:text-blue-300 flex-1">
+        <p class="text-[11px] sm:text-xs text-blue-700 dark:text-blue-300 flex-1 truncate">
           <span class="font-bold">{{ rentedVehicles.length }} unit sedang berjalan</span>
           · {{ rentedVehicles.map(v => v.name).join(', ') }}
         </p>
-        <button @click="router.push('/rental/transaksi')" class="text-xs font-bold text-blue-700 dark:text-blue-300 hover:underline shrink-0">
-          Lihat Transaksi →
+        <button @click="router.push('/rental/transaksi')" class="text-[11px] sm:text-xs font-bold text-blue-700 dark:text-blue-300 hover:underline shrink-0">
+          Lihat →
         </button>
       </div>
 
-      <!-- ③ ONBOARDING: belum ada transaksi bulan ini -->
+      <!-- ③ ONBOARDING: belum ada transaksi bulan ini (super compact di mobile) -->
       <div
         v-if="isBlankMonth && vehiclesStore.vehicles.length > 0"
-        class="card border border-dashed border-primary-200 dark:border-primary-800/60 bg-gradient-to-br from-primary-50/60 to-slate-50 dark:from-primary-950/20 dark:to-slate-800/80 p-5 sm:p-6"
+        class="card border border-dashed border-primary-200 dark:border-primary-800/60 bg-gradient-to-br from-primary-50/60 to-slate-50 dark:from-primary-950/20 dark:to-slate-800/80 p-2.5 sm:p-5"
       >
-        <div class="flex items-start gap-4">
-          <div class="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center shrink-0">
-            <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" viewBox="0 0 20 20" fill="currentColor">
+        <div class="flex items-center sm:items-start gap-2.5 sm:gap-3.5">
+          <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center shrink-0">
+            <svg class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-primary-600 dark:text-primary-400" viewBox="0 0 20 20" fill="currentColor">
               <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-bold text-slate-900 dark:text-white">
+            <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
               Mulai catat di {{ monthNames[month - 1] }} {{ year }}
+              <span class="text-[10px] sm:text-xs font-normal text-slate-500 dark:text-slate-400">· {{ vehiclesStore.vehicles.length }} armada siap</span>
             </p>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Kamu punya {{ vehiclesStore.vehicles.length }} armada siap. Catat sewa pertama bulan ini untuk mulai memantau performa keuangan rental.
+            <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 hidden sm:block">
+              Catat sewa pertama bulan ini untuk mulai memantau performa keuangan rental secara real-time.
             </p>
           </div>
         </div>
-        <div class="mt-3 grid grid-cols-3 gap-2">
+
+        <div class="mt-2 sm:mt-3 grid grid-cols-3 gap-1.5 sm:gap-2">
           <button
             @click="openQuickIncome(sortedVehicles[0])"
-            class="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-2.5 px-2 sm:px-3.5 py-2.5 sm:py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 text-center sm:text-left transition-all shadow-2xs"
+            class="flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg sm:rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 text-center sm:text-left transition-all shadow-2xs"
           >
-            <span class="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950/50 flex items-center justify-center shrink-0">
-              <BanknotesIcon class="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-emerald-100 dark:bg-emerald-950/50 flex items-center justify-center shrink-0">
+              <BanknotesIcon class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-600 dark:text-emerald-400" />
             </span>
-            <span>
-              <p class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight">Catat Sewa Cepat</p>
-              <p class="text-[9px] sm:text-[10px] text-slate-400 hidden sm:block">{{ sortedVehicles[0]?.name || 'Pilih armada' }}</p>
+            <span class="min-w-0">
+              <p class="text-[9px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight truncate">Sewa Cepat</p>
+              <p class="text-[9px] text-slate-400 hidden sm:block truncate">{{ sortedVehicles[0]?.name || 'Pilih mobil' }}</p>
             </span>
           </button>
+
           <button
             @click="router.push('/rental/transaksi')"
-            class="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-2.5 px-2 sm:px-3.5 py-2.5 sm:py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-center sm:text-left transition-all shadow-2xs"
+            class="flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg sm:rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-center sm:text-left transition-all shadow-2xs"
           >
-            <span class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
-              <PlusIcon class="w-4 h-4 text-slate-600 dark:text-slate-300" />
+            <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
+              <PlusIcon class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-600 dark:text-slate-300" />
             </span>
-            <span>
-              <p class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight">Catat Transaksi</p>
-              <p class="text-[9px] sm:text-[10px] text-slate-400 hidden sm:block">Sewa atau biaya operasional</p>
+            <span class="min-w-0">
+              <p class="text-[9px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight truncate">Transaksi</p>
+              <p class="text-[9px] text-slate-400 hidden sm:block truncate">Pemasukan &amp; beban</p>
             </span>
           </button>
+
           <button
             @click="router.push('/rental/laporan')"
-            class="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-2.5 px-2 sm:px-3.5 py-2.5 sm:py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 text-center sm:text-left transition-all shadow-2xs"
+            class="flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-2 px-1.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg sm:rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 text-center sm:text-left transition-all shadow-2xs"
           >
-            <span class="w-7 h-7 rounded-lg bg-blue-100 dark:bg-blue-950/50 flex items-center justify-center shrink-0">
-              <ArrowTrendingUpIcon class="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-blue-100 dark:bg-blue-950/50 flex items-center justify-center shrink-0">
+              <ArrowTrendingUpIcon class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600 dark:text-blue-400" />
             </span>
-            <span>
-              <p class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight">Lihat Laporan</p>
-              <p class="text-[9px] sm:text-[10px] text-slate-400 hidden sm:block">Riwayat bulan sebelumnya</p>
+            <span class="min-w-0">
+              <p class="text-[9px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight truncate">Laporan</p>
+              <p class="text-[9px] text-slate-400 hidden sm:block truncate">Bulan sebelumnya</p>
             </span>
           </button>
         </div>
       </div>
 
-      <!-- ══ 4 METRIC CARDS dengan Ring Chart ═══════════════════════════════ -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
+      <!-- ══ 4 METRIC CARDS dengan Ring Chart (Super Compact di Mobile) ══ -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3.5 lg:gap-4">
 
         <!-- 1. Total Sewa Masuk -->
-        <div class="card p-3 sm:p-5 flex flex-col gap-0.5 sm:gap-1">
-          <div class="flex items-center justify-between gap-2">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center shrink-0">
-              <BanknotesIcon class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400" />
+        <div class="card p-2 sm:p-4 lg:p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-1 mb-0.5 sm:mb-1">
+              <div class="w-6 h-6 sm:w-8 lg:w-9 sm:h-8 lg:h-9 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center shrink-0">
+                <BanknotesIcon class="w-3.5 h-3.5 sm:w-4 lg:w-5 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-emerald-50 dark:bg-emerald-900/40 flex items-center justify-center">
+                <ArrowTrendingUpIcon class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-500" />
+              </div>
             </div>
-            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-emerald-50 dark:bg-emerald-900/40 flex items-center justify-center">
-              <ArrowTrendingUpIcon class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-500" />
-            </div>
+            <p class="text-[9px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 leading-tight">Total Sewa Masuk</p>
           </div>
-          <p class="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Total Sewa Masuk</p>
 
-          <div class="flex items-center justify-center py-1 sm:py-2">
-            <div class="relative w-20 h-20 sm:w-28 sm:h-28">
+          <div class="flex items-center justify-center py-0.5 sm:py-1.5 lg:py-2">
+            <div class="relative w-16 h-16 sm:w-24 sm:h-24 lg:w-28 lg:h-28">
               <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
-                <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="10" class="dark:[stroke:#1E293B]"/>
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" class="dark:[stroke:#1E293B]"/>
                 <circle
                   cx="60" cy="60" r="48" fill="none"
-                  stroke="#10B981" stroke-width="10"
+                  stroke="#10B981" stroke-width="11"
                   stroke-linecap="round"
                   :stroke-dasharray="ringDash(totalIncome > 0 ? Math.min(totalIncome / (totalIncome + totalExpense + 1), 1) : 0)"
                   class="transition-all duration-700"
                 />
               </svg>
-              <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-1">
-                <p class="text-[10px] sm:text-xs font-bold text-slate-900 dark:text-white tabular-nums leading-tight">
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-0.5">
+                <p class="text-[9px] sm:text-xs lg:text-sm font-bold text-slate-900 dark:text-white tabular-nums leading-tight">
                   {{ formatCurrency(totalIncome) }}
                 </p>
               </div>
             </div>
           </div>
 
-          <div class="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-slate-100 dark:border-slate-700/60">
-            <span class="inline-flex items-center gap-1 text-[9px] sm:text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-              <ArrowTrendingUpIcon class="w-3 h-3 hidden sm:inline" /> Pemasukan
+          <div class="flex items-center justify-between pt-1 sm:pt-1.5 border-t border-slate-100 dark:border-slate-700/60 text-[8px] sm:text-[10px]">
+            <span class="inline-flex items-center gap-0.5 font-semibold text-emerald-600 dark:text-emerald-400 truncate">
+              <ArrowTrendingUpIcon class="w-2.5 h-2.5 hidden sm:inline" /> Pemasukan
             </span>
-            <span class="text-[9px] sm:text-[10px] text-slate-400">Bulan ini</span>
+            <span class="text-slate-400 shrink-0">Bulan ini</span>
           </div>
         </div>
 
         <!-- 2. Biaya Operasional -->
-        <div class="card p-3 sm:p-5 flex flex-col gap-0.5 sm:gap-1">
-          <div class="flex items-center justify-between gap-2">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center shrink-0">
-              <ReceiptRefundIcon class="w-4 h-4 sm:w-5 sm:h-5 text-rose-600 dark:text-rose-400" />
+        <div class="card p-2 sm:p-4 lg:p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-1 mb-0.5 sm:mb-1">
+              <div class="w-6 h-6 sm:w-8 lg:w-9 sm:h-8 lg:h-9 rounded-lg sm:rounded-xl bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center shrink-0">
+                <ReceiptRefundIcon class="w-3.5 h-3.5 sm:w-4 lg:w-5 text-rose-600 dark:text-rose-400" />
+              </div>
+              <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-rose-50 dark:bg-rose-900/40 flex items-center justify-center">
+                <ArrowTrendingUpIcon class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-rose-500 rotate-180" />
+              </div>
             </div>
-            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-rose-50 dark:bg-rose-900/40 flex items-center justify-center">
-              <ArrowTrendingUpIcon class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-rose-500 rotate-180" />
-            </div>
+            <p class="text-[9px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 leading-tight">Biaya Operasional</p>
           </div>
-          <p class="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Biaya Operasional</p>
 
-          <div class="flex items-center justify-center py-1 sm:py-2">
-            <div class="relative w-20 h-20 sm:w-28 sm:h-28">
+          <div class="flex items-center justify-center py-0.5 sm:py-1.5 lg:py-2">
+            <div class="relative w-16 h-16 sm:w-24 sm:h-24 lg:w-28 lg:h-28">
               <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
-                <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="10" class="dark:[stroke:#1E293B]"/>
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" class="dark:[stroke:#1E293B]"/>
                 <circle
                   cx="60" cy="60" r="48" fill="none"
-                  stroke="#F43F5E" stroke-width="10"
+                  stroke="#F43F5E" stroke-width="11"
                   stroke-linecap="round"
                   :stroke-dasharray="ringDash(totalExpense > 0 ? Math.min(totalExpense / (totalIncome + totalExpense + 1), 1) : 0)"
                   class="transition-all duration-700"
                 />
               </svg>
-              <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-1">
-                <p class="text-[10px] sm:text-xs font-bold text-slate-900 dark:text-white tabular-nums leading-tight">
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-0.5">
+                <p class="text-[9px] sm:text-xs lg:text-sm font-bold text-slate-900 dark:text-white tabular-nums leading-tight">
                   {{ formatCurrency(totalExpense) }}
                 </p>
               </div>
             </div>
           </div>
 
-          <div class="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-slate-100 dark:border-slate-700/60">
-            <span class="inline-flex items-center gap-1 text-[9px] sm:text-[11px] font-semibold text-rose-500 dark:text-rose-400">
-              <svg class="w-3 h-3 hidden sm:inline" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clip-rule="evenodd"/></svg>
+          <div class="flex items-center justify-between pt-1 sm:pt-1.5 border-t border-slate-100 dark:border-slate-700/60 text-[8px] sm:text-[10px]">
+            <span class="inline-flex items-center gap-0.5 font-semibold text-rose-500 dark:text-rose-400 truncate">
               Beban
             </span>
-            <span class="text-[9px] sm:text-[10px] text-slate-400">Bensin &amp; servis</span>
+            <span class="text-slate-400 shrink-0">Bensin &amp; servis</span>
           </div>
         </div>
 
         <!-- 3. Laba Bersih -->
-        <div class="card p-3 sm:p-5 flex flex-col gap-0.5 sm:gap-1">
-          <div class="flex items-center justify-between gap-2">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center shrink-0">
-              <ChartBarIcon class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400" />
+        <div class="card p-2 sm:p-4 lg:p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-1 mb-0.5 sm:mb-1">
+              <div class="w-6 h-6 sm:w-8 lg:w-9 sm:h-8 lg:h-9 rounded-lg sm:rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center shrink-0">
+                <ChartBarIcon class="w-3.5 h-3.5 sm:w-4 lg:w-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-blue-50 dark:bg-blue-900/40 flex items-center justify-center">
+                <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3" :class="totalProfit >= 0 ? 'text-blue-500' : 'text-rose-500'" fill="currentColor" viewBox="0 0 20 20">
+                  <path v-if="totalProfit >= 0" fill-rule="evenodd" d="M12.577 4.878a.75.75 0 01.919-.53l4.78 1.281a.75.75 0 01.531.919l-1.281 4.78a.75.75 0 01-1.449-.387l.81-3.022a19.407 19.407 0 00-5.594 5.203.75.75 0 01-1.139.093L7 10.06l-4.72 4.72a.75.75 0 01-1.06-1.061l5.25-5.25a.75.75 0 011.06 0l3.074 3.073a20.923 20.923 0 015.545-4.931l-3.042-.815a.75.75 0 01-.53-.918z" clip-rule="evenodd"/>
+                  <path v-else fill-rule="evenodd" d="M1.22 5.222a.75.75 0 011.06 0L7 9.942l3.768-3.769a.75.75 0 011.113.058 20.908 20.908 0 013.813 7.254l1.574-2.727a.75.75 0 011.3.75l-2.475 4.286a.75.75 0 01-1.025.275l-4.287-2.475a.75.75 0 01.75-1.3l2.71 1.565a19.422 19.422 0 00-3.013-6.024L7.53 11.533a.75.75 0 01-1.06 0l-5.25-5.25a.75.75 0 010-1.061z" clip-rule="evenodd"/>
+                </svg>
+              </div>
             </div>
-            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-blue-50 dark:bg-blue-900/40 flex items-center justify-center">
-              <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" :class="totalProfit >= 0 ? 'text-blue-500' : 'text-rose-500'" fill="currentColor" viewBox="0 0 20 20">
-                <path v-if="totalProfit >= 0" fill-rule="evenodd" d="M12.577 4.878a.75.75 0 01.919-.53l4.78 1.281a.75.75 0 01.531.919l-1.281 4.78a.75.75 0 01-1.449-.387l.81-3.022a19.407 19.407 0 00-5.594 5.203.75.75 0 01-1.139.093L7 10.06l-4.72 4.72a.75.75 0 01-1.06-1.061l5.25-5.25a.75.75 0 011.06 0l3.074 3.073a20.923 20.923 0 015.545-4.931l-3.042-.815a.75.75 0 01-.53-.918z" clip-rule="evenodd"/>
-                <path v-else fill-rule="evenodd" d="M1.22 5.222a.75.75 0 011.06 0L7 9.942l3.768-3.769a.75.75 0 011.113.058 20.908 20.908 0 013.813 7.254l1.574-2.727a.75.75 0 011.3.75l-2.475 4.286a.75.75 0 01-1.025.275l-4.287-2.475a.75.75 0 01.75-1.3l2.71 1.565a19.422 19.422 0 00-3.013-6.024L7.53 11.533a.75.75 0 01-1.06 0l-5.25-5.25a.75.75 0 010-1.061z" clip-rule="evenodd"/>
-              </svg>
-            </div>
+            <p class="text-[9px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 leading-tight">Laba Bersih</p>
           </div>
-          <p class="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Laba Bersih</p>
 
-          <div class="flex items-center justify-center py-1 sm:py-2">
-            <div class="relative w-20 h-20 sm:w-28 sm:h-28">
+          <div class="flex items-center justify-center py-0.5 sm:py-1.5 lg:py-2">
+            <div class="relative w-16 h-16 sm:w-24 sm:h-24 lg:w-28 lg:h-28">
               <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
-                <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="10" class="dark:[stroke:#1E293B]"/>
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" class="dark:[stroke:#1E293B]"/>
                 <circle
                   cx="60" cy="60" r="48" fill="none"
-                  :stroke="totalProfit >= 0 ? '#3B82F6' : '#F43F5E'" stroke-width="10"
+                  :stroke="totalProfit >= 0 ? '#3B82F6' : '#F43F5E'" stroke-width="11"
                   stroke-linecap="round"
                   :stroke-dasharray="ringDash(totalIncome > 0 ? Math.min(Math.abs(totalProfit) / (totalIncome + 1), 1) : 0)"
                   class="transition-all duration-700"
                 />
               </svg>
-              <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-1">
-                <p :class="['text-[10px] sm:text-xs font-bold tabular-nums leading-tight', totalProfit >= 0 ? 'text-slate-900 dark:text-white' : 'text-rose-600']">
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-0.5">
+                <p :class="['text-[9px] sm:text-xs lg:text-sm font-bold tabular-nums leading-tight', totalProfit >= 0 ? 'text-slate-900 dark:text-white' : 'text-rose-600']">
                   {{ formatCurrency(totalProfit) }}
                 </p>
               </div>
             </div>
           </div>
 
-          <div class="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-slate-100 dark:border-slate-700/60">
-            <span class="inline-flex items-center gap-1 text-[9px] sm:text-[11px] font-semibold text-blue-600 dark:text-blue-400">
-              <ArrowTrendingUpIcon class="w-3 h-3 hidden sm:inline" /> Laba bersih
+          <div class="flex items-center justify-between pt-1 sm:pt-1.5 border-t border-slate-100 dark:border-slate-700/60 text-[8px] sm:text-[10px]">
+            <span class="inline-flex items-center gap-0.5 font-semibold text-blue-600 dark:text-blue-400 truncate">
+              <ArrowTrendingUpIcon class="w-2.5 h-2.5 hidden sm:inline" /> Laba
             </span>
-            <span class="text-[9px] sm:text-[10px] text-slate-400">{{ totalProfit >= 0 ? 'Surplus' : 'Defisit' }}</span>
+            <span class="text-slate-400 shrink-0">{{ totalProfit >= 0 ? 'Surplus' : 'Defisit' }}</span>
           </div>
         </div>
 
         <!-- 4. Unit Armada — multi-segment ring -->
-        <div class="card p-3 sm:p-5 flex flex-col gap-0.5 sm:gap-1">
-          <div class="flex items-center justify-between gap-2">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center shrink-0">
-              <TruckIcon class="w-4 h-4 sm:w-5 sm:h-5 text-violet-600 dark:text-violet-400" />
+        <div class="card p-2 sm:p-4 lg:p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-1 mb-0.5 sm:mb-1">
+              <div class="w-6 h-6 sm:w-8 lg:w-9 sm:h-8 lg:h-9 rounded-lg sm:rounded-xl bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center shrink-0">
+                <TruckIcon class="w-3.5 h-3.5 sm:w-4 lg:w-5 text-violet-600 dark:text-violet-400" />
+              </div>
+              <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-violet-50 dark:bg-violet-900/40 flex items-center justify-center">
+                <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-violet-500" fill="currentColor" viewBox="0 0 20 20"><path d="M3.196 12.87l-.825.483a.75.75 0 000 1.294l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.294l-.825-.484-5.666 3.322a1.5 1.5 0 01-1.516 0l-5.426-3.32z"/><path d="M16.94 9.123l.75-.44a.75.75 0 000-1.29l-7.25-4.26a.75.75 0 00-.76 0L2.43 7.393a.75.75 0 000 1.29l.75.44 5.33-3.131a1.5 1.5 0 011.52 0l6.91 4.131z"/><path d="M8.31 13.723l-5.01-2.944-1.48.868a.75.75 0 000 1.296l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.296l-1.48-.868-5.01 2.944a1.5 1.5 0 01-1.278 0z"/></svg>
+              </div>
             </div>
-            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-violet-50 dark:bg-violet-900/40 flex items-center justify-center">
-              <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-violet-500" fill="currentColor" viewBox="0 0 20 20"><path d="M3.196 12.87l-.825.483a.75.75 0 000 1.294l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.294l-.825-.484-5.666 3.322a1.5 1.5 0 01-1.516 0l-5.426-3.32z"/><path d="M16.94 9.123l.75-.44a.75.75 0 000-1.29l-7.25-4.26a.75.75 0 00-.76 0L2.43 7.393a.75.75 0 000 1.29l.75.44 5.33-3.131a1.5 1.5 0 011.52 0l6.91 4.131z"/><path d="M8.31 13.723l-5.01-2.944-1.48.868a.75.75 0 000 1.296l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.296l-1.48-.868-5.01 2.944a1.5 1.5 0 01-1.278 0z"/></svg>
-            </div>
+            <p class="text-[9px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 leading-tight">Unit Armada</p>
           </div>
-          <p class="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Unit Armada</p>
 
-          <div class="flex items-center justify-center gap-2 sm:gap-3 py-1 sm:py-2">
-            <div class="relative w-20 h-20 sm:w-24 sm:h-24 shrink-0">
+          <div class="flex items-center justify-center gap-1 sm:gap-2.5 lg:gap-3 py-0.5 sm:py-1.5 lg:py-2">
+            <div class="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 shrink-0">
               <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
-                <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="10" class="dark:[stroke:#1E293B]"/>
-                <circle v-if="availableCount > 0" cx="60" cy="60" r="48" fill="none" stroke="#10B981" stroke-width="10" stroke-linecap="butt" :stroke-dasharray="`${availableArc.toFixed(1)} ${C}`" stroke-dashoffset="0"/>
-                <circle v-if="rentedCount > 0" cx="60" cy="60" r="48" fill="none" stroke="#3B82F6" stroke-width="10" stroke-linecap="butt" :stroke-dasharray="`${rentedArc.toFixed(1)} ${C}`" :stroke-dashoffset="`-${availableArc.toFixed(1)}`"/>
-                <circle v-if="maintenanceCount > 0" cx="60" cy="60" r="48" fill="none" stroke="#F59E0B" stroke-width="10" stroke-linecap="butt" :stroke-dasharray="`${maintenArc.toFixed(1)} ${C}`" :stroke-dashoffset="`-${(availableArc + rentedArc).toFixed(1)}`"/>
-                <circle v-if="vehiclesStore.vehicles.length === 0" cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="10" :stroke-dasharray="`${C * 0.03} ${C}`"/>
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" class="dark:[stroke:#1E293B]"/>
+                <circle v-if="availableCount > 0" cx="60" cy="60" r="48" fill="none" stroke="#10B981" stroke-width="11" stroke-linecap="butt" :stroke-dasharray="`${availableArc.toFixed(1)} ${C}`" stroke-dashoffset="0"/>
+                <circle v-if="rentedCount > 0" cx="60" cy="60" r="48" fill="none" stroke="#3B82F6" stroke-width="11" stroke-linecap="butt" :stroke-dasharray="`${rentedArc.toFixed(1)} ${C}`" :stroke-dashoffset="`-${availableArc.toFixed(1)}`"/>
+                <circle v-if="maintenanceCount > 0" cx="60" cy="60" r="48" fill="none" stroke="#F59E0B" stroke-width="11" stroke-linecap="butt" :stroke-dasharray="`${maintenArc.toFixed(1)} ${C}`" :stroke-dashoffset="`-${(availableArc + rentedArc).toFixed(1)}`"/>
+                <circle v-if="vehiclesStore.vehicles.length === 0" cx="60" cy="60" r="48" fill="none" stroke="#E2E8F0" stroke-width="11" :stroke-dasharray="`${C * 0.03} ${C}`"/>
               </svg>
               <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-                <p class="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-none">{{ vehiclesStore.vehicles.length }}</p>
-                <p class="text-[9px] sm:text-[10px] text-slate-400 mt-0.5">Mobil</p>
+                <p class="text-xs sm:text-lg lg:text-xl font-extrabold text-slate-900 dark:text-white leading-none">{{ vehiclesStore.vehicles.length }}</p>
+                <p class="text-[8px] sm:text-[9px] text-slate-400 mt-0.5">Mobil</p>
               </div>
             </div>
-            <div class="flex flex-col gap-1 text-[10px] sm:text-[11px]">
-              <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+            <div class="flex flex-col gap-0.5 sm:gap-1 text-[8px] sm:text-[10px]">
+              <div class="flex items-center gap-1">
+                <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 shrink-0"></span>
                 <span class="text-slate-600 dark:text-slate-300">{{ availableCount }} siap</span>
               </div>
-              <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-blue-500 shrink-0"></span>
+              <div class="flex items-center gap-1">
+                <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-blue-500 shrink-0"></span>
                 <span class="text-slate-600 dark:text-slate-300">{{ rentedCount }} sewa</span>
               </div>
-              <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-amber-400 shrink-0"></span>
+              <div class="flex items-center gap-1">
+                <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-amber-400 shrink-0"></span>
                 <span class="text-slate-600 dark:text-slate-300">{{ maintenanceCount }} servis</span>
               </div>
             </div>
           </div>
 
-          <div class="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-slate-100 dark:border-slate-700/60">
-            <span class="text-[9px] sm:text-[11px] font-semibold text-violet-600 dark:text-violet-400">Total armada</span>
-            <span :class="['text-[9px] sm:text-[10px] font-medium', maintenanceCount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-slate-400']">
-              {{ maintenanceCount > 0 ? `${maintenanceCount} servis` : 'Siap semua' }}
+          <div class="flex items-center justify-between pt-1 sm:pt-1.5 border-t border-slate-100 dark:border-slate-700/60 text-[8px] sm:text-[10px]">
+            <span class="font-semibold text-violet-600 dark:text-violet-400">Total</span>
+            <span :class="['font-medium', maintenanceCount > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-slate-400']">
+              {{ maintenanceCount > 0 ? `${maintenanceCount} bengkel` : 'Siap semua' }}
             </span>
           </div>
         </div>
