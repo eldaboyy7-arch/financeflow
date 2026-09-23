@@ -9,6 +9,7 @@ import { useFormatCurrency } from '@/composables/useFormatCurrency'
 import CurrencyInput from '@/components/CurrencyInput.vue'
 import SelectInput, { type SelectOption } from '@/components/SelectInput.vue'
 import DateInput from '@/components/DateInput.vue'
+import VehicleSelect from '@/components/rental/VehicleSelect.vue'
 import api from '@/api/axios'
 import {
   XMarkIcon,
@@ -140,22 +141,19 @@ function applyVehicleConfig(v: Vehicle) {
   syncCategoryWithRentalType(rentalType.value)
 }
 
-function onVehicleChange(val: string | number) {
-  selectedVehicleId.value = val
-  const v = vehiclesStore.vehicles.find(item => String(item.id) === String(val))
-  if (v) {
-    dailyRate.value = Number(v.daily_rate) || 200000
-    if (!isCustomAmount.value) {
-      totalAmount.value = dailyRate.value * durationDays.value
-    }
-    updateStatusToRented.value = v.status !== 'rented'
+function onVehicleSelect(v: Vehicle) {
+  selectedVehicleId.value = v.id
+  dailyRate.value = Number(v.daily_rate) || 200000
+  if (!isCustomAmount.value) {
+    totalAmount.value = dailyRate.value * durationDays.value
+  }
+  updateStatusToRented.value = v.status !== 'rented'
 
-    const isLargeFleet = (v.capacity && v.capacity >= 10) || 
-                         v.name.toLowerCase().includes('hiace') || 
-                         v.name.toLowerCase().includes('bus')
-    if (isLargeFleet && rentalType.value === 'lepas_kunci') {
-      rentalType.value = 'dengan_supir'
-    }
+  const isLargeFleet = (v.capacity && v.capacity >= 10) || 
+                       v.name.toLowerCase().includes('hiace') || 
+                       v.name.toLowerCase().includes('bus')
+  if (isLargeFleet && rentalType.value === 'lepas_kunci') {
+    rentalType.value = 'dengan_supir'
   }
 }
 
@@ -350,76 +348,22 @@ async function handleSubmit() {
             {{ errorMessage }}
           </div>
 
-          <!-- Section: Pilih Armada Mobil -->
+          <!-- Section: Pilih Armada Mobil (Modern Custom Dropdown) -->
           <div class="space-y-1.5">
             <div class="flex items-center justify-between">
               <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">
                 Pilih Armada Mobil <span class="text-rose-500">*</span>
               </label>
-              <span class="text-[11px] text-slate-400">
-                {{ vehiclesStore.vehicles.filter(v => v.status === 'available').length }} unit siap disewa
+              <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ vehiclesStore.vehicles.filter(v => v.status === 'available').length }}</span> unit siap disewa
               </span>
             </div>
-            <div class="relative">
-              <select
-                v-model="selectedVehicleId"
-                @change="onVehicleChange(selectedVehicleId)"
-                class="w-full pl-3 pr-10 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-2xs appearance-none"
-              >
-                <option value="" disabled>-- Pilih Armada Mobil --</option>
-                <option
-                  v-for="v in vehiclesStore.vehicles"
-                  :key="v.id"
-                  :value="v.id"
-                >
-                  {{ v.name }} {{ v.plate_number ? `(${v.plate_number})` : '' }} &mdash; {{ formatCurrency(v.daily_rate) }}/hari ({{ v.status === 'available' ? 'Siap' : (v.status === 'rented' ? 'Sedang Disewa' : 'Servis') }})
-                </option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
-                <ChevronUpDownIcon class="w-4 h-4" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Vehicle Info Card (Live Target) -->
-          <div class="p-3.5 rounded-2xl bg-gradient-to-r from-slate-50 via-slate-50 to-primary-50/30 dark:from-slate-850 dark:to-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3 min-w-0">
-              <div class="w-14 h-12 rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-700 shrink-0 flex items-center justify-center">
-                <img
-                  v-if="activeVehicle.photo_url"
-                  :src="activeVehicle.photo_url"
-                  :alt="activeVehicle.name"
-                  class="w-full h-full object-cover"
-                />
-                <TruckIcon v-else class="w-6 h-6 text-slate-400" />
-              </div>
-              <div class="min-w-0">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block truncate">
-                  {{ activeVehicle.plate_number || 'Tanpa Plat' }} &bull; {{ activeVehicle.capacity || 7 }} Kursi
-                </span>
-                <h4 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white truncate">
-                  {{ activeVehicle.name }}
-                </h4>
-                <div class="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-                  <span>Tarif dasar:</span>
-                  <span class="font-bold text-primary-600 dark:text-primary-400">{{ formatCurrency(dailyRate) }}</span>
-                  <span class="text-[10px]">/hari</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="text-right shrink-0">
-              <span
-                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold"
-                :class="activeVehicle.status === 'available' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300' : (activeVehicle.status === 'rented' ? 'bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300')"
-              >
-                <span
-                  class="w-1.5 h-1.5 rounded-full"
-                  :class="activeVehicle.status === 'available' ? 'bg-emerald-500' : (activeVehicle.status === 'rented' ? 'bg-blue-500' : 'bg-amber-500')"
-                />
-                {{ activeVehicle.status === 'available' ? 'Siap Disewa' : (activeVehicle.status === 'rented' ? 'Sedang Disewa' : 'Di Bengkel') }}
-              </span>
-            </div>
+            
+            <VehicleSelect
+              v-model="selectedVehicleId"
+              :vehicles="vehiclesStore.vehicles"
+              @change="onVehicleSelect"
+            />
           </div>
 
           <!-- Section: Durasi Sewa (1-Klik Pilih Hari) -->
