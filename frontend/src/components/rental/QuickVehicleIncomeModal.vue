@@ -114,9 +114,7 @@ const returnDateFormatted = computed(() => {
 })
 
 function applyVehicleConfig(v: Vehicle) {
-  dailyRate.value = Number(v.daily_rate) || 200000
   durationDays.value = 1
-  totalAmount.value = dailyRate.value
   isCustomAmount.value = false
   startDate.value = new Date().toISOString().slice(0, 10)
   customerName.value = ''
@@ -132,6 +130,14 @@ function applyVehicleConfig(v: Vehicle) {
   
   rentalType.value = isLargeFleet ? 'dengan_supir' : 'lepas_kunci'
 
+  // Set tarif sesuai tipe sewa yang terdeteksi
+  if (rentalType.value === 'dengan_supir' && v.daily_rate_driver && Number(v.daily_rate_driver) > 0) {
+    dailyRate.value = Number(v.daily_rate_driver)
+  } else {
+    dailyRate.value = Number(v.daily_rate) || 200000
+  }
+  totalAmount.value = dailyRate.value
+
   // Pre-select account (first active account)
   if (accountsStore.activeAccounts.length > 0 && !selectedAccountId.value) {
     selectedAccountId.value = String(accountsStore.activeAccounts[0].id)
@@ -143,11 +149,6 @@ function applyVehicleConfig(v: Vehicle) {
 
 function onVehicleSelect(v: Vehicle) {
   selectedVehicleId.value = v.id
-  dailyRate.value = Number(v.daily_rate) || 200000
-  if (!isCustomAmount.value) {
-    totalAmount.value = dailyRate.value * durationDays.value
-  }
-  updateStatusToRented.value = v.status !== 'rented'
 
   const isLargeFleet = (v.capacity && v.capacity >= 10) || 
                        v.name.toLowerCase().includes('hiace') || 
@@ -155,6 +156,18 @@ function onVehicleSelect(v: Vehicle) {
   if (isLargeFleet && rentalType.value === 'lepas_kunci') {
     rentalType.value = 'dengan_supir'
   }
+
+  // Set tarif sesuai tipe sewa aktif
+  if (rentalType.value === 'dengan_supir' && v.daily_rate_driver && Number(v.daily_rate_driver) > 0) {
+    dailyRate.value = Number(v.daily_rate_driver)
+  } else {
+    dailyRate.value = Number(v.daily_rate) || 200000
+  }
+
+  if (!isCustomAmount.value) {
+    totalAmount.value = dailyRate.value * durationDays.value
+  }
+  updateStatusToRented.value = v.status !== 'rented'
 }
 
 // Sync state when vehicle changes or modal opens
@@ -205,6 +218,19 @@ function syncCategoryWithRentalType(type: 'lepas_kunci' | 'dengan_supir') {
 
 watch(rentalType, (newType) => {
   syncCategoryWithRentalType(newType)
+
+  // Update tarif harian sesuai tipe sewa
+  const v = activeVehicle.value
+  if (v) {
+    if (newType === 'dengan_supir' && v.daily_rate_driver && Number(v.daily_rate_driver) > 0) {
+      dailyRate.value = Number(v.daily_rate_driver)
+    } else {
+      dailyRate.value = Number(v.daily_rate) || 200000
+    }
+    if (!isCustomAmount.value) {
+      totalAmount.value = dailyRate.value * durationDays.value
+    }
+  }
 })
 
 function setDuration(days: number) {

@@ -349,65 +349,87 @@ async function submitTransaction() {
         <div
           v-for="tx in transactions"
           :key="tx.id"
-          class="flex items-center gap-3.5 px-5 py-3.5 hover:bg-slate-50/70 dark:hover:bg-slate-700/30 transition-colors group"
+          class="px-4 py-3 sm:px-5 sm:py-3.5 hover:bg-slate-50/70 dark:hover:bg-slate-700/30 transition-colors group"
         >
-          <div
-            :class="[
-              'w-10 h-10 rounded-xl flex items-center justify-center shrink-0',
-              tx.type === 'income'
-                ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400'
-                : 'bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400'
-            ]"
-          >
-            <ArrowUpRightIcon v-if="tx.type === 'income'" class="w-5 h-5 stroke-[2.5]" />
-            <ArrowDownRightIcon v-else class="w-5 h-5 stroke-[2.5]" />
-          </div>
+          <!-- Baris utama: icon + info + nominal + actions -->
+          <div class="flex items-center gap-2.5 sm:gap-3.5">
+            <!-- Icon -->
+            <div
+              :class="[
+                'w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0',
+                tx.type === 'income'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400'
+                  : 'bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400'
+              ]"
+            >
+              <ArrowUpRightIcon v-if="tx.type === 'income'" class="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+              <ArrowDownRightIcon v-else class="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+            </div>
 
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">
-              {{ tx.description || (tx.type === 'income' ? 'Sewa Masuk' : 'Biaya Operasional') }}
-            </p>
-            <div class="flex items-center gap-2 mt-0.5 text-xs text-slate-400">
-              <span>{{ formatDate(tx.date) }}</span>
-              <template v-if="tx.vehicle">
-                <span>·</span>
-                <span class="inline-flex items-center gap-1 font-medium text-slate-700 dark:text-slate-300">
-                  <TruckIcon class="w-3 h-3 text-slate-400" />
-                  {{ tx.vehicle.name }}
-                </span>
-              </template>
-              <template v-if="tx.category">
-                <span>·</span>
-                <span class="text-slate-500">{{ tx.category.name }}</span>
-              </template>
+            <!-- Info Tengah -->
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                {{ tx.description || (tx.type === 'income' ? 'Sewa Masuk' : 'Biaya Operasional') }}
+              </p>
+              <!-- Meta info baris ke-2 (wrap-safe) -->
+              <div class="flex flex-wrap items-center gap-x-1.5 gap-y-0 mt-0.5 text-[10px] sm:text-xs text-slate-400">
+                <span>{{ formatDate(tx.date) }}</span>
+                <template v-if="tx.vehicle">
+                  <span class="hidden sm:inline">·</span>
+                  <span class="hidden sm:inline-flex items-center gap-0.5 font-medium text-slate-600 dark:text-slate-300">
+                    <TruckIcon class="w-3 h-3 text-slate-400" />
+                    {{ tx.vehicle.name }}
+                  </span>
+                </template>
+                <template v-if="tx.category">
+                  <span class="hidden sm:inline">·</span>
+                  <span class="hidden sm:inline text-slate-500">{{ tx.category.name }}</span>
+                </template>
+              </div>
+            </div>
+
+            <!-- Kanan: Nominal + Rekening -->
+            <div class="text-right shrink-0">
+              <p :class="['text-sm font-bold tabular-nums', tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400']">
+                {{ tx.type === 'income' ? '+' : '−' }}{{ formatCurrency(tx.amount) }}
+              </p>
+              <span class="text-[10px] text-slate-400 block mt-0.5">{{ tx.account?.name || 'Kas' }}</span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-0.5 shrink-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+              <button
+                type="button"
+                @click.stop="openEdit(tx)"
+                class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/60 transition-colors"
+                title="Edit Transaksi"
+              >
+                <PencilSquareIcon class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </button>
+              <button
+                type="button"
+                @click.stop="deleteTransaction(tx.id)"
+                class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-colors"
+                title="Hapus Transaksi"
+              >
+                <TrashIcon class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </button>
             </div>
           </div>
 
-          <div class="text-right shrink-0">
-            <p :class="['text-sm font-bold tabular-nums', tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400']">
-              {{ tx.type === 'income' ? '+' : '−' }}{{ formatCurrency(tx.amount) }}
-            </p>
-            <span class="text-[11px] text-slate-400 block mt-0.5">{{ tx.account?.name || 'Kas' }}</span>
-          </div>
-
-          <!-- Action Buttons (Edit & Hapus) -->
-          <div class="flex items-center gap-0.5 shrink-0 ml-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-            <button
-              type="button"
-              @click.stop="openEdit(tx)"
-              class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/60 transition-colors"
-              title="Edit Transaksi"
-            >
-              <PencilSquareIcon class="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              @click.stop="deleteTransaction(tx.id)"
-              class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-colors"
-              title="Hapus Transaksi"
-            >
-              <TrashIcon class="w-4 h-4" />
-            </button>
+          <!-- Sub-info (mobile only): armada + kategori di bawah -->
+          <div class="flex flex-wrap items-center gap-1.5 mt-1.5 ml-[46px] sm:hidden">
+            <template v-if="tx.vehicle">
+              <span class="inline-flex items-center gap-0.5 text-[10px] font-medium text-slate-500 dark:text-slate-400">
+                <TruckIcon class="w-3 h-3" />
+                {{ tx.vehicle.name }}
+              </span>
+            </template>
+            <template v-if="tx.category">
+              <span class="inline-flex items-center gap-0.5 text-[10px] bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded-full">
+                {{ tx.category.name }}
+              </span>
+            </template>
           </div>
         </div>
       </div>
