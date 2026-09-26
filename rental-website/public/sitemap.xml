@@ -7,40 +7,40 @@
   <!-- Halaman Utama / Beranda -->
   <url>
     <loc>https://www.3putrimulya.com/</loc>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   <!-- Pilihan Armada Rental Mobil -->
   <url>
     <loc>https://www.3putrimulya.com/armada</loc>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Paket Tour Bintan & Sewa HiAce -->
   <url>
     <loc>https://www.3putrimulya.com/paket-tour-bintan</loc>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Pilihan Layanan Rental & Supir -->
   <url>
     <loc>https://www.3putrimulya.com/layanan</loc>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Inspirasi Destinasi Wisata Bintan -->
   <url>
     <loc>https://www.3putrimulya.com/destinasi</loc>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 

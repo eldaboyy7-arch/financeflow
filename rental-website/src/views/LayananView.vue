@@ -8,7 +8,7 @@ const { isEnglish } = useLanguage()
 
 const updatePageTitle = () => {
   document.title = isEnglish.value
-    ? 'Car Rental Services & Tour Transportation Bintan | 3 Putri Mulya'
+    ? 'Layanan Rental Mobil Bintan — Car Rental Services & Transport | 3 Putri Mulya'
     : 'Layanan Rental Mobil & Transportasi Wisata Bintan | 3 Putri Mulya'
 }
 

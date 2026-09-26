@@ -106,7 +106,7 @@ watch(previewVehicle, (vehicle) => {
 
 onMounted(() => {
   document.title = isEnglish.value
-    ? 'Official Fleet Catalog — Car & Bus Rental Bintan | 3 Putri Mulya'
+    ? 'Pilihan Armada Rental Mobil Bintan — Fleet Catalog | 3 Putri Mulya'
     : 'Katalog Lengkap Armada — Sewa Mobil & Bus Pariwisata Bintan | 3 Putri Mulya'
   window.scrollTo({ top: 0, behavior: 'smooth' })
   fetchVehicles()

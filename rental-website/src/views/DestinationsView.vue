@@ -9,7 +9,7 @@ const { isEnglish } = useLanguage()
 
 const updatePageTitle = () => {
   document.title = isEnglish.value
-    ? 'Bintan Tourist Attractions & Travel Destinations Guide | 3 Putri Mulya'
+    ? 'Wisata & Destinasi Favorit Bintan — Travel Destinations Guide | 3 Putri Mulya'
     : 'Panduan Destinasi & Wisata Populer Pulau Bintan | 3 Putri Mulya'
 }
 

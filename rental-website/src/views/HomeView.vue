@@ -85,8 +85,8 @@ const featuredVehicle = computed(() => {
 
 function updateDocTitle() {
   document.title = isEnglish.value
-    ? '3 Putri Mulya - Bintan Car Rental & Tour'
-    : '3 Putri Mulya - Rental Mobil & Tour Bintan'
+    ? 'Rental Mobil Bintan - Car Rental Bintan | 3 Putri Mulya'
+    : 'Rental Mobil Bintan - Sewa Mobil & Tour Bintan | 3 Putri Mulya'
 }
 
 onMounted(() => {

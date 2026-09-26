@@ -209,7 +209,7 @@ const getTourWhatsAppUrl = (pkg: TourPackage) => {
 
 const updatePageTitle = () => {
   document.title = isEnglish.value
-    ? 'Bintan HiAce Tour Packages (Commuter & Premio) - Driver & Fuel Included | 3 Putri Mulya'
+    ? 'Paket Tour Bintan HiAce — Tour Packages Bintan All-In | 3 Putri Mulya'
     : 'Paket Tour Bintan HiAce - Mulai Rp 1.400.000 All-In (Supir & BBM) | 3 Putri Mulya'
 }
 
