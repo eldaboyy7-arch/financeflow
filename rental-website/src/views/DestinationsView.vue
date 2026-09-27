@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { destinationsList } from '@/config/destinations'
 import { siteConfig } from '@/config/site'
@@ -13,8 +13,83 @@ const updatePageTitle = () => {
     : 'Panduan Destinasi & Wisata Populer Pulau Bintan | 3 Putri Mulya'
 }
 
+const DEST_SCHEMA_ID = 'jsonld-destinations'
+const SITE_URL = 'https://www.3putrimulya.com'
+
+function injectDestinationsSchema() {
+  if (typeof document === 'undefined') return
+  const existing = document.getElementById(DEST_SCHEMA_ID)
+  if (existing) existing.remove()
+
+  const schemas = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Beranda', item: SITE_URL },
+        { '@type': 'ListItem', position: 2, name: 'Destinasi Wisata Bintan', item: `${SITE_URL}/destinasi` }
+      ]
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Rekomendasi Objek Wisata Terbaik di Pulau Bintan',
+      description: 'Panduan dan rekomendasi objek wisata populer di Pulau Bintan yang dapat dikunjungi dengan rental mobil atau paket tour 3 Putri Mulya.',
+      itemListElement: [
+        {
+          '@type': 'TouristAttraction',
+          position: 1,
+          name: 'Lagoi Bay Bintan',
+          description: 'Kawasan pantai pasir putih premium, pusat rekreasi keluarga, resort mewah, dan kuliner tepi laut di utara Bintan.',
+          url: `${SITE_URL}/destinasi`
+        },
+        {
+          '@type': 'TouristAttraction',
+          position: 2,
+          name: 'Treasure Bay Bintan (Crystal Lagoon)',
+          description: 'Kolam renang air laut buatan terbesar di Asia Tenggara dengan wahana water sports seru untuk keluarga.',
+          url: `${SITE_URL}/destinasi`
+        },
+        {
+          '@type': 'TouristAttraction',
+          position: 3,
+          name: 'Pantai Trikora',
+          description: 'Garis pantai eksotis di timur Bintan dengan formasi batu granit raksasa, pondok santai, dan seafood segar.',
+          url: `${SITE_URL}/destinasi`
+        },
+        {
+          '@type': 'TouristAttraction',
+          position: 4,
+          name: 'Gurun Pasir Busung & Danau Biru',
+          description: 'Bekas tambang pasir dengan panorama bukit pasir estetik dan danau biru toska yang sangat fotogenik.',
+          url: `${SITE_URL}/destinasi`
+        },
+        {
+          '@type': 'TouristAttraction',
+          position: 5,
+          name: 'Vihara 500 Lohan (Ksitigarbha Bodhisattva)',
+          description: 'Situs cagar budaya dan wisata religi dengan 500 patung batu berwajah unik dengan ekspresi berbeda di Tanjungpinang.',
+          url: `${SITE_URL}/destinasi`
+        }
+      ]
+    }
+  ]
+
+  const script = document.createElement('script')
+  script.id = DEST_SCHEMA_ID
+  script.type = 'application/ld+json'
+  script.textContent = JSON.stringify(schemas)
+  document.head.appendChild(script)
+}
+
 onMounted(() => {
   updatePageTitle()
+  injectDestinationsSchema()
+})
+
+onUnmounted(() => {
+  const existing = document.getElementById(DEST_SCHEMA_ID)
+  if (existing) existing.remove()
 })
 
 watch(isEnglish, () => {

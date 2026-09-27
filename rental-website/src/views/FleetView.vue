@@ -104,10 +104,97 @@ watch(previewVehicle, (vehicle) => {
   }
 })
 
+const FLEET_SCHEMA_ID = 'jsonld-fleet-catalog'
+const SITE_URL = 'https://www.3putrimulya.com'
+
+function injectFleetSchema() {
+  if (typeof document === 'undefined') return
+  const existing = document.getElementById(FLEET_SCHEMA_ID)
+  if (existing) existing.remove()
+
+  const schemas = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Beranda', item: SITE_URL },
+        { '@type': 'ListItem', position: 2, name: 'Pilihan Armada Rental Mobil Bintan', item: `${SITE_URL}/armada` }
+      ]
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Katalog Armada Rental Mobil Bintan 3 Putri Mulya',
+      description: 'Pilihan armada rental mobil di Pulau Bintan & Tanjungpinang: City Car, MPV Keluarga, hingga Minibus HiAce Luxury.',
+      itemListElement: [
+        {
+          '@type': 'Product',
+          position: 1,
+          name: 'Toyota New Avanza / Veloz',
+          description: 'Sewa mobil MPV 7 penumpang terlaris di Bintan. Nyaman untuk keluarga, hemat BBM, AC dingin.',
+          offers: {
+            '@type': 'AggregateOffer',
+            priceCurrency: 'IDR',
+            lowPrice: '300000',
+            highPrice: '500000',
+            offerCount: '2'
+          }
+        },
+        {
+          '@type': 'Product',
+          position: 2,
+          name: 'Toyota Innova Reborn',
+          description: 'Sewa mobil medium MPV 7-8 penumpang mewah dan tangguh untuk perjalanan bisnis dan wisata keluarga di Bintan.',
+          offers: {
+            '@type': 'AggregateOffer',
+            priceCurrency: 'IDR',
+            lowPrice: '500000',
+            highPrice: '800000',
+            offerCount: '2'
+          }
+        },
+        {
+          '@type': 'Product',
+          position: 3,
+          name: 'Toyota HiAce Commuter / Premio Luxury',
+          description: 'Sewa minibus 11-15 penumpang all-in supir & BBM dengan fasilitas karaoke on-board untuk rombongan wisata Bintan.',
+          offers: {
+            '@type': 'AggregateOffer',
+            priceCurrency: 'IDR',
+            lowPrice: '1400000',
+            highPrice: '1500000',
+            offerCount: '2'
+          }
+        },
+        {
+          '@type': 'Product',
+          position: 4,
+          name: 'Toyota New Agya / Daihatsu Ayla',
+          description: 'Sewa mobil lincah dan hemat kapasitas 4-5 penumpang untuk keliling kota Tanjungpinang & Bintan.',
+          offers: {
+            '@type': 'AggregateOffer',
+            priceCurrency: 'IDR',
+            lowPrice: '250000',
+            highPrice: '350000',
+            offerCount: '2'
+          }
+        }
+      ]
+    }
+  ]
+
+  const script = document.createElement('script')
+  script.id = FLEET_SCHEMA_ID
+  script.type = 'application/ld+json'
+  script.textContent = JSON.stringify(schemas)
+  document.head.appendChild(script)
+}
+
 onMounted(() => {
   document.title = isEnglish.value
     ? 'Pilihan Armada Rental Mobil Bintan — Fleet Catalog | 3 Putri Mulya'
     : 'Katalog Lengkap Armada — Sewa Mobil & Bus Pariwisata Bintan | 3 Putri Mulya'
+  injectFleetSchema()
   window.scrollTo({ top: 0, behavior: 'smooth' })
   fetchVehicles()
   if (typeof window !== 'undefined') {
@@ -116,6 +203,8 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  const existing = document.getElementById(FLEET_SCHEMA_ID)
+  if (existing) existing.remove()
   if (typeof window !== 'undefined') {
     window.removeEventListener('keydown', handleKeydown)
     document.body.classList.remove('overflow-hidden')

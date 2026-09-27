@@ -8,8 +8,8 @@ const router = createRouter({
       name: 'home',
       component: () => import('@/views/HomeView.vue'),
       meta: {
-        title: '3 Putri Mulya - Rental Mobil Lepas Kunci & Driver Bintan',
-        description: 'Rental mobil resmi di Bintan & Tanjungpinang. Armada terawat, harga lepas kunci & dengan supir transparan, serta paket tour wisata Bintan.'
+        title: 'Rental Mobil Bintan - Car Rental Bintan | 3 Putri Mulya',
+        description: 'Rental mobil terpercaya di Pulau Bintan & Tanjungpinang. Sewa mobil lepas kunci, dengan supir profesional, atau paket tour HiAce seharian. Trusted car rental in Bintan Island — self-drive & chauffeur options available.'
       }
     },
     {
@@ -98,8 +98,23 @@ const router = createRouter({
   }
 })
 
+function setMetaTag(selector: string, attrName: string, attrValue: string, content: string) {
+  let el = document.querySelector(selector)
+  if (!el) {
+    el = document.createElement('meta')
+    el.setAttribute(attrName, attrValue)
+    document.head.appendChild(el)
+  }
+  el.setAttribute('content', content)
+}
+
 router.afterEach((to) => {
   if (typeof document === 'undefined') return
+
+  const cleanPath = to.path === '/' ? '' : to.path
+  const fullUrl = `https://www.3putrimulya.com${cleanPath}`
+  const pageTitle = (to.meta?.title as string) || 'Rental Mobil Bintan - Car Rental Bintan | 3 Putri Mulya'
+  const pageDesc = (to.meta?.description as string) || 'Rental mobil terpercaya di Pulau Bintan & Tanjungpinang. Sewa mobil lepas kunci, dengan supir profesional, atau paket tour HiAce seharian.'
 
   // 1. Dynamic Canonical Tag
   let canonicalEl = document.querySelector('link[rel="canonical"]')
@@ -108,24 +123,27 @@ router.afterEach((to) => {
     canonicalEl.setAttribute('rel', 'canonical')
     document.head.appendChild(canonicalEl)
   }
-  const cleanPath = to.path === '/' ? '' : to.path
-  canonicalEl.setAttribute('href', `https://www.3putrimulya.com${cleanPath}`)
+  canonicalEl.setAttribute('href', fullUrl)
 
   // 2. Dynamic Title
-  if (to.meta?.title) {
-    document.title = to.meta.title as string
-  }
+  document.title = pageTitle
 
   // 3. Dynamic Meta Description
-  if (to.meta?.description) {
-    let metaDesc = document.querySelector('meta[name="description"]')
-    if (!metaDesc) {
-      metaDesc = document.createElement('meta')
-      metaDesc.setAttribute('name', 'description')
-      document.head.appendChild(metaDesc)
-    }
-    metaDesc.setAttribute('content', to.meta.description as string)
-  }
+  setMetaTag('meta[name="description"]', 'name', 'description', pageDesc)
+
+  // 4. Dynamic Open Graph (WhatsApp, Facebook, LinkedIn link preview)
+  setMetaTag('meta[property="og:title"]', 'property', 'og:title', pageTitle)
+  setMetaTag('meta[property="og:description"]', 'property', 'og:description', pageDesc)
+  setMetaTag('meta[property="og:url"]', 'property', 'og:url', fullUrl)
+
+  // 5. Dynamic Twitter / X Card
+  setMetaTag('meta[name="twitter:title"]', 'name', 'twitter:title', pageTitle)
+  setMetaTag('meta[name="twitter:description"]', 'name', 'twitter:description', pageDesc)
+
+  // 6. Dynamic hreflang sync
+  document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => {
+    el.setAttribute('href', fullUrl)
+  })
 })
 
 export default router

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { siteConfig } from '@/config/site'
 import { useLanguage } from '@/composables/useLanguage'
@@ -12,8 +12,86 @@ const updatePageTitle = () => {
     : 'Layanan Rental Mobil & Transportasi Wisata Bintan | 3 Putri Mulya'
 }
 
+const SVC_SCHEMA_ID = 'jsonld-services'
+const SITE_URL = 'https://www.3putrimulya.com'
+
+function injectServicesSchema() {
+  if (typeof document === 'undefined') return
+  const existing = document.getElementById(SVC_SCHEMA_ID)
+  if (existing) existing.remove()
+
+  const schemas = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Beranda', item: SITE_URL },
+        { '@type': 'ListItem', position: 2, name: 'Layanan Rental Mobil & Supir Bintan', item: `${SITE_URL}/layanan` }
+      ]
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: 'Layanan Rental Mobil & Supir Bintan 3 Putri Mulya',
+      serviceType: 'Car Rental & Transportation',
+      provider: {
+        '@type': 'LocalBusiness',
+        name: '3 Putri Mulya',
+        telephone: '+6281372371120',
+        url: SITE_URL
+      },
+      areaServed: {
+        '@type': 'Place',
+        name: 'Pulau Bintan & Tanjungpinang, Kepulauan Riau'
+      },
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Pilihan Layanan Transportasi Bintan',
+        itemListElement: [
+          {
+            '@type': 'Offer',
+            name: 'Sewa Mobil Lepas Kunci (Self-Drive)',
+            description: 'Sewa mobil harian tanpa supir dengan durasi fleksibel 24 jam dan kilometer tanpa batas di Pulau Bintan.',
+            priceCurrency: 'IDR'
+          },
+          {
+            '@type': 'Offer',
+            name: 'Sewa Mobil dengan Supir Profesional (Chauffeur)',
+            description: 'Sewa mobil dengan supir lokal berpengalaman, ramah, dan hafal rute wisata Bintan. Durasi 10-12 jam.',
+            priceCurrency: 'IDR'
+          },
+          {
+            '@type': 'Offer',
+            name: 'Paket Tour Wisata All-In & Karaoke On-Board',
+            description: 'Paket keliling objek wisata Bintan all-in supir, BBM, parkir, dan fasilitas karaoke naik HiAce.',
+            priceCurrency: 'IDR'
+          },
+          {
+            '@type': 'Offer',
+            name: 'Antar-Jemput Pelabuhan Feri & Bandara Bintan',
+            description: 'Layanan transfer antar-jemput tepat waktu dari/ke Pelabuhan Feri Bandar Bentan Telani (BBT Lagoi), Sri Bintan Pura, dan Bandara RHF.',
+            priceCurrency: 'IDR'
+          }
+        ]
+      }
+    }
+  ]
+
+  const script = document.createElement('script')
+  script.id = SVC_SCHEMA_ID
+  script.type = 'application/ld+json'
+  script.textContent = JSON.stringify(schemas)
+  document.head.appendChild(script)
+}
+
 onMounted(() => {
   updatePageTitle()
+  injectServicesSchema()
+})
+
+onUnmounted(() => {
+  const existing = document.getElementById(SVC_SCHEMA_ID)
+  if (existing) existing.remove()
 })
 
 watch(isEnglish, () => {
@@ -121,15 +199,15 @@ const mainServices = computed(() => isEnglish.value ? [
 ])
 
 const serviceTabList = computed(() => isEnglish.value ? [
-  { id: 'lepas-kunci' as const, label: 'Self-Drive Rental', icon: '🔑' },
-  { id: 'driver' as const, label: 'With Chauffeur', icon: '👨‍✈️' },
-  { id: 'tour' as const, label: 'Private Tour Package', icon: '🌴' },
-  { id: 'transfer' as const, label: 'Airport & Ferry Transfer', icon: '🚢' },
+  { id: 'lepas-kunci' as const, label: 'Self-Drive Rental' },
+  { id: 'driver' as const, label: 'With Chauffeur' },
+  { id: 'tour' as const, label: 'Private Tour Package' },
+  { id: 'transfer' as const, label: 'Airport & Ferry Transfer' },
 ] : [
-  { id: 'lepas-kunci' as const, label: 'Sewa Lepas Kunci', icon: '🔑' },
-  { id: 'driver' as const, label: 'Sewa dengan Supir', icon: '👨‍✈️' },
-  { id: 'tour' as const, label: 'Paket Tour Wisata', icon: '🌴' },
-  { id: 'transfer' as const, label: 'Antar-Jemput Bandara & Pelabuhan', icon: '🚢' },
+  { id: 'lepas-kunci' as const, label: 'Sewa Lepas Kunci' },
+  { id: 'driver' as const, label: 'Sewa dengan Supir' },
+  { id: 'tour' as const, label: 'Paket Tour Wisata' },
+  { id: 'transfer' as const, label: 'Antar-Jemput Bandara & Pelabuhan' },
 ])
 
 const serviceDetails = computed(() => {
@@ -521,7 +599,11 @@ const currentDetail = computed(() => serviceDetails.value[activeTab.value])
             ? 'bg-slate-900 text-white border-slate-900 shadow-md scale-[1.02]'
             : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'"
         >
-          <span>{{ tab.icon }}</span>
+          <!-- SVG Icons -->
+          <svg v-if="tab.id === 'lepas-kunci'" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+          <svg v-else-if="tab.id === 'driver'" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          <svg v-else-if="tab.id === 'tour'" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <svg v-else class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
           <span>{{ tab.label }}</span>
         </button>
       </div>

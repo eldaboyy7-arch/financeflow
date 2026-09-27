@@ -526,9 +526,10 @@ onBeforeUnmount(() => {
                   </span>
                   <span
                     v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')"
-                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-black bg-rose-600 text-white shadow-md animate-pulse"
+                    class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-black bg-rose-600 text-white shadow-md"
                   >
-                    🔥 {{ isEnglish ? `SAVE ${pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22)}%` : `DISKON ${pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22)}%` }}
+                    <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                    {{ isEnglish ? `SAVE ${pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22)}%` : `DISKON ${pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22)}%` }}
                   </span>
                 </div>
                 <div class="absolute bottom-2 right-2 pointer-events-none">
@@ -558,8 +559,9 @@ onBeforeUnmount(() => {
                     <span class="text-xs font-bold text-slate-400 line-through">
                       {{ getOriginalPrice(pkg).formatted }}
                     </span>
-                    <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-50 text-rose-600 border border-rose-200 shadow-2xs">
-                      🔥 {{ isEnglish ? `Save ${getSavings(pkg).formatted}` : `Hemat ${getSavings(pkg).formatted}` }}
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-50 text-rose-600 border border-rose-200 shadow-2xs">
+                      <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                      {{ isEnglish ? `Save ${getSavings(pkg).formatted}` : `Hemat ${getSavings(pkg).formatted}` }}
                     </span>
                   </div>
                   <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">

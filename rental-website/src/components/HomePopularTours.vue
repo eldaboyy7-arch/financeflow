@@ -172,8 +172,8 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/95 text-slate-900 shadow-sm backdrop-blur-xs">
                 {{ getTourBadge(pkg) }}
               </span>
-              <span v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-black bg-rose-600 text-white shadow-xs animate-pulse">
-                🔥 -{{ pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22) }}%
+              <span v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-black bg-rose-600 text-white shadow-xs">
+                -{{ pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22) }}%
               </span>
             </div>
 
@@ -246,8 +246,8 @@ function getTourBadge(pkg: { id: string; slug: string; badge?: string; duration?
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white/95 text-slate-900 shadow-sm backdrop-blur-xs">
               {{ getTourBadge(pkg) }}
             </span>
-            <span v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-600 text-white shadow-md animate-pulse">
-              🔥 -{{ pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22) }}%
+            <span v-if="pkg.rawOriginalPrice || pkg.slug?.includes('premio') || pkg.slug?.includes('commuter')" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-600 text-white shadow-md">
+              -{{ pkg.discountPercent || (pkg.slug?.includes('premio') ? 25 : 22) }}%
             </span>
           </div>
 

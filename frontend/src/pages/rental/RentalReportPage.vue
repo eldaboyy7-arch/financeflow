@@ -736,7 +736,7 @@ onBeforeUnmount(() => {
 
           <div v-for="v in report.vehicles" :key="'print-tx-' + v.id" class="mb-3.5 border border-slate-300 rounded p-2 page-break-avoid">
             <div class="flex items-center justify-between font-bold text-xs bg-slate-100 px-2 py-1 border-b border-slate-200 mb-1">
-              <span>🚗 {{ v.name }} — Plat: {{ v.plate_number || 'Tanpa Plat' }}</span>
+              <span>{{ v.name }} — Plat: {{ v.plate_number || 'Tanpa Plat' }}</span>
               <span class="text-[11px] font-normal text-slate-600">
                 {{ v.transactions?.length || 0 }} Catatan Transaksi
               </span>

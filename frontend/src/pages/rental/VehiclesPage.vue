@@ -318,7 +318,8 @@ function statusBadge(s: string) {
                 : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-50'
             ]"
           >
-            <span>🟢 Tersedia ({{ availableCount }})</span>
+            <span class="w-2 h-2 rounded-full" :class="selectedStatus === 'available' ? 'bg-white' : 'bg-emerald-500'"></span>
+            <span>Tersedia ({{ availableCount }})</span>
           </button>
           <button
             @click="selectedStatus = 'rented'"
@@ -329,7 +330,8 @@ function statusBadge(s: string) {
                 : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-50'
             ]"
           >
-            <span>🔵 Disewa ({{ rentedCount }})</span>
+            <span class="w-2 h-2 rounded-full" :class="selectedStatus === 'rented' ? 'bg-white' : 'bg-blue-500'"></span>
+            <span>Disewa ({{ rentedCount }})</span>
           </button>
           <button
             @click="selectedStatus = 'maintenance'"
@@ -340,7 +342,8 @@ function statusBadge(s: string) {
                 : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-50'
             ]"
           >
-            <span>🟡 Di Bengkel ({{ maintenanceCount }})</span>
+            <span class="w-2 h-2 rounded-full" :class="selectedStatus === 'maintenance' ? 'bg-white' : 'bg-amber-400'"></span>
+            <span>Di Bengkel ({{ maintenanceCount }})</span>
           </button>
         </div>
       </div>
