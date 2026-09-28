@@ -2,7 +2,7 @@
 import { ref, watch, computed } from 'vue'
 
 const props = defineProps<{
-  modelValue: number
+  modelValue?: number
   min?: number
   required?: boolean
   placeholder?: string
@@ -15,8 +15,8 @@ const emit = defineEmits<{
 // Display value with dot separators
 const displayValue = ref(formatDisplay(props.modelValue))
 
-function formatDisplay(num: number): string {
-  if (!num && num !== 0) return ''
+function formatDisplay(num?: number): string {
+  if (num === undefined || num === null) return ''
   if (num === 0) return ''
   return num.toLocaleString('id-ID')
 }
@@ -60,7 +60,7 @@ function onFocus(e: FocusEvent) {
 }
 
 function onBlur() {
-  if (props.modelValue > 0) {
+  if (props.modelValue && props.modelValue > 0) {
     displayValue.value = formatDisplay(props.modelValue)
   } else {
     displayValue.value = ''

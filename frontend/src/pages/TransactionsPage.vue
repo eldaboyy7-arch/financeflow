@@ -138,7 +138,7 @@ const displayRecords = computed<UnifiedRecord[]>(() => {
   // Include Transfers (if activeTab is 'all' or 'transfers', and filter permits)
   if (activeTab.value !== 'transactions' && filters.value.type !== 'income' && filters.value.type !== 'expense' && !filters.value.category_id) {
     for (const t of transfers.value) {
-      if (filters.value.account_id && String(t.from_account_id) !== String(filters.value.account_id) && String(t.to_account_id) !== String(filters.value.account_id)) continue
+      if (filters.value.account_id && String(t.from_account?.id) !== String(filters.value.account_id) && String(t.to_account?.id) !== String(filters.value.account_id)) continue
       if (filters.value.search && !((t.description || '') + (t.from_account?.name || '') + (t.to_account?.name || '')).toLowerCase().includes(filters.value.search.toLowerCase())) continue
 
       list.push({

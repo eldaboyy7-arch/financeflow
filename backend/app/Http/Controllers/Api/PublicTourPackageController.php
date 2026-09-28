@@ -24,7 +24,7 @@ class PublicTourPackageController extends Controller
 
         $cachedData = Cache::remember($cacheKey, 1800, function () {
             // Determine the rental business owner ID
-            $ownerId = (int) env('RENTAL_OWNER_ID', config('app.rental_owner_id', 0));
+            $ownerId = (int) config('services.rental_owner_id', env('RENTAL_OWNER_ID', 0));
 
             if ($ownerId <= 0) {
                 // Auto-detect owner from existing tour packages (prioritizing the client)

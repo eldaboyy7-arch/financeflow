@@ -39,6 +39,7 @@ const authStore = useAuthStore()
 const dashboardStore = useDashboardStore()
 const goalsStore = useGoalsStore()
 const recurringStore = useRecurringStore()
+const router = useRouter()
 
 const showScanner = ref(false)
 const summary = computed(() => dashboardStore.summary)
@@ -571,7 +572,7 @@ const totalBreakdown = computed(() => breakdown.value.reduce((s, b) => s + b.tot
             <div class="text-right shrink-0">
               <p
                 class="text-sm font-bold tabular-nums"
-                :class="tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : tx.type === 'transfer' ? 'text-[#0066FF] dark:text-blue-400' : 'text-rose-500 dark:text-rose-400'"
+                :class="tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'"
               >
                 {{ formatAmount(tx.amount, tx.type) }}
               </p>

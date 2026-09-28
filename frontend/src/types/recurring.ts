@@ -37,3 +37,8 @@ export interface CreateRecurringPayload {
   auto_create?: boolean
   notes?: string
 }
+
+export interface UpdateRecurringPayload extends Partial<CreateRecurringPayload> {
+  next_due_date?: string
+  is_active?: boolean
+}

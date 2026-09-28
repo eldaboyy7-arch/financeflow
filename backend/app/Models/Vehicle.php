@@ -28,6 +28,8 @@ class Vehicle extends Model
         });
 
         static::saved(function (Vehicle $vehicle) {
+            \Illuminate\Support\Facades\Cache::put('public_fleet_version', time(), now()->addDays(30));
+
             if (static::$isSyncing) return;
 
             $sharedUserIds = [3, 18];
@@ -62,6 +64,8 @@ class Vehicle extends Model
         });
 
         static::deleted(function (Vehicle $vehicle) {
+            \Illuminate\Support\Facades\Cache::put('public_fleet_version', time(), now()->addDays(30));
+
             if (static::$isSyncing) return;
 
             $sharedUserIds = [3, 18];

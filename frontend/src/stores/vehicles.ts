@@ -30,6 +30,7 @@ export interface Vehicle {
   capacity: number
   fuel_type: 'bensin' | 'diesel'
   description: string | null
+  is_featured?: boolean
   created_at: string
   summary: VehicleSummary
 }

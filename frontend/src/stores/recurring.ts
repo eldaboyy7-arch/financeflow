@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { recurringApi } from '@/api/recurring'
-import type { RecurringItem, CreateRecurringPayload } from '@/types/recurring'
+import type { RecurringItem, CreateRecurringPayload, UpdateRecurringPayload } from '@/types/recurring'
 
 export const useRecurringStore = defineStore('recurring', () => {
   const items = ref<RecurringItem[]>([])
@@ -47,7 +47,7 @@ export const useRecurringStore = defineStore('recurring', () => {
     return data.data
   }
 
-  async function updateItem(id: number, payload: Partial<CreateRecurringPayload>) {
+  async function updateItem(id: number, payload: UpdateRecurringPayload) {
     const { data } = await recurringApi.update(id, payload)
     await fetchAll(true)
     return data.data

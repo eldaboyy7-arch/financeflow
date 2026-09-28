@@ -17,7 +17,7 @@ export function useFormatCurrency() {
     }).format(amount)
   }
 
-  function formatAmount(amount: number, type?: 'income' | 'expense'): string {
+  function formatAmount(amount: number, type?: 'income' | 'expense' | 'transfer' | string): string {
     const formatted = formatCurrency(Math.abs(amount))
     if (type === 'income') return `+${formatted}`
     if (type === 'expense') return `-${formatted}`

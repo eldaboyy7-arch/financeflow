@@ -23,7 +23,7 @@ async function handleSubmit() {
   error.value = ''
   loading.value = true
   try {
-    await authApi.forgotPassword({ email: email.value })
+    await authApi.forgotPassword(email.value)
     step.value = 2
     startCooldown()
   } catch (err: any) {
@@ -54,7 +54,7 @@ async function handleResend() {
   if (resendCooldown.value > 0 || loading.value) return
   loading.value = true
   try {
-    await authApi.forgotPassword({ email: email.value })
+    await authApi.forgotPassword(email.value)
     startCooldown()
   } catch {
     startCooldown()

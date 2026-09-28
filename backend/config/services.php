@@ -39,4 +39,6 @@ return [
         'storage_bucket' => env('SUPABASE_STORAGE_BUCKET', 'fleet'),
     ],
 
+    'rental_owner_id' => env('RENTAL_OWNER_ID', 18),
+
 ];
