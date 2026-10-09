@@ -316,7 +316,7 @@ async function handleSubmit() {
 
     // 3. Refresh stores
     accountsStore.fetchAccounts(true)
-    vehiclesStore.fetchVehicles()
+    vehiclesStore.fetchVehicles(undefined, undefined, true)
 
     uiStore.showToast(`Pemasukan sewa ${formatCurrency(totalAmount.value)} (${v.name} · ${durationDays.value} Hari) berhasil dicatat!`)
     emit('saved', txData)

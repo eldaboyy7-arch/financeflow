@@ -181,8 +181,9 @@ async function deleteTransaction(id: number) {
   try {
     await api.delete(`/transactions/${id}`)
     uiStore.showToast('Transaksi rental berhasil dihapus!', 'info')
-    vehiclesStore.fetchVehicles()
-    accountsStore.fetchAccounts(true)
+    vehiclesStore.fetchVehicles(undefined, undefined, true)
+    await accountsStore.fetchAccounts(true)
+    accounts.value = accountsStore.accounts
     fetchTx()
   } catch (e: any) {
     uiStore.showToast(e?.response?.data?.message ?? 'Gagal menghapus transaksi.', 'error')
@@ -229,8 +230,9 @@ async function submitTransaction() {
     }
     showModal.value = false
     editingId.value = null
-    vehiclesStore.fetchVehicles()
-    accountsStore.fetchAccounts(true)
+    vehiclesStore.fetchVehicles(undefined, undefined, true)
+    await accountsStore.fetchAccounts(true)
+    accounts.value = accountsStore.accounts
     fetchTx()
   } catch (e: any) {
     const data = e?.response?.data

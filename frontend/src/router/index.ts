@@ -117,6 +117,11 @@ const router = createRouter({
         },
       ],
     },
+    // Catch-all: redirect unknown URLs to dashboard instead of blank screen
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/',
+    },
   ],
 })
 

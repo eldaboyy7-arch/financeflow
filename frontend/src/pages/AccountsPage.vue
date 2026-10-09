@@ -39,7 +39,7 @@ const defaultForm: AccountPayload = {
 }
 const form = ref<AccountPayload>({ ...defaultForm })
 
-onMounted(() => accountsStore.fetchAccounts())
+onMounted(() => accountsStore.fetchAccounts(true))
 
 function openCreate() {
   editingId.value = null

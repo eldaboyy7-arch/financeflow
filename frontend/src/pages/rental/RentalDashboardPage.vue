@@ -32,7 +32,7 @@ const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Ag
 const rentalWebsiteUrl = (import.meta.env.VITE_RENTAL_WEBSITE_URL as string) || (import.meta.env.DEV ? 'http://localhost:5175' : 'https://3putrimulya-rent.vercel.app')
 
 onMounted(() => {
-  vehiclesStore.fetchVehicles(month.value, year.value)
+  vehiclesStore.fetchVehicles(month.value, year.value, true)
   tourStore.fetchPackages()
 })
 

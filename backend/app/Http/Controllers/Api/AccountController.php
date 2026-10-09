@@ -44,11 +44,13 @@ class AccountController extends Controller
     {
         $this->authorizeAccount($account, $request);
 
+        $validated = $request->validated();
         $oldOpeningBalance = $account->opening_balance;
-        $account->update($request->validated());
+        $account->update($validated);
 
         // Recalculate balance if opening balance changed
-        if (isset($request->validated()['opening_balance']) && $request->validated()['opening_balance'] != $oldOpeningBalance) {
+        // Use array_key_exists (not isset) to correctly handle opening_balance = 0
+        if (array_key_exists('opening_balance', $validated) && $validated['opening_balance'] != $oldOpeningBalance) {
             $account->recalculateBalance();
         }
 
@@ -61,6 +63,15 @@ class AccountController extends Controller
 
         if ($account->transactions()->count() > 0) {
             return response()->json(['message' => 'Akun memiliki transaksi dan tidak dapat dihapus.'], 422);
+        }
+
+        // Also block deletion if account has transfer history to prevent corrupting partner account balances
+        $hasTransfers = \App\Models\Transfer::where('from_account_id', $account->id)
+            ->orWhere('to_account_id', $account->id)
+            ->exists();
+
+        if ($hasTransfers) {
+            return response()->json(['message' => 'Akun memiliki riwayat transfer dan tidak dapat dihapus.'], 422);
         }
 
         $account->delete();

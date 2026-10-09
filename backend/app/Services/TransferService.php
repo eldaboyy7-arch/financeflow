@@ -11,6 +11,9 @@ class TransferService
     public function create(array $data, int $userId): Transfer
     {
         return DB::transaction(function () use ($data, $userId) {
+            // Normalize fee to 0 if null to prevent SQL NOT NULL constraint violation
+            $data['fee'] = $data['fee'] ?? 0;
+
             $transfer = Transfer::create(array_merge($data, ['user_id' => $userId]));
             $transfer->fromAccount->recalculateBalance();
             $transfer->toAccount->recalculateBalance();

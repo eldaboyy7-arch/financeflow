@@ -49,7 +49,9 @@ const passwordLoading = ref(false)
 
 async function handleLogout() {
   await authStore.logout()
-  router.push('/login')
+  // Use hard redirect (not router.push) to fully clear all Pinia store state
+  // from memory, preventing data leakage between user sessions.
+  window.location.href = '/login'
 }
 
 async function updateProfile() {

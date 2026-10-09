@@ -55,11 +55,12 @@ class RecurringTransaction extends Model
     {
         $current = Carbon::parse($this->next_due_date);
         $next = match ($this->frequency) {
-            'daily'   => $current->addDay(),
-            'weekly'  => $current->addWeek(),
-            'monthly' => $current->addMonth(),
-            'yearly'  => $current->addYear(),
-            default   => $current->addMonth(),
+            'daily'   => $current->copy()->addDay(),
+            'weekly'  => $current->copy()->addWeek(),
+            // addMonthsNoOverflow prevents date overflow (e.g. Jan 31 -> Feb 28, not Mar 3)
+            'monthly' => $current->copy()->addMonthsNoOverflow(1),
+            'yearly'  => $current->copy()->addYear(),
+            default   => $current->copy()->addMonthsNoOverflow(1),
         };
 
         $this->last_run_date = now()->toDateString();

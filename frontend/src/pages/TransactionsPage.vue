@@ -140,6 +140,9 @@ const displayRecords = computed<UnifiedRecord[]>(() => {
     for (const t of transfers.value) {
       if (filters.value.account_id && String(t.from_account?.id) !== String(filters.value.account_id) && String(t.to_account?.id) !== String(filters.value.account_id)) continue
       if (filters.value.search && !((t.description || '') + (t.from_account?.name || '') + (t.to_account?.name || '')).toLowerCase().includes(filters.value.search.toLowerCase())) continue
+      // Filter by date range (transfers aren't server-filtered by date like transactions)
+      if (filters.value.date_from && t.date < filters.value.date_from) continue
+      if (filters.value.date_to && t.date > filters.value.date_to) continue
 
       list.push({
         id: t.id,
@@ -293,9 +296,9 @@ function openModal(type: 'income' | 'expense' | 'transfer') {
 function editTransaction(tx: Transaction) {
   editingId.value = tx.id
   modalType.value = tx.type
-  txCategoryId.value = String(tx.category.id)
-  txAccountId.value = String(tx.account.id)
-  txForm.value = { type: tx.type, amount: tx.amount, date: tx.date, category_id: tx.category.id, account_id: tx.account.id, description: tx.description ?? '' }
+  txCategoryId.value = tx.category?.id ? String(tx.category.id) : ''
+  txAccountId.value = tx.account?.id ? String(tx.account.id) : ''
+  txForm.value = { type: tx.type, amount: tx.amount, date: tx.date, category_id: tx.category?.id ?? 0, account_id: tx.account?.id ?? 0, description: tx.description ?? '' }
   modalError.value = ''
   showModal.value = true
 }
