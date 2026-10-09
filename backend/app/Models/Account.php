@@ -44,10 +44,17 @@ class Account extends Model
      * Recalculate the current balance based on opening balance,
      * all transactions, and all transfers. Does NOT create income/expense
      * records for transfers — balance is adjusted directly.
+     *
+     * NOTE: Income from rental transactions (vehicle_id != null) IS included
+     * in the account balance — the money still lands in the physical account.
+     * Only general (non-rental) expenses are subtracted here; rental-linked
+     * expenses are tracked separately in vehicle/rental reports.
      */
     public function recalculateBalance(): void
     {
-        $income     = $this->transactions()->where('type', 'income')->whereNull('transfer_id')->whereNull('vehicle_id')->sum('amount');
+        // All income (general + rental) counts toward the account balance.
+        $income     = $this->transactions()->where('type', 'income')->whereNull('transfer_id')->sum('amount');
+        // Only non-rental expenses reduce the account balance directly.
         $expense    = $this->transactions()->where('type', 'expense')->whereNull('transfer_id')->whereNull('vehicle_id')->sum('amount');
         $transferIn = Transfer::where('to_account_id', $this->id)->sum('amount');
         $transferOut = Transfer::where('from_account_id', $this->id)->sum('amount')
