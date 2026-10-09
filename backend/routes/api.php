@@ -69,14 +69,16 @@ Route::middleware(['auth:sanctum', 'throttle:api.general'])->group(function () {
     Route::apiResource('categories', CategoryController::class)->except(['show']);
 
     // Transactions & Transfers
+    // NOTE: static sub-routes (/export, /scan-receipt) MUST be declared BEFORE
+    // apiResource() to avoid Laravel matching them as {transaction} route param.
     Route::get('/transactions/export', [TransactionController::class, 'export']);
+    Route::post('/transactions/scan-receipt', [ReceiptScannerController::class, 'scan'])->middleware('throttle:ai.endpoints');
     Route::get('/transactions/{transaction}/receipt', [TransactionController::class, 'receipt']);
     Route::delete('/transactions/{transaction}/receipt', [TransactionController::class, 'deleteReceipt'])->middleware('throttle:financial.mutations');
     Route::apiResource('transactions', TransactionController::class);
     Route::apiResource('transfers', TransferController::class);
 
     // AI Features (Dedicated AI Rate Limiter: 20/min/user)
-    Route::post('/transactions/scan-receipt', [ReceiptScannerController::class, 'scan'])->middleware('throttle:ai.endpoints');
     Route::post('/ai/advisor', [AiAdvisorController::class, 'ask'])->middleware('throttle:ai.endpoints');
 
     // Budgets
